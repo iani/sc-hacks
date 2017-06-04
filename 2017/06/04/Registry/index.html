@@ -3,21 +3,25 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Page 1 | SC Hacks</title>
+  <title>Registry: Hierarchical Namespaces | SC Hacks</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
+  <meta name="keywords" content="registry" />
   
   
   
-  <meta name="description" content="Gradually introducing recipe elements from previous SuperCollider libraries">
-<meta property="og:type" content="website">
-<meta property="og:title" content="SC Hacks">
-<meta property="og:url" content="http://iani.github.io/index.html">
+  
+  <meta name="description" content="Registry class.    This class make its possible to store objects and retrieve them, as done with classes such as Pdef, Ndef, OSCdef etc, but without having to subclass.  To create this behavior ins">
+<meta name="keywords" content="registry">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Registry: Hierarchical Namespaces">
+<meta property="og:url" content="http://iani.github.io/2017/06/04/Registry/index.html">
 <meta property="og:site_name" content="SC Hacks">
-<meta property="og:description" content="Gradually introducing recipe elements from previous SuperCollider libraries">
+<meta property="og:description" content="Registry class.    This class make its possible to store objects and retrieve them, as done with classes such as Pdef, Ndef, OSCdef etc, but without having to subclass.  To create this behavior ins">
+<meta property="og:updated_time" content="2017-06-04T16:30:03.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SC Hacks">
-<meta name="twitter:description" content="Gradually introducing recipe elements from previous SuperCollider libraries">
+<meta name="twitter:title" content="Registry: Hierarchical Namespaces">
+<meta name="twitter:description" content="Registry class.    This class make its possible to store objects and retrieve them, as done with classes such as Pdef, Ndef, OSCdef etc, but without having to subclass.  To create this behavior ins">
   
     <link rel="alternate" href="/atom.xml" title="SC Hacks" type="application/atom+xml">
   
@@ -50,7 +54,7 @@
 
 
 
-  <body>
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
 
 
   
@@ -120,17 +124,15 @@
             
       <div id="content" class="outer">
         
-          <section id="main">
-  
-    <article id="post-Registry"  class="article article-type-post" itemscope itemprop="blogPost" >
+          <section id="main" style="float:none;"><article id="post-Registry" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost" >
   <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
     
     
       <header class="article-header">
         
   
-    <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/sc-hacks/2017/06/04/Registry/">Registry: Hierarchical Namespaces</a>
+    <h1 class="thumb" class="article-title" itemprop="name">
+      Registry: Hierarchical Namespaces
     </h1>
   
 
@@ -181,172 +183,50 @@ Store an object in Library under an array of objects (called a <i>path</i>).  Wh
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/sc-hacks/tags/registry/">registry</a></li></ul>
 
       
+        
+	<div id="comment">
+	
+	<!-- 多说评论框 start -->
+	 <div class="ds-thread" data-thread-key="/sc-hacks/2017/06/04/Registry/" data-title="Registry: Hierarchical Namespaces" data-url="http://iani.github.io/2017/06/04/Registry/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"iTimeTraveler"};
+	  (function() {
+	    var ds = document.createElement('script');
+	    ds.type = 'text/javascript';ds.async = true;
+	    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+	    ds.charset = 'UTF-8';
+	    (document.getElementsByTagName('head')[0] 
+	     || document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	  </script>
+	<!-- 多说公共JS代码 end -->
+	
+	</div>
+	<link rel="stylesheet" href="/sc-hacks/css/comment.css">
+
+
+      
     </footer>
     <hr class="entry-footer-hr">
   </div>
+  
+    
   
 </article>
 
 <!-- Table of Contents -->
 
-  
-
-
+  <aside id="sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+      <ol class="nav">None</ol>
+    
+    </div>
+  </aside>
 </section>
-          <aside id="sidebar">
-  
-    <div style="margin: 20px 0;">
-	<div id="search-form-wrap">
-
-    <form class="search-form">
-        <label style="width: 72%;">
-            <span class="screen-reader-text">Search for:</span>
-            <input type="search" class="search-field" style="height: 36px; width: 100%;" placeholder=" Search…" value="" name="s" title="Search for:">
-        </label>
-        <input type="submit" class="search-form-submit" value="Search">
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="Type something..."/>
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
-        },
-        ROOT_URL: '/sc-hacks/',
-        CONTENT_URL: '/sc-hacks/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-<script src="/sc-hacks/js/insight.js"></script>
-
-</div>
-</div>
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/sc-hacks/categories/classes/">classes</a><span class="category-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/sc-hacks/tags/registry/" style="font-size: 10px;">registry</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget_athemes_tabs">
-    <ul id="widget-tab" class="clearfix widget-tab-nav">
-      <li class="active"><a>Recent Posts</a></li>
-    </ul>
-    <div class="widget">
-      <ul>
-        
-          <li class="clearfix">
-
-            
-              <div class="widget-entry-summary" style="margin: 0;">
-            
-
-              <h6 style="margin: 0;"><a href="/sc-hacks/2017/06/04/Registry/">Registry: Hierarchical Namespaces</a></h6>
-              <span>June 4, 2017</span>
-            </div>
-
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/sc-hacks/archives/2017/06/">June 2017</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/registry/">registry</a><span class="tag-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Connect With Us</h3>
-    <div class="widget widget_athemes_social_icons">
-
-    	<ul class="clearfix widget-social-icons">   
-    	
-   			<li><a href="https://github.com/iTimeTraveler" title="Github"><i class="fa fa-github" aria-hidden="true"></i></a></li> 
-
-   		
-   			<li><a href="null" title="Weibo"><i class="fa fa-weibo" aria-hidden="true"></i></a></li> 
-
-   		
-   			<li><a href="null" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li> 
-
-   		
-   			<li><a href="null" title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a></li> 
-
-   		
-   			<li><a href="null" title="Google-plus"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li> 
-
-   		
-   			<li><a href="null" title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a></li> 
-
-   		
-   		</ul>
-
-
-   		<!--
-   		<ul class="clearfix widget-social-icons">   		
-   		<li class="widget-si-twitter"><a href="http://twitter.com" title="Twitter"><i class="ico-twitter"></i></a></li> 
-		<li class="widget-si-facebook"><a href="http://facebook.com" title="Facebook"><i class="ico-facebook"></i></a></li>
-			<li class="widget-si-gplus"><a href="http://plus.google.com" title="Google+"><i class="ico-gplus"></i></a></li>
-			<li class="widget-si-pinterest"><a href="http://pinterest.com" title="Pinterest"><i class="ico-pinterest"></i></a></li>
-			<li class="widget-si-flickr"><a href="http://flickr.com" title="Flickr"><i class="ico-flickr"></i></a></li>
-			<li class="widget-si-instagram"><a href="http://instagram.com" title="Instagram"><i class="ico-instagram"></i></a></li>
-		</ul> -->
-
-    </div>
-  </div>
-
-
-  
-</aside>
         
       </div>
 
