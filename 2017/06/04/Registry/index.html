@@ -6,19 +6,19 @@
   <title>Registry: Hierarchical Namespaces | SC Hacks</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta name="keywords" content="Registry" />
+  <meta name="keywords" content="registryRegistryREGISTRY" />
   
   
   
   
   <meta name="description" content="Registry class    What it is for   This class make its possible to store objects and retrieve them, as done with classes such as Pdef, Ndef, OSCdef etc, but without having to subclass.  To create t">
-<meta name="keywords" content="Registry">
+<meta name="keywords" content="registry,Registry,REGISTRY">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Registry: Hierarchical Namespaces">
 <meta property="og:url" content="http://iani.github.io/2017/06/04/Registry/index.html">
 <meta property="og:site_name" content="SC Hacks">
 <meta property="og:description" content="Registry class    What it is for   This class make its possible to store objects and retrieve them, as done with classes such as Pdef, Ndef, OSCdef etc, but without having to subclass.  To create t">
-<meta property="og:updated_time" content="2017-06-05T05:28:46.000Z">
+<meta property="og:updated_time" content="2017-06-05T05:34:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Registry: Hierarchical Namespaces">
 <meta name="twitter:description" content="Registry class    What it is for   This class make its possible to store objects and retrieve them, as done with classes such as Pdef, Ndef, OSCdef etc, but without having to subclass.  To create t">
@@ -185,7 +185,7 @@ This is the code that makes it possible to create or modify an OSCFunc bound to 
 
 <div class="org-src-container">
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {&#10;&#9;oscFunc { | path |&#10;&#9;&#9;path.removeOsc;&#10;&#9;&#9;^Registry (&#39;oscFuncs&#39;, path, { OSCFunc (this, path) });&#10;&#9;}&#10;}&#10;&#10;+ Symbol {&#10;&#9;removeOsc {&#10;&#9;&#9;Registry.doIfFound (&#39;oscFuncs&#39;, this, { | found |q&#10;&#9;&#9;&#9;found.objectClosed;&#10;&#9;&#9;&#9;found.free;&#10;&#9;&#9;});     &#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {&#10;&#9;oscFunc { | path |&#10;&#9;&#9;path.removeOsc;&#10;&#9;&#9;^Registry ('oscFuncs', path, { OSCFunc (this, path) });&#10;&#9;}&#10;}&#10;&#10;+ Symbol {&#10;&#9;removeOsc {&#10;&#9;&#9;Registry.doIfFound ('oscFuncs', this, { | found |q&#10;&#9;&#9;&#9;found.objectClosed;&#10;&#9;&#9;&#9;found.free;&#10;&#9;&#9;});     &#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
 </div>
 </div>
 </div>
@@ -199,7 +199,7 @@ This is the code that makes it possible to create or modify an OSCFunc bound to 
 
       
   <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/sc-hacks/tags/Registry/">Registry</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/sc-hacks/tags/REGISTRY/">REGISTRY</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/sc-hacks/tags/Registry/">Registry</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/sc-hacks/tags/registry/">registry</a></li></ul>
 
       
         

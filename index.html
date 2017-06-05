@@ -175,22 +175,22 @@ An <code>EventPattern</code> creates <code>EventStreams</code> which are played 
 <h2 id="sec-3">Example</h2>
 <div class="outline-text-2" id="text-3">
 <pre class="example">
-() +> \e;
-0.1 +>.dur \e;
-Pseq ((0..20), inf) +>.degree \e;
-Prand ((0..20), inf) +>.degree \e;
-(freq: Pfunc ({ 300 rrand: 1000 }), dur: Prand ([0.1, 0.2], inf)) +> \e;
-(freq: Pfunc ({ 30.rrand(80).midicps }), dur: Pfunc ({ 0.1 exprand: 1 }), legato: Prand ([0.1, 2], inf)) +> \e;
-(degree: Pseq ((0..20), inf), dur: 0.1) +!>.degree \e;
+() +&gt; \e;
+0.1 +&gt;.dur \e;
+Pseq ((0..20), inf) +&gt;.degree \e;
+Prand ((0..20), inf) +&gt;.degree \e;
+(freq: Pfunc ({ 300 rrand: 1000 }), dur: Prand ([0.1, 0.2], inf)) +&gt; \e;
+(freq: Pfunc ({ 30.rrand(80).midicps }), dur: Pfunc ({ 0.1 exprand: 1 }), legato: Prand ([0.1, 2], inf)) +&gt; \e;
+(degree: Pseq ((0..20), inf), dur: 0.1) +!&gt;.degree \e;
 </pre>
 
 <p>
 Note: 
 </p>
 <ul class="org-ul">
-<li><code>+></code> adds all key-value pairs of an event to the event being played.
+<li><code>+&gt;</code> adds all key-value pairs of an event to the event being played.
 </li>
-<li><code>+!></code> replaces the contents of the event being played by the contents of the new event.
+<li><code>+!&gt;</code> replaces the contents of the event being played by the contents of the new event.
 </li>
 </ul>
 </div>
@@ -393,7 +393,7 @@ This is the code that makes it possible to create or modify an OSCFunc bound to 
 
 <div class="org-src-container">
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {&#10;&#9;oscFunc { | path |&#10;&#9;&#9;path.removeOsc;&#10;&#9;&#9;^Registry (&#39;oscFuncs&#39;, path, { OSCFunc (this, path) });&#10;&#9;}&#10;}&#10;&#10;+ Symbol {&#10;&#9;removeOsc {&#10;&#9;&#9;Registry.doIfFound (&#39;oscFuncs&#39;, this, { | found |q&#10;&#9;&#9;&#9;found.objectClosed;&#10;&#9;&#9;&#9;found.free;&#10;&#9;&#9;});     &#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {&#10;&#9;oscFunc { | path |&#10;&#9;&#9;path.removeOsc;&#10;&#9;&#9;^Registry ('oscFuncs', path, { OSCFunc (this, path) });&#10;&#9;}&#10;}&#10;&#10;+ Symbol {&#10;&#9;removeOsc {&#10;&#9;&#9;Registry.doIfFound ('oscFuncs', this, { | found |q&#10;&#9;&#9;&#9;found.objectClosed;&#10;&#9;&#9;&#9;found.free;&#10;&#9;&#9;});     &#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
 </div>
 </div>
 </div>
@@ -407,7 +407,7 @@ This is the code that makes it possible to create or modify an OSCFunc bound to 
 
       
   <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/sc-hacks/tags/Registry/">Registry</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/sc-hacks/tags/REGISTRY/">REGISTRY</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/sc-hacks/tags/Registry/">Registry</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/sc-hacks/tags/registry/">registry</a></li></ul>
 
       
     </footer>
@@ -481,7 +481,7 @@ This is the code that makes it possible to create or modify an OSCFunc bound to 
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/sc-hacks/tags/EventPattern/" style="font-size: 10px;">EventPattern</a> <a href="/sc-hacks/tags/EventStream/" style="font-size: 10px;">EventStream</a> <a href="/sc-hacks/tags/EventStreamPlayer/" style="font-size: 10px;">EventStreamPlayer</a> <a href="/sc-hacks/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/sc-hacks/tags/Registry/" style="font-size: 10px;">Registry</a>
+      <a href="/sc-hacks/tags/EventPattern/" style="font-size: 10px;">EventPattern</a> <a href="/sc-hacks/tags/EventStream/" style="font-size: 10px;">EventStream</a> <a href="/sc-hacks/tags/EventStreamPlayer/" style="font-size: 10px;">EventStreamPlayer</a> <a href="/sc-hacks/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/sc-hacks/tags/REGISTRY/" style="font-size: 10px;">REGISTRY</a> <a href="/sc-hacks/tags/Registry/" style="font-size: 10px;">Registry</a> <a href="/sc-hacks/tags/registry/" style="font-size: 10px;">registry</a>
     </div>
   </div>
 
@@ -550,7 +550,7 @@ This is the code that makes it possible to create or modify an OSCFunc bound to 
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/EventPattern/">EventPattern</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/EventStream/">EventStream</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/EventStreamPlayer/">EventStreamPlayer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/Notification/">Notification</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/Registry/">Registry</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/EventPattern/">EventPattern</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/EventStream/">EventStream</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/EventStreamPlayer/">EventStreamPlayer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/Notification/">Notification</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/REGISTRY/">REGISTRY</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/Registry/">Registry</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/registry/">registry</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
