@@ -9,15 +9,15 @@
   
   
   
-  <meta name="description" content="Gradually introducing recipe elements from previous SuperCollider libraries">
+  <meta name="description" content="Gradually introducing recipes from previous SuperCollider libraries">
 <meta property="og:type" content="website">
 <meta property="og:title" content="SC Hacks">
 <meta property="og:url" content="http://iani.github.io/index.html">
 <meta property="og:site_name" content="SC Hacks">
-<meta property="og:description" content="Gradually introducing recipe elements from previous SuperCollider libraries">
+<meta property="og:description" content="Gradually introducing recipes from previous SuperCollider libraries">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SC Hacks">
-<meta name="twitter:description" content="Gradually introducing recipe elements from previous SuperCollider libraries">
+<meta name="twitter:description" content="Gradually introducing recipes from previous SuperCollider libraries">
   
     <link rel="alternate" href="/atom.xml" title="SC Hacks" type="application/atom+xml">
   
@@ -90,7 +90,7 @@
           </h1>
           
           
-            <div class="site-description">Gradually introducing recipe elements from previous SuperCollider libraries</div>
+            <div class="site-description">Gradually introducing recipes from previous SuperCollider libraries</div>
           
             
           <nav id="main-navigation" class="main-navigation" role="navigation">
@@ -289,7 +289,7 @@ This is the code that makes it possible to create or modify an OSCFunc bound to 
 
 <div class="org-src-container">
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {&#10;&#9;oscFunc { | path |&#10;&#9;&#9;path.removeOsc;&#10;&#9;&#9;^Registry ('oscFuncs', path, { OSCFunc (this, path) });&#10;&#9;}&#10;}&#10;&#10;+ Symbol {&#10;&#9;removeOsc {&#10;&#9;&#9;Registry.doIfFound ('oscFuncs', this, { | found |q&#10;&#9;&#9;&#9;found.objectClosed;&#10;&#9;&#9;&#9;found.free;&#10;&#9;&#9;});     &#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {&#10;&#9;oscFunc { | path |&#10;&#9;&#9;path.removeOsc;&#10;&#9;&#9;^Registry (&#39;oscFuncs&#39;, path, { OSCFunc (this, path) });&#10;&#9;}&#10;}&#10;&#10;+ Symbol {&#10;&#9;removeOsc {&#10;&#9;&#9;Registry.doIfFound (&#39;oscFuncs&#39;, this, { | found |q&#10;&#9;&#9;&#9;found.objectClosed;&#10;&#9;&#9;&#9;found.free;&#10;&#9;&#9;});     &#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
 </div>
 </div>
 </div>
