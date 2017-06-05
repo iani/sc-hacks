@@ -152,13 +152,7 @@ var themeMenus = {};
             
 
 
-
-What it does
-
-
 An EventStream makes it easy to modify patterns while playing them. 
-
-
 
 
 
@@ -167,7 +161,7 @@ An EventStream makes it easy to modify patterns while playing them.
 How it works
 
 
-An EventPattern creates EventStreams which are played by EventStreamPlayer.  EventStream stores an event whose values are streams and uses this to produce a new event which is played by EventStreamPlayer.  It is thus possible to modify t...
+An EventPattern creates EventStreams which are played by EventStreamPlayer.  EventStream stores an event whose values are streams and uses this to produce a new event which is played by EventStreamPlayer.  It is thus possible to modify the event stored in...
           
 
         
@@ -226,11 +220,7 @@ An EventPattern creates EventStreams which are played by EventStreamPlayer.  Eve
             
 
 
-
-What it is for
-
-
-Notification is an improved version of the NotificationCenter class.  This class enables objects to register a function which is called when another object changes according to some aspect.  The aspect is expressed by a symbol.  To trigger a notification action, one sends the message changed to an object together with a symb...
+Notification is an improved version of the NotificationCenter class.  This class enables objects to register a function which is called when another object changes according to some aspect.  The aspect is expressed by a symbol.  To trigger a notification action, one sends the message changed to an object together with a symbol expressing the ...
           
 
         
@@ -289,14 +279,7 @@ Notification is an improved version of the NotificationCenter class.  This class
             
 
 
-Registry class
-
-
-
-What it is for
-
-
-This class make its possible to store objects and retrieve them, as done with classes such as Pdef, Ndef, OSCdef etc, but without having to subclass.  To create this behavior instead, add a method to Symbol for accessing the kind of object needed.  For example: \aSymbol.oscFunc. This also allows easier custo...
+This class helps to store objects and to retrieve them using a key.  This is similar to the way that with classes such as Pdef, Ndef, OSCdef work, but Registry can be used to add the same feature ot any class, without subclassing it.  To create this behavior instead, add a method to Symbol for accessing the kind of object needed.  For example...
           
 
         
