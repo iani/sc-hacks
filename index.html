@@ -122,6 +122,93 @@
         
           <section id="main">
   
+    <article id="post-Registry"  class="article article-type-post" itemscope itemprop="blogPost" >
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      <a class="article-title" href="/sc-hacks/2017/06/05/Registry/">Registry: Hierarchical Namespaces</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/sc-hacks/2017/06/05/Registry/" class="article-date">
+	  <time datetime="2017-06-05T05:43:33.000Z" itemprop="datePublished">June 5, 2017</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/sc-hacks/categories/classes/">classes</a>
+ 
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+
+<p>
+<i>Registry class</i>
+</p>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">What it is for</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+This class make its possible to store objects and retrieve them, as done with classes such as <code>Pdef</code>, <code>Ndef</code>, <code>OSCdef</code> etc, but without having to subclass.  To create this behavior instead, add a method to <code>Symbol</code> for accessing the kind of object needed.  For example: <code>\aSymbol.oscFunc</code>. This also allows easier customization of how the object is created if not found. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">How it works</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Store an object in Library under an array of objects (called a <i>path</i>).  When accessing the path, create the object if not already stored, else return the previously stored object.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">Example</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+This is the code that makes it possible to create or modify an OSCFunc bound to a symbol.  It defines the methods <code>Function:oscFunc</code> and <code>Symbol:removeOsc</code>.
+</p>
+
+<div class="org-src-container">
+
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {&#10;&#9;oscFunc { | path |&#10;&#9;&#9;path.removeOsc;&#10;&#9;&#9;^Registry ('oscFuncs', path, { OSCFunc (this, path) });&#10;&#9;}&#10;}&#10;&#10;+ Symbol {&#10;&#9;removeOsc {&#10;&#9;&#9;Registry.doIfFound ('oscFuncs', this, { | found |q&#10;&#9;&#9;&#9;found.objectClosed;&#10;&#9;&#9;&#9;found.free;&#10;&#9;&#9;});     &#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
+</div>
+</div>
+</div>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/sc-hacks/categories/classes/">classes</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/sc-hacks/tags/registry/">registry</a></li></ul>
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+</article>
+
+<!-- Table of Contents -->
+
+  
     <article id="post-EventStream"  class="article article-type-post" itemscope itemprop="blogPost" >
   <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
     
@@ -332,93 +419,6 @@ Similar extensions can be built for whatever object needs to monitor the closing
 <!-- Table of Contents -->
 
   
-    <article id="post-Registry"  class="article article-type-post" itemscope itemprop="blogPost" >
-  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/sc-hacks/2017/06/04/Registry/">Registry: Hierarchical Namespaces</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      
-	<a href="/sc-hacks/2017/06/04/Registry/" class="article-date">
-	  <time datetime="2017-06-04T19:23:08.000Z" itemprop="datePublished">June 4, 2017</time>
-	</a>
-
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/sc-hacks/categories/classes/">classes</a>
- 
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-
-<p>
-<i>Registry class</i>
-</p>
-
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">What it is for</h2>
-<div class="outline-text-2" id="text-1">
-<p>
-This class make its possible to store objects and retrieve them, as done with classes such as <code>Pdef</code>, <code>Ndef</code>, <code>OSCdef</code> etc, but without having to subclass.  To create this behavior instead, add a method to <code>Symbol</code> for accessing the kind of object needed.  For example: <code>\aSymbol.oscFunc</code>. This also allows easier customization of how the object is created if not found. 
-</p>
-</div>
-</div>
-
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">How it works</h2>
-<div class="outline-text-2" id="text-2">
-<p>
-Store an object in Library under an array of objects (called a <i>path</i>).  When accessing the path, create the object if not already stored, else return the previously stored object.
-</p>
-</div>
-</div>
-
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">Example</h2>
-<div class="outline-text-2" id="text-3">
-<p>
-This is the code that makes it possible to create or modify an OSCFunc bound to a symbol.  It defines the methods <code>Function:oscFunc</code> and <code>Symbol:removeOsc</code>.
-</p>
-
-<div class="org-src-container">
-
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {&#10;&#9;oscFunc { | path |&#10;&#9;&#9;path.removeOsc;&#10;&#9;&#9;^Registry (&#39;oscFuncs&#39;, path, { OSCFunc (this, path) });&#10;&#9;}&#10;}&#10;&#10;+ Symbol {&#10;&#9;removeOsc {&#10;&#9;&#9;Registry.doIfFound (&#39;oscFuncs&#39;, this, { | found |q&#10;&#9;&#9;&#9;found.objectClosed;&#10;&#9;&#9;&#9;found.free;&#10;&#9;&#9;});     &#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
-</div>
-</div>
-</div>
-
-      
-    </div>
-    <footer class="entry-meta entry-footer">
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/sc-hacks/categories/classes/">classes</a>
-
-      
-  <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/sc-hacks/tags/Registry/">Registry</a></li></ul>
-
-      
-    </footer>
-    <hr class="entry-footer-hr">
-  </div>
-  
-</article>
-
-<!-- Table of Contents -->
-
-  
 
 
 </section>
@@ -481,7 +481,7 @@ This is the code that makes it possible to create or modify an OSCFunc bound to 
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/sc-hacks/tags/EventPattern/" style="font-size: 10px;">EventPattern</a> <a href="/sc-hacks/tags/EventStream/" style="font-size: 10px;">EventStream</a> <a href="/sc-hacks/tags/EventStreamPlayer/" style="font-size: 10px;">EventStreamPlayer</a> <a href="/sc-hacks/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/sc-hacks/tags/Registry/" style="font-size: 10px;">Registry</a>
+      <a href="/sc-hacks/tags/EventPattern/" style="font-size: 10px;">EventPattern</a> <a href="/sc-hacks/tags/EventStream/" style="font-size: 10px;">EventStream</a> <a href="/sc-hacks/tags/EventStreamPlayer/" style="font-size: 10px;">EventStreamPlayer</a> <a href="/sc-hacks/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/sc-hacks/tags/registry/" style="font-size: 10px;">registry</a>
     </div>
   </div>
 
@@ -493,6 +493,18 @@ This is the code that makes it possible to create or modify an OSCFunc bound to 
     </ul>
     <div class="widget">
       <ul>
+        
+          <li class="clearfix">
+
+            
+              <div class="widget-entry-summary" style="margin: 0;">
+            
+
+              <h6 style="margin: 0;"><a href="/sc-hacks/2017/06/05/Registry/">Registry: Hierarchical Namespaces</a></h6>
+              <span>June 5, 2017</span>
+            </div>
+
+          </li>
         
           <li class="clearfix">
 
@@ -518,18 +530,6 @@ This is the code that makes it possible to create or modify an OSCFunc bound to 
 
           </li>
         
-          <li class="clearfix">
-
-            
-              <div class="widget-entry-summary" style="margin: 0;">
-            
-
-              <h6 style="margin: 0;"><a href="/sc-hacks/2017/06/04/Registry/">Registry: Hierarchical Namespaces</a></h6>
-              <span>June 4, 2017</span>
-            </div>
-
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -550,7 +550,7 @@ This is the code that makes it possible to create or modify an OSCFunc bound to 
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/EventPattern/">EventPattern</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/EventStream/">EventStream</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/EventStreamPlayer/">EventStreamPlayer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/Notification/">Notification</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/Registry/">Registry</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/EventPattern/">EventPattern</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/EventStream/">EventStream</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/EventStreamPlayer/">EventStreamPlayer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/Notification/">Notification</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/registry/">registry</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
