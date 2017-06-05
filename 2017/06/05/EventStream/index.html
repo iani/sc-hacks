@@ -3,22 +3,25 @@
 <head>
   <meta charset="utf-8">
   
-  <title>About sc-hacks | SC Hacks</title>
+  <title>EventStream: Modify Patterns while playing | SC Hacks</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
+  <meta name="keywords" content="EventStreamEventPatternEventStreamPlayer" />
   
   
   
-  <meta name="description" content="In this repository, I will review the techniques developed in my libraries for SuperCollider tiny-sc and tiny-inc.  I will try to build a cleaner structure step-by-step, and reducing the code to essen">
-<meta property="og:type" content="website">
-<meta property="og:title" content="About sc-hacks">
-<meta property="og:url" content="http://iani.github.io/about/index.html">
+  
+  <meta name="description" content="What it does   An EventStream makes it possible to modify patterns while playing them.       How it works   An EventPattern creates EventStreams which are played by EventStreamPlayer.  EventStream">
+<meta name="keywords" content="EventStream,EventPattern,EventStreamPlayer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EventStream: Modify Patterns while playing">
+<meta property="og:url" content="http://iani.github.io/2017/06/05/EventStream/index.html">
 <meta property="og:site_name" content="SC Hacks">
-<meta property="og:description" content="In this repository, I will review the techniques developed in my libraries for SuperCollider tiny-sc and tiny-inc.  I will try to build a cleaner structure step-by-step, and reducing the code to essen">
-<meta property="og:updated_time" content="2017-06-04T15:45:29.000Z">
+<meta property="og:description" content="What it does   An EventStream makes it possible to modify patterns while playing them.       How it works   An EventPattern creates EventStreams which are played by EventStreamPlayer.  EventStream">
+<meta property="og:updated_time" content="2017-06-05T05:25:51.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="About sc-hacks">
-<meta name="twitter:description" content="In this repository, I will review the techniques developed in my libraries for SuperCollider tiny-sc and tiny-inc.  I will try to build a cleaner structure step-by-step, and reducing the code to essen">
+<meta name="twitter:title" content="EventStream: Modify Patterns while playing">
+<meta name="twitter:description" content="What it does   An EventStream makes it possible to modify patterns while playing them.       How it works   An EventPattern creates EventStreams which are played by EventStreamPlayer.  EventStream">
   
     <link rel="alternate" href="/atom.xml" title="SC Hacks" type="application/atom+xml">
   
@@ -51,7 +54,7 @@
 
 
 
-  <body>
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
 
 
   
@@ -121,7 +124,7 @@
             
       <div id="content" class="outer">
         
-          <section id="main"><article id="page-undefined"  class="article article-type-page" itemscope itemprop="blogPost" >
+          <section id="main" style="float:none;"><article id="post-EventStream" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost" >
   <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
     
     
@@ -129,7 +132,7 @@
         
   
     <h1 class="thumb" class="article-title" itemprop="name">
-      About sc-hacks
+      EventStream: Modify Patterns while playing
     </h1>
   
 
@@ -137,24 +140,76 @@
     
     <div class="article-meta">
       
-       
+	<a href="/sc-hacks/2017/06/05/EventStream/" class="article-date">
+	  <time datetime="2017-06-05T04:54:50.000Z" itemprop="datePublished">June 5, 2017</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/sc-hacks/categories/classes/">classes</a>
+ 
       
     </div>
     <div class="article-entry" itemprop="articleBody">
       
-        <p>In this repository, I will review the techniques developed in my libraries for SuperCollider <a href="https://github.com/iani/tiny-sc" target="_blank" rel="external">tiny-sc</a> and <a href="https://github.com/iani/tiny-inc" target="_blank" rel="external">tiny-inc</a>.  I will try to build a cleaner structure step-by-step, and reducing the code to essential features, as far as possible. </p>
+        
+
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">What it does</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+An EventStream makes it possible to modify patterns while playing them. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">How it works</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+An <code>EventPattern</code> creates <code>EventStreams</code> which are played by <code>EventStreamPlayer</code>.  <code>EventStream</code> stores an event whose values are streams and uses this to produce a new event which is played by EventStreamPlayer.  It is thus possible to modify the event stored in the EventStream while the EventStreamPlayer is playing it.  This makes it easy to modify a playing pattern (which is difficult when using Pbind).
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">Example</h2>
+<div class="outline-text-2" id="text-3">
+<div class="org-src-container">
+
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">() +&#38;gt; \e;&#10;0.1 +&#38;gt;.dur \e;&#10;Pseq ((0..20), inf) +&#38;gt;.degree \e;&#10;Prand ((0..20), inf) +&#38;gt;.degree \e;&#10;(freq: Pfunc ({ 300 rrand: 1000 }), dur: Prand ([0.1, 0.2], inf)) +&#38;gt; \e;&#10;(freq: Pfunc ({ 30.rrand(80).midicps }), dur: Pfunc ({ 0.1 exprand: 1 }), legato: Prand ([0.1, 2], inf)) +&#38;gt; \e;&#10;(degree: Pseq ((0..20), inf), dur: 0.1) +!&#38;gt;.degree \e;</span><br></pre></td></tr></table></figure>
+</div>
+
+<p>
+Note: 
+</p>
+<ul class="org-ul">
+<li><code>+></code> adds all key-value pairs of an event to the event being played.
+</li>
+<li><code>+!></code> replaces the contents of the event being played by the contents of the new event.
+</li>
+</ul>
+</div>
+</div>
 
       
     </div>
     <footer class="entry-meta entry-footer">
       
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/sc-hacks/categories/classes/">classes</a>
+
       
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/sc-hacks/tags/EventPattern/">EventPattern</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/sc-hacks/tags/EventStream/">EventStream</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/sc-hacks/tags/EventStreamPlayer/">EventStreamPlayer</a></li></ul>
+
       
         
 	<div id="comment">
 	
 	<!-- 多说评论框 start -->
-	 <div class="ds-thread" data-thread-key="/sc-hacks/about/index.html" data-title="About sc-hacks" data-url="http://iani.github.io/about/index.html"></div>
+	 <div class="ds-thread" data-thread-key="/sc-hacks/2017/06/05/EventStream/" data-title="EventStream: Modify Patterns while playing" data-url="http://iani.github.io/2017/06/05/EventStream/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -180,189 +235,30 @@
   </div>
   
     
+<nav id="article-nav">
+  
+  
+    <a href="/sc-hacks/2017/06/04/Notification/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Notification: Register a function callback to a message and a pair of objects</div>
+    </a>
+  
+</nav>
+
   
 </article>
 
 <!-- Table of Contents -->
+
+  <aside id="sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-1"><span class="nav-number">1.</span> <span class="nav-text">What it does</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-2"><span class="nav-number">2.</span> <span class="nav-text">How it works</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-3"><span class="nav-number">3.</span> <span class="nav-text">Example</span></a></li></ol>
+    
+    </div>
+  </aside>
 </section>
-          <aside id="sidebar">
-  
-    <div style="margin: 20px 0;">
-	<div id="search-form-wrap">
-
-    <form class="search-form">
-        <label style="width: 72%;">
-            <span class="screen-reader-text">Search for:</span>
-            <input type="search" class="search-field" style="height: 36px; width: 100%;" placeholder=" Search…" value="" name="s" title="Search for:">
-        </label>
-        <input type="submit" class="search-form-submit" value="Search">
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="Type something..."/>
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
-        },
-        ROOT_URL: '/sc-hacks/',
-        CONTENT_URL: '/sc-hacks/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-<script src="/sc-hacks/js/insight.js"></script>
-
-</div>
-</div>
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/sc-hacks/categories/classes/">classes</a><span class="category-list-count">3</span></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/sc-hacks/tags/EventPattern/" style="font-size: 10px;">EventPattern</a> <a href="/sc-hacks/tags/EventStream/" style="font-size: 10px;">EventStream</a> <a href="/sc-hacks/tags/EventStreamPlayer/" style="font-size: 10px;">EventStreamPlayer</a> <a href="/sc-hacks/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/sc-hacks/tags/Registry/" style="font-size: 10px;">Registry</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget_athemes_tabs">
-    <ul id="widget-tab" class="clearfix widget-tab-nav">
-      <li class="active"><a>Recent Posts</a></li>
-    </ul>
-    <div class="widget">
-      <ul>
-        
-          <li class="clearfix">
-
-            
-              <div class="widget-entry-summary" style="margin: 0;">
-            
-
-              <h6 style="margin: 0;"><a href="/sc-hacks/2017/06/05/EventStream/">EventStream: Modify Patterns while playing</a></h6>
-              <span>June 5, 2017</span>
-            </div>
-
-          </li>
-        
-          <li class="clearfix">
-
-            
-              <div class="widget-entry-summary" style="margin: 0;">
-            
-
-              <h6 style="margin: 0;"><a href="/sc-hacks/2017/06/04/Notification/">Notification: Register a function callback to a message and a pair of objects</a></h6>
-              <span>June 4, 2017</span>
-            </div>
-
-          </li>
-        
-          <li class="clearfix">
-
-            
-              <div class="widget-entry-summary" style="margin: 0;">
-            
-
-              <h6 style="margin: 0;"><a href="/sc-hacks/2017/06/04/Registry/">Registry: Hierarchical Namespaces</a></h6>
-              <span>June 4, 2017</span>
-            </div>
-
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/sc-hacks/archives/2017/06/">June 2017</a><span class="archive-list-count">3</span></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/EventPattern/">EventPattern</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/EventStream/">EventStream</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/EventStreamPlayer/">EventStreamPlayer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/Notification/">Notification</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/Registry/">Registry</a><span class="tag-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Connect With Us</h3>
-    <div class="widget widget_athemes_social_icons">
-
-    	<ul class="clearfix widget-social-icons">   
-    	
-   			<li><a href="https://github.com/iTimeTraveler" title="Github"><i class="fa fa-github" aria-hidden="true"></i></a></li> 
-
-   		
-   			<li><a href="null" title="Weibo"><i class="fa fa-weibo" aria-hidden="true"></i></a></li> 
-
-   		
-   			<li><a href="null" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li> 
-
-   		
-   			<li><a href="null" title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a></li> 
-
-   		
-   			<li><a href="null" title="Google-plus"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li> 
-
-   		
-   			<li><a href="null" title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a></li> 
-
-   		
-   		</ul>
-
-
-   		<!--
-   		<ul class="clearfix widget-social-icons">   		
-   		<li class="widget-si-twitter"><a href="http://twitter.com" title="Twitter"><i class="ico-twitter"></i></a></li> 
-		<li class="widget-si-facebook"><a href="http://facebook.com" title="Facebook"><i class="ico-facebook"></i></a></li>
-			<li class="widget-si-gplus"><a href="http://plus.google.com" title="Google+"><i class="ico-gplus"></i></a></li>
-			<li class="widget-si-pinterest"><a href="http://pinterest.com" title="Pinterest"><i class="ico-pinterest"></i></a></li>
-			<li class="widget-si-flickr"><a href="http://flickr.com" title="Flickr"><i class="ico-flickr"></i></a></li>
-			<li class="widget-si-instagram"><a href="http://instagram.com" title="Instagram"><i class="ico-instagram"></i></a></li>
-		</ul> -->
-
-    </div>
-  </div>
-
-
-  
-</aside>
         
       </div>
 
