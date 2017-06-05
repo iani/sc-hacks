@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Tag: registry | SC Hacks</title>
+  <title>tag: registry | SC Hacks</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
   
@@ -35,51 +35,31 @@
     @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/d337d8/000000000000000000010095/27/l?subset_id=2&fvd=i4) format("woff2");font-weight:400;font-style:italic;}</style>
     
   <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Yanone+Kaffeesatz%3A200%2C300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
-
-  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Oswald%3A300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
   <link rel="stylesheet" href="/sc-hacks/css/style.css">
 
   <script src="/sc-hacks/js/jquery-3.1.1.min.js"></script>
 
   <!-- Bootstrap core CSS -->
   <link rel="stylesheet" href="/sc-hacks/css/bootstrap.css" >
-  <link rel="stylesheet" href="/sc-hacks/css/fashion.css" >
+  <link rel="stylesheet" href="/sc-hacks/css/hiero.css" >
   <link rel="stylesheet" href="/sc-hacks/css/glyphs.css" >
 
 </head>
 
+<script>
+var themeMenus = {};
+
+  themeMenus["/sc-hacks/"] = "Home"; 
+
+  themeMenus["/sc-hacks/about"] = "About"; 
+
+</script>
 
 
   <body>
 
 
-  
-  
-  <div class="site-header-image">
-    <img id="originBg" width="100%" alt="Hike News" src="">
-  </div>
-
-  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
-    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src="">
-  </div>
-
-  <script>
-        var imgUrls = "css/images/pose01.jpg".split(",");
-        var random = Math.floor((Math.random() * imgUrls.length ));
-        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
-          document.getElementById("originBg").src=imgUrls[random];
-          document.getElementById("blurBg").src=imgUrls[random];
-        } else {
-          document.getElementById("originBg").src='/sc-hacks/' + imgUrls[random];
-          document.getElementById("blurBg").src='/sc-hacks/' + imgUrls[random];
-        }
-    </script>
-
-
-
-
-<header id="allheader" class="site-header" role="banner" 
-   style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);"  >
+  <header id="allheader" class="site-header" role="banner">
   <div class="clearfix container">
       <div class="site-branding">
 
@@ -88,7 +68,7 @@
               <a href="/sc-hacks/" title="SC Hacks" rel="home"> SC Hacks </a>
             
           </h1>
-          
+
           
             <div class="site-description">Gradually introducing recipes from previous SuperCollider libraries</div>
           
@@ -96,13 +76,11 @@
           <nav id="main-navigation" class="main-navigation" role="navigation">
             <a class="nav-open">Menu</a>
             <a class="nav-close">Close</a>
-
             <div class="clearfix sf-menu">
-              <ul id="main-nav" class="menu sf-js-enabled sf-arrows"  style="touch-action: pan-y;">
+
+              <ul id="main-nav" class="nmenu sf-js-enabled">
                     
                       <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class="" href="/sc-hacks/">Home</a> </li>
-                    
-                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class="" href="/sc-hacks/archives">Archives</a> </li>
                     
                       <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class="" href="/sc-hacks/about">About</a> </li>
                     
@@ -110,9 +88,12 @@
             </div>
           </nav>
 
+
       </div>
   </div>
 </header>
+
+
 
 
   <div id="container">
@@ -160,13 +141,13 @@
 </section>
           <aside id="sidebar">
   
-    <div style="margin: 20px 0;">
+    <div class="widget-wrap" style="margin: 20px 0;">
 	<div id="search-form-wrap">
 
     <form class="search-form">
-        <label style="width: 72%;">
+        <label style="width: 75%;">
             <span class="screen-reader-text">Search for:</span>
-            <input type="search" class="search-field" style="height: 36px; width: 100%;" placeholder=" Search…" value="" name="s" title="Search for:">
+            <input type="search" class="search-field" style="height: 42px;" placeholder=" Search…" value="" name="s" title="Search for:">
         </label>
         <input type="submit" class="search-form-submit" value="Search">
     </form>
@@ -299,23 +280,41 @@
 
     	<ul class="clearfix widget-social-icons">   
     	
-   			<li><a href="https://github.com/iTimeTraveler" title="Github"><i class="fa fa-github" aria-hidden="true"></i></a></li> 
-
+          
+     			  <li><a href="https://github.com/iTimeTraveler" title="Github"><i class="fa fa-github" aria-hidden="true"></i></a></li> 
+          
    		
-   			<li><a href="null" title="Weibo"><i class="fa fa-weibo" aria-hidden="true"></i></a></li> 
-
+          
+     			  <li><a href="http://www.yoursite.com" title="Weibo"><i class="fa fa-weibo" aria-hidden="true"></i></a></li> 
+          
    		
-   			<li><a href="null" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li> 
-
+          
+     			  <li><a href="null" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li> 
+          
    		
-   			<li><a href="null" title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a></li> 
-
+          
+     			  <li><a href="null" title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a></li> 
+          
    		
-   			<li><a href="null" title="Google-plus"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li> 
-
+          
+     			  <li><a href="null" title="Google-plus"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li> 
+          
    		
-   			<li><a href="null" title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a></li> 
-
+          
+     			  <li><a href="null" title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a></li> 
+          
+   		
+          
+     			  <li><a href="null" title="Pinterest"><i class="fa fa-pinterest" aria-hidden="true"></i></a></li> 
+          
+   		
+          
+     			  <li><a href="null" title="Flickr"><i class="fa fa-flickr" aria-hidden="true"></i></a></li> 
+          
+   		
+          
+            <li><a href="mailto:null?subject=请联系我&body=我能帮你什么" title="email"><i class="fa fa-envelope" aria-hidden="true"></i></a></li> 
+          
    		
    		</ul>
 
@@ -338,27 +337,21 @@
 </aside>
         
       </div>
-
-    </div>
-    <!-- <nav id="mobile-nav">
-  
-    <a href="/sc-hacks/" class="mobile-nav-link">Home</a>
-  
-    <a href="/sc-hacks/archives" class="mobile-nav-link">Archives</a>
-  
-    <a href="/sc-hacks/about" class="mobile-nav-link">About</a>
-  
-</nav> -->
-    <footer id="footer" class="site-footer">
+      <footer id="footer" class="site-footer">
   
 
   <div class="clearfix container">
       <div class="site-info">
 	      &copy; 2017 SC Hacks All Rights Reserved.
-        
+          
+            <span id="busuanzi_container_site_uv">
+              本站访客数<span id="busuanzi_value_site_uv"></span>人次  
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+            </span>
+          
       </div>
       <div class="site-credit">
-        Theme by <a href="https://github.com/iTimeTraveler/hexo-theme-hipaper" target="_blank">hipaper</a>
+        Theme by <a href="https://github.com/iTimeTraveler/hexo-theme-hiero" target="_blank">hiero</a>
       </div>
   </div>
 </footer>
@@ -367,24 +360,19 @@
 <!-- min height -->
 
 <script>
-    var wrapdiv = document.getElementById("wrap");
     var contentdiv = document.getElementById("content");
 
-    wrapdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
     contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
-
-
-    <!-- headerblur min height -->
-    
-      var headerblur = document.getElementById("header-blur");
-      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
-    
-    
 </script>
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/sc-hacks/" class="mobile-nav-link">Home</a>
+  
+    <a href="/sc-hacks/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
     
-<div style="display: none;">
-  <script src="https://s11.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
-</div>
 
 <!-- mathjax config similar to math.stackexchange -->
 
@@ -437,6 +425,9 @@
   </div>
 
 
+
+	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
 
 
 
