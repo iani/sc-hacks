@@ -18,7 +18,7 @@
 <meta property="og:url" content="http://iani.github.io/2017/06/05/Registry/index.html">
 <meta property="og:site_name" content="SC Hacks">
 <meta property="og:description" content="Registry class    What it is for   This class make its possible to store objects and retrieve them, as done with classes such as Pdef, Ndef, OSCdef etc, but without having to subclass.  To create t">
-<meta property="og:updated_time" content="2017-06-05T05:43:33.000Z">
+<meta property="og:updated_time" content="2017-06-05T05:49:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Registry: Hierarchical Namespaces">
 <meta name="twitter:description" content="Registry class    What it is for   This class make its possible to store objects and retrieve them, as done with classes such as Pdef, Ndef, OSCdef etc, but without having to subclass.  To create t">
@@ -185,7 +185,7 @@ This is the code that makes it possible to create or modify an OSCFunc bound to 
 
 <div class="org-src-container">
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {&#10;&#9;oscFunc { | path |&#10;&#9;&#9;path.removeOsc;&#10;&#9;&#9;^Registry ('oscFuncs', path, { OSCFunc (this, path) });&#10;&#9;}&#10;}&#10;&#10;+ Symbol {&#10;&#9;removeOsc {&#10;&#9;&#9;Registry.doIfFound ('oscFuncs', this, { | found |q&#10;&#9;&#9;&#9;found.objectClosed;&#10;&#9;&#9;&#9;found.free;&#10;&#9;&#9;});     &#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {&#10;&#9;oscFunc { | path |&#10;&#9;&#9;path.removeOsc;&#10;&#9;&#9;^Registry ('oscFuncs', path, { OSCFunc (this, path) });&#10;&#9;}&#10;}&#10;&#10;+ Symbol {&#10;&#9;removeOsc {&#10;&#9;&#9;Registry.doIfFound ('oscFuncs', this, { | found |&#10;&#9;&#9;&#9;found.objectClosed;&#10;&#9;&#9;&#9;found.free;&#10;&#9;&#9;});     &#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
 </div>
 </div>
 </div>
@@ -235,9 +235,9 @@ This is the code that makes it possible to create or modify an OSCFunc bound to 
 <nav id="article-nav">
   
   
-    <a href="/sc-hacks/2017/06/05/EventStream/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/sc-hacks/2017/06/04/Notification/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">EventStream: Modify Patterns while playing</div>
+      <div class="article-nav-title">Notification: Register a function callback to a message and a pair of objects</div>
     </a>
   
 </nav>
