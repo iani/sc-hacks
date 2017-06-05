@@ -11,17 +11,17 @@
   
   
   
-  <meta name="description" content="What it does   An EventStream makes it easy to modify patterns while playing them.       How it works   An EventPattern creates EventStreams which are played by EventStreamPlayer.  EventStream sto">
+  <meta name="description" content="What it does   An EventStream makes it easy to modify patterns while playing them.">
 <meta name="keywords" content="EventStream,EventPattern,EventStreamPlayer">
 <meta property="og:type" content="article">
 <meta property="og:title" content="EventStream: Modify Patterns while playing">
 <meta property="og:url" content="http://iani.github.io/2017/06/05/EventStream/index.html">
 <meta property="og:site_name" content="SC Hacks">
-<meta property="og:description" content="What it does   An EventStream makes it easy to modify patterns while playing them.       How it works   An EventPattern creates EventStreams which are played by EventStreamPlayer.  EventStream sto">
-<meta property="og:updated_time" content="2017-06-05T05:53:57.000Z">
+<meta property="og:description" content="What it does   An EventStream makes it easy to modify patterns while playing them.">
+<meta property="og:updated_time" content="2017-06-05T15:42:37.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="EventStream: Modify Patterns while playing">
-<meta name="twitter:description" content="What it does   An EventStream makes it easy to modify patterns while playing them.       How it works   An EventPattern creates EventStreams which are played by EventStreamPlayer.  EventStream sto">
+<meta name="twitter:description" content="What it does   An EventStream makes it easy to modify patterns while playing them.">
   
     <link rel="alternate" href="/atom.xml" title="SC Hacks" type="application/atom+xml">
   
@@ -98,6 +98,24 @@ var themeMenus = {};
 </header>
 
 
+  <div style="background: #fff; width: 100%;">
+
+      <div style="max-height:600px; overflow: hidden;  display: flex; display: -webkit-flex; align-items: center;">
+        <img id="originBg" width="100%" alt="" src="">
+      </div>
+
+  </div>
+
+  <script>
+      var imgUrls = "css/images/pose.jpg".split(",");
+      var random = Math.floor((Math.random() * imgUrls.length ));
+      if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
+        document.getElementById("originBg").src=imgUrls[random];
+      } else {
+        document.getElementById("originBg").src='/sc-hacks/' + imgUrls[random];
+      }
+  </script>
+
 
 
   <div id="container">
@@ -122,7 +140,7 @@ var themeMenus = {};
     <div class="article-meta">
       
 	Posted on <a href="/sc-hacks/2017/06/05/EventStream/" class="article-date">
-	  <time datetime="2017-06-05T04:54:50.000Z" itemprop="datePublished">June 5, 2017</time>
+	  <time datetime="2017-06-05T15:42:37.000Z" itemprop="datePublished">June 5, 2017</time>
 	</a>
 
       
@@ -142,6 +160,8 @@ var themeMenus = {};
 <p>
 An EventStream makes it easy to modify patterns while playing them. 
 </p>
+
+<a id="more"></a>
 </div>
 </div>
 
@@ -222,17 +242,8 @@ Prand ((0..20), inf) +&gt;.degree \e;
     
 <nav id="article-nav">
   
-    <a href="/sc-hacks/2017/06/05/Registry/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Registry: Hierarchical Namespaces
-        
-      </div>
-    </a>
   
-  
-    <a href="/sc-hacks/2017/06/04/Notification/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/sc-hacks/2017/06/05/Notification/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">Notification: Register a function callback to a message and a pair of objects</div>
     </a>
