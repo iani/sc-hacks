@@ -1168,8 +1168,11 @@ ul.widget-tab-nav {
 	}
 
 .site-header-image {
-	max-height:800px; 
-	min-height:500px; 
+	max-height:200px; 
+	/* 
+       max-height:800px; 
+       min-height:500px; */
+    min-height:100px; 
 	overflow: hidden;
 	position: relative;
 }
