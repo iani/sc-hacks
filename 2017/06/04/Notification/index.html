@@ -3,25 +3,25 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Registry: Hierarchical Namespaces | SC Hacks</title>
+  <title>Notification: Register a function callback to a message and a pair of objects | SC Hacks</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta name="keywords" content="Registry" />
+  <meta name="keywords" content="Notification" />
   
   
   
   
-  <meta name="description" content="Registry class    What it is for   This class make its possible to store objects and retrieve them, as done with classes such as Pdef, Ndef, OSCdef etc, but without having to subclass.  To create t">
-<meta name="keywords" content="Registry">
+  <meta name="description" content="Notification class    What it is for   Notification is an improved version of the NotificationCenter class.  This class enables objects to register a function which is called when another object ch">
+<meta name="keywords" content="Notification">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Registry: Hierarchical Namespaces">
-<meta property="og:url" content="http://iani.github.io/2017/06/04/Registry/index.html">
+<meta property="og:title" content="Notification: Register a function callback to a message and a pair of objects">
+<meta property="og:url" content="http://iani.github.io/2017/06/04/Notification/index.html">
 <meta property="og:site_name" content="SC Hacks">
-<meta property="og:description" content="Registry class    What it is for   This class make its possible to store objects and retrieve them, as done with classes such as Pdef, Ndef, OSCdef etc, but without having to subclass.  To create t">
-<meta property="og:updated_time" content="2017-06-04T19:27:06.000Z">
+<meta property="og:description" content="Notification class    What it is for   Notification is an improved version of the NotificationCenter class.  This class enables objects to register a function which is called when another object ch">
+<meta property="og:updated_time" content="2017-06-05T04:05:59.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Registry: Hierarchical Namespaces">
-<meta name="twitter:description" content="Registry class    What it is for   This class make its possible to store objects and retrieve them, as done with classes such as Pdef, Ndef, OSCdef etc, but without having to subclass.  To create t">
+<meta name="twitter:title" content="Notification: Register a function callback to a message and a pair of objects">
+<meta name="twitter:description" content="Notification class    What it is for   Notification is an improved version of the NotificationCenter class.  This class enables objects to register a function which is called when another object ch">
   
     <link rel="alternate" href="/atom.xml" title="SC Hacks" type="application/atom+xml">
   
@@ -102,7 +102,7 @@
             
       <div id="content" class="outer">
         
-          <section id="main" style="float:none;"><article id="post-Registry" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost" >
+          <section id="main" style="float:none;"><article id="post-Notification" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost" >
   <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
     
     
@@ -110,7 +110,7 @@
         
   
     <h1 class="thumb" class="article-title" itemprop="name">
-      Registry: Hierarchical Namespaces
+      Notification: Register a function callback to a message and a pair of objects
     </h1>
   
 
@@ -118,8 +118,8 @@
     
     <div class="article-meta">
       
-	<a href="/sc-hacks/2017/06/04/Registry/" class="article-date">
-	  <time datetime="2017-06-04T19:23:08.000Z" itemprop="datePublished">June 4, 2017</time>
+	<a href="/sc-hacks/2017/06/04/Notification/" class="article-date">
+	  <time datetime="2017-06-04T19:29:46.000Z" itemprop="datePublished">June 4, 2017</time>
 	</a>
 
       
@@ -133,43 +133,71 @@
         
 
 <p>
-<i>Registry class</i>
+<i>Notification class</i>
 </p>
 
 <div id="outline-container-sec-1" class="outline-2">
 <h2 id="sec-1">What it is for</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-This class make its possible to store objects and retrieve them, as done with classes such as <code>Pdef</code>, <code>Ndef</code>, <code>OSCdef</code> etc, but without having to subclass.  To create this behavior instead, add a method to <code>Symbol</code> for accessing the kind of object needed.  For example: <code>\aSymbol.oscFunc</code>. This also allows easier customization of how the object is created if not found. 
+<code>Notification</code> is an improved version of the <a href="http://doc.sccode.org/Classes/NotificationCenter.html" target="_blank" rel="external">NotificationCenter class</a>.  This class enables objects to register a function which is called when another object changes according to some aspect.  The aspect is expressed by a symbol.  To trigger a notification action, one sends the message <code>changed</code> to an object together with a symbol expressing the aspect which changed.  The function will only be evaluated for those objects which have registered to listen to the changing object according to the given aspect symbol.  This allows detailed control of callback execution amongst objects of the system.  For example, one can tell a gui object to change its color to green when a synth starts, and to change its color to red when that synth stops.
 </p>
+
+<p>
+<code>Notification</code> adds the following enhancements: 
+</p>
+<ul class="org-ul">
+<li>Ability to remove existing notification connections reliably.
+</li>
+<li>Several methods for easily adding or modifying connections between objects.
+</li>
+<li>Ability to remove all connections from an object with a single message, <code>objectClosed</code>, and also to execute additional actions when that object closes.  Closing here means that the object is freed and will no longer be used by the system.
+</li>
+</ul>
 </div>
 </div>
 
 <div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">Example</h2>
+<h2 id="sec-2">Examples</h2>
 <div class="outline-text-2" id="text-2">
+</div><div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><code>onObjectClosed</code></h3>
+<div class="outline-text-3" id="text-2-1">
 <p>
-This is the code that makes it possible to create or modify an OSCFunc bound to a symbol.  It defines the methods <code>Function:oscFunc</code> and <code>Symbol:removeOsc</code>.
+<code>Registry</code> uses <code>onObjectClosed</code> to remove objects by sending them that message:
 </p>
 
 <div class="org-src-container">
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {&#10;&#9;oscFunc { | path |&#10;&#9;&#9;path.removeOsc;&#10;&#9;&#9;^Registry (&#39;oscFuncs&#39;, path, { OSCFunc (this, path) });&#10;&#9;}&#10;}&#10;&#10;+ Symbol {&#10;&#9;removeOsc {&#10;&#9;&#9;Registry.doIfFound (&#39;oscFuncs&#39;, this, { | found |q&#10;&#9;&#9;&#9;found.objectClosed;&#10;&#9;&#9;&#9;found.free;&#10;&#9;&#9;});     &#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
-</div>
-</div>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line"> *new { | ... pathAndFunc |&#10;&#9;      var path, makeFunc, instance;&#10;&#9;      makeFunc = pathAndFunc.last;&#10;&#9;      path = pathAndFunc[0..pathAndFunc.size-2];&#10;&#9;      instance = Library.global.atPath(path);&#10;&#9;      if (instance.isNil) {&#10;&#9;&#9;      instance = makeFunc.value;&#10;&#9;&#9;      Library.global.putAtPath(path, instance);&#10;&#9;&#9;      instance.onObjectClosed(this, {&#10;&#9;&#9;&#9;      this.remove(*path)&#10;&#9;&#9;      });&#10;&#9;      };&#10;&#9;      ^instance;&#10;}</span><br></pre></td></tr></table></figure>
 </div>
 
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">How it works</h2>
-<div class="outline-text-2" id="text-3">
 <p>
-Store an object in Library under an array of objects (called a <i>path</i>).  When accessing the path, create the object if not already stored, else return the previously stored object.
+This is in turn used by <code>oscFunc</code> and <code>rout</code> methods for removing <code>OSCFunc</code> and <code>Routine</code> objects in order to replace them with new instances. 
 </p>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><code>addNotifierOneShot</code></h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+The <code>addNotifierOneShot</code> method executes the registered Function just once. This is useful when it is clear that only one call is required. For example, the <code>onEnd</code> and <code>onStart</code> methods for <code>Node</code> make use of the <code>addNotifierOneShot</code> method:
+</p>
+
+<div class="org-src-container">
+
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Node {&#10;&#9;onStart { | listener, action |&#10;&#9;&#9;NodeWatcher.register(this);&#10;&#9;&#9;listener.addNotifierOneShot(this, \n_go, action);&#10;&#9;}&#10;&#10;&#9;onEnd { | listener, action |&#10;&#9;&#9;NodeWatcher.register(this);&#10;&#9;&#9;//              this.isPlaying = true; // dangerous&#10;&#9;&#9;listener.addNotifierOneShot(this, \n_end, action);&#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
+</div>
+
+<p>
+Similar extensions can be built for whatever object needs to monitor the closing or end of an object such as closing of a Window or stopping of a Pattern.
+</p>
+</div>
 </div>
 </div>
 
 <p class="author">Author: Ioannis Zannos</p>
-<p class="date">Created: 2017-06-04 Sun 22:27</p>
+<p class="date">Created: 2017-06-05 Mon 07:06</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/" target="_blank" rel="external">Emacs</a> 25.1.1 (<a href="http://orgmode.org" target="_blank" rel="external">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer" target="_blank" rel="external">Validate</a></p>
 
@@ -182,14 +210,14 @@ Store an object in Library under an array of objects (called a <i>path</i>).  Wh
 
       
   <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/sc-hacks/tags/Registry/">Registry</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/sc-hacks/tags/Notification/">Notification</a></li></ul>
 
       
         
 	<div id="comment">
 	
 	<!-- 多说评论框 start -->
-	 <div class="ds-thread" data-thread-key="/sc-hacks/2017/06/04/Registry/" data-title="Registry: Hierarchical Namespaces" data-url="http://iani.github.io/2017/06/04/Registry/"></div>
+	 <div class="ds-thread" data-thread-key="/sc-hacks/2017/06/04/Notification/" data-title="Notification: Register a function callback to a message and a pair of objects" data-url="http://iani.github.io/2017/06/04/Notification/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -217,15 +245,11 @@ Store an object in Library under an array of objects (called a <i>path</i>).  Wh
     
 <nav id="article-nav">
   
-    <a href="/sc-hacks/2017/06/04/Notification/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Notification: Register a function callback to a message and a pair of objects
-        
-      </div>
-    </a>
   
+    <a href="/sc-hacks/2017/06/04/Registry/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Registry: Hierarchical Namespaces</div>
+    </a>
   
 </nav>
 
@@ -238,7 +262,7 @@ Store an object in Library under an array of objects (called a <i>path</i>).  Wh
     <div id="toc" class="toc-article">
     <strong class="toc-title">Contents</strong>
     
-      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-1"><span class="nav-number">1.</span> <span class="nav-text">What it is for</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-2"><span class="nav-number">2.</span> <span class="nav-text">Example</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-3"><span class="nav-number">3.</span> <span class="nav-text">How it works</span></a></li></ol>
+      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-1"><span class="nav-number">1.</span> <span class="nav-text">What it is for</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-2"><span class="nav-number">2.</span> <span class="nav-text">Examples</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#sec-2-1"><span class="nav-number">2.1.</span> <span class="nav-text">onObjectClosed</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sec-2-2"><span class="nav-number">2.2.</span> <span class="nav-text">addNotifierOneShot</span></a></li></ol></li></ol>
     
     </div>
   </aside>

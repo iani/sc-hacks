@@ -54,32 +54,10 @@
 
 
   
-  
-  <div class="site-header-image">
-    <img id="originBg" width="100%" alt="Hike News" src="">
-  </div>
-
-  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
-    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src="">
-  </div>
-
-  <script>
-        var imgUrls = "css/images/pose01.jpg".split(",");
-        var random = Math.floor((Math.random() * imgUrls.length ));
-        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
-          document.getElementById("originBg").src=imgUrls[random];
-          document.getElementById("blurBg").src=imgUrls[random];
-        } else {
-          document.getElementById("originBg").src='/sc-hacks/' + imgUrls[random];
-          document.getElementById("blurBg").src='/sc-hacks/' + imgUrls[random];
-        }
-    </script>
-
-
 
 
 <header id="allheader" class="site-header" role="banner" 
-   style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);"  >
+   >
   <div class="clearfix container">
       <div class="site-branding">
 
@@ -121,7 +99,7 @@
       <div id="content" class="outer">
         
           <section id="main">
-  <div class="archives-tags-wrap"><blockquote><span>There are 1 posts in total till now.</span></blockquote>
+  <div class="archives-tags-wrap"><blockquote><span>There are 2 posts in total till now.</span></blockquote>
 
 
 
@@ -139,6 +117,26 @@
 		      <h1><a href="/sc-hacks/archives/2017" class="archive-year">2017</a></h1>
 		    </div>
 		    <div class="archives">
+		
+		<article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+
+      <a href="/sc-hacks/2017/06/04/Notification/" class="archive-article-date">
+		  <time datetime="2017-06-04T19:29:46.000Z" itemprop="datePublished">Jun 04, 2017</time>
+	  </a>
+      
+  
+    <h1 class="thumb" itemprop="name">
+      <a class="archive-article-title" href="/sc-hacks/2017/06/04/Notification/">Notification: Register a function callback to a message and a pair of objects</a>
+    </h1>
+  
+
+    </header>
+  </div>
+</article>
+	
+		
 		
 		<article class="archive-article archive-type-post">
   <div class="archive-article-inner">
@@ -217,7 +215,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/sc-hacks/categories/classes/">classes</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/sc-hacks/categories/classes/">classes</a><span class="category-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -227,7 +225,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/sc-hacks/tags/registry/" style="font-size: 10px;">registry</a>
+      <a href="/sc-hacks/tags/Notification/" style="font-size: 10px;">Notification</a> <a href="/sc-hacks/tags/Registry/" style="font-size: 10px;">Registry</a>
     </div>
   </div>
 
@@ -239,6 +237,18 @@
     </ul>
     <div class="widget">
       <ul>
+        
+          <li class="clearfix">
+
+            
+              <div class="widget-entry-summary" style="margin: 0;">
+            
+
+              <h6 style="margin: 0;"><a href="/sc-hacks/2017/06/04/Notification/">Notification: Register a function callback to a message and a pair of objects</a></h6>
+              <span>June 4, 2017</span>
+            </div>
+
+          </li>
         
           <li class="clearfix">
 
@@ -262,7 +272,7 @@
     <h3 class="widget-title">Archives</h3>
 
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/sc-hacks/archives/2017/06/">June 2017</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/sc-hacks/archives/2017/06/">June 2017</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -272,7 +282,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/registry/">registry</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/Notification/">Notification</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/sc-hacks/tags/Registry/">Registry</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -361,9 +371,6 @@
 
 
     <!-- headerblur min height -->
-    
-      var headerblur = document.getElementById("header-blur");
-      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
     
     
 </script>
