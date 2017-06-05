@@ -174,18 +174,23 @@ An <code>EventPattern</code> creates <code>EventStreams</code> which are played 
 <div id="outline-container-sec-3" class="outline-2">
 <h2 id="sec-3">Example</h2>
 <div class="outline-text-2" id="text-3">
-<div class="org-src-container">
-
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">() +&#38;gt; \e;&#10;0.1 +&#38;gt;.dur \e;&#10;Pseq ((0..20), inf) +&#38;gt;.degree \e;&#10;Prand ((0..20), inf) +&#38;gt;.degree \e;&#10;(freq: Pfunc ({ 300 rrand: 1000 }), dur: Prand ([0.1, 0.2], inf)) +&#38;gt; \e;&#10;(freq: Pfunc ({ 30.rrand(80).midicps }), dur: Pfunc ({ 0.1 exprand: 1 }), legato: Prand ([0.1, 2], inf)) +&#38;gt; \e;&#10;(degree: Pseq ((0..20), inf), dur: 0.1) +!&#38;gt;.degree \e;</span><br></pre></td></tr></table></figure>
-</div>
+<pre class="example">
+() +> \e;
+0.1 +>.dur \e;
+Pseq ((0..20), inf) +>.degree \e;
+Prand ((0..20), inf) +>.degree \e;
+(freq: Pfunc ({ 300 rrand: 1000 }), dur: Prand ([0.1, 0.2], inf)) +> \e;
+(freq: Pfunc ({ 30.rrand(80).midicps }), dur: Pfunc ({ 0.1 exprand: 1 }), legato: Prand ([0.1, 2], inf)) +> \e;
+(degree: Pseq ((0..20), inf), dur: 0.1) +!>.degree \e;
+</pre>
 
 <p>
 Note: 
 </p>
 <ul class="org-ul">
-<li><code>+&gt;</code> adds all key-value pairs of an event to the event being played.
+<li><code>+></code> adds all key-value pairs of an event to the event being played.
 </li>
-<li><code>+!&gt;</code> replaces the contents of the event being played by the contents of the new event.
+<li><code>+!></code> replaces the contents of the event being played by the contents of the new event.
 </li>
 </ul>
 </div>
@@ -388,7 +393,7 @@ This is the code that makes it possible to create or modify an OSCFunc bound to 
 
 <div class="org-src-container">
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {&#10;&#9;oscFunc { | path |&#10;&#9;&#9;path.removeOsc;&#10;&#9;&#9;^Registry ('oscFuncs', path, { OSCFunc (this, path) });&#10;&#9;}&#10;}&#10;&#10;+ Symbol {&#10;&#9;removeOsc {&#10;&#9;&#9;Registry.doIfFound ('oscFuncs', this, { | found |q&#10;&#9;&#9;&#9;found.objectClosed;&#10;&#9;&#9;&#9;found.free;&#10;&#9;&#9;});     &#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {&#10;&#9;oscFunc { | path |&#10;&#9;&#9;path.removeOsc;&#10;&#9;&#9;^Registry (&#39;oscFuncs&#39;, path, { OSCFunc (this, path) });&#10;&#9;}&#10;}&#10;&#10;+ Symbol {&#10;&#9;removeOsc {&#10;&#9;&#9;Registry.doIfFound (&#39;oscFuncs&#39;, this, { | found |q&#10;&#9;&#9;&#9;found.objectClosed;&#10;&#9;&#9;&#9;found.free;&#10;&#9;&#9;});     &#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
 </div>
 </div>
 </div>
