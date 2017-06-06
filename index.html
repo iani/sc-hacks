@@ -509,18 +509,6 @@ An EventStream makes it easy to modify patterns while playing them.
           <p>
 <code>Notification</code> is an improved version of the <a href="http://doc.sccode.org/Classes/NotificationCenter.html" target="_blank" rel="external">NotificationCenter class</a>.  This class enables objects to register a function which is called when another object changes according to some aspect.  The aspect is expressed by a symbol.  To trigger a notification action, one sends the message <code>changed</code> to an object together with a symbol expressing the aspect which changed.  The function will only be evaluated for those objects which have registered to listen to the changing object according to the given aspect symbol.  This allows detailed control of callback execution amongst objects of the system.  For example, one can tell a gui object to change its color to green when a synth starts, and to change its color to red when that synth stops.
 </p>
-
-<p>
-<code>Notification</code> adds the following enhancements: 
-</p>
-<ul class="org-ul">
-<li>Ability to remove existing notification connections reliably.
-</li>
-<li>Several methods for easily adding or modifying connections between objects.
-</li>
-<li>Ability to remove all connections from an object with a single message, <code>objectClosed</code>, and also to execute additional actions when that object closes.  Closing here means that the object is freed and will no longer be used by the system.
-</li>
-</ul>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/sc-hacks/2017/06/05/Notification/#more" rel="contents">
