@@ -77,7 +77,7 @@
 <link href="/sc-hacks/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="synth,method,environment," />
 
 
 
@@ -93,15 +93,17 @@
 
 
 
-<meta name="description" content="Gradually introducing recipes from previous SuperCollider libraries">
-<meta property="og:type" content="website">
-<meta property="og:title" content="SC Hacks">
-<meta property="og:url" content="http://iani.github.io/categories/gui/index.html">
+<meta name="description" content="Provide arguments for playing a function from values found in an environment.  connect all congtrol names in the function&apos;s arguments to   Free all notifications from the synth when it stops playin">
+<meta name="keywords" content="synth,method,environment">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Function:eplay : play a function and follow its arguments from an environment">
+<meta property="og:url" content="http://iani.github.io/2017/06/08/Function-eplay/index.html">
 <meta property="og:site_name" content="SC Hacks">
-<meta property="og:description" content="Gradually introducing recipes from previous SuperCollider libraries">
+<meta property="og:description" content="Provide arguments for playing a function from values found in an environment.  connect all congtrol names in the function&apos;s arguments to   Free all notifications from the synth when it stops playin">
+<meta property="og:updated_time" content="2017-06-08T15:46:28.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SC Hacks">
-<meta name="twitter:description" content="Gradually introducing recipes from previous SuperCollider libraries">
+<meta name="twitter:title" content="Function:eplay : play a function and follow its arguments from an environment">
+<meta name="twitter:description" content="Provide arguments for playing a function from values found in an environment.  connect all congtrol names in the function&apos;s arguments to   Free all notifications from the synth when it stops playin">
 
 
 
@@ -129,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="http://iani.github.io/categories/gui/"/>
+  <link rel="canonical" href="http://iani.github.io/2017/06/08/Function-eplay/"/>
 
 
 
 
 
-  <title>Category: gui | SC Hacks</title>
+  <title>Function:eplay : play a function and follow its arguments from an environment | SC Hacks</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -161,7 +163,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -265,45 +267,188 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h1>gui<small>Category</small>
-      </h1>
-    </div>
-
+  <div id="posts" class="posts-expand">
     
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/sc-hacks/2017/06/06/BuildingGUIs/" itemprop="url">
-              
-                <span itemprop="name">Building GUIs</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-06-06T14:18:21+03:00"
-              content="2017-06-06" >
-          06-06
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-  </section>
 
   
 
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/08/Function-eplay/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Iannis Zannos">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/sc-hacks/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SC Hacks">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Function:eplay : play a function and follow its arguments from an environment</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-08T18:46:28+03:00">
+                2017-06-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/sc-hacks/categories/methods/" itemprop="url" rel="index">
+                    <span itemprop="name">methods</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+
+<ol class="org-ol">
+<li>Provide arguments for playing a function from values found in an environment.
+</li>
+<li>connect all congtrol names in the function's arguments to 
+</li>
+<li>Free all notifications from the synth when it stops playing. 
+</li>
+</ol>
+
+<div class="org-src-container">
+
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {&#10;&#9;eplay { | envir = \envir |&#10;&#9;&#9;var synth;&#10;&#9;&#9;envir = envir.asEnvironment;&#10;&#9;&#9;envir use: {&#10;&#9;&#9;&#9;var argNames, args;&#10;&#9;&#9;&#9;argNames = this.def.argNames;&#10;&#9;&#9;&#9;args = argNames.collect ({ | name |&#10;&#9;&#9;&#9;&#9;[name, currentEnvironment [name]]&#10;&#9;&#9;&#9;}).select ({ | pair |&#10;&#9;&#9;&#9;&#9;pair [1].notNil;&#10;&#9;&#9;&#9;}).flat;&#10;&#9;&#9;&#9;//  arg target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args;&#10;&#9;&#9;&#9;synth = this.play  (&#10;&#9;&#9;&#9;&#9;~target.asTarget, ~outbus ? 0, ~fadeTime ? 0.02,&#10;&#9;&#9;&#9;&#9;~addAction ? \addToHead, args&#10;&#9;&#9;&#9;);&#10;&#9;&#9;&#9;argNames do: { | param |&#10;&#9;&#9;&#9;&#9;synth.addNotifier (envir, param, { | val |&#10;&#9;&#9;&#9;&#9;&#9;synth.set (param, val);&#10;&#9;&#9;&#9;&#9;});&#10;&#9;&#9;&#9;};&#10;&#9;&#9;};&#10;&#9;&#9;// This is done by addNotifier anyway:&#10;&#9;&#9;//              synth.onEnd (this, { synth.objectClosed });&#10;&#9;&#9;^synth;&#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
+</div>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/sc-hacks/tags/synth/" rel="tag"># synth</a>
+          
+            <a href="/sc-hacks/tags/method/" rel="tag"># method</a>
+          
+            <a href="/sc-hacks/tags/environment/" rel="tag"># environment</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/sc-hacks/2017/06/06/BuildingGUIs/" rel="next" title="Building GUIs">
+                <i class="fa fa-chevron-left"></i> Building GUIs
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -311,6 +456,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -506,10 +655,10 @@
   
 
   
-    <script type="text/javascript" src="/sc-hacks/js/src/scrollspy.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/sc-hacks/js/src/scrollspy.js?v=5.1.1"></script>
 <script type="text/javascript" src="/sc-hacks/js/src/post-details.js?v=5.1.1"></script>
 
-  
+
 
   
 
