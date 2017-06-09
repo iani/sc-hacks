@@ -77,7 +77,7 @@
 <link href="/sc-hacks/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="synth,design," />
+  <meta name="keywords" content="synth,design,TODO," />
 
 
 
@@ -94,13 +94,13 @@
 
 
 <meta name="description" content="Additional TODO&apos;s for Function:eplay:     Store the resulting synth in envir under [\synths, synthName] (default for synthName: synth).  If previous synth exists under [\synths, synthName] path, then">
-<meta name="keywords" content="synth,design">
+<meta name="keywords" content="synth,design,TODO">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Improving Function:eplay">
 <meta property="og:url" content="http://iani.github.io/2017/06/09/ImprovingEplay/index.html">
 <meta property="og:site_name" content="SC Hacks">
 <meta property="og:description" content="Additional TODO&apos;s for Function:eplay:     Store the resulting synth in envir under [\synths, synthName] (default for synthName: synth).  If previous synth exists under [\synths, synthName] path, then">
-<meta property="og:updated_time" content="2017-06-09T08:54:17.000Z">
+<meta property="og:updated_time" content="2017-06-09T09:03:06.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Improving Function:eplay">
 <meta name="twitter:description" content="Additional TODO&apos;s for Function:eplay:     Store the resulting synth in envir under [\synths, synthName] (default for synthName: synth).  If previous synth exists under [\synths, synthName] path, then">
@@ -387,19 +387,47 @@ Additional TODO's for Function:eplay:
 </li>
 <li>When a synth ends, remove it from its path in envir.
 </li>
-<li>Make sure that when a synth <code>previousSynth</code> is released by replacing it through a new synth created through <code>Function:eplay</code>, the <code>previousSynth</code> ending does not remove the new synth that has already been stored in the same path.  
+<li>Make sure that when a synth <code>previousSynth</code> is released by replacing it through a new synth created through <code>Function:eplay</code>, the <code>previousSynth</code> ending does not remove the new synth that has already been stored in the same path.
+</li>
+<li>When a new synth starts or when an old synth is removed, it should emit notifications so that GUIS that depend on it update their status.  Such guis may be:
+<ul class="org-ul">
+<li>Start-stop buttons
+</li>
+<li>Guis with widgets for controlling the synths parameters.  When a new synth starts, then the old gui should be replaced with a new one with widgets corresponding to the new synth's control parameters.
+</li>
+</ul>
+<p>
+Note: Possibly the notification should be emitted from the <code>\synthName</code> under which the synth is stored.  The messages may be:
+</p>
+<ul class="org-ul">
+<li><code>\started</code>
+</li>
+<li><code>\stopped</code>
+</li>
+<li><code>\replaced</code>
+    The above is subject to testing. 
+</li>
+</ul>
 </li>
 </ul>
 
 <a id="more"></a>
 
-<p>
-Note: To develop the right code for this, do it with a plain function, adding the functionalities one-by-one.
-</p>
-
 <div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">Current <code>Function:eplay</code> method code</h2>
+<h2 id="sec-1">Notes:</h2>
 <div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>When this is done, it should be possible to create multiple gui windows for multiple synths running in the same environment. However, parameters under the same name will control the parameters under that name for all synths in that environment.
+</li>
+<li>To develop the right code for this, do it with a plain function, adding the functionalities one-by-one.
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">Current <code>Function:eplay</code> method code</h2>
+<div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 
 <figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {&#10;&#9;eplay { | envir |&#10;&#9;&#9;var synth;&#10;&#9;&#9;envir = envir.asEnvironment;&#10;&#9;&#9;envir use: {&#10;&#9;&#9;&#9;var argNames, args;&#10;&#9;&#9;&#9;argNames = this.def.argNames;&#10;&#9;&#9;&#9;args = argNames.collect ({ | name |&#10;&#9;&#9;&#9;&#9;[name, envir[name]]Mak&#10;&#9;&#9;&#9;}).select ({ | pair |&#10;&#9;&#9;&#9;&#9;pair [1].notNil;&#10;&#9;&#9;&#9;}).flat;&#10;&#9;&#9;&#9;//  arg target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args;&#10;&#9;&#9;&#9;synth = this.play  (&#10;&#9;&#9;&#9;&#9;~target.asTarget, ~outbus ? 0, ~fadeTime ? 0.02,&#10;&#9;&#9;&#9;&#9;~addAction ? \addToHead, args&#10;&#9;&#9;&#9;);&#10;&#9;&#9;&#9;argNames do: { | param |&#10;&#9;&#9;&#9;&#9;synth.addNotifier (envir, param, { | val |&#10;&#9;&#9;&#9;&#9;&#9;synth.set (param, val);&#10;&#9;&#9;&#9;&#9;});&#10;&#9;&#9;&#9;};&#10;&#9;&#9;};&#10;&#9;&#9;// This is done by addNotifier anyway:&#10;&#9;&#9;//              synth.onEnd (this, { synth.objectClosed });&#10;&#9;&#9;^synth;&#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
@@ -407,9 +435,9 @@ Note: To develop the right code for this, do it with a plain function, adding th
 </div>
 </div>
 
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">Drafts for next version</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">Drafts for next version</h2>
+<div class="outline-text-2" id="text-3">
 <p>
 (to be continued)
 </p>
@@ -452,6 +480,8 @@ Note: To develop the right code for this, do it with a plain function, adding th
           
             <a href="/sc-hacks/tags/design/" rel="tag"># design</a>
           
+            <a href="/sc-hacks/tags/TODO/" rel="tag"># TODO</a>
+          
         </div>
       
 
@@ -472,6 +502,10 @@ Note: To develop the right code for this, do it with a plain function, adding th
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/sc-hacks/2017/06/09/StoreSpecsAndSynthDefsInLibrary/" rel="prev" title="Store Specs and SynthDefs in Library">
+                Store Specs and SynthDefs in Library <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -543,7 +577,7 @@ Note: To develop the right code for this, do it with a plain function, adding th
           
             <div class="site-state-item site-state-posts">
               <a href="/sc-hacks/archives">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>
@@ -554,7 +588,7 @@ Note: To develop the right code for this, do it with a plain function, adding th
             
             <div class="site-state-item site-state-categories">
               <a href="/sc-hacks/categories/index.html">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">categories</span>
               </a>
             </div>
@@ -565,7 +599,7 @@ Note: To develop the right code for this, do it with a plain function, adding th
             
             <div class="site-state-item site-state-tags">
               <a href="/sc-hacks/tags/index.html">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
@@ -600,7 +634,7 @@ Note: To develop the right code for this, do it with a plain function, adding th
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-1"><span class="nav-number">1.</span> <span class="nav-text">Current Function:eplay method code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-2"><span class="nav-number">2.</span> <span class="nav-text">Drafts for next version</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-1"><span class="nav-number">1.</span> <span class="nav-text">Notes:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-2"><span class="nav-number">2.</span> <span class="nav-text">Current Function:eplay method code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-3"><span class="nav-number">3.</span> <span class="nav-text">Drafts for next version</span></a></li></ol></div>
             
 
           </div>

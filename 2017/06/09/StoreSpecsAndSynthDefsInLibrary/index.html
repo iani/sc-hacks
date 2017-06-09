@@ -77,7 +77,7 @@
 <link href="/sc-hacks/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="design,TODO," />
 
 
 
@@ -93,15 +93,17 @@
 
 
 
-<meta name="description" content="Gradually introducing recipes from previous SuperCollider libraries">
-<meta property="og:type" content="website">
-<meta property="og:title" content="SC Hacks">
-<meta property="og:url" content="http://iani.github.io/categories/classes/index.html">
+<meta name="description" content="Specs and SynthDefs should be stored in Library using Registry.  Advantages:     simplify and unify the API for accessing Specs and SynthDefs (and SynthDescs).  provide global access to Specs and S">
+<meta name="keywords" content="design,TODO">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Store Specs and SynthDefs in Library">
+<meta property="og:url" content="http://iani.github.io/2017/06/09/StoreSpecsAndSynthDefsInLibrary/index.html">
 <meta property="og:site_name" content="SC Hacks">
-<meta property="og:description" content="Gradually introducing recipes from previous SuperCollider libraries">
+<meta property="og:description" content="Specs and SynthDefs should be stored in Library using Registry.  Advantages:     simplify and unify the API for accessing Specs and SynthDefs (and SynthDescs).  provide global access to Specs and S">
+<meta property="og:updated_time" content="2017-06-09T09:10:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SC Hacks">
-<meta name="twitter:description" content="Gradually introducing recipes from previous SuperCollider libraries">
+<meta name="twitter:title" content="Store Specs and SynthDefs in Library">
+<meta name="twitter:description" content="Specs and SynthDefs should be stored in Library using Registry.  Advantages:     simplify and unify the API for accessing Specs and SynthDefs (and SynthDescs).  provide global access to Specs and S">
 
 
 
@@ -129,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="http://iani.github.io/categories/classes/"/>
+  <link rel="canonical" href="http://iani.github.io/2017/06/09/StoreSpecsAndSynthDefsInLibrary/"/>
 
 
 
 
 
-  <title>Category: classes | SC Hacks</title>
+  <title>Store Specs and SynthDefs in Library | SC Hacks</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -161,7 +163,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -265,101 +267,187 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h1>classes<small>Category</small>
-      </h1>
-    </div>
-
+  <div id="posts" class="posts-expand">
     
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/sc-hacks/2017/06/05/EventStream/" itemprop="url">
-              
-                <span itemprop="name">EventStream: Modify Patterns while playing</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-06-05T18:42:37+03:00"
-              content="2017-06-05" >
-          06-05
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/sc-hacks/2017/06/05/Notification/" itemprop="url">
-              
-                <span itemprop="name">Notification: Register a function callback to a message and a pair of objects</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-06-05T18:42:21+03:00"
-              content="2017-06-05" >
-          06-05
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/sc-hacks/2017/06/05/Registry/" itemprop="url">
-              
-                <span itemprop="name">Registry: Hierarchical Namespaces</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-06-05T18:41:22+03:00"
-              content="2017-06-05" >
-          06-05
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-  </section>
 
   
 
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/09/StoreSpecsAndSynthDefsInLibrary/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Iannis Zannos">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/sc-hacks/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SC Hacks">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Store Specs and SynthDefs in Library</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-09T12:06:09+03:00">
+                2017-06-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/sc-hacks/categories/notes/" itemprop="url" rel="index">
+                    <span itemprop="name">notes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+
+<p>
+Specs and SynthDefs should be stored in Library using Registry.  Advantages: 
+</p>
+
+<ul class="org-ul">
+<li>simplify and unify the API for accessing Specs and SynthDefs (and SynthDescs).
+</li>
+<li>provide global access to Specs and SynthDefs for all environments, guis, synths using spec/synthdef name.
+</li>
+<li>ensure SynthDefs are always loaded when the server is rebooted, also when it is a remote server.
+</li>
+<li>provide easy global access to SynthDescs for automatic GUI generation.
+</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/sc-hacks/tags/design/" rel="tag"># design</a>
+          
+            <a href="/sc-hacks/tags/TODO/" rel="tag"># TODO</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/sc-hacks/2017/06/09/ImprovingEplay/" rel="next" title="Improving Function:eplay">
+                <i class="fa fa-chevron-left"></i> Improving Function:eplay
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -367,6 +455,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -562,10 +654,10 @@
   
 
   
-    <script type="text/javascript" src="/sc-hacks/js/src/scrollspy.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/sc-hacks/js/src/scrollspy.js?v=5.1.1"></script>
 <script type="text/javascript" src="/sc-hacks/js/src/post-details.js?v=5.1.1"></script>
 
-  
+
 
   
 

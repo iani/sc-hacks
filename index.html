@@ -277,6 +277,155 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/09/StoreSpecsAndSynthDefsInLibrary/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Iannis Zannos">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/sc-hacks/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SC Hacks">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/sc-hacks/2017/06/09/StoreSpecsAndSynthDefsInLibrary/" itemprop="url">Store Specs and SynthDefs in Library</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-09T12:06:09+03:00">
+                2017-06-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/sc-hacks/categories/notes/" itemprop="url" rel="index">
+                    <span itemprop="name">notes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+
+<p>
+Specs and SynthDefs should be stored in Library using Registry.  Advantages: 
+</p>
+
+<ul class="org-ul">
+<li>simplify and unify the API for accessing Specs and SynthDefs (and SynthDescs).
+</li>
+<li>provide global access to Specs and SynthDefs for all environments, guis, synths using spec/synthdef name.
+</li>
+<li>ensure SynthDefs are always loaded when the server is rebooted, also when it is a remote server.
+</li>
+<li>provide easy global access to SynthDescs for automatic GUI generation.
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/09/ImprovingEplay/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -388,7 +537,27 @@ Additional TODO's for Function:eplay:
 </li>
 <li>When a synth ends, remove it from its path in envir.
 </li>
-<li>Make sure that when a synth <code>previousSynth</code> is released by replacing it through a new synth created through <code>Function:eplay</code>, the <code>previousSynth</code> ending does not remove the new synth that has already been stored in the same path.  
+<li>Make sure that when a synth <code>previousSynth</code> is released by replacing it through a new synth created through <code>Function:eplay</code>, the <code>previousSynth</code> ending does not remove the new synth that has already been stored in the same path.
+</li>
+<li>When a new synth starts or when an old synth is removed, it should emit notifications so that GUIS that depend on it update their status.  Such guis may be:
+<ul class="org-ul">
+<li>Start-stop buttons
+</li>
+<li>Guis with widgets for controlling the synths parameters.  When a new synth starts, then the old gui should be replaced with a new one with widgets corresponding to the new synth's control parameters.
+</li>
+</ul>
+<p>
+Note: Possibly the notification should be emitted from the <code>\synthName</code> under which the synth is stored.  The messages may be:
+</p>
+<ul class="org-ul">
+<li><code>\started</code>
+</li>
+<li><code>\stopped</code>
+</li>
+<li><code>\replaced</code>
+    The above is subject to testing. 
+</li>
+</ul>
 </li>
 </ul>
           <!--noindex-->
@@ -1180,7 +1349,7 @@ This class helps to store objects and to retrieve them using a key.  This is sim
           
             <div class="site-state-item site-state-posts">
               <a href="/sc-hacks/archives">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>
@@ -1191,7 +1360,7 @@ This class helps to store objects and to retrieve them using a key.  This is sim
             
             <div class="site-state-item site-state-categories">
               <a href="/sc-hacks/categories/index.html">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">categories</span>
               </a>
             </div>
@@ -1202,7 +1371,7 @@ This class helps to store objects and to retrieve them using a key.  This is sim
             
             <div class="site-state-item site-state-tags">
               <a href="/sc-hacks/tags/index.html">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
