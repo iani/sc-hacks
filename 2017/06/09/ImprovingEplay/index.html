@@ -377,10 +377,10 @@
         
 
 <p>
-Additional TODO's for Function:eplay: 
+Additional TODO&apos;s for Function:eplay: 
 </p>
 
-<ul class="org-ul">
+<ul class="org-ul ui list">
 <li>Store the resulting synth in envir under <code>[\synths, synthName]</code> (default for <code>synthName</code>: <code>synth</code>).
 </li>
 <li>If previous synth exists under <code>[\synths, synthName]</code> path, then free/release it.
@@ -393,7 +393,7 @@ Additional TODO's for Function:eplay:
 <ul class="org-ul">
 <li>Start-stop buttons
 </li>
-<li>Guis with widgets for controlling the synths parameters.  When a new synth starts, then the old gui should be replaced with a new one with widgets corresponding to the new synth's control parameters.
+<li>Guis with widgets for controlling the synths parameters.  When a new synth starts, then the old gui should be replaced with a new one with widgets corresponding to the new synth&apos;s control parameters.
 </li>
 </ul>
 <p>
@@ -416,7 +416,7 @@ Note: Possibly the notification should be emitted from the <code>\synthName</cod
 <div id="outline-container-sec-1" class="outline-2">
 <h2 id="sec-1">Notes</h2>
 <div class="outline-text-2" id="text-1">
-<ul class="org-ul">
+<ul class="org-ul ui list">
 <li>When this is done, it should be possible to create multiple gui windows for multiple synths running in the same environment. However, parameters under the same name will control the parameters under that name for all synths in that environment.
 </li>
 <li>To develop the right code for this, do it with a plain function, adding the functionalities one-by-one.
@@ -430,7 +430,34 @@ Note: Possibly the notification should be emitted from the <code>\synthName</cod
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {&#10;&#9;eplay { | envir |&#10;&#9;&#9;var synth;&#10;&#9;&#9;envir = envir.asEnvironment;&#10;&#9;&#9;envir use: {&#10;&#9;&#9;&#9;var argNames, args;&#10;&#9;&#9;&#9;argNames = this.def.argNames;&#10;&#9;&#9;&#9;args = argNames.collect ({ | name |&#10;&#9;&#9;&#9;&#9;[name, envir[name]]Mak&#10;&#9;&#9;&#9;}).select ({ | pair |&#10;&#9;&#9;&#9;&#9;pair [1].notNil;&#10;&#9;&#9;&#9;}).flat;&#10;&#9;&#9;&#9;//  arg target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args;&#10;&#9;&#9;&#9;synth = this.play  (&#10;&#9;&#9;&#9;&#9;~target.asTarget, ~outbus ? 0, ~fadeTime ? 0.02,&#10;&#9;&#9;&#9;&#9;~addAction ? \addToHead, args&#10;&#9;&#9;&#9;);&#10;&#9;&#9;&#9;argNames do: { | param |&#10;&#9;&#9;&#9;&#9;synth.addNotifier (envir, param, { | val |&#10;&#9;&#9;&#9;&#9;&#9;synth.set (param, val);&#10;&#9;&#9;&#9;&#9;});&#10;&#9;&#9;&#9;};&#10;&#9;&#9;};&#10;&#9;&#9;// This is done by addNotifier anyway:&#10;&#9;&#9;//              synth.onEnd (this, { synth.objectClosed });&#10;&#9;&#9;^synth;&#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {
+	eplay { | envir |
+		var synth;
+		envir = envir.asEnvironment;
+		envir use: {
+			var argNames, args;
+			argNames = this.def.argNames;
+			args = argNames.collect ({ | name |
+				[name, envir[name]]Mak
+			}).select ({ | pair |
+				pair [1].notNil;
+			}).flat;
+			//  arg target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args;
+			synth = this.play  (
+				~target.asTarget, ~outbus ? 0, ~fadeTime ? 0.02,
+				~addAction ? \addToHead, args
+			);
+			argNames do: { | param |
+				synth.addNotifier (envir, param, { | val |
+					synth.set (param, val);
+				});
+			};
+		};
+		// This is done by addNotifier anyway:
+		//              synth.onEnd (this, { synth.objectClosed });
+		^synth;
+	}
+}</span><br></pre></td></tr></table></figure>
 </div>
 </div>
 </div>
