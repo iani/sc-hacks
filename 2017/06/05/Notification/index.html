@@ -374,7 +374,7 @@
 <p>
 <code>Notification</code> adds the following enhancements: 
 </p>
-<ul class="org-ul ui list">
+<ul class="org-ul">
 <li>Ability to remove existing notification connections reliably.
 </li>
 <li>Several methods for easily adding or modifying connections between objects.
@@ -395,20 +395,7 @@
 
 <div class="org-src-container">
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line"> *new { | ... pathAndFunc |
-	      var path, makeFunc, instance;
-	      makeFunc = pathAndFunc.last;
-	      path = pathAndFunc[0..pathAndFunc.size-2];
-	      instance = Library.global.atPath(path);
-	      if (instance.isNil) {
-		      instance = makeFunc.value;
-		      Library.global.putAtPath(path, instance);
-		      instance.onObjectClosed(this, {
-			      this.remove(*path)
-		      });
-	      };
-	      ^instance;
-}</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line"> *new { | ... pathAndFunc |&#10;&#9;      var path, makeFunc, instance;&#10;&#9;      makeFunc = pathAndFunc.last;&#10;&#9;      path = pathAndFunc[0..pathAndFunc.size-2];&#10;&#9;      instance = Library.global.atPath(path);&#10;&#9;      if (instance.isNil) {&#10;&#9;&#9;      instance = makeFunc.value;&#10;&#9;&#9;      Library.global.putAtPath(path, instance);&#10;&#9;&#9;      instance.onObjectClosed(this, {&#10;&#9;&#9;&#9;      this.remove(*path)&#10;&#9;&#9;      });&#10;&#9;      };&#10;&#9;      ^instance;&#10;}</span><br></pre></td></tr></table></figure>
 </div>
 
 <p>
@@ -425,18 +412,7 @@ The <code>addNotifierOneShot</code> method executes the registered Function just
 
 <div class="org-src-container">
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Node {
-	onStart { | listener, action |
-		NodeWatcher.register(this);
-		listener.addNotifierOneShot(this, \n_go, action);
-	}
-
-	onEnd { | listener, action |
-		NodeWatcher.register(this);
-		//              this.isPlaying = true; // dangerous
-		listener.addNotifierOneShot(this, \n_end, action);
-	}
-}</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Node {&#10;&#9;onStart { | listener, action |&#10;&#9;&#9;NodeWatcher.register(this);&#10;&#9;&#9;listener.addNotifierOneShot(this, \n_go, action);&#10;&#9;}&#10;&#10;&#9;onEnd { | listener, action |&#10;&#9;&#9;NodeWatcher.register(this);&#10;&#9;&#9;//              this.isPlaying = true; // dangerous&#10;&#9;&#9;listener.addNotifierOneShot(this, \n_end, action);&#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
 </div>
 
 <p>

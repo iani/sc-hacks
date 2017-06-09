@@ -365,10 +365,10 @@
       
         
 
-<ol class="org-ol ui list">
+<ol class="org-ol">
 <li>Provide arguments for playing a function from values found in an environment.
 </li>
-<li>connect all control names in the function&apos;s arguments to an environment for auto-update
+<li>connect all control names in the function's arguments to an environment for auto-update
 </li>
 <li>Free all notifications from the synth when it stops playing.
 </li>
@@ -381,34 +381,7 @@
 <div class="outline-text-2" id="text-1">
 <div class="org-src-container">
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {
-	eplay { | envir = \envir |
-		var synth;
-		envir = envir.asEnvironment;
-		envir use: {
-			var argNames, args;
-			argNames = this.def.argNames;
-			args = argNames.collect ({ | name |
-				[name, currentEnvironment [name]]
-			}).select ({ | pair |
-				pair [1].notNil;
-			}).flat;
-			//  arg target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args;
-			synth = this.play  (
-				~target.asTarget, ~outbus ? 0, ~fadeTime ? 0.02,
-				~addAction ? \addToHead, args
-			);
-			argNames do: { | param |
-				synth.addNotifier (envir, param, { | val |
-					synth.set (param, val);
-				});
-			};
-		};
-		// This is done by addNotifier anyway:
-		//              synth.onEnd (this, { synth.objectClosed });
-		^synth;
-	}
-}</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {&#10;&#9;eplay { | envir = \envir |&#10;&#9;&#9;var synth;&#10;&#9;&#9;envir = envir.asEnvironment;&#10;&#9;&#9;envir use: {&#10;&#9;&#9;&#9;var argNames, args;&#10;&#9;&#9;&#9;argNames = this.def.argNames;&#10;&#9;&#9;&#9;args = argNames.collect ({ | name |&#10;&#9;&#9;&#9;&#9;[name, currentEnvironment [name]]&#10;&#9;&#9;&#9;}).select ({ | pair |&#10;&#9;&#9;&#9;&#9;pair [1].notNil;&#10;&#9;&#9;&#9;}).flat;&#10;&#9;&#9;&#9;//  arg target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args;&#10;&#9;&#9;&#9;synth = this.play  (&#10;&#9;&#9;&#9;&#9;~target.asTarget, ~outbus ? 0, ~fadeTime ? 0.02,&#10;&#9;&#9;&#9;&#9;~addAction ? \addToHead, args&#10;&#9;&#9;&#9;);&#10;&#9;&#9;&#9;argNames do: { | param |&#10;&#9;&#9;&#9;&#9;synth.addNotifier (envir, param, { | val |&#10;&#9;&#9;&#9;&#9;&#9;synth.set (param, val);&#10;&#9;&#9;&#9;&#9;});&#10;&#9;&#9;&#9;};&#10;&#9;&#9;};&#10;&#9;&#9;// This is done by addNotifier anyway:&#10;&#9;&#9;//              synth.onEnd (this, { synth.objectClosed });&#10;&#9;&#9;^synth;&#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
 </div>
 </div>
 </div>
@@ -418,23 +391,7 @@
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">\window.vlayout (
-	HLayout (
-		StaticText ().string_ (\freq),
-		Slider.horizontal.connectEnvir (\freq),
-		NumberBox ().connectEnvir (\freq)
-	)
-).front;
-//:
-{
-	loop {
-		~freq = 400 + 400.rand;
-	   1.wait;
-	}
-}.fork;
-//:
-{ | freq = 440 | SinOsc.ar (freq, 0, 0.1) }.eplay;
-//:</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">\window.vlayout (&#10;&#9;HLayout (&#10;&#9;&#9;StaticText ().string_ (\freq),&#10;&#9;&#9;Slider.horizontal.connectEnvir (\freq),&#10;&#9;&#9;NumberBox ().connectEnvir (\freq)&#10;&#9;)&#10;).front;&#10;//:&#10;{&#10;&#9;loop {&#10;&#9;&#9;~freq = 400 + 400.rand;&#10;&#9;   1.wait;&#10;&#9;}&#10;}.fork;&#10;//:&#10;{ | freq = 440 | SinOsc.ar (freq, 0, 0.1) }.eplay;&#10;//:</span><br></pre></td></tr></table></figure>
 </div>
 </div>
 </div>

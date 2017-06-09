@@ -376,8 +376,7 @@ This notebook shows how to build GUIs starting from scratch, with minimal code a
 <div class="outline-text-2" id="text-1">
 <div class="org-src-container">
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">//: 1 Just a window
-Window (&quot;window name&quot;).front;</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">//: 1 Just a window&#10;Window (&#34;window name&#34;).front;</span><br></pre></td></tr></table></figure>
 </div>
 </div>
 </div>
@@ -391,20 +390,7 @@ Use VLayout for automatic resizing.
 
 <div class="org-src-container">
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">Window (&quot;window name&quot;)
-.view.layout_ (
-	VLayout (
-		Slider ()
-	)
-).front;
-//: Make the slider horizontal.
-Window (&quot;window name&quot;)
-.view.layout_ (
-	VLayout (
-		Slider ()
-		.orientation_ (\horizontal)
-	)
-).front;</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">Window (&#34;window name&#34;)&#10;.view.layout_ (&#10;&#9;VLayout (&#10;&#9;&#9;Slider ()&#10;&#9;)&#10;).front;&#10;//: Make the slider horizontal.&#10;Window (&#34;window name&#34;)&#10;.view.layout_ (&#10;&#9;VLayout (&#10;&#9;&#9;Slider ()&#10;&#9;&#9;.orientation_ (\horizontal)&#10;&#9;)&#10;).front;</span><br></pre></td></tr></table></figure>
 </div>
 </div>
 </div>
@@ -419,19 +405,7 @@ Make the orientation an argument to enable customization.
 
 <div class="org-src-container">
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">var makeSlider;
-
-makeSlider = { | orientation = \horizontal |
-	Slider ()
-		.orientation_ (orientation)
-};
-
-Window (&quot;window name&quot;)
-.view.layout_ (
-	VLayout (
-		*({makeSlider.([\horizontal, \vertical].choose)} ! 10)
-	)
-).front;</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">var makeSlider;&#10;&#10;makeSlider = { | orientation = \horizontal |&#10;&#9;Slider ()&#10;&#9;&#9;.orientation_ (orientation)&#10;};&#10;&#10;Window (&#34;window name&#34;)&#10;.view.layout_ (&#10;&#9;VLayout (&#10;&#9;&#9;*({makeSlider.([\horizontal, \vertical].choose)} ! 10)&#10;&#9;)&#10;).front;</span><br></pre></td></tr></table></figure>
 </div>
 </div>
 </div>
@@ -442,30 +416,7 @@ Window (&quot;window name&quot;)
 <div class="outline-text-2" id="text-4">
 <div class="org-src-container">
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">var makeSlider;
-
-makeSlider = { | label = &quot;slider&quot;, min = 0, max = 10, step = 0, default = 0.5, orientation = \horizontal,
-	action |
-	var controlSpec;
-	controlSpec = [min, max, \lin, step, default].asSpec;
-	// provide default action if needed:
-	action ?? {
-		action = { | value | controlSpec.map (value).postln }
-	};
-	HLayout (
-		StaticText ().string_ (label),
-		Slider ()
-		.action_ ({ | me | action.(me.value)})
-		.orientation_ (orientation)
-	)
-};
-
-Window (&quot;window name&quot;)
-.view.layout_ (
-	VLayout (
-		*({makeSlider.([\horizontal, \vertical].choose)} ! 10)
-	)
-).front;</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">var makeSlider;&#10;&#10;makeSlider = { | label = &#34;slider&#34;, min = 0, max = 10, step = 0, default = 0.5, orientation = \horizontal,&#10;&#9;action |&#10;&#9;var controlSpec;&#10;&#9;controlSpec = [min, max, \lin, step, default].asSpec;&#10;&#9;// provide default action if needed:&#10;&#9;action ?? {&#10;&#9;&#9;action = { | value | controlSpec.map (value).postln }&#10;&#9;};&#10;&#9;HLayout (&#10;&#9;&#9;StaticText ().string_ (label),&#10;&#9;&#9;Slider ()&#10;&#9;&#9;.action_ ({ | me | action.(me.value)})&#10;&#9;&#9;.orientation_ (orientation)&#10;&#9;)&#10;};&#10;&#10;Window (&#34;window name&#34;)&#10;.view.layout_ (&#10;&#9;VLayout (&#10;&#9;&#9;*({makeSlider.([\horizontal, \vertical].choose)} ! 10)&#10;&#9;)&#10;).front;</span><br></pre></td></tr></table></figure>
 </div>
 </div>
 </div>
@@ -476,32 +427,7 @@ Window (&quot;window name&quot;)
 <div class="outline-text-2" id="text-5">
 <div class="org-src-container">
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">var makeSlider;
-
-makeSlider = { | label = &quot;slider&quot;, min = 0, max = 10, step = 0, default = 0.5, orientation = \horizontal,
-	action |
-	var controlSpec;
-	controlSpec = [min, max, \lin, step, default].asSpec;
-	// provide default action if needed:
-	action ?? {
-		action = { | value | controlSpec.map (value).postln }
-	};
-	HLayout (
-		StaticText ().string_ (label),
-		Slider ()
-		.action_ ({ | me | action.(me.value)})
-		.orientation_ (orientation),
-		NumberBox ())
-};
-
-Window (&quot;window name&quot;)
-.view.layout_ (
-	VLayout (
-		*({makeSlider.(
-			max: 0.0.rrand (20.0),
-			orientation: [\horizontal, \vertical].choose)} ! 10)
-	)
-).front;</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">var makeSlider;&#10;&#10;makeSlider = { | label = &#34;slider&#34;, min = 0, max = 10, step = 0, default = 0.5, orientation = \horizontal,&#10;&#9;action |&#10;&#9;var controlSpec;&#10;&#9;controlSpec = [min, max, \lin, step, default].asSpec;&#10;&#9;// provide default action if needed:&#10;&#9;action ?? {&#10;&#9;&#9;action = { | value | controlSpec.map (value).postln }&#10;&#9;};&#10;&#9;HLayout (&#10;&#9;&#9;StaticText ().string_ (label),&#10;&#9;&#9;Slider ()&#10;&#9;&#9;.action_ ({ | me | action.(me.value)})&#10;&#9;&#9;.orientation_ (orientation),&#10;&#9;&#9;NumberBox ())&#10;};&#10;&#10;Window (&#34;window name&#34;)&#10;.view.layout_ (&#10;&#9;VLayout (&#10;&#9;&#9;*({makeSlider.(&#10;&#9;&#9;&#9;max: 0.0.rrand (20.0),&#10;&#9;&#9;&#9;orientation: [\horizontal, \vertical].choose)} ! 10)&#10;&#9;)&#10;).front;</span><br></pre></td></tr></table></figure>
 </div>
 </div>
 </div>
@@ -512,7 +438,7 @@ Window (&quot;window name&quot;)
 <pre class="example">
 var makeSlider;
 
-makeSlider = { | label = &quot;slider&quot;, min = 0, max = 10, step = 0, default = 0.5, orientation = \horizontal,
+makeSlider = { | label = "slider", min = 0, max = 10, step = 0, default = 0.5, orientation = \horizontal,
 	action |
 	var controlSpec, mappedVal, slider, numberBox;
 	controlSpec = [min, max, \lin, step, default].asSpec;
@@ -537,11 +463,11 @@ makeSlider = { | label = &quot;slider&quot;, min = 0, max = 10, step = 0, defaul
 	)
 };
 
-Window (&quot;window name&quot;)
+Window ("window name")
 .view.layout_ (
 	VLayout (
 		*({ | i |
-			makeSlider.(format (&quot;slider %&quot;, i),
+			makeSlider.(format ("slider %", i),
 				max: 0.0.rrand (20.0),
 				orientation: [\horizontal, \vertical].choose)
 		} ! 10)
@@ -567,7 +493,7 @@ var makeSlider;
 </p>
 
 <p>
-makeSlider = { | label = &quot;slider&quot;, controlSpec, orientation = \horizontal, action |
+makeSlider = { | label = "slider", controlSpec, orientation = \horizontal, action |
         var mappedVal, slider, numberBox;
 </p>
 
@@ -599,11 +525,11 @@ makeSlider = { | label = &quot;slider&quot;, controlSpec, orientation = \horizon
 </p>
 
 <p>
-Window (&quot;window name&quot;)
+Window ("window name")
 .view.layout_ (
         VLayout (
                 *([\freq, &amp;] collect: { | name |
-                        makeSlider.(format (&quot; %&quot;, name),
+                        makeSlider.(format (" %", name),
                                 controlSpec: name,
                                 orientation: \horizontal <i>* [\horizontal, \vertical].choose *</i> )
                 })
@@ -626,7 +552,7 @@ Define a class and provide the options as defaults.
 <div id="outline-container-sec-9" class="outline-2">
 <h2 id="sec-9">Next steps &#x2026;</h2>
 <div class="outline-text-2" id="text-9">
-<ol class="org-ol ui list">
+<ol class="org-ol">
 <li>Control a routine from a GUI. 
 <ul class="org-ul">
 <li>Let the GUI elements set environment variables of an environment.
