@@ -77,7 +77,7 @@
 <link href="/sc-hacks/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="TODO,notification," />
+  <meta name="keywords" content="notification,TODO," />
 
 
 
@@ -94,13 +94,13 @@
 
 
 <meta name="description" content="(Note: Yet to do:)    anEnvironment.eplay(envir)     (dur: 0.1).eplay;     ().eplay;     () eplay: \newEnvir;    Play the receiver Event in the environment given in argument envir using a custom even">
-<meta name="keywords" content="TODO,notification">
+<meta name="keywords" content="notification,TODO">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Event eplay: Patterns updating current environment">
 <meta property="og:url" content="http://iani.github.io/2017/06/11/EventEplay/index.html">
 <meta property="og:site_name" content="SC Hacks">
 <meta property="og:description" content="(Note: Yet to do:)    anEnvironment.eplay(envir)     (dur: 0.1).eplay;     ().eplay;     () eplay: \newEnvir;    Play the receiver Event in the environment given in argument envir using a custom even">
-<meta property="og:updated_time" content="2017-06-11T10:04:00.000Z">
+<meta property="og:updated_time" content="2017-06-11T13:38:28.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Event eplay: Patterns updating current environment">
 <meta name="twitter:description" content="(Note: Yet to do:)    anEnvironment.eplay(envir)     (dur: 0.1).eplay;     ().eplay;     () eplay: \newEnvir;    Play the receiver Event in the environment given in argument envir using a custom even">
@@ -306,7 +306,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-11T12:20:24+03:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-11T16:12:57+03:00">
                 2017-06-11
               </time>
             
@@ -393,17 +393,30 @@ Play the receiver Event in the environment given in argument <code>envir</code> 
 </p>
 
 <div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">Example</h2>
+<h2 id="sec-1">Examples</h2>
 <div class="outline-text-2" id="text-1">
 <a id="more"></a>
+</div>
 
+<div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1">Example 1</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">(degree: Pbrown (0, 30, 2, inf), dur: 0.1).eplay;&#10;{ | freq = 400 | SinOsc.ar (freq, 0, 0.1 )}.eplay;&#10;\window.vlayout (CSlider (\freq)).front;</span><br></pre></td></tr></table></figure>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2">Example 2</h3>
+<div class="outline-text-3" id="text-1-2">
 <p>
 To test triggering of envelopes, instead of writing this:
 </p>
 
 <div class="org-src-container">
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">{ | freq = 400, gate = 0 |&#10;&#9;var env;&#10;&#9;env = Env.adsr ();&#10;&#9;SinOsc.ar (freq, 0, 0.1)&#10;&#9;* EnvGen.kr (env, gate: gate, doneAction: 0)&#10;}.eplay;&#10;//:&#10;{&#10;&#9;inf do: { | i |&#10;&#9;&#9;~gate = i % 2;&#10;&#9;0.1.wait&#10;&#9;}&#10;}.rout;</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">{ | freq = 400, gate = 0 |&#10;&#9;var env;&#10;&#9;env = Env.adsr ();&#10;&#9;SinOsc.ar (freq, 0, 0.1)&#10;&#9;* EnvGen.kr (env, gate: gate, doneAction: 0)&#10;}.eplay;&#10;//:&#10;{&#10;&#9;inf do: { | i |&#10;&#9;&#9;~gate = i % 2;&#10;&#9;0.1.rrand (0.5).wait&#10;&#9;}&#10;}.rout;</span><br></pre></td></tr></table></figure>
 </div>
 
 <p>
@@ -412,7 +425,8 @@ one may write this:
 
 <div class="org-src-container">
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">{ | freq = 400, gate = 0 |&#10;&#9;var env;&#10;&#9;env = Env.adsr ();&#10;&#9;SinOsc.ar (freq, 0, 0.1)&#10;&#9;* EnvGen.kr (env, gate: gate, doneAction: 0)&#10;}.eplay;&#10;//:&#10;(dur: 0.1, gate: Pseq([1, 0], inf)).eplay;</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">{ | freq = 400, gate = 0 |&#10;&#9;var env;&#10;&#9;env = Env.adsr (0.01, 0.01, 0.9, 0.3);&#10;&#9;SinOsc.ar (freq, 0, 0.1)&#10;&#9;* EnvGen.kr (env, gate: gate, doneAction: 0)&#10;}.eplay;&#10;&#10;(dur: Pwhite (0.01, 0.15, inf), gate: Pseq([0, 1], inf)).eplay;&#10;//: Note the overlap with the still playing note in the freq change:&#10;(dur: 0.15, gate: Pseq([0, 1], inf), degree: Pstutter (4, Pbrown (-5, 20, 5, inf))).eplay;</span><br></pre></td></tr></table></figure>
+</div>
 </div>
 </div>
 </div>
@@ -445,9 +459,9 @@ one may write this:
       
         <div class="post-tags">
           
-            <a href="/sc-hacks/tags/TODO/" rel="tag"># TODO</a>
-          
             <a href="/sc-hacks/tags/notification/" rel="tag"># notification</a>
+          
+            <a href="/sc-hacks/tags/TODO/" rel="tag"># TODO</a>
           
         </div>
       
@@ -460,8 +474,8 @@ one may write this:
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/sc-hacks/2017/06/11/Nevent/" rel="next" title="Nevent: Environment that notifes variable updates">
-                <i class="fa fa-chevron-left"></i> Nevent: Environment that notifes variable updates
+              <a href="/sc-hacks/2017/06/11/TriggeringEnvGen/" rel="next" title="Triggering EnvGen">
+                <i class="fa fa-chevron-left"></i> Triggering EnvGen
               </a>
             
           </div>
@@ -469,10 +483,6 @@ one may write this:
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/sc-hacks/2017/06/11/TriggeringEnvGen/" rel="prev" title="Triggering EnvGen">
-                Triggering EnvGen <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -555,7 +565,7 @@ one may write this:
             
             <div class="site-state-item site-state-categories">
               <a href="/sc-hacks/categories/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">categories</span>
               </a>
             </div>
@@ -566,7 +576,7 @@ one may write this:
             
             <div class="site-state-item site-state-tags">
               <a href="/sc-hacks/tags/index.html">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
@@ -601,7 +611,7 @@ one may write this:
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-1"><span class="nav-number">1.</span> <span class="nav-text">Example</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-1"><span class="nav-number">1.</span> <span class="nav-text">Examples</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#sec-1-1"><span class="nav-number">1.1.</span> <span class="nav-text">Example 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sec-1-2"><span class="nav-number">1.2.</span> <span class="nav-text">Example 2</span></a></li></ol></li></ol></div>
             
 
           </div>
