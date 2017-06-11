@@ -93,17 +93,17 @@
 
 
 
-<meta name="description" content="Individual improvement steps for Function:eplay: Done and TODO.    i#+HTML:     Done (11 Jun 2017 21:48)   Store the resulting synth in envir under [\synths, synthName] (default for synthName: synth)">
+<meta name="description" content="Individual improvement steps for Function:eplay: Done and TODO.">
 <meta name="keywords" content="design,synth,TODO">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Improving Function:eplay">
 <meta property="og:url" content="http://iani.github.io/2017/06/11/ImprovingEplay/index.html">
 <meta property="og:site_name" content="SC Hacks">
-<meta property="og:description" content="Individual improvement steps for Function:eplay: Done and TODO.    i#+HTML:     Done (11 Jun 2017 21:48)   Store the resulting synth in envir under [\synths, synthName] (default for synthName: synth)">
-<meta property="og:updated_time" content="2017-06-11T18:51:14.000Z">
+<meta property="og:description" content="Individual improvement steps for Function:eplay: Done and TODO.">
+<meta property="og:updated_time" content="2017-06-11T18:54:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Improving Function:eplay">
-<meta name="twitter:description" content="Individual improvement steps for Function:eplay: Done and TODO.    i#+HTML:     Done (11 Jun 2017 21:48)   Store the resulting synth in envir under [\synths, synthName] (default for synthName: synth)">
+<meta name="twitter:description" content="Individual improvement steps for Function:eplay: Done and TODO.">
 
 
 
@@ -380,9 +380,7 @@
 Individual improvement steps for Function:eplay: Done and TODO.
 </p>
 
-<p>
-i#+HTML: <!&#x2013; more &#x2013;>
-</p>
+<a id="more"></a>
 
 <div id="outline-container-sec-1" class="outline-2">
 <h2 id="sec-1">Done (11 Jun 2017 21:48)</h2>
@@ -428,7 +426,7 @@ Note: Possibly the notification should be emitted from the <code>\synthName</cod
 </li>
 </ul>
 
-<a id="more"></a>
+<!-- more -->
 </div>
 </div>
 
@@ -449,7 +447,7 @@ Note: Possibly the notification should be emitted from the <code>\synthName</cod
 <div class="outline-text-2" id="text-4">
 <div class="org-src-container">
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {&#10;&#9;eplay { | envir |&#10;&#9;&#9;var synth;&#10;&#9;&#9;envir = envir.asEnvironment;&#10;&#9;&#9;envir use: {&#10;&#9;&#9;&#9;var argNames, args;&#10;&#9;&#9;&#9;argNames = this.def.argNames;&#10;&#9;&#9;&#9;args = argNames.collect ({ | name |&#10;&#9;&#9;&#9;&#9;[name, envir[name]]Mak&#10;&#9;&#9;&#9;}).select ({ | pair |&#10;&#9;&#9;&#9;&#9;pair [1].notNil;&#10;&#9;&#9;&#9;}).flat;&#10;&#9;&#9;&#9;//  arg target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args;&#10;&#9;&#9;&#9;synth = this.play  (&#10;&#9;&#9;&#9;&#9;~target.asTarget, ~outbus ? 0, ~fadeTime ? 0.02,&#10;&#9;&#9;&#9;&#9;~addAction ? \addToHead, args&#10;&#9;&#9;&#9;);&#10;&#9;&#9;&#9;argNames do: { | param |&#10;&#9;&#9;&#9;&#9;synth.addNotifier (envir, param, { | val |&#10;&#9;&#9;&#9;&#9;&#9;synth.set (param, val);&#10;&#9;&#9;&#9;&#9;});&#10;&#9;&#9;&#9;};&#10;&#9;&#9;};&#10;&#9;&#9;// This is done by addNotifier anyway:&#10;&#9;&#9;//              synth.onEnd (this, { synth.objectClosed });&#10;&#9;&#9;^synth;&#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">+ Function {&#10;&#9;eplay { | name = \synth, envir |&#10;&#9;&#9;var synth;&#10;&#9;&#9;envir = envir.asEnvironment;&#10;&#9;&#9;Registry.doIfFound (envir, \synths, name, { | oldSynth |&#10;&#9;&#9;&#9;oldSynth.objectClosed; // prevent removal of successor on end&#10;&#9;&#9;&#9;oldSynth.release(envir [\releaseTime] ? 0.02);&#10;&#9;&#9;});&#10;&#9;&#9;envir use: {&#10;&#9;&#9;&#9;var argNames, args;&#10;&#9;&#9;&#9;argNames = this.def.argNames;&#10;&#9;&#9;&#9;/* assume that the func uses a gate argument&#10;&#9;&#9;&#9;&#9;Later devise a way to get all the actual ontrols from the synthdef after it has loaded&#10;&#9;&#9;&#9;*/&#10;&#9;&#9;&#9;args = (argNames ++ ['gate']).collect ({ | name |&#10;&#9;&#9;&#9;&#9;[name, envir[name]]&#10;&#9;&#9;&#9;}).select ({ | pair |&#10;&#9;&#9;&#9;&#9;pair [1].notNil;&#10;&#9;&#9;&#9;});&#10;&#9;&#9;&#9;//  arg target, outbus = 0, fadeTime = 0.02, addAction=\addToHead, args;&#10;&#9;&#9;&#9;// Ensure removal from lib on end:&#10;&#9;&#9;&#9;synth = Registry (envir, \synths, name, {&#10;&#9;&#9;&#9;&#9;this.play (&#10;&#9;&#9;&#9;&#9;&#9;~target.asTarget, ~outbus ? 0, ~fadeTime ? 0.02,&#10;&#9;&#9;&#9;&#9;&#9;~addAction ? \addToHead, (args ? []).flat&#10;&#9;&#9;&#9;&#9;)&#10;&#9;&#9;&#9;});&#10;&#9;&#9;&#9;synth.onStart (this, {| myself |&#10;&#9;&#9;&#9;&#9;// &#34;now adding the notifiers for updates, just on time&#34;.postln;&#10;&#9;&#9;&#9;&#9;argNames do: { | param |&#10;&#9;&#9;&#9;&#9;&#9;synth.addNotifier (envir, param, { | val |&#10;&#9;&#9;&#9;&#9;&#9;&#9;synth.set (param, val);&#10;&#9;&#9;&#9;&#9;&#9;});&#10;&#9;&#9;&#9;&#9;};&#10;&#9;&#9;&#9;});&#10;&#9;&#9;&#9;if (argNames.size == 0) {&#10;&#9;&#9;&#9;&#9;synth.onEnd (this, { synth.objectClosed;}); // in case no func args&#10;&#9;&#9;&#9;}&#10;&#9;&#9;};&#10;&#10;&#9;&#9;^synth;&#10;&#9;}&#10;}</span><br></pre></td></tr></table></figure>
 </div>
 </div>
 </div>
