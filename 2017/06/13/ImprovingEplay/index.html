@@ -77,7 +77,7 @@
 <link href="/sc-hacks/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="synth,design,TODO," />
+  <meta name="keywords" content="design,synth,TODO," />
 
 
 
@@ -94,13 +94,13 @@
 
 
 <meta name="description" content="Individual improvement steps for Function:eplay: Done and TODO.">
-<meta name="keywords" content="synth,design,TODO">
+<meta name="keywords" content="design,synth,TODO">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Improving Function:eplay">
 <meta property="og:url" content="http://iani.github.io/2017/06/13/ImprovingEplay/index.html">
 <meta property="og:site_name" content="SC Hacks">
 <meta property="og:description" content="Individual improvement steps for Function:eplay: Done and TODO.">
-<meta property="og:updated_time" content="2017-06-13T15:38:41.000Z">
+<meta property="og:updated_time" content="2017-06-13T15:45:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Improving Function:eplay">
 <meta name="twitter:description" content="Individual improvement steps for Function:eplay: Done and TODO.">
@@ -418,18 +418,13 @@ The follwoing will add some complexity to the current scheme and may therefore b
 </ul>
 
 <p>
-In addition to listening for changes from the <code>currentEnvironment</code>, a second notification mechanism should be added to Function:eplay, to enable creating new synths, releasing or freeing this synth when playing EventPatterns with an <code>EventStreamPlayer</code>.  These changes are to be triggered through a function stored in <code>Event</code> default parent, in response to keys produced by a Stream in the Event beying played.  Here aee some considerations for designing this feature: 
+In addition to listening for changes from the <code>currentEnvironment</code>, a second notification mechanism should be added to Function:eplay, to enable creating new synths, releasing or freeing this synth when playing EventPatterns with an <code>EventStreamPlayer</code>.  A simple way to do this is by a stream which generates the commands to be played.  The stream is stored in a key with the same name as the synth to be controlled.  Function:eplay or SynthPlayer:play adds the environment as notifier to the synth with the synth's name as message and a switch statement which choses the action to be performed depending on the value that was sent in addition to the key (message) by the changed message. A draft for this code has been added now to Function:eplay: 
 </p>
 
-<p>
-The messages sent to effect the changes can be defined arbitrarily. However, it is important to determine who emits the messages (the notifier) and who listens to them (the listener).  The notifier has to be someone different than the event playing, because we want to be able to play independently different synths from the same event.  The listener cannot be the synth, because sometimes a new synth must be created to continue a line that no longer has a playing synth. One first draft would use the symbol under which a function is played with eplay as both notifier and listener: 
-</p>
+<div class="org-src-container">
 
-<pre class="example">
-name \newSynth name
-name \release name
-name \set name
-</pre>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">synth.onStart (this, {| myself |&#10;&#9;// &#34;Synth started, so I add notifiers for updates&#34;.postln;&#10;&#9;argNames do: { | param |&#10;&#9;&#9;synth.addNotifier (envir, param, { | val |&#10;&#9;&#9;&#9;synth.set (param, val);&#10;&#9;&#9;});&#10;&#9;&#9;// Experimental: &#10;&#9;&#9;synth.addNotifier (envir, name, { | command |&#10;&#9;&#9;&#9;//    command.postln;&#10;&#9;&#9;&#9;switch (command,&#10;&#9;&#9;&#9;&#9;\stop, {&#10;&#9;&#9;&#9;&#9;&#9;synth.objectClosed;&#10;&#9;&#9;&#9;&#9;&#9;synth.release (envir [\releaseTime] ? 0.02);&#10;&#9;&#9;&#9;&#9;},&#10;&#9;&#9;&#9;&#9;{ postf (&#34;the command was: %\n&#34;, command)}&#10;&#9;&#9;&#9;)&#10;&#9;&#9;})&#10;&#9;};&#10;});</span><br></pre></td></tr></table></figure>
+</div>
 </div>
 </div>
 
@@ -528,9 +523,9 @@ See <a href="https://github.com/iani/sc-hacks/blob/master/LabCode/rebuildFunctio
       
         <div class="post-tags">
           
-            <a href="/sc-hacks/tags/synth/" rel="tag"># synth</a>
-          
             <a href="/sc-hacks/tags/design/" rel="tag"># design</a>
+          
+            <a href="/sc-hacks/tags/synth/" rel="tag"># synth</a>
           
             <a href="/sc-hacks/tags/TODO/" rel="tag"># TODO</a>
           
