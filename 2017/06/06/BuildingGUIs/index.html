@@ -534,7 +534,7 @@ makeSlider = { | label = "slider", controlSpec, orientation = \horizontal, actio
 Window ("window name")
 .view.layout_ (
         VLayout (
-                *([\freq, &] collect: { | name |
+                *([\freq, &amp;] collect: { | name |
                         makeSlider.(format (" %", name),
                                 controlSpec: name,
                                 orientation: \horizontal <i>* [\horizontal, \vertical].choose *</i> )

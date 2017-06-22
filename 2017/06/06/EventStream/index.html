@@ -390,13 +390,13 @@ An <code>EventPattern</code> creates <code>EventStreams</code> which are played 
 <h2 id="sec-2">Example</h2>
 <div class="outline-text-2" id="text-2">
 <pre class="example">
-() +> \e;
-0.1 +>.dur \e;
-Pseq ((0..20), inf) +>.degree \e;
-Prand ((0..20), inf) +>.degree \e;
-(freq: Pfunc ({ 300 rrand: 1000 }), dur: Prand ([0.1, 0.2], inf)) +> \e;
-(freq: Pfunc ({ 30.rrand(80).midicps }), dur: Pfunc ({ 0.1 exprand: 1 }), legato: Prand ([0.1, 2], inf)) +> \e;
-(degree: Pseq ((0..20), inf), dur: 0.1) +!>.degree \e;
+() +&gt; \e;
+0.1 +&gt;.dur \e;
+Pseq ((0..20), inf) +&gt;.degree \e;
+Prand ((0..20), inf) +&gt;.degree \e;
+(freq: Pfunc ({ 300 rrand: 1000 }), dur: Prand ([0.1, 0.2], inf)) +&gt; \e;
+(freq: Pfunc ({ 30.rrand(80).midicps }), dur: Pfunc ({ 0.1 exprand: 1 }), legato: Prand ([0.1, 2], inf)) +&gt; \e;
+(degree: Pseq ((0..20), inf), dur: 0.1) +!&gt;.degree \e;
 </pre>
 
 <p>
@@ -404,9 +404,9 @@ Prand ((0..20), inf) +>.degree \e;
 </p>
 
 <ul class="org-ul">
-<li><code>+></code> adds all key-value pairs of an event to the event being played.
+<li><code>+&gt;</code> adds all key-value pairs of an event to the event being played.
 </li>
-<li><code>+!></code> replaces the contents of the event being played by the contents of the new event.
+<li><code>+!&gt;</code> replaces the contents of the event being played by the contents of the new event.
 </li>
 </ul>
 </div>
