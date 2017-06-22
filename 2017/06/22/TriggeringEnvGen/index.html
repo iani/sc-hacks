@@ -1,0 +1,815 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/sc-hacks/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,700,700italic|Raleway:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/sc-hacks/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/sc-hacks/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="design,trigger,envgen,env,gate," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/sc-hacks/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="Besides controlling the amplitude shape of a single sound-event or note in its entirety, envelopes can also be used to generate streams of sound events with the same synth.  The same technique can al">
+<meta name="keywords" content="design,trigger,envgen,env,gate">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Triggering EnvGen and Line">
+<meta property="og:url" content="http://iani.github.io/2017/06/22/TriggeringEnvGen/index.html">
+<meta property="og:site_name" content="SC Hacks">
+<meta property="og:description" content="Besides controlling the amplitude shape of a single sound-event or note in its entirety, envelopes can also be used to generate streams of sound events with the same synth.  The same technique can al">
+<meta property="og:updated_time" content="2017-06-22T04:22:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Triggering EnvGen and Line">
+<meta name="twitter:description" content="Besides controlling the amplitude shape of a single sound-event or note in its entirety, envelopes can also be used to generate streams of sound events with the same synth.  The same technique can al">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/sc-hacks/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":true},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://iani.github.io/2017/06/22/TriggeringEnvGen/"/>
+
+
+
+
+
+  <title>Triggering EnvGen and Line | SC Hacks</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/sc-hacks/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SC Hacks</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">SC code step-by-step</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/sc-hacks/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/sc-hacks/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/sc-hacks/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/sc-hacks/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/sc-hacks/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/22/TriggeringEnvGen/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Iannis Zannos">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/sc-hacks/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SC Hacks">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Triggering EnvGen and Line</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-22T03:11:53+09:00">
+                2017-06-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/sc-hacks/categories/design/" itemprop="url" rel="index">
+                    <span itemprop="name">design</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+
+<p>
+Besides controlling the amplitude shape of a single sound-event or note in its entirety, envelopes can also be used to generate streams of sound events with the same synth.  The same technique can also be applied to Line or Xline to arbitrarily construct shapes controlling any parameter on the fly.  Here are some examples explaining how to do this using either just the default <b>SCClassLibrary</b> and the <b>sc-hacks</b> library.
+</p>
+
+<a id="more"></a>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">Basic Examples</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Two items are necessary to re-trigger envelope or line-segment UGens in a Synth:
+</p>
+<ol class="org-ol">
+<li>The <code>doneAction</code> argument of the UGen in question must have a value of 0 in order to keep the Synth alive afer the UGen has finished playing.
+</li>
+<li>The UGen in question must use a control in its <code>gate</code> argument. The UGen restarts whenever the value of the <code>gate</code> control changes from 0 to 1.  Furthermore, if the Envelope contains a release part, then the release part will be triggered when the <code>gate</code> control changes from 1 to 0.
+</li>
+</ol>
+</div>
+
+<div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1">Caution: Use a name other than <code>gate</code> as control name for triggering</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+*NOTE: The control used to trigger the EnvGen <i>must have a name different than</i> <code>gate</code>, otherwise SC will be unable to release the synth because it creates a second <code>gate</code> control by default when creating synthdefs from functions.  For example: 
+</p>
+
+<div class="org-src-container">
+
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">//: This is wrong:&#10;a =  { | freq = 400, gate = 0 |&#10;&#9;var env;&#10;&#9;env = Env.adsr ();&#10;&#9;SinOsc.ar (freq, 0, 0.1)&#10;&#9;* EnvGen.kr (env, gate: gate, doneAction: 0)&#10;}.play;&#10;NodeWatcher.register (a); // register a to update state when it ends&#10;//: Test if a is playing&#10;a.isPlaying;&#10;// first let it make a sound:&#10;a.set (\gate, 1);&#10;//: then try to release it:&#10;a.release;&#10;//: The output amplitude is 0 but the synth is still playing:&#10;a.isPlaying;&#10;//: Try again, specifying a release time:&#10;a.release (0.1);&#10;//: To really stop the synth, you have to free it&#10;a.free;&#10;//: The synth has stopped playing. Synth count should be 0 in the server display&#10;a.isPlaying; // returns false</span><br></pre></td></tr></table></figure>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2">Function play and Synth set (SCClassLibrary)</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Here is a simple example using only the standard SCClassLibrary:
+</p>
+
+<div class="org-src-container">
+
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">//: Start a triggerable synth and store it in variable a&#10;// Note: The EnvGen will not be triggered because trig is 0.&#10;// Thus the synth will not produce an audible signal.&#10;&#10;// use trig instead of gate as control name!&#10;a = { | freq = 400, trig = 0 |&#10;&#9;var env;&#10;&#9;env = Env.adsr ();&#10;&#9;SinOsc.ar (freq, 0, 0.1)&#10;&#9;* EnvGen.kr (env, gate: trig, doneAction: 0)&#10;}.play;&#10;//: Trigger the envelope&#10;a.set (\trig, 1);&#10;//: Release the envelope&#10;a.set (\trig, 0);&#10;//: Re-trigger the nevelope&#10;a.set (\trig, 1);&#10;//: Release the envelope again&#10;a.set (\trig, 0);&#10;//: Run a routine to start and stop the synth several times&#10;{&#10;&#9;10 do: { | i |&#10;&#9;&#9;a.set (\trig, (i + 1) % 2); // i+1 : start with trigger on&#10;&#9;&#9;0.01.exprand (0.5).wait;&#10;&#9;}&#10;}.fork;&#10;//: Do the same as above, but also change the frequency&#10;{&#10;&#9;40 do: { | i |&#10;&#9;&#9;// only change frequency when starting, not when releasing:&#10;&#9;&#9;if (i + 1 % 2 &#38;gt; 0) { // i / 2: wholetone -&#38;gt; chromatic&#10;&#9;&#9;&#9;a.set (\freq, (i / 2 + 60).midicps, \trig, 1);                        &#10;&#9;&#9;}{&#10;&#9;&#9;&#9;a.set (\trig, 0);&#10;&#9;&#9;};&#10;&#9;&#9;0.01.exprand (0.5).wait;&#10;&#9;};&#10;}.fork;&#10;//:</span><br></pre></td></tr></table></figure>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3">Control through environment variables, using Function <code>+&gt;</code></h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+In <i>sc-hacks</i>, the operator <code>+&gt;</code> plays a function and stores its synth in the global Library using a <code>SynthPlayer</code> instance.  Additionally, it makes the synth react whenever an environment variable whose name corresponds to a control parameter of the synth is set in the <code>currentEnvironment</code>.  This makes it easy to control the synth through the environment.
+</p>
+
+<p>
+Example: 
+</p>
+
+<div class="org-src-container">
+
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">{ | freq = 400, trig = 0 |&#10;&#9;var env;&#10;&#9;env = Env.adsr ();&#10;&#9;SinOsc.ar (freq, 0, 0.1)&#10;&#9;* EnvGen.kr (env, gate: trig, doneAction: 0)&#10;} +&#38;gt; \test;&#10;//:&#10;~trig = 1;&#10;//:&#10;~trig = 0;&#10;//:&#10;{&#10;&#9;var trig;&#10;&#9;inf do: { | i |&#10;&#9;&#9;trig = i + 1 % 2;&#10;&#9;&#9;if (trig &#38;gt; 0) { ~freq = 300 rrand: 3000 };&#10;&#9;&#9;~trig = trig;&#10;&#9;&#9;0.9.rand.wait;&#10;&#9;};&#10;}.rout;&#10;// rout starts a routine like fork, and stores it in the library&#10;// under a name (default: &#39;routine&#39;)&#10;// Additionally, if a routine is running under the same name,&#10;// it stops that routine before starting the new one to replace it.&#10;//:&#10;{&#10;&#9;var trig;&#10;&#9;26 do: { | i |&#10;&#9;&#9;trig = i + 1 % 2;&#10;&#9;&#9;if (trig &#38;gt; 0) { ~freq = (i / 2 + 60).midicps };&#10;&#9;&#9;~trig = trig;&#10;&#9;&#9;0.24.wait;&#10;&#9;};&#10;}.rout;&#10;//:&#10;{&#10;&#9;20 do: { | i |&#10;&#9;&#9;~trig = i + 1 % 2;&#10;&#9;&#9;~freq = 300 rrand: 3000;&#10;&#9;&#9;0.9.rand.wait;&#10;&#9;}&#10;}.rout;</span><br></pre></td></tr></table></figure>
+</div>
+</div>
+</div>
+</div>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/sc-hacks/tags/design/" rel="tag"># design</a>
+          
+            <a href="/sc-hacks/tags/trigger/" rel="tag"># trigger</a>
+          
+            <a href="/sc-hacks/tags/envgen/" rel="tag"># envgen</a>
+          
+            <a href="/sc-hacks/tags/env/" rel="tag"># env</a>
+          
+            <a href="/sc-hacks/tags/gate/" rel="tag"># gate</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/sc-hacks/2017/06/21/PatternSynthPlay/" rel="next" title="Pattern and Synth play scenarios">
+                <i class="fa fa-chevron-left"></i> Pattern and Synth play scenarios
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/sc-hacks/2017/06/22/CreatingGUIs/" rel="prev" title="Creating GUIs">
+                Creating GUIs <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/sc-hacks/images/avatar.gif"
+               alt="Iannis Zannos" />
+          <p class="site-author-name" itemprop="name">Iannis Zannos</p>
+           
+              <p class="site-description motion-element" itemprop="description">Gradually introducing recipes from previous SuperCollider libraries</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/sc-hacks/archives">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/sc-hacks/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/sc-hacks/tags/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-1"><span class="nav-number">1.</span> <span class="nav-text">Basic Examples</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#sec-1-1"><span class="nav-number">1.1.</span> <span class="nav-text">Caution: Use a name other than gate as control name for triggering</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sec-1-2"><span class="nav-number">1.2.</span> <span class="nav-text">Function play and Synth set (SCClassLibrary)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sec-1-3"><span class="nav-number">1.3.</span> <span class="nav-text">Control through environment variables, using Function +></span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-diamond"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Iannis Zannos</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/sc-hacks/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/sc-hacks/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/sc-hacks/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/sc-hacks/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/sc-hacks/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/sc-hacks/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/sc-hacks/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/sc-hacks/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/sc-hacks/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/sc-hacks/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/sc-hacks/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
