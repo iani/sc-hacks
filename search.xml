@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title><![CDATA[Operator Design]]></title>
-    <url>%2Fsc-hacks%2F2017%2F06%2F22%2FOperatorDesign%2F</url>
-    <content type="text"><![CDATA[sc-hacks uses binary operators to shorten and help classify the coding of common operations such as playing a synth or a pattern. The syntax of a binary operator in SuperCollider is: receiver operator[optional: .adverb] argument For example: // receiver operator adverb argument{ WhiteNoise.ar(0.1) } +&amp;gt;.newenvir \mysynth This section discusses and documents the operators of this library, in the order in which they are implemented. General principle: 4 types of objects stored under names in environments. Function:play: {} +&gt;.envir \playerName // Start a synth and store it in \synth1&#10;{ SinOsc.ar(\freq.kr(400), 0, \amp.kr(0.1)) } +&#38;gt; \synth1;&#10;//: Start a routine modifying the freq parameter&#10;{&#10;&#9;loop {&#10;&#9;&#9;~freq = 50 rrand: 100;&#10;&#9;&#9;5.1.wait;&#10;&#9;}&#10;} rout: \envir;&#10;//: Replace the function playing in \synth1&#10;{ Ringz.ar (WhiteNoise.ar (\amp.kr (0.1)), \freq.kr (400)) } +&#38;gt; \synth1;&#10;//: Start a synth in a different environment&#10;{ LFSaw.ar(\freq.kr(400), 0, \amp.kr(0.1)) } +&#38;gt;.envir2 \synth1;&#10;//: Start a routine modifying the freq parameter in the second environment&#10;{&#10;&#9;loop {&#10;&#9;&#9;~freq = 400 rrand: 4000;&#10;&#9;&#9;0.1.wait;&#10;&#9;}&#10;} rout: \envir2;&#10;//: Test the contents of the library&#10;Library.global.dictionary; Accessing SynthPlayers, EventPatterns/EventStreamPlayers, Routines and Windows The following messages are used to access a SynthPlayer, EventStreamPlayer, Routine or Window stored under a name in an environment. If no enviroment is specified, then the currentEnvironment is used. symbol.synth(optional: envir) symbol.pattern(optional: envir) symbol.routine(optional: envir) symbol.window(optional: envir)]]></content>
-      <categories>
-        <category>design</category>
-      </categories>
-      <tags>
-        <tag>operators</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[Registry: Hierarchical Namespaces]]></title>
-    <url>%2Fsc-hacks%2F2017%2F06%2F22%2FRegistry%2F</url>
-    <content type="text"><![CDATA[This class helps to store objects and to retrieve them using a key. This is similar to the way that with classes such as Pdef, Ndef, OSCdef work, but Registry can be used to add the same feature ot any class, without subclassing it. To create this behavior instead, add a method to Symbol for accessing the kind of object needed. For example: \aSymbol.oscFunc. This also allows easier customization of how the object is created if not found. How it works Store an object in Library under an array of objects (called a path). When accessing the path, create the object if not already stored, else return the previously stored object. Who uses it SynthPlayer registers its instances in the current environment under their names. Function:oscFunc and Symbol:removeOsc registers OSCFuncs under their path names in order to remove existing OSCFunc instances when creating a new one under the same path. Example This is the code that makes it possible to create or modify an OSCFunc bound to a symbol. It defines the methods Function:oscFunc and Symbol:removeOsc. + Function {&#10;&#9;oscFunc { | path |&#10;&#9;&#9;path.removeOsc;&#10;&#9;&#9;^Registry (&#39;oscFuncs&#39;, path, { OSCFunc (this, path) });&#10;&#9;}&#10;}&#10;&#10;+ Symbol {&#10;&#9;removeOsc {&#10;&#9;&#9;Registry.doIfFound (&#39;oscFuncs&#39;, this, { | found |&#10;&#9;&#9;&#9;found.objectClosed;&#10;&#9;&#9;&#9;found.free;&#10;&#9;&#9;}); &#10;&#9;}&#10;}]]></content>
+    <url>%2Fsc-hacks%2F2017%2F06%2F23%2FRegistry%2F</url>
+    <content type="text"><![CDATA[This class helps to store objects and to retrieve them using a key. This is similar to the way that with classes such as Pdef, Ndef, OSCdef work, but Registry can be used to add the same feature to any class, without subclassing it. To create this behavior instead, add a method to Symbol for accessing the kind of object needed. For example: \aSymbol.oscFunc. This also allows easier customization of how the object is created if not found. How it works Store an object in Library under an array of objects (called a path). When accessing the path, create the object if not already stored, else return the previously stored object. Who uses it SynthPlayer registers its instances in the current environment under their names. Function:oscFunc and Symbol:removeOsc registers OSCFuncs under their path names in order to remove existing OSCFunc instances when creating a new one under the same path. Example This is the code that makes it possible to create or modify an OSCFunc bound to a symbol. It defines the methods Function:oscFunc and Symbol:removeOsc. + Function {&#10;&#9;oscFunc { | path |&#10;&#9;&#9;path.removeOsc;&#10;&#9;&#9;^Registry (&#39;oscFuncs&#39;, path, { OSCFunc (this, path) });&#10;&#9;}&#10;}&#10;&#10;+ Symbol {&#10;&#9;removeOsc {&#10;&#9;&#9;Registry.doIfFound (&#39;oscFuncs&#39;, this, { | found |&#10;&#9;&#9;&#9;found.objectClosed;&#10;&#9;&#9;&#9;found.free;&#10;&#9;&#9;}); &#10;&#9;}&#10;}]]></content>
       <categories>
         <category>classes</category>
       </categories>
       <tags>
         <tag>registry</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Operator Design]]></title>
+    <url>%2Fsc-hacks%2F2017%2F06%2F22%2FOperatorDesign%2F</url>
+    <content type="text"><![CDATA[sc-hacks uses binary operators to shorten and help classify the coding of common operations such as playing a synth or a pattern. The syntax of a binary operator in SuperCollider is: receiver operator[optional: .adverb] argument For example: // receiver operator adverb argument{ WhiteNoise.ar(0.1) } +&amp;gt;.newenvir \mysynth This section discusses and documents the operators of this library, in the order in which they are implemented. General principle: 4 types of objects stored under names in environments. Function:play: {} +&gt;.envir \playerName // Start a synth and store it in \synth1&#10;{ SinOsc.ar(\freq.kr(400), 0, \amp.kr(0.1)) } +&#38;gt; \synth1;&#10;//: Start a routine modifying the freq parameter&#10;{&#10;&#9;loop {&#10;&#9;&#9;~freq = 50 rrand: 100;&#10;&#9;&#9;5.1.wait;&#10;&#9;}&#10;} rout: \envir;&#10;//: Replace the function playing in \synth1&#10;{ Ringz.ar (WhiteNoise.ar (\amp.kr (0.1)), \freq.kr (400)) } +&#38;gt; \synth1;&#10;//: Start a synth in a different environment&#10;{ LFSaw.ar(\freq.kr(400), 0, \amp.kr(0.1)) } +&#38;gt;.envir2 \synth1;&#10;//: Start a routine modifying the freq parameter in the second environment&#10;{&#10;&#9;loop {&#10;&#9;&#9;~freq = 400 rrand: 4000;&#10;&#9;&#9;0.1.wait;&#10;&#9;}&#10;} rout: \envir2;&#10;//: Test the contents of the library&#10;Library.global.dictionary; Accessing SynthPlayers, EventPatterns/EventStreamPlayers, Routines and Windows The following messages are used to access a SynthPlayer, EventStreamPlayer, Routine or Window stored under a name in an environment. If no enviroment is specified, then the currentEnvironment is used. symbol.synth(optional: envir) symbol.pattern(optional: envir) symbol.routine(optional: envir) symbol.window(optional: envir) Additionally, the following introspection methods are provided: Nevent:envirs : Dictionary with all Nenvirs stored in Library under \environments Registry;envirs : Synonym of Nevent:envirs \envirName.synths : All synth players of Nenvir named \envirName. \envirName.patterns : All EventStreamPlayers of Nenvir named \envirName. \envirName.routines : All Routines of Nenvir named \envirName. \envirName.windows : All windows of Nenvir named \envirName. Method implementation code The code implementing these methods for Symbol in Nevent.sc is: // Return nil if no element found.// Also, do not push the environment if created.synth { | envir | ^Registry.at (envir.asEnvironment (false), \synths, this);}pattern { | envir | ^Registry.at (envir.asEnvironment (false), \patterns, this);}routine { | envir | ^Registry.at (envir.asEnvironment (false), \routines, this);}window { | envir, rect | // always construct new window, and push the environment ^Registry (envir.asEnvironment, \windows, this, { Window (this, rect) .onClose_ ({ | me | me.objectClosed; }); })} Tests, examples //: explicitly push \envir as currentEnvironment (only for clarity).&#10;\envir.push;&#10;//: Initially, no synth is available:&#10;\envir.synths;&#10;//: Also no synth is available in &#10;//: Play a function in envir: &#10;{ PinkNoise.ar(0.2) } +&#38;gt;.envir \test;]]></content>
+      <categories>
+        <category>design</category>
+      </categories>
+      <tags>
+        <tag>operators</tag>
       </tags>
   </entry>
   <entry>
@@ -123,10 +123,10 @@
         <category>methods</category>
       </categories>
       <tags>
-        <tag>EventPattern</tag>
         <tag>notification</tag>
         <tag>EnvGen</tag>
         <tag>trigger</tag>
+        <tag>EventPattern</tag>
         <tag>Event</tag>
       </tags>
   </entry>
@@ -174,8 +174,8 @@
         <category>gui</category>
       </categories>
       <tags>
-        <tag>learning</tag>
         <tag>gui</tag>
+        <tag>learning</tag>
       </tags>
   </entry>
   <entry>
@@ -186,8 +186,8 @@
         <category>classes</category>
       </categories>
       <tags>
-        <tag>EventStream</tag>
         <tag>EventPattern</tag>
+        <tag>EventStream</tag>
         <tag>EventStreamPlayer</tag>
       </tags>
   </entry>
