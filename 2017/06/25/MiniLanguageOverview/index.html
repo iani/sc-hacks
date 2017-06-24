@@ -396,19 +396,19 @@ The classes, methods and operators provided by <i>sc-hacks</i> extend SuperColli
 These are operators that are written after a function, and thus take a function as receiver.  They serve two main uses of functions in musical processes: 
 </p>
 <ol class="org-ol">
-<li>Play a synth (<code>Function:play</code> : operator <code>+></code>)
+<li>Play a synth (<code>Function:play</code> : operator <code>+&gt;</code>)
 </li>
-<li>Play a routine (<code>Function:fork</code> : operator <code>*></code>)
+<li>Play a routine (<code>Function:fork</code> : operator <code>*&gt;</code>)
 </li>
 </ol>
 
 
 <p>
-+> play as synth
++&gt; play as synth
 </p>
 
 <p>
-*> play as routine (fork)
+*&gt; play as routine (fork)
 </p>
 </div>
 </div>
@@ -421,19 +421,19 @@ These are operators that are written after an event, and thus take an event as r
 </p>
 
 <p>
-@> play
+@&gt; play
 </p>
 
 <p>
-@>+ addEvent
+@&gt;+ addEvent
 </p>
 
 <p>
-@>! setEvent
+@&gt;! setEvent
 </p>
 
 <p>
-@>@ addKey 
+@&gt;@ addKey 
 </p>
 </div>
 </div>
@@ -450,31 +450,31 @@ They are primarily used to link synths (with buses, and in right synth order).
 </p>
 
 <p>
-&> set the output bus of the receiver to the input bus of the argument (only the output bus of the receiver changes)
+&amp;&gt; set the output bus of the receiver to the input bus of the argument (only the output bus of the receiver changes)
 </p>
 
 <p>
-< &  set the input bus of the argument to the output bus of the receiver (only the input bus of the argument changes)
+&lt; &amp;  set the input bus of the argument to the output bus of the receiver (only the input bus of the argument changes)
 </p>
 
 <pre class="example">
-receiver &>! argument
+receiver &amp;&gt;! argument
 </pre>
 
 <p>
-&>! set the output bus of the receiver to the input bus of the argument, on a new private bus (both receiver and argument change)
+&amp;&gt;! set the output bus of the receiver to the input bus of the argument, on a new private bus (both receiver and argument change)
 </p>
 
 <pre class="example">
-receiver &/> argument
+receiver &amp;/&gt; argument
 </pre>
 
 <p>
-&/> Copy the output signal of the receiver from its bus onto the input bus of the argument, using a signal copy synth.
+&amp;/&gt; Copy the output signal of the receiver from its bus onto the input bus of the argument, using a signal copy synth.
 </p>
 
 <pre class="example">
-receiver < / > argument
+receiver &lt; / &gt; argument
 </pre>
 
 <p>
@@ -504,7 +504,7 @@ rplay
 <h3 id="sec-2-5">Operators to strings (!?)</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
-string +> symbol : play synthdef named by string on the symbol as SynthPlayer ?
+string +&gt; symbol : play synthdef named by string on the symbol as SynthPlayer ?
 </p>
 </div>
 </div>
