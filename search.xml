@@ -8,8 +8,8 @@
         <category>coding</category>
       </categories>
       <tags>
-        <tag>class</tag>
         <tag>method</tag>
+        <tag>class</tag>
         <tag>coding</tag>
         <tag>language</tag>
       </tags>
@@ -149,10 +149,10 @@
         <category>methods</category>
       </categories>
       <tags>
-        <tag>EventPattern</tag>
         <tag>notification</tag>
         <tag>EnvGen</tag>
         <tag>trigger</tag>
+        <tag>EventPattern</tag>
         <tag>Event</tag>
       </tags>
   </entry>
@@ -187,8 +187,8 @@
         <category>methods</category>
       </categories>
       <tags>
-        <tag>method</tag>
         <tag>synth</tag>
+        <tag>method</tag>
         <tag>environment</tag>
       </tags>
   </entry>
@@ -200,8 +200,8 @@
         <category>gui</category>
       </categories>
       <tags>
-        <tag>gui</tag>
         <tag>learning</tag>
+        <tag>gui</tag>
       </tags>
   </entry>
   <entry>
@@ -212,8 +212,8 @@
         <category>classes</category>
       </categories>
       <tags>
-        <tag>EventStream</tag>
         <tag>EventPattern</tag>
+        <tag>EventStream</tag>
         <tag>EventStreamPlayer</tag>
       </tags>
   </entry>
