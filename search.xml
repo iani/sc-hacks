@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Playing Events as Patterns]]></title>
+    <url>%2Fsc-hacks%2F2017%2F06%2F24%2FPlayingEventsAsPatterns%2F</url>
+    <content type="text"><![CDATA[sc-hacks provides two ways to play Events as patterns: \name pplay: (event ...) Play event as EventPattern, using default play key settings, i.e. playing notes unless something else is specified. (event ...) eplay: \name Play event as EventPattern using a custom partial event type \envEvent. This does not produce any sounds per default, but only writes the results of playing all streams in the event, including the default translations of \degree, \ctranspose and related keys, to currentEnvironment. These changes are broadcast to the system using the changed mechanism and can be used to drive both GUI and synths. Both pplay and eplay use EventPattern, EventStream and EventStreamPlayer. This means, it is easy to modify the event and thus change the behaviour of the player, while it is playing. Symbol pplay Here the pattern is modified with addKey, addEvent and setEvent while playing: \p.pplay;//:\p.pplay ((freq: Pbrown (10, 200, 10, inf) * 10));//:\p.pplay ((degree: Pbrown (1, 20, 3, inf)));//:\p.addKey (\dur, 0.1);//:\p addEvent: (ctranspose: Pstutter (20, Pbrown (-6, 6, 1, inf)), legato: Pseq ([0.2, 0.1, 0.2, 4], inf));//:\p setEvent: (freq: Pwhite (300, 3000, inf), dur: Pseq ([0.1, 0.3], inf), legato: 0.1); Event eplay (freq: Pwhite (400, 20000, inf).sqrt, dur: 0.1).eplay;\window.vlayout (CSlider (\freq)).front;//:(freq: Pwhite (400, 2000, inf), dur: 0.1).eplay;//:\test splay: { SinOsc.ar (\freq.kr (400), 0, 0.1) };//:(degree: Pbrown (0, 20, 2, inf), dur: 0.1).eplay;//: Play different functions in parallel, with crossfade: ~fadeTime = 2;{ var players; players = Pseq ([ { LFPulse.ar (\freq.kr (400) / [2, 3], 0, 0.5, 0.1) }, /* { Blip.ar (\freq.kr (400 * [1, 1.2]), LFNoise0.kr (5).range (5, 250), 0.3) }, */ { LPF.ar ( Ringz.ar (PinkNoise.ar (0.1), \freq.kr (400) * [1, 1.5], 0.1), LFNoise2.kr (1).range (400, 1000) ) } ], inf).asStream; loop { \test splay: players.next; 2.5.wait; }}.fork;//: NOTE: other keys are overwritten in the source event of the other]]></content>
+      <categories>
+        <category>coding</category>
+      </categories>
+      <tags>
+        <tag>Event</tag>
+        <tag>Pattern</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Registry: Hierarchical Namespaces]]></title>
     <url>%2Fsc-hacks%2F2017%2F06%2F23%2FRegistry%2F</url>
     <content type="text"><![CDATA[This class helps to store objects and to retrieve them using a key. This is similar to the way that with classes such as Pdef, Ndef, OSCdef work, but Registry can be used to add the same feature to any class, without subclassing it. To create this behavior instead, add a method to Symbol for accessing the kind of object needed. For example: \aSymbol.oscFunc. This also allows easier customization of how the object is created if not found. How it works Store an object in Library under an array of objects (called a path). When accessing the path, create the object if not already stored, else return the previously stored object. Who uses it SynthPlayer registers its instances in the current environment under their names. Function:oscFunc and Symbol:removeOsc registers OSCFuncs under their path names in order to remove existing OSCFunc instances when creating a new one under the same path. Example This is the code that makes it possible to create or modify an OSCFunc bound to a symbol. It defines the methods Function:oscFunc and Symbol:removeOsc. + Function {&#10;&#9;oscFunc { | path |&#10;&#9;&#9;path.removeOsc;&#10;&#9;&#9;^Registry (&#39;oscFuncs&#39;, path, { OSCFunc (this, path) });&#10;&#9;}&#10;}&#10;&#10;+ Symbol {&#10;&#9;removeOsc {&#10;&#9;&#9;Registry.doIfFound (&#39;oscFuncs&#39;, this, { | found |&#10;&#9;&#9;&#9;found.objectClosed;&#10;&#9;&#9;&#9;found.free;&#10;&#9;&#9;}); &#10;&#9;}&#10;}]]></content>
@@ -44,9 +56,9 @@
       <tags>
         <tag>trigger</tag>
         <tag>design</tag>
+        <tag>gate</tag>
         <tag>envgen</tag>
         <tag>env</tag>
-        <tag>gate</tag>
       </tags>
   </entry>
   <entry>
@@ -123,10 +135,10 @@
         <category>methods</category>
       </categories>
       <tags>
+        <tag>EventPattern</tag>
         <tag>notification</tag>
         <tag>EnvGen</tag>
         <tag>trigger</tag>
-        <tag>EventPattern</tag>
         <tag>Event</tag>
       </tags>
   </entry>
@@ -174,8 +186,8 @@
         <category>gui</category>
       </categories>
       <tags>
-        <tag>gui</tag>
         <tag>learning</tag>
+        <tag>gui</tag>
       </tags>
   </entry>
   <entry>
@@ -186,8 +198,8 @@
         <category>classes</category>
       </categories>
       <tags>
-        <tag>EventPattern</tag>
         <tag>EventStream</tag>
+        <tag>EventPattern</tag>
         <tag>EventStreamPlayer</tag>
       </tags>
   </entry>
