@@ -106,7 +106,7 @@
 <meta property="og:url" content="http://iani.github.io/2017/06/25/MiniLanguageOverview/index.html">
 <meta property="og:site_name" content="SC Hacks">
 <meta property="og:description" content="The classes, methods and operators provided by sc-hacks extend SuperCollider to simplify the coding of GUI and of sound / musical structure / interaction.  Inspired by the efforts of tiny=sc and tiny">
-<meta property="og:updated_time" content="2017-06-24T16:41:01.000Z">
+<meta property="og:updated_time" content="2017-06-24T16:45:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Mini-Language Overview">
 <meta name="twitter:description" content="The classes, methods and operators provided by sc-hacks extend SuperCollider to simplify the coding of GUI and of sound / musical structure / interaction.  Inspired by the efforts of tiny=sc and tiny">
@@ -393,22 +393,22 @@ The classes, methods and operators provided by <i>sc-hacks</i> extend SuperColli
 <h3 id="sec-2-1">Operators on Functions</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
-These are operators that are written after an event, and thus take an event as receiver.  They serve two main uses of functions in musical processes: 
+These are operators that are written after a function, and thus take a function as receiver.  They serve two main uses of functions in musical processes: 
 </p>
 <ol class="org-ol">
-<li>Play a synth (<code>Function:play</code> : operator <code>+&gt;</code>)
+<li>Play a synth (<code>Function:play</code> : operator <code>+></code>)
 </li>
-<li>Play a routine (<code>Function:fork</code> : operator <code>*&gt;</code>)
+<li>Play a routine (<code>Function:fork</code> : operator <code>*></code>)
 </li>
 </ol>
 
 
 <p>
-+&gt; play as synth
++> play as synth
 </p>
 
 <p>
-*&gt; play as routine (fork)
+*> play as routine (fork)
 </p>
 </div>
 </div>
@@ -417,23 +417,23 @@ These are operators that are written after an event, and thus take an event as r
 <h3 id="sec-2-2">Operators on Events</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
-These are operators that are written after an event, and thus take an event as receiver. 
+These are operators that are written after an event, and thus take an event as receiver.  They serve to play the event as EventPattern inside currentEnvironment, setting the environments keys (but not producing any sound by itself).  Furthermore, they serve to modify the event of such a playing EventPattern.
 </p>
 
 <p>
-@&gt; play
+@> play
 </p>
 
 <p>
-@&gt;+ addEvent
+@>+ addEvent
 </p>
 
 <p>
-@&gt;! setEvent
+@>! setEvent
 </p>
 
 <p>
-@&gt;@ addKey 
+@>@ addKey 
 </p>
 </div>
 </div>
@@ -442,40 +442,39 @@ These are operators that are written after an event, and thus take an event as r
 <h3 id="sec-2-3">Operators on Symbols</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
-These are operators that are written after an event, and thus take an event as receiver.
+These are operators that are written after a symbol, and thus take a symbol as receiver.
 </p>
-
 
 <p>
 They are primarily used to link synths (with buses, and in right synth order).
 </p>
 
 <p>
-&amp;&gt; set the output bus of the receiver to the input bus of the argument (only the output bus of the receiver changes)
+&> set the output bus of the receiver to the input bus of the argument (only the output bus of the receiver changes)
 </p>
 
 <p>
-&lt; &amp;  set the input bus of the argument to the output bus of the receiver (only the input bus of the argument changes)
+< &  set the input bus of the argument to the output bus of the receiver (only the input bus of the argument changes)
 </p>
 
 <pre class="example">
-receiver &amp;&gt;! argument
+receiver &>! argument
 </pre>
 
 <p>
-&amp;&gt;! set the output bus of the receiver to the input bus of the argument, on a new private bus (both receiver and argument change)
+&>! set the output bus of the receiver to the input bus of the argument, on a new private bus (both receiver and argument change)
 </p>
 
 <pre class="example">
-receiver &amp;/&gt; argument
+receiver &/> argument
 </pre>
 
 <p>
-&amp;/&gt; Copy the output signal of the receiver from its bus onto the input bus of the argument, using a signal copy synth.
+&/> Copy the output signal of the receiver from its bus onto the input bus of the argument, using a signal copy synth.
 </p>
 
 <pre class="example">
-receiver &lt; / &gt; argument
+receiver < / > argument
 </pre>
 
 <p>
@@ -505,7 +504,7 @@ rplay
 <h3 id="sec-2-5">Operators to strings (!?)</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
-string +&gt; symbol : play synthdef named by string on the symbol as SynthPlayer ?
+string +> symbol : play synthdef named by string on the symbol as SynthPlayer ?
 </p>
 </div>
 </div>
