@@ -106,7 +106,7 @@
 <meta property="og:url" content="http://iani.github.io/2017/06/25/OperatorDesign/index.html">
 <meta property="og:site_name" content="SC Hacks">
 <meta property="og:description" content="sc-hacks uses binary operators to shorten and help classify the coding of common operations such as playing a synth or a pattern.  The syntax of a binary operator in SuperCollider is:      receiver o">
-<meta property="og:updated_time" content="2017-06-25T14:20:04.000Z">
+<meta property="og:updated_time" content="2017-06-25T14:35:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Operator Design">
 <meta name="twitter:description" content="sc-hacks uses binary operators to shorten and help classify the coding of common operations such as playing a synth or a pattern.  The syntax of a binary operator in SuperCollider is:      receiver o">
@@ -402,24 +402,19 @@ Here is a list of operators introduced in <i>sc-hacks</i>.
 There are 2 operators taking functions as arguent, 4 operators taking event as argument, and 5 operators taking a symbol as argument.
 </p>
 
-<div class="export">
-<p>
-&lt;ol&gt;
-&lt;li&gt;&lt;code&gt;{ function } +&amp;gt; synthname &lt;/code&gt; play as synth&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;{function } *&amp;gt; synthname &lt;/code&gt; play as routine (fork)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;( event ) @&amp;gt; patternname &lt;/code&gt; play&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;( event ) @&amp;gt;+&lt;/code&gt; ; patternname addEvent&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;( event ) @&amp;gt;!&lt;/code&gt; ; patternname setEvent&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;( event ) @&amp;gt;@&lt;/code&gt; ; patternname addKey&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;receiver &amp;amp;&amp;gt; argument&lt;/code&gt; set the output bus of the receiver to the input bus of the argument (only the output bus of the receiver changes)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;receiver &amp;lt;&amp;amp; argument&lt;/code&gt; set the input bus of the argument to the output bus of the receiver (only the input bus of  the argument changes)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;receiver &amp;amp;&amp;gt;! argument&lt;/code&gt; set the output bus of the receiver to the input bus of the argument, - on a new private bus (both receiver and argument change)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;receiver &amp;amp;/&amp;gt; argument&lt;/code&gt; Copy the output signal of the receiver from its bus onto the input bus of the argument, using a signal copy synth. (neither receiver nor argument changes).&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;receiver &amp;lt;/&amp;gt; argument&lt;/code&gt; Copy the output signal of the receiver onto a new private bus, and the signal from that private bus onto the input bus of the argument, using 2 signal copy synths (neither receiver nor argument changes).&lt;/li&gt;
-&lt;/ol&gt;
-</p>
-
-</div>
+<ol>
+<li><code>{ function } +&gt; synthname </code> play as synth</li>
+<li><code>{function } *&gt; synthname </code> play as routine (fork)</li>
+<li><code>( event ) @&gt; patternname </code> play</li>
+<li><code>( event ) @&gt;+</code> ; patternname addEvent</li>
+<li><code>( event ) @&gt;!</code> ; patternname setEvent</li>
+<li><code>( event ) @&gt;@</code> ; patternname addKey</li>
+<li><code>receiver &amp;&gt; argument</code> set the output bus of the receiver to the input bus of the argument (only the output bus of the receiver changes)</li>
+<li><code>receiver &lt;&amp; argument</code> set the input bus of the argument to the output bus of the receiver (only the input bus of  the argument changes)</li>
+<li><code>receiver &amp;&gt;! argument</code> set the output bus of the receiver to the input bus of the argument, - on a new private bus (both receiver and argument change)</li>
+<li><code>receiver &amp;/&gt; argument</code> Copy the output signal of the receiver from its bus onto the input bus of the argument, using a signal copy synth. (neither receiver nor argument changes).</li>
+<li><code>receiver &lt;/&gt; argument</code> Copy the output signal of the receiver onto a new private bus, and the signal from that private bus onto the input bus of the argument, using 2 signal copy synths (neither receiver nor argument changes).</li>
+</ol>
 </div>
 </div>
 
