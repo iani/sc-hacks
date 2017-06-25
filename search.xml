@@ -83,8 +83,8 @@
         <category>use</category>
       </categories>
       <tags>
-        <tag>design</tag>
         <tag>synth</tag>
+        <tag>design</tag>
         <tag>use</tag>
         <tag>pattern</tag>
       </tags>
@@ -136,8 +136,8 @@
         <category>notes</category>
       </categories>
       <tags>
-        <tag>design</tag>
         <tag>synth</tag>
+        <tag>design</tag>
         <tag>TODO</tag>
       </tags>
   </entry>
@@ -149,10 +149,10 @@
         <category>methods</category>
       </categories>
       <tags>
-        <tag>EventPattern</tag>
         <tag>notification</tag>
         <tag>EnvGen</tag>
         <tag>trigger</tag>
+        <tag>EventPattern</tag>
         <tag>Event</tag>
       </tags>
   </entry>
@@ -212,8 +212,8 @@
         <category>classes</category>
       </categories>
       <tags>
-        <tag>EventStream</tag>
         <tag>EventPattern</tag>
+        <tag>EventStream</tag>
         <tag>EventStreamPlayer</tag>
       </tags>
   </entry>
