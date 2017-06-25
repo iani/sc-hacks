@@ -8,8 +8,8 @@
         <category>coding</category>
       </categories>
       <tags>
-        <tag>class</tag>
         <tag>method</tag>
+        <tag>class</tag>
         <tag>coding</tag>
         <tag>language</tag>
       </tags>
@@ -68,8 +68,8 @@
         <category>design</category>
       </categories>
       <tags>
-        <tag>design</tag>
         <tag>trigger</tag>
+        <tag>design</tag>
         <tag>envgen</tag>
         <tag>env</tag>
         <tag>gate</tag>
@@ -83,8 +83,8 @@
         <category>use</category>
       </categories>
       <tags>
-        <tag>synth</tag>
         <tag>design</tag>
+        <tag>synth</tag>
         <tag>use</tag>
         <tag>pattern</tag>
       </tags>
@@ -136,8 +136,8 @@
         <category>notes</category>
       </categories>
       <tags>
-        <tag>synth</tag>
         <tag>design</tag>
+        <tag>synth</tag>
         <tag>TODO</tag>
       </tags>
   </entry>
@@ -187,8 +187,8 @@
         <category>methods</category>
       </categories>
       <tags>
-        <tag>method</tag>
         <tag>synth</tag>
+        <tag>method</tag>
         <tag>environment</tag>
       </tags>
   </entry>
@@ -200,8 +200,8 @@
         <category>gui</category>
       </categories>
       <tags>
-        <tag>gui</tag>
         <tag>learning</tag>
+        <tag>gui</tag>
       </tags>
   </entry>
   <entry>
