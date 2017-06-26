@@ -70,9 +70,9 @@
       <tags>
         <tag>trigger</tag>
         <tag>design</tag>
-        <tag>gate</tag>
         <tag>envgen</tag>
         <tag>env</tag>
+        <tag>gate</tag>
       </tags>
   </entry>
   <entry>
@@ -149,10 +149,10 @@
         <category>methods</category>
       </categories>
       <tags>
+        <tag>EventPattern</tag>
         <tag>notification</tag>
         <tag>EnvGen</tag>
         <tag>trigger</tag>
-        <tag>EventPattern</tag>
         <tag>Event</tag>
       </tags>
   </entry>
@@ -212,8 +212,8 @@
         <category>classes</category>
       </categories>
       <tags>
-        <tag>EventPattern</tag>
         <tag>EventStream</tag>
+        <tag>EventPattern</tag>
         <tag>EventStreamPlayer</tag>
       </tags>
   </entry>
