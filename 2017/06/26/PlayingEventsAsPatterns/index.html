@@ -83,7 +83,7 @@
 <link href="/sc-hacks/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="synth,design,use,pattern," />
+  <meta name="keywords" content="Event,Pattern," />
 
 
 
@@ -99,17 +99,17 @@
 
 
 
-<meta name="description" content="Event:eplay and SynthPlayer can play with several instances in parallel on the same environment, and also provide several additional features.  This section gives some examples that explore these fea">
-<meta name="keywords" content="synth,design,use,pattern">
+<meta name="description" content="sc-hacks provides two ways to play Events as patterns:    \name pplay: (event ...) Play event as EventPattern, using default play key settings, i.e. playing notes unless something else is specified.">
+<meta name="keywords" content="Event,Pattern">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Pattern and Synth play scenarios">
-<meta property="og:url" content="http://iani.github.io/2017/06/21/PatternSynthPlay/index.html">
+<meta property="og:title" content="Playing Events as Patterns">
+<meta property="og:url" content="http://iani.github.io/2017/06/26/PlayingEventsAsPatterns/index.html">
 <meta property="og:site_name" content="SC Hacks">
-<meta property="og:description" content="Event:eplay and SynthPlayer can play with several instances in parallel on the same environment, and also provide several additional features.  This section gives some examples that explore these fea">
-<meta property="og:updated_time" content="2017-06-21T11:34:27.000Z">
+<meta property="og:description" content="sc-hacks provides two ways to play Events as patterns:    \name pplay: (event ...) Play event as EventPattern, using default play key settings, i.e. playing notes unless something else is specified.">
+<meta property="og:updated_time" content="2017-06-26T00:15:22.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Pattern and Synth play scenarios">
-<meta name="twitter:description" content="Event:eplay and SynthPlayer can play with several instances in parallel on the same environment, and also provide several additional features.  This section gives some examples that explore these fea">
+<meta name="twitter:title" content="Playing Events as Patterns">
+<meta name="twitter:description" content="sc-hacks provides two ways to play Events as patterns:    \name pplay: (event ...) Play event as EventPattern, using default play key settings, i.e. playing notes unless something else is specified.">
 
 
 
@@ -137,13 +137,13 @@
 
 
 
-  <link rel="canonical" href="http://iani.github.io/2017/06/21/PatternSynthPlay/"/>
+  <link rel="canonical" href="http://iani.github.io/2017/06/26/PlayingEventsAsPatterns/"/>
 
 
 
 
 
-  <title>Pattern and Synth play scenarios | SC Hacks</title>
+  <title>Playing Events as Patterns | SC Hacks</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -283,7 +283,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/21/PatternSynthPlay/">
+    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/26/PlayingEventsAsPatterns/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Iannis Zannos">
@@ -300,7 +300,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Pattern and Synth play scenarios</h1>
+          <h1 class="post-title" itemprop="name headline">Playing Events as Patterns</h1>
         
 
         <div class="post-meta">
@@ -312,8 +312,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-21T20:22:08+09:00">
-                2017-06-21
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-26T09:15:22+09:00">
+                2017-06-26
               </time>
             
 
@@ -335,8 +335,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/sc-hacks/categories/use/" itemprop="url" rel="index">
-                    <span itemprop="name">use</span>
+                  <a href="/sc-hacks/categories/coding/" itemprop="url" rel="index">
+                    <span itemprop="name">coding</span>
                   </a>
                 </span>
 
@@ -372,21 +372,43 @@
         
 
 <p>
-<code>Event:eplay</code> and <code>SynthPlayer</code> can play with several instances in parallel on the same environment, and also provide several additional features.  This section gives some examples that explore these features and show how they work and notes some questions regarding future features.
+<i>sc-hacks</i> provides two ways to play Events as patterns: 
 </p>
+<ol class="org-ol">
+<li><code>\name pplay: (event ...)</code> Play event as EventPattern, using default <code>play</code> key settings, i.e. playing notes unless something else is specified.
+</li>
+<li><code>(event ...) eplay: \name</code> Play event as EventPattern using a custom partial event type <code>\envEvent</code>. This does not produce any sounds per default, but only writes the results of playing all streams in the event, including the default translations of <code>\degree</code>, <code>\ctranspose</code> and related keys, to <code>currentEnvironment</code>. These changes are broadcast to the system using the <code>changed</code> mechanism and can be used to drive both GUI and synths.
+</li>
+</ol>
 
 <a id="more"></a>
 
+<p>
+Both <code>pplay</code> and <code>eplay</code> use <code>EventPattern</code>, <code>EventStream</code> and <code>EventStreamPlayer</code>.  This means, it is easy to modify the event and thus change the behaviour of the player, while it is playing.  
+</p>
+
 <div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">Creating, starting and stopping patterns</h2>
+<h2 id="sec-1">Symbol pplay</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Here the pattern is modified with <code>addKey</code>, <code>addEvent</code> and <code>setEvent</code> while playing:
+</p>
+
+<div class="org-src-container">
+
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">\p.pplay;</span><br><span class="line"><span class="comment">//:</span></span><br><span class="line">\p.pplay ((freq: Pbrown (<span class="number">10</span>, <span class="number">200</span>, <span class="number">10</span>, inf) * <span class="number">10</span>));</span><br><span class="line"><span class="comment">//:</span></span><br><span class="line">\p.pplay ((degree: Pbrown (<span class="number">1</span>, <span class="number">20</span>, <span class="number">3</span>, inf)));</span><br><span class="line"><span class="comment">//:</span></span><br><span class="line">\p.addKey (\dur, <span class="number">0.1</span>);</span><br><span class="line"><span class="comment">//:</span></span><br><span class="line">\p addEvent: (ctranspose: Pstutter (<span class="number">20</span>, Pbrown (-<span class="number">6</span>, <span class="number">6</span>, <span class="number">1</span>, inf)), legato: Pseq ([<span class="number">0.2</span>, <span class="number">0.1</span>, <span class="number">0.2</span>, <span class="number">4</span>], inf));</span><br><span class="line"><span class="comment">//:</span></span><br><span class="line">\p setEvent: (freq: Pwhite (<span class="number">300</span>, <span class="number">3000</span>, inf), dur: Pseq ([<span class="number">0.1</span>, <span class="number">0.3</span>], inf), legato: <span class="number">0.1</span>);</span><br></pre></td></tr></table></figure>
+</div>
+</div>
 </div>
 
 <div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">Playing several patterns in the same environment</h2>
-</div>
+<h2 id="sec-2">Event eplay</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
 
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">Playing several synths in the same environment</h2>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">(freq: Pwhite (<span class="number">400</span>, <span class="number">20000</span>, inf).sqrt, dur: <span class="number">0.1</span>).eplay;</span><br><span class="line">\<span class="built_in">window</span>.vlayout (CSlider (\freq)).front;</span><br><span class="line"><span class="comment">//:</span></span><br><span class="line">(freq: Pwhite (<span class="number">400</span>, <span class="number">2000</span>, inf), dur: <span class="number">0.1</span>).eplay;</span><br><span class="line"><span class="comment">//:</span></span><br><span class="line">\test splay: { SinOsc.ar (\freq.kr (<span class="number">400</span>), <span class="number">0</span>, <span class="number">0.1</span>) };</span><br><span class="line"><span class="comment">//:</span></span><br><span class="line">(degree: Pbrown (<span class="number">0</span>, <span class="number">20</span>, <span class="number">2</span>, inf), dur: <span class="number">0.1</span>).eplay;</span><br><span class="line"><span class="comment">//: Play different functions in parallel, with crossfade: </span></span><br><span class="line">~fadeTime = <span class="number">2</span>;</span><br><span class="line">{</span><br><span class="line">	<span class="keyword">var</span> players;</span><br><span class="line">	players = Pseq ([</span><br><span class="line">		{ LFPulse.ar (\freq.kr (<span class="number">400</span>) / [<span class="number">2</span>, <span class="number">3</span>], <span class="number">0</span>, <span class="number">0.5</span>, <span class="number">0.1</span>) },</span><br><span class="line">		<span class="comment">/*</span><br><span class="line">		  { Blip.ar (\freq.kr (400 * [1, 1.2]),</span><br><span class="line">		  LFNoise0.kr (5).range (5, 250),</span><br><span class="line">		  0.3)</span><br><span class="line">		  },</span><br><span class="line">		*/</span></span><br><span class="line">		{</span><br><span class="line">			LPF.ar (</span><br><span class="line">				Ringz.ar (PinkNoise.ar (<span class="number">0.1</span>), \freq.kr (<span class="number">400</span>) * [<span class="number">1</span>, <span class="number">1.5</span>], <span class="number">0.1</span>),</span><br><span class="line">				LFNoise2.kr (<span class="number">1</span>).range (<span class="number">400</span>, <span class="number">1000</span>)</span><br><span class="line">			)</span><br><span class="line">		}</span><br><span class="line">	], inf).asStream;</span><br><span class="line">	loop {</span><br><span class="line">		\test splay: players.next;</span><br><span class="line">		<span class="number">2.5</span>.wait;</span><br><span class="line">	}</span><br><span class="line">}.fork;</span><br><span class="line"></span><br><span class="line"><span class="comment">//: <span class="doctag">NOTE:</span> other keys are overwritten in the source event of the other</span></span><br></pre></td></tr></table></figure>
+</div>
+</div>
 </div>
 
       
@@ -417,13 +439,9 @@
       
         <div class="post-tags">
           
-            <a href="/sc-hacks/tags/synth/" rel="tag"># synth</a>
+            <a href="/sc-hacks/tags/Event/" rel="tag"># Event</a>
           
-            <a href="/sc-hacks/tags/design/" rel="tag"># design</a>
-          
-            <a href="/sc-hacks/tags/use/" rel="tag"># use</a>
-          
-            <a href="/sc-hacks/tags/pattern/" rel="tag"># pattern</a>
+            <a href="/sc-hacks/tags/Pattern/" rel="tag"># Pattern</a>
           
         </div>
       
@@ -436,8 +454,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/sc-hacks/2017/06/21/TriggeringMethods/" rel="next" title="Triggering Methods">
-                <i class="fa fa-chevron-left"></i> Triggering Methods
+              <a href="/sc-hacks/2017/06/25/MiniLanguageOverview/" rel="next" title="Mini-Language Overview">
+                <i class="fa fa-chevron-left"></i> Mini-Language Overview
               </a>
             
           </div>
@@ -446,8 +464,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/sc-hacks/2017/06/22/TriggeringEnvGen/" rel="prev" title="Triggering EnvGen and Line">
-                Triggering EnvGen and Line <i class="fa fa-chevron-right"></i>
+              <a href="/sc-hacks/2017/06/26/MD-Render-Test/" rel="prev" title="Render Test">
+                Render Test <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -576,7 +594,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-1"><span class="nav-number">1.</span> <span class="nav-text">Creating, starting and stopping patterns</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-2"><span class="nav-number">2.</span> <span class="nav-text">Playing several patterns in the same environment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-3"><span class="nav-number">3.</span> <span class="nav-text">Playing several synths in the same environment</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-1"><span class="nav-number">1.</span> <span class="nav-text">Symbol pplay</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sec-2"><span class="nav-number">2.</span> <span class="nav-text">Event eplay</span></a></li></ol></div>
             
 
           </div>
