@@ -12,11 +12,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[Render Test]]></title>
-    <url>%2Fsc-hacks%2F2017%2F06%2F26%2FMD-Render-Test%2F</url>
-    <content type="text"><![CDATA[{ function } +&gt; synthname play as synth { function } *&gt; synthname play as routine (fork) { function } **&gt; synthname wrap in loop and play as routine (fork) { function } &lt;* key evaluate function whenever value of key is set in envir ( event ) @&gt; patternname play ( event ) @&gt;+ patternname addEvent ( event ) @&gt;! patternname setEvent receiver &amp;&gt; argument set the output bus of the receiver to the input bus of the argument (only the output bus of the receiver changes) receiver &lt;&amp; argument set the input bus of the argument to the output bus of the receiver (only the input bus of the argument changes) receiver &amp;&gt;! argument set the output bus of the receiver to the input bus of the argument, - on a new private bus (both receiver and argument change) receiver &amp;/&gt; argument Copy the output signal of the receiver from its bus onto the input bus of the argument, using a signal copy synth. (neither receiver nor argument changes). receiver &lt;/&gt; argument Copy the output signal of the receiver onto a new private bus, and the signal from that private bus onto the input bus of the argument, using 2 signal copy synths (neither receiver nor argument changes).]]></content>
-  </entry>
-  <entry>
     <title><![CDATA[Playing Events as Patterns]]></title>
     <url>%2Fsc-hacks%2F2017%2F06%2F26%2FPlayingEventsAsPatterns%2F</url>
     <content type="text"><![CDATA[sc-hacks provides two ways to play Events as patterns: \name pplay: (event ...) Play event as EventPattern, using default play key settings, i.e. playing notes unless something else is specified. (event ...) eplay: \name Play event as EventPattern using a custom partial event type \envEvent. This does not produce any sounds per default, but only writes the results of playing all streams in the event, including the default translations of \degree, \ctranspose and related keys, to currentEnvironment. These changes are broadcast to the system using the changed mechanism and can be used to drive both GUI and synths. Both pplay and eplay use EventPattern, EventStream and EventStreamPlayer. This means, it is easy to modify the event and thus change the behaviour of the player, while it is playing. Symbol pplay Here the pattern is modified with addKey, addEvent and setEvent while playing: \p.pplay;//:\p.pplay ((freq: Pbrown (10, 200, 10, inf) * 10));//:\p.pplay ((degree: Pbrown (1, 20, 3, inf)));//:\p.addKey (\dur, 0.1);//:\p addEvent: (ctranspose: Pstutter (20, Pbrown (-6, 6, 1, inf)), legato: Pseq ([0.2, 0.1, 0.2, 4], inf));//:\p setEvent: (freq: Pwhite (300, 3000, inf), dur: Pseq ([0.1, 0.3], inf), legato: 0.1); Event eplay (freq: Pwhite (400, 20000, inf).sqrt, dur: 0.1).eplay;\window.vlayout (CSlider (\freq)).front;//:(freq: Pwhite (400, 2000, inf), dur: 0.1).eplay;//:\test splay: { SinOsc.ar (\freq.kr (400), 0, 0.1) };//:(degree: Pbrown (0, 20, 2, inf), dur: 0.1).eplay;//: Play different functions in parallel, with crossfade: ~fadeTime = 2;{ var players; players = Pseq ([ { LFPulse.ar (\freq.kr (400) / [2, 3], 0, 0.5, 0.1) }, /* { Blip.ar (\freq.kr (400 * [1, 1.2]), LFNoise0.kr (5).range (5, 250), 0.3) }, */ { LPF.ar ( Ringz.ar (PinkNoise.ar (0.1), \freq.kr (400) * [1, 1.5], 0.1), LFNoise2.kr (1).range (400, 1000) ) } ], inf).asStream; loop { \test splay: players.next; 2.5.wait; }}.fork;//: NOTE: other keys are overwritten in the source event of the other]]></content>
@@ -75,9 +70,9 @@
       <tags>
         <tag>trigger</tag>
         <tag>design</tag>
+        <tag>gate</tag>
         <tag>envgen</tag>
         <tag>env</tag>
-        <tag>gate</tag>
       </tags>
   </entry>
   <entry>

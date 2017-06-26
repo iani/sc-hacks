@@ -70,7 +70,7 @@
   
     
     
-    <link href="//fonts.googleapis.com/css?family=Source Sans Pro:300,300italic,400,400italic,700,700italic|Raleway:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,700,700italic|Raleway:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
   
 
 
@@ -384,131 +384,6 @@
             </a>
           </div>
           <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/26/MD-Render-Test/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Iannis Zannos">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/sc-hacks/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="SC Hacks">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/sc-hacks/2017/06/26/MD-Render-Test/" itemprop="url">Render Test</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-26T13:46:50+09:00">
-                2017-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ol>
-<li><code>{ function } +&gt; synthname</code> play as synth</li>
-<li><code>{ function } *&gt; synthname</code> play as routine (fork)</li>
-<li><code>{ function } **&gt; synthname</code> wrap in loop and play as routine (fork)</li>
-<li><code>{ function } &lt;* key</code> evaluate function whenever value of key is set in envir</li>
-<li><code>( event ) @&gt; patternname</code> play</li>
-<li><code>( event ) @&gt;+ patternname</code> addEvent</li>
-<li><code>( event ) @&gt;! patternname</code> setEvent</li>
-<li><code>receiver &amp;&gt; argument</code> set the output bus of the receiver to the input bus of the argument (only the output bus of the receiver changes)</li>
-<li><code>receiver &lt;&amp; argument</code> set the input bus of the argument to the output bus of the receiver (only the input bus of the argument changes)</li>
-<li><code>receiver &amp;&gt;! argument</code> set the output bus of the receiver to the input bus of the argument, - on a new private bus (both receiver and argument change)</li>
-<li><code>receiver &amp;/&gt; argument</code> Copy the output signal of the receiver from its bus onto the input bus of the argument, using a signal copy synth. (neither receiver nor argument changes).</li>
-<li><code>receiver &lt;/&gt; argument</code> Copy the output signal of the receiver onto a new private bus, and the signal from that private bus onto the input bus of the argument, using 2 signal copy synths (neither receiver nor argument changes).</li>
-</ol>
-
-          
         
       
     </div>
@@ -1667,6 +1542,146 @@ This section discusses problems and approaches for sonifying data using EventPla
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/21/PlayingGrains/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Iannis Zannos">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/sc-hacks/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SC Hacks">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/sc-hacks/2017/06/21/PlayingGrains/" itemprop="url">Playing Grains</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-21T00:53:36+09:00">
+                2017-06-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/sc-hacks/categories/use/" itemprop="url" rel="index">
+                    <span itemprop="name">use</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>
+Here are some examples for playing grains of sound from a buffer with 
+</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/sc-hacks/2017/06/21/PlayingGrains/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
@@ -1716,7 +1731,7 @@ This section discusses problems and approaches for sonifying data using EventPla
           
             <div class="site-state-item site-state-posts">
               <a href="/sc-hacks/archives">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>
