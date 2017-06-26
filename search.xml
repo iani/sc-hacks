@@ -31,8 +31,8 @@
         <category>coding</category>
       </categories>
       <tags>
-        <tag>method</tag>
         <tag>class</tag>
+        <tag>method</tag>
         <tag>coding</tag>
         <tag>language</tag>
       </tags>
@@ -70,9 +70,9 @@
       <tags>
         <tag>trigger</tag>
         <tag>design</tag>
+        <tag>gate</tag>
         <tag>envgen</tag>
         <tag>env</tag>
-        <tag>gate</tag>
       </tags>
   </entry>
   <entry>
@@ -187,8 +187,8 @@
         <category>methods</category>
       </categories>
       <tags>
-        <tag>synth</tag>
         <tag>method</tag>
+        <tag>synth</tag>
         <tag>environment</tag>
       </tags>
   </entry>
