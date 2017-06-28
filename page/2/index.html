@@ -49,13 +49,8 @@
   
 
   
-    
-    
-  
 
   
-    
-      
     
 
     
@@ -70,7 +65,7 @@
   
     
     
-    <link href="//fonts.googleapis.com/css?family=Montserrat:300,300italic,400,400italic,700,700italic|Raleway:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Raleway:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
   
 
 
@@ -283,7 +278,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/19/ImprovingEplay/">
+    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/22/test/TriggeringEnvGen/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Iannis Zannos">
@@ -302,7 +297,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/sc-hacks/2017/06/19/ImprovingEplay/" itemprop="url">Improving Function:eplay</a></h1>
+                <a class="post-title-link" href="/sc-hacks/2017/06/22/test/TriggeringEnvGen/" itemprop="url">Triggering EnvGen and Line</a></h1>
         
 
         <div class="post-meta">
@@ -314,8 +309,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-19T10:52:42+09:00">
-                2017-06-19
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-22T13:22:28+09:00">
+                2017-06-22
               </time>
             
 
@@ -337,19 +332,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/sc-hacks/categories/methods/" itemprop="url" rel="index">
-                    <span itemprop="name">methods</span>
-                  </a>
-                </span>
-
-                
-                
-                  , 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/sc-hacks/categories/methods/notes/" itemprop="url" rel="index">
-                    <span itemprop="name">notes</span>
+                  <a href="/sc-hacks/categories/design/" itemprop="url" rel="index">
+                    <span itemprop="name">design</span>
                   </a>
                 </span>
 
@@ -384,11 +368,11 @@
       
         
           <p>
-Individual improvement steps for Function:eplay: Done and TODO.  Thesse notes are from an early stage in development.  Now the functionality of most done steps has been integrated in class <code>SynthPlayer</code>.  
+Besides controlling the amplitude shape of a single sound-event or note in its entirety, envelopes can also be used to generate streams of sound events with the same synth.  The same technique can also be applied to Line or Xline to arbitrarily construct shapes controlling any parameter on the fly.  Here are some examples explaining how to do this using either just the default <b>SCClassLibrary</b> and the <b>sc-hacks</b> library.
 </p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/sc-hacks/2017/06/19/ImprovingEplay/#more" rel="contents">
+            <a class="btn" href="/sc-hacks/2017/06/22/test/TriggeringEnvGen/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -434,7 +418,7 @@ Individual improvement steps for Function:eplay: Done and TODO.  Thesse notes ar
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/14/EventEplay/">
+    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/22/TriggeringEnvGen/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Iannis Zannos">
@@ -453,7 +437,7 @@ Individual improvement steps for Function:eplay: Done and TODO.  Thesse notes ar
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/sc-hacks/2017/06/14/EventEplay/" itemprop="url">Event eplay: Patterns updating current environment</a></h1>
+                <a class="post-title-link" href="/sc-hacks/2017/06/22/TriggeringEnvGen/" itemprop="url">Triggering EnvGen and Line</a></h1>
         
 
         <div class="post-meta">
@@ -465,8 +449,8 @@ Individual improvement steps for Function:eplay: Done and TODO.  Thesse notes ar
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-14T00:27:31+09:00">
-                2017-06-14
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-22T03:11:53+09:00">
+                2017-06-22
               </time>
             
 
@@ -488,8 +472,8 @@ Individual improvement steps for Function:eplay: Done and TODO.  Thesse notes ar
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/sc-hacks/categories/methods/" itemprop="url" rel="index">
-                    <span itemprop="name">methods</span>
+                  <a href="/sc-hacks/categories/design/" itemprop="url" rel="index">
+                    <span itemprop="name">design</span>
                   </a>
                 </span>
 
@@ -524,15 +508,11 @@ Individual improvement steps for Function:eplay: Done and TODO.  Thesse notes ar
       
         
           <p>
-<code>anEnvironment.eplay(envir)</code>
-</p>
-
-<p>
-Play an event as EventPattern, updating the values in envir from each event.  Use custom event type: envEvent.  This only updates the values in the environment.  The sound must be generated by <code>Function:eplay</code>.  See examples below.
+Besides controlling the amplitude shape of a single sound-event or note in its entirety, envelopes can also be used to generate streams of sound events with the same synth.  The same technique can also be applied to Line or Xline to arbitrarily construct shapes controlling any parameter on the fly.  Here are some examples explaining how to do this using either just the default <b>SCClassLibrary</b> and the <b>sc-hacks</b> library.
 </p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/sc-hacks/2017/06/14/EventEplay/#more" rel="contents">
+            <a class="btn" href="/sc-hacks/2017/06/22/TriggeringEnvGen/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -578,7 +558,7 @@ Play an event as EventPattern, updating the values in envir from each event.  Us
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/11/Nevent/">
+    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/21/test/PatternSynthPlay/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Iannis Zannos">
@@ -597,7 +577,7 @@ Play an event as EventPattern, updating the values in envir from each event.  Us
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/sc-hacks/2017/06/11/Nevent/" itemprop="url">Nevent: Environment that notifes variable updates</a></h1>
+                <a class="post-title-link" href="/sc-hacks/2017/06/21/test/PatternSynthPlay/" itemprop="url">Pattern and Synth play scenarios</a></h1>
         
 
         <div class="post-meta">
@@ -609,8 +589,8 @@ Play an event as EventPattern, updating the values in envir from each event.  Us
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-11T18:17:57+09:00">
-                2017-06-11
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-21T20:34:27+09:00">
+                2017-06-21
               </time>
             
 
@@ -632,8 +612,8 @@ Play an event as EventPattern, updating the values in envir from each event.  Us
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/sc-hacks/categories/classes/" itemprop="url" rel="index">
-                    <span itemprop="name">classes</span>
+                  <a href="/sc-hacks/categories/use/" itemprop="url" rel="index">
+                    <span itemprop="name">use</span>
                   </a>
                 </span>
 
@@ -667,304 +647,12 @@ Play an event as EventPattern, updating the values in envir from each event.  Us
 
       
         
-          
-            
-
-<p>
-<code>Nevent</code> is an <code>EnvironmentRedirect</code> that notifies the changes of value of its variables. 
+          <p>
+<code>Event:eplay</code> and <code>SynthPlayer</code> can play with several instances in parallel on the same environment, and also provide several additional features.  This section gives some examples that explore these features and show how they work and notes some questions regarding future features.
 </p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/09/StoreSpecsAndSynthDefsInLibrary/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Iannis Zannos">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/sc-hacks/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="SC Hacks">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/sc-hacks/2017/06/09/StoreSpecsAndSynthDefsInLibrary/" itemprop="url">Store Specs and SynthDefs in Library</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-09T18:06:09+09:00">
-                2017-06-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/sc-hacks/categories/notes/" itemprop="url" rel="index">
-                    <span itemprop="name">notes</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-
-<p>
-Specs and SynthDefs should be stored in Library using Registry.  Advantages: 
-</p>
-
-<ul class="org-ul">
-<li>simplify and unify the API for accessing Specs and SynthDefs (and SynthDescs).
-</li>
-<li>provide global access to Specs and SynthDefs for all environments, guis, synths using spec/synthdef name.
-</li>
-<li>ensure SynthDefs are always loaded when the server is rebooted, also when it is a remote server.
-</li>
-<li>provide easy global access to SynthDescs for automatic GUI generation.
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/09/Function-eplay/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Iannis Zannos">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/sc-hacks/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="SC Hacks">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/sc-hacks/2017/06/09/Function-eplay/" itemprop="url">Function:eplay : play a function and follow its arguments from an environment</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-09T00:46:28+09:00">
-                2017-06-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/sc-hacks/categories/methods/" itemprop="url" rel="index">
-                    <span itemprop="name">methods</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <ol class="org-ol">
-<li>Provide arguments for playing a function from values found in an environment.
-</li>
-<li>connect all control names in the function's arguments to an environment for auto-update
-</li>
-<li>Free all notifications from the synth when it stops playing.
-</li>
-</ol>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/sc-hacks/2017/06/09/Function-eplay/#more" rel="contents">
+            <a class="btn" href="/sc-hacks/2017/06/21/test/PatternSynthPlay/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1010,7 +698,7 @@ Specs and SynthDefs should be stored in Library using Registry.  Advantages:
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/06/BuildingGUIs/">
+    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/21/PatternSynthPlay/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Iannis Zannos">
@@ -1029,7 +717,7 @@ Specs and SynthDefs should be stored in Library using Registry.  Advantages:
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/sc-hacks/2017/06/06/BuildingGUIs/" itemprop="url">Building GUIs</a></h1>
+                <a class="post-title-link" href="/sc-hacks/2017/06/21/PatternSynthPlay/" itemprop="url">Pattern and Synth play scenarios</a></h1>
         
 
         <div class="post-meta">
@@ -1041,8 +729,8 @@ Specs and SynthDefs should be stored in Library using Registry.  Advantages:
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-06T20:18:21+09:00">
-                2017-06-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-21T20:22:08+09:00">
+                2017-06-21
               </time>
             
 
@@ -1064,8 +752,8 @@ Specs and SynthDefs should be stored in Library using Registry.  Advantages:
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/sc-hacks/categories/gui/" itemprop="url" rel="index">
-                    <span itemprop="name">gui</span>
+                  <a href="/sc-hacks/categories/use/" itemprop="url" rel="index">
+                    <span itemprop="name">use</span>
                   </a>
                 </span>
 
@@ -1100,11 +788,11 @@ Specs and SynthDefs should be stored in Library using Registry.  Advantages:
       
         
           <p>
-This notebook shows how to build GUIs starting from scratch, with minimal code and in small steps.
+<code>Event:eplay</code> and <code>SynthPlayer</code> can play with several instances in parallel on the same environment, and also provide several additional features.  This section gives some examples that explore these features and show how they work and notes some questions regarding future features.
 </p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/sc-hacks/2017/06/06/BuildingGUIs/#more" rel="contents">
+            <a class="btn" href="/sc-hacks/2017/06/21/PatternSynthPlay/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1150,7 +838,7 @@ This notebook shows how to build GUIs starting from scratch, with minimal code a
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/06/EventStream/">
+    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/21/test/TriggeringMethods/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Iannis Zannos">
@@ -1169,7 +857,7 @@ This notebook shows how to build GUIs starting from scratch, with minimal code a
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/sc-hacks/2017/06/06/EventStream/" itemprop="url">EventStream: Modify Patterns while playing</a></h1>
+                <a class="post-title-link" href="/sc-hacks/2017/06/21/test/TriggeringMethods/" itemprop="url">Triggering Methods</a></h1>
         
 
         <div class="post-meta">
@@ -1181,8 +869,8 @@ This notebook shows how to build GUIs starting from scratch, with minimal code a
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-06T00:42:37+09:00">
-                2017-06-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-21T13:22:41+09:00">
+                2017-06-21
               </time>
             
 
@@ -1204,8 +892,8 @@ This notebook shows how to build GUIs starting from scratch, with minimal code a
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/sc-hacks/categories/classes/" itemprop="url" rel="index">
-                    <span itemprop="name">classes</span>
+                  <a href="/sc-hacks/categories/coding/" itemprop="url" rel="index">
+                    <span itemprop="name">coding</span>
                   </a>
                 </span>
 
@@ -1240,11 +928,11 @@ This notebook shows how to build GUIs starting from scratch, with minimal code a
       
         
           <p>
-An EventStream makes it easy to modify patterns while playing them. 
+This section illustrates several different ways to trigger grains, envelopes or other gate-triggered UGens
 </p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/sc-hacks/2017/06/06/EventStream/#more" rel="contents">
+            <a class="btn" href="/sc-hacks/2017/06/21/test/TriggeringMethods/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1290,7 +978,7 @@ An EventStream makes it easy to modify patterns while playing them.
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/06/Notification/">
+    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/21/TriggeringMethods/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Iannis Zannos">
@@ -1309,7 +997,7 @@ An EventStream makes it easy to modify patterns while playing them.
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/sc-hacks/2017/06/06/Notification/" itemprop="url">Notification: Register a function callback to a message and a pair of objects</a></h1>
+                <a class="post-title-link" href="/sc-hacks/2017/06/21/TriggeringMethods/" itemprop="url">Triggering Methods</a></h1>
         
 
         <div class="post-meta">
@@ -1321,8 +1009,8 @@ An EventStream makes it easy to modify patterns while playing them.
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-06T00:42:21+09:00">
-                2017-06-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-21T13:19:28+09:00">
+                2017-06-21
               </time>
             
 
@@ -1344,8 +1032,8 @@ An EventStream makes it easy to modify patterns while playing them.
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/sc-hacks/categories/classes/" itemprop="url" rel="index">
-                    <span itemprop="name">classes</span>
+                  <a href="/sc-hacks/categories/coding/" itemprop="url" rel="index">
+                    <span itemprop="name">coding</span>
                   </a>
                 </span>
 
@@ -1380,11 +1068,571 @@ An EventStream makes it easy to modify patterns while playing them.
       
         
           <p>
-<code>Notification</code> is an improved version of the <a href="http://doc.sccode.org/Classes/NotificationCenter.html" target="_blank" rel="external">NotificationCenter class</a>.  This class enables objects to register a function which is called when another object changes according to some aspect.  The aspect is expressed by a symbol.  To trigger a notification action, one sends the message <code>changed</code> to an object together with a symbol expressing the aspect which changed.  The function will only be evaluated for those objects which have registered to listen to the changing object according to the given aspect symbol.  This allows detailed control of callback execution amongst objects of the system.  For example, one can tell a gui object to change its color to green when a synth starts, and to change its color to red when that synth stops.
+This section illustrates several different ways to trigger grains, envelopes or other gate-triggered UGens
 </p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/sc-hacks/2017/06/06/Notification/#more" rel="contents">
+            <a class="btn" href="/sc-hacks/2017/06/21/TriggeringMethods/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/21/test/PlayingWithData/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Iannis Zannos">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/sc-hacks/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SC Hacks">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/sc-hacks/2017/06/21/test/PlayingWithData/" itemprop="url">Playing With Data</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-21T13:18:14+09:00">
+                2017-06-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/sc-hacks/categories/design/" itemprop="url" rel="index">
+                    <span itemprop="name">design</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>
+This section discusses problems and approaches for sonifying data using EventPlayer and SynthPlayer. 
+</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/sc-hacks/2017/06/21/test/PlayingWithData/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/21/PlayingWithData/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Iannis Zannos">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/sc-hacks/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SC Hacks">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/sc-hacks/2017/06/21/PlayingWithData/" itemprop="url">Playing With Data</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-21T01:00:07+09:00">
+                2017-06-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/sc-hacks/categories/design/" itemprop="url" rel="index">
+                    <span itemprop="name">design</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>
+This section discusses problems and approaches for sonifying data using EventPlayer and SynthPlayer. 
+</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/sc-hacks/2017/06/21/PlayingWithData/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/21/test/PlayingGrains/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Iannis Zannos">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/sc-hacks/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SC Hacks">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/sc-hacks/2017/06/21/test/PlayingGrains/" itemprop="url">Playing Grains</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-21T00:54:00+09:00">
+                2017-06-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/sc-hacks/categories/use/" itemprop="url" rel="index">
+                    <span itemprop="name">use</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>
+Here are some examples for playing grains of sound from a buffer with 
+</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/sc-hacks/2017/06/21/test/PlayingGrains/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://iani.github.io/sc-hacks/2017/06/21/PlayingGrains/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Iannis Zannos">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/sc-hacks/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SC Hacks">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/sc-hacks/2017/06/21/PlayingGrains/" itemprop="url">Playing Grains</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-21T00:53:36+09:00">
+                2017-06-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/sc-hacks/categories/use/" itemprop="url" rel="index">
+                    <span itemprop="name">use</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>
+Here are some examples for playing grains of sound from a buffer with 
+</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/sc-hacks/2017/06/21/PlayingGrains/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
@@ -1425,7 +1673,7 @@ An EventStream makes it easy to modify patterns while playing them.
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/sc-hacks/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/sc-hacks/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/sc-hacks/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/sc-hacks/">1</a><span class="page-number current">2</span><a class="page-number" href="/sc-hacks/page/3/">3</a><a class="page-number" href="/sc-hacks/page/4/">4</a><a class="extend next" rel="next" href="/sc-hacks/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1470,7 +1718,7 @@ An EventStream makes it easy to modify patterns while playing them.
           
             <div class="site-state-item site-state-posts">
               <a href="/sc-hacks/archives">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>
