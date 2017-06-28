@@ -76,17 +76,6 @@
   </entry>
   <entry>
     <title><![CDATA[Registry: Hierarchical Namespaces]]></title>
-    <url>%2Fsc-hacks%2F2017%2F06%2F23%2FRegistry%2F</url>
-    <content type="text"><![CDATA[This class helps to store objects and to retrieve them using a key. This is similar to the way that with classes such as Pdef, Ndef, OSCdef work, but Registry can be used to add the same feature to any class, without subclassing it. To create this behavior instead, add a method to Symbol for accessing the kind of object needed. For example: \aSymbol.oscFunc. This also allows easier customization of how the object is created if not found. How it works Store an object in Library under an array of objects (called a path). When accessing the path, create the object if not already stored, else return the previously stored object. Who uses it SynthPlayer registers its instances in the current environment under their names. Function:oscFunc and Symbol:removeOsc registers OSCFuncs under their path names in order to remove existing OSCFunc instances when creating a new one under the same path. Example This is the code that makes it possible to create or modify an OSCFunc bound to a symbol. It defines the methods Function:oscFunc and Symbol:removeOsc. + Function {&#10;&#9;oscFunc { | path |&#10;&#9;&#9;path.removeOsc;&#10;&#9;&#9;^Registry (&#39;oscFuncs&#39;, path, { OSCFunc (this, path) });&#10;&#9;}&#10;}&#10;&#10;+ Symbol {&#10;&#9;removeOsc {&#10;&#9;&#9;Registry.doIfFound (&#39;oscFuncs&#39;, this, { | found |&#10;&#9;&#9;&#9;found.objectClosed;&#10;&#9;&#9;&#9;found.free;&#10;&#9;&#9;}); &#10;&#9;}&#10;}]]></content>
-      <categories>
-        <category>classes</category>
-      </categories>
-      <tags>
-        <tag>registry</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[Registry: Hierarchical Namespaces]]></title>
     <url>%2Fsc-hacks%2F2017%2F06%2F23%2Ftest%2FRegistry%2F</url>
     <content type="text"><![CDATA[This class helps to store objects and to retrieve them using a key. This is similar to the way that with classes such as Pdef, Ndef, OSCdef work, but Registry can be used to add the same feature to any class, without subclassing it. To create this behavior instead, add a method to Symbol for accessing the kind of object needed. For example: \aSymbol.oscFunc. This also allows easier customization of how the object is created if not found. How it works Store an object in Library under an array of objects (called a path). When accessing the path, create the object if not already stored, else return the previously stored object. Who uses it SynthPlayer registers its instances in the current environment under their names. Function:oscFunc and Symbol:removeOsc registers OSCFuncs under their path names in order to remove existing OSCFunc instances when creating a new one under the same path. Example This is the code that makes it possible to create or modify an OSCFunc bound to a symbol. It defines the methods Function:oscFunc and Symbol:removeOsc. + Function {&#10;&#9;oscFunc { | path |&#10;&#9;&#9;path.removeOsc;&#10;&#9;&#9;^Registry (&#39;oscFuncs&#39;, path, { OSCFunc (this, path) });&#10;&#9;}&#10;}&#10;&#10;+ Symbol {&#10;&#9;removeOsc {&#10;&#9;&#9;Registry.doIfFound (&#39;oscFuncs&#39;, this, { | found |&#10;&#9;&#9;&#9;found.objectClosed;&#10;&#9;&#9;&#9;found.free;&#10;&#9;&#9;}); &#10;&#9;}&#10;}]]></content>
       <categories>
@@ -97,8 +86,19 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[Registry: Hierarchical Namespaces]]></title>
+    <url>%2Fsc-hacks%2F2017%2F06%2F23%2FRegistry%2F</url>
+    <content type="text"><![CDATA[This class helps to store objects and to retrieve them using a key. This is similar to the way that with classes such as Pdef, Ndef, OSCdef work, but Registry can be used to add the same feature to any class, without subclassing it. To create this behavior instead, add a method to Symbol for accessing the kind of object needed. For example: \aSymbol.oscFunc. This also allows easier customization of how the object is created if not found. How it works Store an object in Library under an array of objects (called a path). When accessing the path, create the object if not already stored, else return the previously stored object. Who uses it SynthPlayer registers its instances in the current environment under their names. Function:oscFunc and Symbol:removeOsc registers OSCFuncs under their path names in order to remove existing OSCFunc instances when creating a new one under the same path. Example This is the code that makes it possible to create or modify an OSCFunc bound to a symbol. It defines the methods Function:oscFunc and Symbol:removeOsc. + Function {&#10;&#9;oscFunc { | path |&#10;&#9;&#9;path.removeOsc;&#10;&#9;&#9;^Registry (&#39;oscFuncs&#39;, path, { OSCFunc (this, path) });&#10;&#9;}&#10;}&#10;&#10;+ Symbol {&#10;&#9;removeOsc {&#10;&#9;&#9;Registry.doIfFound (&#39;oscFuncs&#39;, this, { | found |&#10;&#9;&#9;&#9;found.objectClosed;&#10;&#9;&#9;&#9;found.free;&#10;&#9;&#9;}); &#10;&#9;}&#10;}]]></content>
+      <categories>
+        <category>classes</category>
+      </categories>
+      <tags>
+        <tag>registry</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Creating GUIs]]></title>
-    <url>%2Fsc-hacks%2F2017%2F06%2F22%2FCreatingGUIs%2F</url>
+    <url>%2Fsc-hacks%2F2017%2F06%2F22%2Ftest%2FCreatingGUIs%2F</url>
     <content type="text"><![CDATA[This library provides utilities for creating GUI elements and connecting them to both patterns and synths. Here are some examples. Windows Sliders Buttons]]></content>
       <categories>
         <category>design</category>
@@ -110,7 +110,7 @@
   </entry>
   <entry>
     <title><![CDATA[Creating GUIs]]></title>
-    <url>%2Fsc-hacks%2F2017%2F06%2F22%2Ftest%2FCreatingGUIs%2F</url>
+    <url>%2Fsc-hacks%2F2017%2F06%2F22%2FCreatingGUIs%2F</url>
     <content type="text"><![CDATA[This library provides utilities for creating GUI elements and connecting them to both patterns and synths. Here are some examples. Windows Sliders Buttons]]></content>
       <categories>
         <category>design</category>
@@ -284,7 +284,7 @@
   </entry>
   <entry>
     <title><![CDATA[Event eplay: Patterns updating current environment]]></title>
-    <url>%2Fsc-hacks%2F2017%2F06%2F14%2FEventEplay%2F</url>
+    <url>%2Fsc-hacks%2F2017%2F06%2F14%2Ftest%2FEventEplay%2F</url>
     <content type="text"><![CDATA[anEnvironment.eplay(envir) Play an event as EventPattern, updating the values in envir from each event. Use custom event type: envEvent. This only updates the values in the environment. The sound must be generated by Function:eplay. See examples below. Play the receiver Event in the environment given in argument envir using a custom event type to just set the values of corresponding variables at each event. For example, playing () set ~freq to 60.midicps every 1 second. (dur: 0.1).eplay; ().eplay; () eplay: \newEnvir; Examples Example 1: Single synth, pattern, gui update (degree: Pbrown (0, 30, 2, inf), dur: 0.1).eplay;&#10;{ | freq = 400 | SinOsc.ar (freq, 0, 0.1 )}.eplay;&#10;\window.vlayout (CSlider (\freq)).front; Example 2: Envelope gate on-off To test triggering of envelopes, instead of writing this: { | freq = 400, gate = 0 |&#10;&#9;var env;&#10;&#9;env = Env.adsr ();&#10;&#9;SinOsc.ar (freq, 0, 0.1)&#10;&#9;* EnvGen.kr (env, gate: gate, doneAction: 0)&#10;}.eplay;&#10;//:&#10;{&#10;&#9;inf do: { | i |&#10;&#9;&#9;~gate = i % 2;&#10;&#9;0.1.rrand (0.5).wait&#10;&#9;}&#10;}.rout; one may write this: { | freq = 400, gate = 0 |&#10;&#9;var env;&#10;&#9;env = Env.adsr (0.01, 0.01, 0.9, 0.3);&#10;&#9;SinOsc.ar (freq, 0, 0.1)&#10;&#9;* EnvGen.kr (env, gate: gate, doneAction: 0)&#10;}.eplay;&#10;&#10;(dur: Pwhite (0.01, 0.15, inf), gate: Pseq([0, 1], inf)).eplay;&#10;//: Note the overlap with the still playing note in the freq change:&#10;(dur: 0.15, gate: Pseq([0, 1], inf), degree: Pstutter (4, Pbrown (-5, 20, 5, inf))).eplay; Example 3: Many patterns + many synths in same environment { | freq = 400 | SinOsc.ar (freq * [1, 1.25], 0, 0.1) }.eplay;&#10;(dur: 0.1, degree: Pbrown (-1, 20, 2, inf)).eplay;&#10;//: Start the next synth later:&#10;{ | freq = 400 |&#10;&#9;Ringz.ar (PinkNoise.ar, freq * 1.2)&#10;}.eplay (\synth2);&#10;//: Test fade out when releasing synth to replace with new one:&#10;~fadeTime = 5;&#10;//:&#10;{ | freq = 400, ringTime = 3 |&#10;&#9;Ringz.ar (PinkNoise.ar, freq * [2, 1.2], ringTime)&#10;}.eplay (\synth2);&#10;//:&#10;~ringTime = 0.03;&#10;//:&#10;~ringTime = 2;&#10;//: Start a new pattern in place of the old one:&#10;(dur: 0.1, degree: Pbrown (-1, 20, 2, inf), ringTime: Pwhite (0.01, 1.2, inf)).eplay;&#10;//: remove the ringTime from the next version of the pattern:&#10;(dur: 0.1, degree: Pbrown (-1, 20, 2, inf)).eplay;&#10;//: add a new pattern on the same environment, playing ringTime:&#10;(dur: 0.01, ringTime: Pbrown (0.001, 3, 0.1, inf)).eplay (\ringTime);``&#10;//: add a new pattern on the same environment, playing ringTime:&#10;(dur: 0.1, ringTime: Pwhite (0.01, 4, inf)).eplay (\ringTime);&#10;//:]]></content>
       <categories>
         <category>methods</category>
@@ -299,7 +299,7 @@
   </entry>
   <entry>
     <title><![CDATA[Event eplay: Patterns updating current environment]]></title>
-    <url>%2Fsc-hacks%2F2017%2F06%2F14%2Ftest%2FEventEplay%2F</url>
+    <url>%2Fsc-hacks%2F2017%2F06%2F14%2FEventEplay%2F</url>
     <content type="text"><![CDATA[anEnvironment.eplay(envir) Play an event as EventPattern, updating the values in envir from each event. Use custom event type: envEvent. This only updates the values in the environment. The sound must be generated by Function:eplay. See examples below. Play the receiver Event in the environment given in argument envir using a custom event type to just set the values of corresponding variables at each event. For example, playing () set ~freq to 60.midicps every 1 second. (dur: 0.1).eplay; ().eplay; () eplay: \newEnvir; Examples Example 1: Single synth, pattern, gui update (degree: Pbrown (0, 30, 2, inf), dur: 0.1).eplay;&#10;{ | freq = 400 | SinOsc.ar (freq, 0, 0.1 )}.eplay;&#10;\window.vlayout (CSlider (\freq)).front; Example 2: Envelope gate on-off To test triggering of envelopes, instead of writing this: { | freq = 400, gate = 0 |&#10;&#9;var env;&#10;&#9;env = Env.adsr ();&#10;&#9;SinOsc.ar (freq, 0, 0.1)&#10;&#9;* EnvGen.kr (env, gate: gate, doneAction: 0)&#10;}.eplay;&#10;//:&#10;{&#10;&#9;inf do: { | i |&#10;&#9;&#9;~gate = i % 2;&#10;&#9;0.1.rrand (0.5).wait&#10;&#9;}&#10;}.rout; one may write this: { | freq = 400, gate = 0 |&#10;&#9;var env;&#10;&#9;env = Env.adsr (0.01, 0.01, 0.9, 0.3);&#10;&#9;SinOsc.ar (freq, 0, 0.1)&#10;&#9;* EnvGen.kr (env, gate: gate, doneAction: 0)&#10;}.eplay;&#10;&#10;(dur: Pwhite (0.01, 0.15, inf), gate: Pseq([0, 1], inf)).eplay;&#10;//: Note the overlap with the still playing note in the freq change:&#10;(dur: 0.15, gate: Pseq([0, 1], inf), degree: Pstutter (4, Pbrown (-5, 20, 5, inf))).eplay; Example 3: Many patterns + many synths in same environment { | freq = 400 | SinOsc.ar (freq * [1, 1.25], 0, 0.1) }.eplay;&#10;(dur: 0.1, degree: Pbrown (-1, 20, 2, inf)).eplay;&#10;//: Start the next synth later:&#10;{ | freq = 400 |&#10;&#9;Ringz.ar (PinkNoise.ar, freq * 1.2)&#10;}.eplay (\synth2);&#10;//: Test fade out when releasing synth to replace with new one:&#10;~fadeTime = 5;&#10;//:&#10;{ | freq = 400, ringTime = 3 |&#10;&#9;Ringz.ar (PinkNoise.ar, freq * [2, 1.2], ringTime)&#10;}.eplay (\synth2);&#10;//:&#10;~ringTime = 0.03;&#10;//:&#10;~ringTime = 2;&#10;//: Start a new pattern in place of the old one:&#10;(dur: 0.1, degree: Pbrown (-1, 20, 2, inf), ringTime: Pwhite (0.01, 1.2, inf)).eplay;&#10;//: remove the ringTime from the next version of the pattern:&#10;(dur: 0.1, degree: Pbrown (-1, 20, 2, inf)).eplay;&#10;//: add a new pattern on the same environment, playing ringTime:&#10;(dur: 0.01, ringTime: Pbrown (0.001, 3, 0.1, inf)).eplay (\ringTime);``&#10;//: add a new pattern on the same environment, playing ringTime:&#10;(dur: 0.1, ringTime: Pwhite (0.01, 4, inf)).eplay (\ringTime);&#10;//:]]></content>
       <categories>
         <category>methods</category>
@@ -403,8 +403,8 @@
         <category>gui</category>
       </categories>
       <tags>
-        <tag>gui</tag>
         <tag>learning</tag>
+        <tag>gui</tag>
       </tags>
   </entry>
   <entry>
@@ -415,8 +415,8 @@
         <category>gui</category>
       </categories>
       <tags>
-        <tag>gui</tag>
         <tag>learning</tag>
+        <tag>gui</tag>
       </tags>
   </entry>
   <entry>
