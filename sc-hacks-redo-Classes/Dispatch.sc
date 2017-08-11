@@ -2,12 +2,11 @@
 Acts as dispatcher for EnvironmentRedirect put, in Pevent.
 */
 
-Dispatcher : Event {
-	var pevent;
+Dispatch {
+	var <pevent, <dispatcher;
 	value { | key, obj |
 		pevent.changed(
-			*(this[obj.class] ?? { [\unknown, obj]}).(obj)
+			*(dispatcher[obj.class] ?? { [\unknown, key, obj]}).value(obj)
 		)
-	}
-	
+	}	
 }
