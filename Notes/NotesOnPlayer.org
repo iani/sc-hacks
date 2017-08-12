@@ -51,12 +51,11 @@ Case analysis and pseudocode for the above combinations follows here:
 	Else play function or symbol in self, and return self
 
 ** 4. PatternPlayer : asSourcePlayer  : player, (Function/Symbol/Event):source;
-	never release your player.
+	(Only release player if source is not Event).
 	if source is kind of Event, merge it into your source and into your player
 	    and return self.
-	Else  
-	    play function or symbol in self, and return self
-
+	Else release player, create SynthPlayer, 
+	    play function or symbol in SynthPlayer, and return SynthPlayer
 
 ** 5. Function : asSourcePlayer -> SynthDef asSourcePlayer
 	this.asSynthDef.asSourcePlayer
