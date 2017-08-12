@@ -243,11 +243,15 @@ SynthPlayer : SourcePlayer {
                 { args add: name; args add: val }
             );
 		};
-		args add: \gate;
-		if (busses.size > 0) {
-			args add: 0
-		}{
-			args add: 1
+		if (hasGate) {
+			args add: \gate;
+			if (busses.size > 0 ) {
+				// If busses are present, then trigger env after mapping to them.
+				args add: 0
+			}{
+				// Else trigger env at synth creation time.
+				args add: 1
+			}
 		};
 		^[args, busses];		
 	}
