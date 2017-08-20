@@ -61,6 +61,32 @@
 			}
 		)
 	}
+
+	clearPreviousSynth { | argSource |
+		// if previous synth is playing, release it.
+		// if argSource is different than current def,
+		// and current def is temp, then remove def when synth ends.
+		var defName;
+		if ( // 4 conditions must be met:
+			source.notNil and: // there is a source to remove
+			{ argSource.notNil } and: // a new source has been provided
+			{ argSource != source } and: // new source is different than the previous source
+			{ source.name.asString [..3] == "temp"}) { // the previous source is temporary
+				defName = source.name;
+				source = nil;  // def will be removed.  Store this.
+			};
+		if (player.isNil) { // if no synth plays, then remove source immediately
+			defName !? { SynthDef removeAt: defName }
+		} {   // else remove source after end of released synth
+			player.objectClosed; // remove previous connections to other objects
+			player.onEnd (this, { // create just this one connection to synthdef
+				defName !? { SynthDef removeAt: defName }
+			}); // since connection is set, do release:
+			player.release (envir [\fadeTime] ? 0.02);
+			player = nil; // since released, ready to play next one, and
+			// avoid re-releasing this already released synth.
+		};
+	}
 }
 
 + PatternPlayer {

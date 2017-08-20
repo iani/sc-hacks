@@ -1,109 +1,13 @@
-/*
-	==== Player: hold an envir and a sourcePlayer that plays in that envir.
-	The sourcePlayer can be: 
-	Nil (the Player is not playing)
-	SynthPlayer (the Player plays a SynthDef as Synth)
-	PatternPlayer (the Player plays an Event as EventPattern -> EventStream -> EventStreamPlayer)
-
-	==== Older notes: (from SynthPlayer)	 
-	Hold a synthdef or synthdef-making func and make synths from it.
-	Create new synths when requested.
-	Connect the synths to the envir that they play in, so that they change
-	their (set) their parameters (controls) in response to changes in the environment's values.
-	Also create notification connections for starting/stopping synths from patterns played
-	in the environment.
-
-	==== New implementation:
-
-	1. Player: play : 
-	arg (Function/Symbol/Event) source 
-	var (Nil/SynthPlayer/PatternPlayer )sourcePlayer
-	
-	sourcePlayer = sourcePlayer.asSourcePlayer(this, (Function/Symbol/Event) source);
-	must return a kind of SourcePlayer
-
-	(Nil/SynthPlayer/PatternPlayer) asSourcePlayer : Player:player, (Function/Symbol/Event):source
-	Case analysis and pseudocode for the above combinations follows here: 
-
-	2. Nil : asSourcePlayer : player, (Function/Symbol/Event):source;
-	source.asSourcePlayer player
-	See Function, Symbol, SynthDef, Event asSourcePlayer below.
-
-	3. SynthPlayer : asSourcePlayer : player, (Function/Symbol/Event):source;
-	always release your player.
-	if source is kind of Event, create PatternPlayer and play it and return it.
-	Else play function or symbol in self, and return self
-
-	4. PatternPlayer : asSourcePlayer  : player, (Function/Symbol/Event):source;
-	never release your player.
-	if source is kind of Event, merge it into your source and into your player
-	and return self.
-	Else  
-	play function or symbol in self, and return self
-
-
-	5. Function : asSourcePlayer -> SynthDef asSourcePlayer
-	this.asSynthDef.asSourcePlayer
-
-	6. Symbol : asSourcePlayer -> SynthDef asSourceplayer
-	this.asSynthDef.asSourcePlayer
-
-	7. SynthDef : asSourcePlayer
-	create SynthPlayer and play it
-
-	8. Event : asSourcePlayer
-	create PatternPlayer and play it
-*/
-
-Player {
-	var <envir, <name, <sourcePlayer;
-	var <busses;
-
-	*new { | envir, name = \default |
-		^this.newCopyArgs (envir, name);
-	}
-
-	play { | source |
-		// For definitions, see file asSourcePlayer.sc
-		sourcePlayer = sourcePlayer.asSourcePlayer(this, source);
-	}
-
-	busses {
-		busses ?? { busses = ( )};
-		^busses;
-	}
-
-	getBus { | controlName = \in, numChannels = 1 |
-		// should be named getAudioBus ?
-		^this.setBus(
-			controlName,
-			this.busses.atFail(
-				controlName,
-				{ bus = PersistentBus.audio(numChannels) }
-			)
-		)		
-	}
-}
 
 SourcePlayer {
 	var <player, <envir, <source;
 
 	*new { | player, source | // plays immediately:
-		^this.newCo(player, player.envir).play(source);
+		^this.newCopyArgs(player, player.envir).play(source);
 	}
 }
 
 PatternPlayer : SourcePlayer {
-	asSourceplayer { | argPlayer, argSource |
-		switch (argSource.class,
-			Event, {
-				this.play(argSource)				
-			},{
-				this.release;
-				^SynthPlayer(argPlayer, argSource); // plays immediately
-			}
-		)
-	}
 
 	play { | argSource |
 		
@@ -114,32 +18,6 @@ PatternPlayer : SourcePlayer {
 SynthPlayer : SourcePlayer {
 	var <controlNames, <hasGate = false, <event;	
 
-	clearPreviousSynth { | argSource |
-		// if previous synth is playing, release it.
-		// if argSource is different than current def,
-		// and current def is temp, then remove def when synth ends.
-		var defName;
-		if ( // 4 conditions must be met:
-			source.notNil and: // there is a source to remove
-			{ argSource.notNil } and: // a new source has been provided
-			{ argSource != source } and: // new source is different than the previous source
-			{ source.name.asString [..3] == "temp"}) { // the previous source is temporary
-				defName = source.name;
-				source = nil;  // def will be removed.  Store this.
-			};
-		if (player.isNil) { // if no synth plays, then remove source immediately
-			defName !? { SynthDef removeAt: defName }
-		} {   // else remove source after end of released synth
-			player.objectClosed; // remove previous connections to other objects
-			player.onEnd (this, { // create just this one connection to synthdef
-				defName !? { SynthDef removeAt: defName }
-			}); // since connection is set, do release:
-			player.release (envir [\fadeTime] ? 0.02);
-			player = nil; // since released, ready to play next one, and
-			// avoid re-releasing this already released synth.
-		};
-	}
-	
 	play { | argSource |
 		// If a function or symbol is provided, then make def, then synth,
 		// else use old def or default def.
