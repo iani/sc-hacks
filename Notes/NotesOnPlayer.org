@@ -68,3 +68,37 @@ Case analysis and pseudocode for the above combinations follows here:
 
 ** 8. Event : asSourcePlayer
 	create PatternPlayer and play it
+
+* Using FeedbackIn
+
+Use Fin shortcut (defined in this lib)
+
+* Bus allocation
+
+see player putBus, getBus
+
+Player.getBus(envir \controlname);
+
+
+does: 
+
+this[\busses].put(\controlName, Registry(envir, \controlName { PersistentBus() });
+also sets control with index of bus just obtained
+also does: 
+this.addNotifier(pbus, \newBus { | newbus |
+     this.putBus(controlName, newbus)
+});
+
+etc. refine.
+
+New class: =PersistentBus=
+
+#+BEGIN_SRC sclang
+  PersistentBus {
+          var <bus;
+	
+  }
+#+END_SRC
+
+Sends changed message when re-allocated at server boot. 
+

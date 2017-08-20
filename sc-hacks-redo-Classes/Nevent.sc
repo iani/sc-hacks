@@ -1,5 +1,6 @@
 Nevent : EnvironmentRedirect {
 	classvar <libRoot = \environments;
+	var <name;
 	*all {
 		^Registry.at(\libRoot).values;
 		
@@ -16,7 +17,9 @@ Nevent : EnvironmentRedirect {
 					Float: { | key, object |
 						[key, object]
 					}
-				))
+					)
+				),
+				name
 			).setGroup(OrderedGroup.last);
 		})
 	}

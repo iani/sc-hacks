@@ -53,26 +53,35 @@
 
 	8. Event : asSourcePlayer
 	create PatternPlayer and play it
-
-
 */
 
 Player {
 	var <envir, <name, <sourcePlayer;
+	var <busses;
 
 	*new { | envir, name = \default |
-		^this.newCopyArgs (envir.asEnvironment (true), name);
+		^this.newCopyArgs (envir, name);
 	}
 
 	play { | source |
+		// For definitions, see file asSourcePlayer.sc
 		sourcePlayer = sourcePlayer.asSourcePlayer(this, source);
 	}
 
-}
+	busses {
+		busses ?? { busses = ( )};
+		^busses;
+	}
 
-+ Nil {
-	asSourcePlayer { | player, source |
-		^source.asSourcePlayer(player)		
+	getBus { | controlName = \in, numChannels = 1 |
+		// should be named getAudioBus ?
+		^this.setBus(
+			controlName,
+			this.busses.atFail(
+				controlName,
+				{ bus = PersistentBus.audio(numChannels) }
+			)
+		)		
 	}
 }
 
@@ -80,7 +89,7 @@ SourcePlayer {
 	var <player, <envir, <source;
 
 	*new { | player, source | // plays immediately:
-		^this.newCopyArgs(player, player.envir).play(source);
+		^this.newCo(player, player.envir).play(source);
 	}
 }
 
@@ -104,25 +113,6 @@ PatternPlayer : SourcePlayer {
 
 SynthPlayer : SourcePlayer {
 	var <controlNames, <hasGate = false, <event;	
-
-	asSourceplayer { | argPlayer, argSource |
-		// if still waiting to start synth after def, then skip this play!
-		if (player.notNil and: { player.isPlaying.not}) {
-			"Waiting for created synth to start after loading synthdef.".postln;
-			postf("Cancelled playing of new source: %.\n", argSource);
-			^this
-		};
-		this clearPreviousSynth: argSource; // release previous synth,
-		// and clear previous synthdef if appropriate.
-		// Then create either new PatternPlayer or new synth.
-		switch (argSource.class,
-			Event, {
-				^PatternPlayer(argPlayer, argSource); // plays immediately
-			},{
-				this.play(argSource)
-			}
-		)
-	}
 
 	clearPreviousSynth { | argSource |
 		// if previous synth is playing, release it.
@@ -271,28 +261,6 @@ SynthPlayer : SourcePlayer {
 	receiveEvent { | event |
 		this.release;
 		^Pattern
-	}
-	
-}
-+ Function {
-
-	asSourcePlayer { | player |
-		^player.playFunction(this); // always releases
-	}
-
-	
-}
-
-+ Event {
-	asSourcePlayer { | player |
-		^player.playEvent(this); // does not release previous pattern player
-	}
-	
-}
-
-+ Symbol {
-	asPlayer { | player |
-		^player.playSymbol(this); // like function
 	}
 }
 
