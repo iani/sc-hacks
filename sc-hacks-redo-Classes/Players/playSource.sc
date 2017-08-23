@@ -8,26 +8,26 @@
 
 
 + Nil {
-	asSourcePlayer { | player, source |
-		^source.asSourcePlayer(player)		
+	playSource { | player, source |
+		^source.playSource(player)		
 	}
 }
 
 + Function {
 
-	asSourcePlayer { | player |
+	playSource { | player |
 		^SynthPlayer(player, this);
 	}
 }
 
 + Event {
-	asSourcePlayer { | player |
+	playSource { | player |
 		^PatternPlayer(player, this); // does not release previous pattern player
 	}
 }
 
 + Symbol {
-	asSourcePlayer { | player |
+	playSource { | player |
 		^SynthPlayer(player, this); // like function
 	}
 }
@@ -37,15 +37,15 @@
 // and return a new instance of different class if required.
 
 + SynthPlayer {
+		
+	playSource { | argPlayer, argSource |
 	// Always first clear previous synth, stopping self.
 	// Then:
 	// If argSource is Event, then stop self and return PatternPlayer.
-	// Else play source in self.
-		
-	
-	asSourceplayer { | argPlayer, argSource |
-		// if still waiting to start synth after def, then skip this play!
+	// Else play source in self.		
+
 		if (player.notNil and: { player.isPlaying.not}) {
+			// if still waiting to start synth after def, then skip this play!
 			"Waiting for created synth to start after loading synthdef.".postln;
 			postf("Cancelled playing of new source: %.\n", argSource);
 			^this
@@ -99,5 +99,15 @@
 				^SynthPlayer(argPlayer, argSource); // plays immediately
 			}
 		)
+	}
+}
+
+// TODO: Factor this out to other class
++ EventStream {
+	receiveEvent { | inEvent, patternPlayer |
+		inEvent keysValuesDo: { | key value |
+			event[key] = value;
+			streamEvent[key] = value.asStream;
+		}		
 	}
 }

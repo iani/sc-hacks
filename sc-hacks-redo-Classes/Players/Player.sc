@@ -19,39 +19,38 @@
 	arg (Function/Symbol/Event) source 
 	var (Nil/SynthPlayer/PatternPlayer )sourcePlayer
 	
-	sourcePlayer = sourcePlayer.asSourcePlayer(this, (Function/Symbol/Event) source);
+	sourcePlayer = sourcePlayer.playSource(this, (Function/Symbol/Event) source);
 	must return a kind of SourcePlayer
 
-	(Nil/SynthPlayer/PatternPlayer) asSourcePlayer : Player:player, (Function/Symbol/Event):source
+	(Nil/SynthPlayer/PatternPlayer) playSource : Player:player, (Function/Symbol/Event):source
 	Case analysis and pseudocode for the above combinations follows here: 
 
-	2. Nil : asSourcePlayer : player, (Function/Symbol/Event):source;
-	source.asSourcePlayer player
-	See Function, Symbol, SynthDef, Event asSourcePlayer below.
+	2. Nil : playSource : player, (Function/Symbol/Event):source;
+	source.playSource player
+	See Function, Symbol, SynthDef, Event playSource below.
 
-	3. SynthPlayer : asSourcePlayer : player, (Function/Symbol/Event):source;
+	3. SynthPlayer : playSource : player, (Function/Symbol/Event):source;
 	always release your player.
 	if source is kind of Event, create PatternPlayer and play it and return it.
 	Else play function or symbol in self, and return self
 
-	4. PatternPlayer : asSourcePlayer  : player, (Function/Symbol/Event):source;
+	4. PatternPlayer : playSource  : player, (Function/Symbol/Event):source;
 	never release your player.
 	if source is kind of Event, merge it into your source and into your player
 	and return self.
 	Else  
 	play function or symbol in self, and return self
 
+	5. Function : playSource -> SynthDef playSource
+	this.asSynthDef.playSource
 
-	5. Function : asSourcePlayer -> SynthDef asSourcePlayer
-	this.asSynthDef.asSourcePlayer
+	6. Symbol : playSource -> SynthDef asSourceplayer
+	this.asSynthDef.playSource
 
-	6. Symbol : asSourcePlayer -> SynthDef asSourceplayer
-	this.asSynthDef.asSourcePlayer
-
-	7. SynthDef : asSourcePlayer
+	7. SynthDef : playSource
 	create SynthPlayer and play it
 
-	8. Event : asSourcePlayer
+	8. Event : playSource
 	create PatternPlayer and play it
 */
 
@@ -64,8 +63,8 @@ Player {
 	}
 
 	play { | source |
-		// For definitions, see file asSourcePlayer.sc
-		sourcePlayer = sourcePlayer.asSourcePlayer(this, source);
+		// For definitions, see file playSource.sc
+		sourcePlayer = sourcePlayer.playSource(this, source);
 	}
 
 	busses {
