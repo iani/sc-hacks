@@ -1,5 +1,18 @@
 /* 21 Aug 2017 02:00
 
+Play a function, symbol, or event inside a Player.
+
+Player sends playSource message to its sourcePlayer variable, which decides what to do depending on its Class and the class of the source to be played.
+
+If the sourcePlayer is Nil, it creates a SynthPlayer or PatternPlayer, depending on the class of the source.
+
+If the source is a PatternPlayer or SynthPlayer, it either returns itself, or a new PatternPlayer or SynthPlayer, depending on the class of the source.
+
+The decision tree is as follows: 
+
+
+
+
 */
 
 // ================================================================
@@ -9,25 +22,24 @@
 
 + Nil {
 	playSource { | player, source |
-		^source.playSource(player)		
+		^source.makeSource(player)		
 	}
 }
 
 + Function {
-
-	playSource { | player |
+	makeSource { | player |
 		^SynthPlayer(player, this);
 	}
 }
 
 + Event {
-	playSource { | player |
+	makeSource { | player |
 		^PatternPlayer(player, this); // does not release previous pattern player
 	}
 }
 
 + Symbol {
-	playSource { | player |
+	makeSource { | player |
 		^SynthPlayer(player, this); // like function
 	}
 }

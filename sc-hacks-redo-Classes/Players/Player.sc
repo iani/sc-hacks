@@ -63,6 +63,7 @@ Player {
 	}
 
 	play { | source |
+		// play a function, symbol, or event.
 		// For definitions, see file playSource.sc
 		sourcePlayer = sourcePlayer.playSource(this, source);
 	}
