@@ -3,7 +3,7 @@ SourcePlayer {
 	var <player, <envir, <source;
 
 	*new { | player, source | // plays immediately:
-		^this.newCopyArgs(player, player.envir).play(source);
+		^this.newCopyArgs(player, player.envir).playSource(source);
 	}
 }
 
@@ -18,13 +18,52 @@ PatternPlayer : SourcePlayer {
 SynthPlayer : SourcePlayer {
 	var <controlNames, <hasGate = false, <event;	
 
-	play { | argSource |
+	playSource { | argSource |
+		var outbus, target, server;
+		// if still waiting to start synth after def, then skip this play!
+		if (player.notNil and: { player.isPlaying.not}) {
+			"Waiting for created synth to start".postln;
+			^this
+		};
+		// stop previous synth, and remove def if appropriate:
+		this clearPreviousSynth: argSource;
+		// If a function or symbol is provided, then make def, then synth,
+		// else use old def or default def:
+		this makeSynth: argSource;
+	}
+
+	clearPreviousSynth { | funcOrDef |
+		// if previous synth is playing, release it.
+		// if funcOrDef is different than current def,
+		// and current def is temp, then remove def when synth ends.
+		var defName;
+		if ( // 4 conditions must be met:
+			def.notNil and: // there is a def to remove
+			{ funcOrDef.notNil } and: // a new def has been provided
+			{ funcOrDef != def} and: // new def is different than the previous def
+			{ def.name.asString [..3] == "temp"}) { // the previous def is temporary
+				defName = def.name;
+				def = nil;
+			};
+		if (synth.isNil) { // if no synth plays, then remove def immediately
+			defName !? { SynthDef removeAt: defName }
+		} {   // else remove def after end of released synth
+			synth.objectClosed;
+			synth.onEnd (this, {
+				defName !? { SynthDef removeAt: defName }
+			});
+			synth.release (envir [\fadeTime] ? 0.02);
+			synth = nil
+		};
+	}
+	
+	makeSynth { | argSource |
 		// If a function or symbol is provided, then make def, then synth,
 		// else use old def or default def.
 		// Note: previous synth has been cleared and synthdef removed,
 		// or scheduled for removal after previous synth stops.
 		var target, server, outbus, args, busses;
-		// first just create the synth ...
+		// Create synth according to source class
 		switch (argSource.class,
 			// Here decide from argSource's class: if argSource is Function or Symbol,
 			// then obtain def from them and use it.
@@ -34,16 +73,16 @@ SynthPlayer : SourcePlayer {
 				server = target.server;
 				// TODO: check if args already contain \out - outbus
 				#args, busses = this.source_(
-					argSource.asSynthDef (
+					argSource.asPlayerSynthDef (
 						fadeTime: envir [\fadeTime] ? 0.02,
 						name: SystemSynthDefs.generateTempName
 					).add
 				);
-				synth = Synth.basicNew(source.name, server);
+				player = Synth.basicNew(source.name, server);
 				outbus = envir [\outbus] ? 0;
 				source.doSend (
 					server, // TODO: remove \out, outbus from args and check
-					synth.newMsg(target, [\i_out, outbus, \out, outbus] ++ args,
+					player.newMsg(target, [\i_out, outbus, \out, outbus] ++ args,
 						envir [\addAction] ? \addToHead);
 				);
 			},
@@ -51,24 +90,25 @@ SynthPlayer : SourcePlayer {
 				#args, busses = this.source_(
 					(SynthDescLib.at (argSource) ?? { SynthDescLib at: \default}).def
 				);
-				synth = Synth (
+				player = Synth (
 					source.name, args, target, envir [\addAction] ? \addToHead
 				)
 			},
-			{  // Guessing part: If no appropriate source was provided,
-				// then provide one by guessing:
+			{  // If no appropriate source was provided, then provide one by guessing:
+				// if no source is already stored, then get one from SynthDescLib
 				source ?? {
 					#args, busses = this.source_(
 						SynthDescLib.at (argSource) ?? { SynthDescLib at: \default}
 					).def;
 				};
-				synth = Synth (
+				// source was either present, or provided by the immediately preceding step:
+				player = Synth (
 					source.name, args, target, envir [\addAction] ? \addToHead
 				)
 			};
 		);
-		// ... then connect it to the environment and map the busses, when started
-		this.connectSynth (synth, busses);
+		// Connect created synth to the environment and map the busses, when started
+		this.connectPlayer (player, busses);
 	}
 
 	source_ { | def |
@@ -123,96 +163,71 @@ SynthPlayer : SourcePlayer {
 		};
 		^[args, busses];		
 	}
-}
 
-SynthPlayer : SHPlayer {
-	var <def, <controlNames, <hasGate = false;
-
+	connectPlayer { | argSynth, busses |
+		/* argSynth created by this.play
+			1. Store it
+			2. When it is really started, then:
+			2.1 Connect to environment parameters according to controlNames
+			2.2 Connect extra actions: restart, release, free, etc.
+			2.3 Initialize auto-removal on end.
+		*/
+		player = argSynth;
+		player.onStart (this, {
+			this.changed(\started);
+			/* If busses exist, then start the synth's gated envelope after mapping them */
+			if (busses.size > 0) {
+				busses keysValuesDo: { | key, value |
+					// postf("mapping synth: %, param: % to bus: %\n", this, key, value);
+					player.map(key, value);
+				};
+				player.set(\gate, 1);
+			};
+			(controlNames add: \gate) do: { | param |
+				player.addNotifier (envir, param, { | val, notification |
+					// handle busses as well as numerical values;
+					switch (val.class,
+						Nil, {},
+						Bus, {
+							/*
+								postf("MAPPING SYNTH %. PARAM: %, VAL: %\n", 
+								notification.listener,
+								param, val);
+							*/
+							notification.listener.map(param, val);								
+						},{
+							notification.listener.set (param, val);							
+						}
+					)
+				});
+			};
+			player.onEnd (this, {
+				this.changed(\stopped);
+				player.objectClosed;
+				player = nil;
+			});
+		});
+	}
+	/*
+		// envir can do this to add control from self to this player by name.
 	init {
 		this.addNotifier (envir, name, { | command |
 			this perform: command;
 		});
 	}
+	*/
 
 	isPlaying { ^synth.isPlaying }
+}
 
-	play { | func |
-		var outbus, target, server;
-		// if still waiting to start synth after def, then skip this play!
-		if (synth.notNil and: { synth.isPlaying.not}) {
-			"Waiting for created synth to start".postln;
-			^this
-		};
-		// stop previous synth, and remove def if appropriate:
-		this clearPreviousSynth: func;
-		// If a function or symbol is provided, then make def, then synth,
-		// else use old def or default def:
-		this makeSynth: func;
-	}
+SynthPlayer : SHPlayer {
+	var <def, <controlNames, <hasGate = false;
 
-	clearPreviousSynth { | funcOrDef |
-		// if previous synth is playing, release it.
-		// if funcOrDef is different than current def,
-		// and current def is temp, then remove def when synth ends.
-		var defName;
-		if ( // 4 conditions must be met:
-			def.notNil and: // there is a def to remove
-			{ funcOrDef.notNil } and: // a new def has been provided
-			{ funcOrDef != def} and: // new def is different than the previous def
-			{ def.name.asString [..3] == "temp"}) { // the previous def is temporary
-				defName = def.name;
-				def = nil;
-			};
-		if (synth.isNil) { // if no synth plays, then remove def immediately
-			defName !? { SynthDef removeAt: defName }
-		} {   // else remove def after end of released synth
-			synth.objectClosed;
-			synth.onEnd (this, {
-				defName !? { SynthDef removeAt: defName }
-			});
-			synth.release (envir [\fadeTime] ? 0.02);
-			synth = nil
-		};
-	}
+	
 
-	makeSynth { | func |
-		// If a function or symbol is provided, then make def, then synth,
-		// else use old def or default def:
-		var target, server, outbus, args, busses;
-		#args, busses = this.makeSynthArgs;
-		switch (func.class,
-			Function, {
-				target = envir [\target].asTarget;
-				server = target.server;
-				this.def = func.asSynthDef (
-					fadeTime: envir [\fadeTime] ? 0.02,
-					name: SystemSynthDefs.generateTempName
-				).add;
-				synth = Synth.basicNew(def.name, server);
-				outbus = envir [\outbus] ? 0; // TODO: remove \out, outbus from args and check
-				def.doSend (
-					server, // TODO: remove \out, outbus from args and check
-					synth.newMsg(target, [\i_out, outbus, \out, outbus] ++ args,
-						envir [\addAction] ? \addToHead);
-				);
-			},
-			Symbol, {
-				this.def = (SynthDescLib.at (func) ?? { SynthDescLib at: \default}).def;
-				synth = Synth (
-					def.name, args, target, envir [\addAction] ? \addToHead
-				)
-			},
-			{
-				def ?? {
-					this.def = (SynthDescLib.at (func) ?? { SynthDescLib at: \default}).def;
-				};
-				synth = Synth (
-					def.name, args, target, envir [\addAction] ? \addToHead
-				)
-			};
-		);
-		this.connectSynth (synth, busses);
-	}
+	
+
+	
 
 	def_ { | argDef |
 		var parName;
@@ -262,51 +277,6 @@ SynthPlayer : SHPlayer {
 		};
 		^[args, busses];
 		
-	}
-
-	connectSynth { | argSynth, busses |
-		/* argSynth created by this.play
-			1. Store it
-			2. When it is really started, then:
-			2.1 Connect to environment parameters according to controlNames
-			2.2 Connect extra actions: restart, release, free, etc.
-			2.3 Initialize auto-removal on end.
-		*/
-		synth = argSynth;
-		synth.onStart (this, {
-			this.changed(\started);
-			/* If busses exist, then start the synth's gated envelope after mapping them */
-			if (busses.size > 0) {
-				busses keysValuesDo: { | key, value |
-					// postf("mapping synth: %, param: % to bus: %\n", this, key, value);
-					synth.map(key, value);
-				};
-				synth.set(\gate, 1);
-			};
-			(controlNames add: \gate) do: { | param |
-				synth.addNotifier (envir, param, { | val, notification |
-					// handle busses as well as numerical values;
-					switch (val.class,
-						Nil, {},
-						Bus, {
-							/*
-								postf("MAPPING SYNTH %. PARAM: %, VAL: %\n", 
-								notification.listener,
-								param, val);
-							*/
-							notification.listener.map(param, val);								
-						},{
-							notification.listener.set (param, val);							
-						}
-					)
-				});
-			};
-			synth.onEnd (this, {
-				this.changed(\stopped);
-				synth.objectClosed;
-				synth = nil;
-			});
-		});
 	}
 
 	stop { | releaseTime |

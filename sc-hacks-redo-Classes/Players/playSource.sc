@@ -8,10 +8,21 @@ If the sourcePlayer is Nil, it creates a SynthPlayer or PatternPlayer, depending
 
 If the source is a PatternPlayer or SynthPlayer, it either returns itself, or a new PatternPlayer or SynthPlayer, depending on the class of the source.
 
-The decision tree is as follows: 
+Decision table for playSource method according to types of receiver and argument:
 
-
-
+|---+---------------+----------+-------------------------+-------------------|
+| ! | receiver      | argument | method/action triggered | result returned   |
+|---+---------------+----------+-------------------------+-------------------|
+|   | Nil           | Function | makeSource              | new SythPlayer    |
+|   | Nil           | Symbol   | makeSource              | new SynthPlayer   |
+|   | Nil           | Event    | makeSource              | new PatternPlayer |
+|   | SynthPlayer   | Function | clearPreviousSynth      | old SynthPlayer   |
+|   | SynthPlayer   | Symbol   | clearPreviousSynth      | old SynthPlayer   |
+|   | SynthPlayer   | Event    | clearPreviousSynth      | new PatternPlayer |
+|   | PatternPlayer | Function | stop pattern            | new SynthPlayer   |
+|   | PatternPlayer | Symbol   | stop pattern            | new SynthPlayer   |
+|   | PatternPlayer | Event    | merge into pattern      | old PatternPlayer |
+|---+---------------+----------+-------------------------+-------------------|
 
 */
 
@@ -21,8 +32,8 @@ The decision tree is as follows:
 
 
 + Nil {
-	playSource { | player, source |
-		^source.makeSource(player)		
+	playSource { | argPlayer, argSource |
+		^argSource.makeSource(argPlayer)		
 	}
 }
 
@@ -32,15 +43,15 @@ The decision tree is as follows:
 	}
 }
 
-+ Event {
-	makeSource { | player |
-		^PatternPlayer(player, this); // does not release previous pattern player
-	}
-}
-
 + Symbol {
 	makeSource { | player |
 		^SynthPlayer(player, this); // like function
+	}
+}
+
++ Event {
+	makeSource { | player |
+		^PatternPlayer(player, this); // does not release previous pattern player
 	}
 }
 
