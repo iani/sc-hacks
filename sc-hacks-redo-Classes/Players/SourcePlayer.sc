@@ -47,7 +47,7 @@ SynthPlayer : SourcePlayer {
 			};
 		if (synth.isNil) { // if no synth plays, then remove def immediately
 			defName !? { SynthDef removeAt: defName }
-		} {   // else remove def after end of released synth
+		}{   // else remove def after end of released synth
 			synth.objectClosed;
 			synth.onEnd (this, {
 				defName !? { SynthDef removeAt: defName }
