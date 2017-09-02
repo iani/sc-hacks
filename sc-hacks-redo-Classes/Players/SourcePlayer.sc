@@ -38,22 +38,22 @@ SynthPlayer : SourcePlayer {
 		// and current def is temp, then remove def when synth ends.
 		var defName;
 		if ( // 4 conditions must be met:
-			def.notNil and: // there is a def to remove
+			source.notNil and: // there is a def to remove
 			{ funcOrDef.notNil } and: // a new def has been provided
-			{ funcOrDef != def} and: // new def is different than the previous def
-			{ def.name.asString [..3] == "temp"}) { // the previous def is temporary
-				defName = def.name;
-				def = nil;
+			{ funcOrDef != source } and: // new def is different than the previous def
+			{ source.name.asString [..3] == "temp"}) { // the previous def is temporary
+				defName = source.name;
+				source = nil;
 			};
-		if (synth.isNil) { // if no synth plays, then remove def immediately
+		if (player.isNil) { // if no synth plays, then remove def immediately
 			defName !? { SynthDef removeAt: defName }
 		}{   // else remove def after end of released synth
-			synth.objectClosed;
-			synth.onEnd (this, {
+			player.objectClosed;
+			player.onEnd (this, {
 				defName !? { SynthDef removeAt: defName }
 			});
-			synth.release (envir [\fadeTime] ? 0.02);
-			synth = nil
+			player.release (envir [\fadeTime] ? 0.02);
+			player = nil
 		};
 	}
 	
@@ -111,11 +111,11 @@ SynthPlayer : SourcePlayer {
 		this.connectPlayer (player, busses);
 	}
 
-	source_ { | def |
+	source_ { | argDef |
 		var parName;
 		source = argDef;
 		hasGate = false;
-		controlNames = def.allControlNames reject: { | a |
+		controlNames = source.allControlNames reject: { | a |
 			if (a.name === \gate) { // gate supplied by makeSynthArgs!
 				hasGate = true;
 			}{
@@ -217,132 +217,8 @@ SynthPlayer : SourcePlayer {
 	}
 	*/
 
-	isPlaying { ^synth.isPlaying }
+	isPlaying { ^player.isPlaying }
 }
 
-SynthPlayer : SHPlayer {
-	var <def, <controlNames, <hasGate = false;
 
-	
-
-	
-
-	
-
-	def_ { | argDef |
-		var parName;
-		def = argDef;
-		controlNames = def.allControlNames reject: { | a |
-			if (a.name === \gate) { // gate supplied by makeSynthArgs!
-				hasGate = true;
-			}{
-				a.rate === \scalar
-			};
-		} collect: { | cn |
-			parName = cn.name;
-			// only set value if no other synth has set it before.
-			// avoid changing other synths parameters with your defaults:
-			(envir [parName]) ?? {
-				// storing params here is useful if a gui is opened later:
-				// but could be replaced by getting the gui defaults from
-				// customized specs stored for each def. (TODO:!)
-				envir [parName] = cn.defaultValue;
-				// envir.changed(parName, cn.defaultValue)
-			};
-			parName;
-		};
-		// hasGate = controlNames includes: 'gate';
-		// def.add; // done separately in makeSynth
-	}
-
-	makeSynthArgs {
-		// create array of arguments to initialize new synth, from environment.
-		var args, busses, numCtls, val;
-		numCtls = controlNames.size + 1 * 2;
-		args = Array.new(numCtls);
-		busses = Array.new(numCtls);
-		controlNames do: { | name |
-			val = envir[name];
-			switch(val.class,
-				Nil, { },
-                Bus, { busses add: name; busses add: val },
-                { args add: name; args add: val }
-            );
-		};
-		args add: \gate;
-		if (busses.size > 0) {
-			args add: 0
-		}{
-			args add: 1
-		};
-		^[args, busses];
-		
-	}
-
-	stop { | releaseTime |
-		synth ?? { ^this };
-		synth.objectClosed;
-		if (hasGate) {
-			synth release: (releaseTime ? envir [\fadeTime] ? 0.02);
-		}{
-			synth.free;
-		};
-		synth = nil;
-	}
-
-	// mainly for calls via EventPattern:
-	tie {
-		// Do not change synth status.  Param changes effect legato
-	}
-
-	null { // synonym of tie
-		// Do not change synth status.  Param changes effect legato
-	}
-	
-	mute {
-		
-	}
-
-	unmute {
-		
-	}
-
-	trigger {
-		
-	}
-
-	release {
-		
-	}
-
-	clear { // ? just use remove instead?
-		
-	}
-
-	remove { // clear and remove from Registry
-		
-	}
-
-	// ================================================================
-	// GUI - experimental
-	gui { | specs |
-		// create gui for this player.
-		/* // simple usage example: 
-			\default +> \testgui1 gui: [\freq, \amp]; // uses current envir
-			\default +>.env2 \testgui1 gui: [\freq, \amp]; // uses env2 as envir
-		*/
-		if (specs.size == 0) {
-			name.sliders(*controlNames.collect(this.getGuiSpec(_)));
-		}{
-			name.sliders(*specs);
-		};
-	}
-
-	getGuiSpec { | argName |
-		var spec;
-		spec = Registry.at(\synthPlayers, this, \specs, argName);
-		spec ?? { spec = argName.asSpec ?? { \amp.asSpec }};
-		^[argName, spec.storeArgs];
-	}
-}
 

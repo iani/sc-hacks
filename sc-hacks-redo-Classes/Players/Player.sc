@@ -56,7 +56,7 @@
 
 Player {
 	var <envir, <name, <sourcePlayer;
-	var <busses;
+	var busses;
 
 	*new { | envir, name = \default |
 		^this.newCopyArgs (envir, name);
@@ -75,12 +75,14 @@ Player {
 
 	getBus { | controlName = \in, numChannels = 1 |
 		// should be named getAudioBus ?
-		^this.setBus(
+		var bus;
+		^this.busses.atFail(
 			controlName,
-			this.busses.atFail(
-				controlName,
-				{ bus = PersistentBus.audio(numChannels) }
-			)
+			{
+				bus = PersistentBus.audio(numChannels);
+				busses[controlName] = bus;
+				bus;
+			}
 		)		
 	}
 }

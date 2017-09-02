@@ -126,6 +126,7 @@ Decision table for playSource method according to types of receiver and argument
 }
 
 // TODO: Factor this out to other class
+/*
 + EventStream {
 	receiveEvent { | inEvent, patternPlayer |
 		inEvent keysValuesDo: { | key value |
@@ -134,3 +135,4 @@ Decision table for playSource method according to types of receiver and argument
 		}		
 	}
 }
+*/

@@ -24,7 +24,7 @@
 
 */
 
-Symbol {
++ Symbol {
 	+> { | player, envir |
 		// play named SynthDef in player
 		^(envir ? player).envir.player(player).play(this);
