@@ -1,14 +1,17 @@
 
 SourcePlayer {
-	var <player, <envir, <source;
+	var <player, <envir, <source, <process;
 
 	*new { | player, source | // plays immediately:
-		^this.newCopyArgs(player, player.envir).playSource(source);
+		^this.newCopyArgs(player, player.envir);
 	}
+
+	isPlaying { ^process.isPlaying }
 }
 
-PatternPlayer : SourcePlayer {
 
+PatternPlayer : SourcePlayer {
+	
 	play { | argSource |
 		
 
@@ -18,10 +21,12 @@ PatternPlayer : SourcePlayer {
 SynthPlayer : SourcePlayer {
 	var <controlNames, <hasGate = false, <event;	
 
-	playSource { | argSource |
+	play { | argSource |
 		var outbus, target, server;
+		postf("% play %\n", this, argSource);
 		// if still waiting to start synth after def, then skip this play!
-		if (player.notNil and: { player.isPlaying.not}) {
+		postf("playSource argSource is: %\n", argSource);
+		if (process.notNil and: { process.isPlaying.not}) {
 			"Waiting for created synth to start".postln;
 			^this
 		};
@@ -45,15 +50,15 @@ SynthPlayer : SourcePlayer {
 				defName = source.name;
 				source = nil;
 			};
-		if (player.isNil) { // if no synth plays, then remove def immediately
+		if (process.isNil) { // if no synth plays, then remove def immediately
 			defName !? { SynthDef removeAt: defName }
 		}{   // else remove def after end of released synth
-			player.objectClosed;
-			player.onEnd (this, {
+			process.objectClosed;
+			process.onEnd (this, {
 				defName !? { SynthDef removeAt: defName }
 			});
-			player.release (envir [\fadeTime] ? 0.02);
-			player = nil
+			process.release (envir [\fadeTime] ? 0.02);
+			process = nil
 		};
 	}
 	
@@ -69,6 +74,7 @@ SynthPlayer : SourcePlayer {
 			// then obtain def from them and use it.
 			// Else provide a def by guessing.
 			Function, {
+				"I will make a synth from a function".postln;
 				target = envir [\target].asTarget;
 				server = target.server;
 				// TODO: check if args already contain \out - outbus
@@ -78,19 +84,20 @@ SynthPlayer : SourcePlayer {
 						name: SystemSynthDefs.generateTempName
 					).add
 				);
-				player = Synth.basicNew(source.name, server);
+				process = Synth.basicNew(source.name, server);
 				outbus = envir [\outbus] ? 0;
 				source.doSend (
 					server, // TODO: remove \out, outbus from args and check
-					player.newMsg(target, [\i_out, outbus, \out, outbus] ++ args,
+					process.newMsg(target, [\i_out, outbus, \out, outbus] ++ args,
 						envir [\addAction] ? \addToHead);
 				);
 			},
 			Symbol, {
+				"I will make a synth from a symbol".postln;
 				#args, busses = this.source_(
 					(SynthDescLib.at (argSource) ?? { SynthDescLib at: \default}).def
 				);
-				player = Synth (
+				process = Synth (
 					source.name, args, target, envir [\addAction] ? \addToHead
 				)
 			},
@@ -102,17 +109,21 @@ SynthPlayer : SourcePlayer {
 					).def;
 				};
 				// source was either present, or provided by the immediately preceding step:
-				player = Synth (
+				process = Synth (
 					source.name, args, target, envir [\addAction] ? \addToHead
 				)
 			};
 		);
 		// Connect created synth to the environment and map the busses, when started
-		this.connectPlayer (player, busses);
+		this.connectPlayer (process, busses);
 	}
 
 	source_ { | argDef |
 		var parName;
+		"Hello. This is source_".postln;
+		"I was just tiven the following as argDef:".postln;
+		argDef.postln;
+		
 		source = argDef;
 		hasGate = false;
 		controlNames = source.allControlNames reject: { | a |
@@ -172,19 +183,19 @@ SynthPlayer : SourcePlayer {
 			2.2 Connect extra actions: restart, release, free, etc.
 			2.3 Initialize auto-removal on end.
 		*/
-		player = argSynth;
-		player.onStart (this, {
+		process = argSynth;
+		process.onStart (this, {
 			this.changed(\started);
 			/* If busses exist, then start the synth's gated envelope after mapping them */
 			if (busses.size > 0) {
 				busses keysValuesDo: { | key, value |
 					// postf("mapping synth: %, param: % to bus: %\n", this, key, value);
-					player.map(key, value);
+					process.map(key, value);
 				};
-				player.set(\gate, 1);
+				process.set(\gate, 1);
 			};
 			(controlNames add: \gate) do: { | param |
-				player.addNotifier (envir, param, { | val, notification |
+				process.addNotifier (envir, param, { | val, notification |
 					// handle busses as well as numerical values;
 					switch (val.class,
 						Nil, {},
@@ -201,10 +212,10 @@ SynthPlayer : SourcePlayer {
 					)
 				});
 			};
-			player.onEnd (this, {
+			process.onEnd (this, {
 				this.changed(\stopped);
-				player.objectClosed;
-				player = nil;
+				process.objectClosed;
+				process = nil;
 			});
 		});
 	}
@@ -217,7 +228,6 @@ SynthPlayer : SourcePlayer {
 	}
 	*/
 
-	isPlaying { ^player.isPlaying }
 }
 
 

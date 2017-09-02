@@ -1,4 +1,32 @@
 /*
+
+Play a function, symbol, or event inside a Player.
+
+Player sends playSource message to its sourcePlayer variable, which decides what to do depending on its Class and the class of the source to be played.
+
+If the sourcePlayer is Nil, it creates a SynthPlayer or PatternPlayer, depending on the class of the source.
+
+If the source is a PatternPlayer or SynthPlayer, it either returns itself, or a new PatternPlayer or SynthPlayer, depending on the class of the source.
+
+Decision table for playSource method according to types of receiver and argument:
+
+|---+---------------+----------+-------------------------+-------------------|
+| ! | receiver      | argument | method/action triggered | result returned   |
+|---+---------------+----------+-------------------------+-------------------|
+|   | Nil           | Function | makeSource              | new SythPlayer    |
+|   | Nil           | Symbol   | makeSource              | new SynthPlayer   |
+|   | Nil           | Event    | makeSource              | new PatternPlayer |
+|   | SynthPlayer   | Function | clearPreviousSynth      | old SynthPlayer   |
+|   | SynthPlayer   | Symbol   | clearPreviousSynth      | old SynthPlayer   |
+|   | SynthPlayer   | Event    | clearPreviousSynth      | new PatternPlayer |
+|   | PatternPlayer | Function | stop pattern            | new SynthPlayer   |
+|   | PatternPlayer | Symbol   | stop pattern            | new SynthPlayer   |
+|   | PatternPlayer | Event    | merge into pattern      | old PatternPlayer |
+|---+---------------+----------+-------------------------+-------------------|
+
+// ================================================================
+// Part 1: Create a new SourcePlayer and play it.
+// The Class of the source chooses the class of the SourcePlayer.
 	==== Player: hold an envir and a sourcePlayer that plays in that envir.
 	The sourcePlayer can be: 
 	Nil (the Player is not playing)
@@ -65,6 +93,7 @@ Player {
 	play { | source |
 		// play a function, symbol, or event.
 		// For definitions, see file playSource.sc
+		//		postf("% play %\n", this, source);
 		sourcePlayer = sourcePlayer.playSource(this, source);
 	}
 
@@ -84,5 +113,45 @@ Player {
 				bus;
 			}
 		)		
+	}
+}
+
++ Nil {
+	playSource { | argPlayer, argSource |
+		//		postf("% playSource % and %\n", this, argPlayer, argSource);
+		^argSource.makeSource(argPlayer).play(argSource);		
+	}
+}
+
++ Function { makeSource { | player |
+	//	postf("% makeSource %\n", this, player)
+
+	^SynthPlayer(player) } }
++ Symbol { makeSource { | player | ^SynthPlayer(player) } }
++ Event { makeSource { | player | ^PatternPlayer(player) } }
+
++ PatternPlayer {
+	playSource { | argPlayer, argSource |
+		switch (argSource.class,
+			Event, {
+				this.play(argSource)				
+			},{
+				this.release;
+				^SynthPlayer(argPlayer).play(argSource);
+			}
+		)
+	}
+}
+
++ SynthPlayer {
+	playSource { | argPlayer, argSource |
+		switch (argSource.class,
+			Event, {
+				this.release;
+				^PatternPlayer(argPlayer).play(argSource);
+			},{
+				this.play(argSource);				
+			}
+		)
 	}
 }

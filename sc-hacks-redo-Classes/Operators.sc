@@ -27,7 +27,7 @@
 + Symbol {
 	+> { | player, envir |
 		// play named SynthDef in player
-		^(envir ? player).envir.player(player).play(this);
+		^Nevent.play(envir ? player, player, this)
 	}
 
 	player { | envir |
@@ -57,7 +57,7 @@
 + Function {
 	+> { | player, envir |
 		// play function as SynthPlayer
-
+		^Nevent.play(envir ? player, player, this)
 	}
 
 	*> { | player, envir |
