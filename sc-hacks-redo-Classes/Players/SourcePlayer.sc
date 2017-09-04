@@ -20,7 +20,7 @@ PatternPlayer : SourcePlayer {
 
 SynthPlayer : SourcePlayer {
 	var <controlNames, <hasGate = false, <event;	
-
+	var <synthDefIsTemp = false;
 	isPlaying { ^process.notNil }
 
 	play { | argSource |
@@ -30,8 +30,8 @@ SynthPlayer : SourcePlayer {
 			"Waiting for created synth to start".postln;
 			^this
 		};
-		// stop previous synth, and remove def if appropriate:
-		this release: argSource;
+		// stop previous synth;
+		this.release;
 		// If a function or symbol is provided, then make def, then synth,
 		// else use old def or default def:
 		this makeSynth: argSource;
@@ -41,23 +41,8 @@ SynthPlayer : SourcePlayer {
 		/* New method to replace clearPreviousSynth.
 			If newSource is provided, then emit notification to remove previous one
 			if appropriate. */
-		postf("release was called. The process is: % and playng status is: %\n",
-			process, process.isPlaying);
-		if (process.isPlaying) {
-			newSource !? {
-				process.onEnd(newSource, { | notification |
-					"I am notifying 'clearDef' so that synthdef clears if appropriate".postln;
-					postf("DETAILS! The listener is: %\n", notification.listener);
-					postf("DETAILS! The notifier is: %\n", notification.notifier);
-					this.changed(\clearDef);
-				})
-			};
+		process !? {
 			process.release (envir [\fadeTime] ? 0.02);
-			process = nil;
-		}{
-			/* If process not playing, then notify to remove source
-				synthdef if appropriate. */
-			newSource !? { this.changed(\clearDef) };
 		};
 	}
 
@@ -66,13 +51,22 @@ SynthPlayer : SourcePlayer {
 		// else use old def or default def.
 		// Note: previous synth has been cleared and synthdef removed,
 		// or scheduled for removal after previous synth stops.
-		var target, server, outbus, args, busses;
+		var target, server, outbus, args, busses, isTemp = false;
 		// Create synth according to source class
+		if (synthDefIsTemp and: { process.isNil } and: { argSource.notNil }) {
+			postf("the synthdef % was leftover and I will remove it\n", source.name);
+			SynthDef removeAt: source.name;
+		}{
+			postf("I WILL NOTTTT REMOVE SYNTHDEF % leftover\n",
+			 if (source.isNil) { "null synthdef"} { source.name }
+			);
+		};
 		switch (argSource.class,
 			// Here decide from argSource's class: if argSource is Function or Symbol,
 			// then obtain def from them and use it.
 			// Else provide a def by guessing.
 			Function, {
+				isTemp = true;
 				target = envir [\target].asTarget;
 				server = target.server;
 				// TODO: check if args already contain \out - outbus
@@ -90,14 +84,7 @@ SynthPlayer : SourcePlayer {
 						envir [\addAction] ? \addToHead);
 				);
 				// preparing better way to clear defs:
-				source.addNotifierOneShot(this, \clearDef, { | ... args |
-					"I received a \clearDef message meaning I should remove myself".postln;
-					postf("I am: %\n", source);
-					postf("I received this as arguments %\n", args);
-					SynthDef removeAt: source.name.postln;
-					"YESSSSSSSS! I DID REMOCE THE OLD SOURCES DEF!".postln;
-					postf("the name of the def that I removed was: %\n", source.name);
-				})
+				
 			},
 			Symbol, {
 				#args, busses = this.source_(
@@ -120,8 +107,9 @@ SynthPlayer : SourcePlayer {
 				)
 			};
 		);
+		synthDefIsTemp = isTemp;
 		// Connect created synth to the environment and map the busses, when started
-		this.connectPlayer (process, busses);
+		this.connectPlayer (process, busses, isTemp);
 	}
 
 	source_ { | argDef |
@@ -178,7 +166,7 @@ SynthPlayer : SourcePlayer {
 		^[args, busses];		
 	}
 
-	connectPlayer { | argSynth, busses |
+	connectPlayer { | argSynth, busses, isTemp = false |
 		/* argSynth created by this.play
 			1. Store it
 			2. When it is really started, then:
@@ -217,13 +205,31 @@ SynthPlayer : SourcePlayer {
 					)
 				});
 			};
-			process.onEnd (this, {
-				this.changed(\stopped);
-				process.objectClosed; // TODO: remove this since on end closes the synth anyway
-				// TODO: only set the process to nil if it is not the playing synth
-				// i.e. if notification.notifier === process 
-				process = nil;
+			process.onEnd (this, { | notification |				
+				if (process === notification.notifier) {
+					this.changed(\stopped);
+					process = nil;
+				}
 			});
+			if (isTemp) {
+				source.addNotifier(process, \n_end, { | notification |
+					postf("will remove synthdef named %\n", notification.listener.name);
+					postf("but only if it has not been replaced by a different one\n");
+					postf("% and % different? %\n",
+						source.name, notification.listener.name,
+						source !== notification.listener
+					);
+					if (source !== notification.listener) {
+						postf("I am consistent and will remove synthdef named %\n",
+							notification.listener.name
+						);
+						SynthDef removeAt: notification.listener.name;
+					}{
+						postf("DAMMIT. I did NOT remove synthdef %\n",
+						notification.listener.name);
+					}
+				});
+			}
 		});
 	}
 	/*

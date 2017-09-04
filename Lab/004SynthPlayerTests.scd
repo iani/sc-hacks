@@ -5,7 +5,7 @@
 \default +> \test;
 { WhiteNoise.ar(0.1) } +> \test;
 
-\test.ppp;
+\test.ppp.addDependant({ | ... args | args.postln; } );
 
-\test.pp.release;
+\test.ppp.release;
 
