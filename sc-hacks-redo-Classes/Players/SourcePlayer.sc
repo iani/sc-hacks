@@ -23,10 +23,26 @@ SynthPlayer : SourcePlayer {
 
 	isPlaying { ^process.notNil }
 
+	play { | argSource |
+		var outbus, target, server;
+		// if still waiting to start synth after def, then skip this play!
+		if (process.notNil and: { process.isPlaying.not}) {
+			"Waiting for created synth to start".postln;
+			^this
+		};
+		// stop previous synth, and remove def if appropriate:
+		this release: argSource;
+		// If a function or symbol is provided, then make def, then synth,
+		// else use old def or default def:
+		this makeSynth: argSource;
+	}
+	
 	release { | newSource |
 		/* New method to replace clearPreviousSynth.
 			If newSource is provided, then emit notification to remove previous one
 			if appropriate. */
+		postf("release was called. The process is: % and playng status is: %\n",
+			process, process.isPlaying);
 		if (process.isPlaying) {
 			newSource !? {
 				process.onEnd(newSource, {
@@ -42,54 +58,7 @@ SynthPlayer : SourcePlayer {
 			newSource !? { this.changed(\clearDef) };
 		};
 	}
-	play { | argSource |
-		var outbus, target, server;
-		// if still waiting to start synth after def, then skip this play!
-		if (process.notNil and: { process.isPlaying.not}) {
-			"Waiting for created synth to start".postln;
-			^this
-		};
-		// stop previous synth, and remove def if appropriate:
-		this clearPreviousSynth: argSource;
-		// If a function or symbol is provided, then make def, then synth,
-		// else use old def or default def:
-		this makeSynth: argSource;
-	}
 
-	/*
-		TODO: Rewrite this as release method.
-		Check again for consistency in all use scenarios: 
-		1. Release to stop the synth player but keep the current source for restarting.
-		2. Release and clear the source (remove the SynthDef from the server!).
-		   This is when: 
-		   1. A new source has been provided and the old source is temp, so cleanup is needed.
-		   2. This SynthPlayer will be discarded because it is replaced by a PatternPlayer.
-	*/
-	clearPreviousSynth { | funcOrDef |
-		// if previous synth is playing, release it.
-		// if funcOrDef is different than current def,
-		// and current def is temp, then remove def when synth ends.
-		var defName;
-		if ( // 4 conditions must be met:
-			source.notNil and: // there is a def to remove
-			{ funcOrDef.notNil } and: // a new def has been provided
-			{ funcOrDef != source } and: // new def is different than the previous def
-			{ source.name.asString [..3] == "temp"}) { // the previous def is temporary
-				defName = source.name;
-				source = nil;
-			};
-		if (process.isNil) { // if no synth plays, then remove def immediately
-			defName !? { SynthDef removeAt: defName }
-		}{   // else remove def after end of released synth
-			process.objectClosed;
-			process.onEnd (source, {
-				defName !? { SynthDef removeAt: defName }
-			});
-			process.release (envir [\fadeTime] ? 0.02);
-			process = nil
-		};
-	}
-	
 	makeSynth { | argSource |
 		// If a function or symbol is provided, then make def, then synth,
 		// else use old def or default def.
@@ -123,7 +92,9 @@ SynthPlayer : SourcePlayer {
 					"I received a \clearDef message meaning I should remove myself".postln;
 					postf("I am: %\n", source);
 					postf("I received this as arguments %\n", args);
-					
+					SynthDef removeAt: source.name.postln;
+					"YESSSSSSSS! I DID REMOCE THE OLD SOURCES DEF!".postln;
+					postf("the name of the def that I removed was: %\n", source.name);
 				})
 			},
 			Symbol, {
@@ -261,6 +232,41 @@ SynthPlayer : SourcePlayer {
 	}
 	*/
 
+	/*
+		TODO: Rewrite this as release method.
+		Check again for consistency in all use scenarios: 
+		1. Release to stop the synth player but keep the current source for restarting.
+		2. Release and clear the source (remove the SynthDef from the server!).
+		   This is when: 
+		   1. A new source has been provided and the old source is temp, so cleanup is needed.
+		   2. This SynthPlayer will be discarded because it is replaced by a PatternPlayer.
+	*/
+	/*
+	clearPreviousSynth { | funcOrDef |
+		// if previous synth is playing, release it.
+		// if funcOrDef is different than current def,
+		// and current def is temp, then remove def when synth ends.
+		var defName;
+		if ( // 4 conditions must be met:
+			source.notNil and: // there is a def to remove
+			{ funcOrDef.notNil } and: // a new def has been provided
+			{ funcOrDef != source } and: // new def is different than the previous def
+			{ source.name.asString [..3] == "temp"}) { // the previous def is temporary
+				defName = source.name;
+				source = nil;
+			};
+		if (process.isNil) { // if no synth plays, then remove def immediately
+			defName !? { SynthDef removeAt: defName }
+		}{   // else remove def after end of released synth
+			process.objectClosed;
+			process.onEnd (source, {
+				defName !? { SynthDef removeAt: defName }
+			});
+			process.release (envir [\fadeTime] ? 0.02);
+			process = nil
+		};
+	}
+	*/
 }
 
 

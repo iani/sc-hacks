@@ -80,7 +80,7 @@ LoadFile {
 		postf("Loading audio file: %\n", path);
 		buffer = Buffer.read(Server.default, path, action: { | b |
 			this.class.calculateTotalAudioBytes;
-			postf("LOADED BUFFER: %\n", b);
+			postf("LOADED: %\n", b);
 		});
 	}
 
