@@ -102,6 +102,20 @@ Player {
 		^busses;
 	}
 
+	isPlaying {
+		^sourcePlayer.isPlaying;
+	}
+
+	process {
+		// If available, return the synth or EventStreamPlayer stored in sourcePlayer.
+		// Else return nil.
+		if (sourcePlayer.isNil) {
+			^nil
+		}{
+			^sourcePlayer.process
+		}
+	}
+	
 	getBus { | controlName = \in, numChannels = 1 |
 		// should be named getAudioBus ?
 		var bus;
@@ -117,31 +131,12 @@ Player {
 }
 
 + Nil {
-	playSource { | argPlayer, argSource |
-		//		postf("% playSource % and %\n", this, argPlayer, argSource);
-		^argSource.makeSource(argPlayer).play(argSource);		
-	}
+	playSource { | argPlayer, argSource | ^argSource.makeSource(argPlayer).play(argSource) }
 }
 
-+ Function { makeSource { | player |
-	//	postf("% makeSource %\n", this, player)
-
-	^SynthPlayer(player) } }
++ Function { makeSource { | player | ^SynthPlayer(player) } }
 + Symbol { makeSource { | player | ^SynthPlayer(player) } }
 + Event { makeSource { | player | ^PatternPlayer(player) } }
-
-+ PatternPlayer {
-	playSource { | argPlayer, argSource |
-		switch (argSource.class,
-			Event, {
-				this.play(argSource)				
-			},{
-				this.release;
-				^SynthPlayer(argPlayer).play(argSource);
-			}
-		)
-	}
-}
 
 + SynthPlayer {
 	playSource { | argPlayer, argSource |
@@ -151,6 +146,19 @@ Player {
 				^PatternPlayer(argPlayer).play(argSource);
 			},{
 				this.play(argSource);				
+			}
+		)
+	}
+}
+
++ PatternPlayer {
+	playSource { | argPlayer, argSource |
+		switch (argSource.class,
+			Event, {
+				this.play(argSource)				
+			},{
+				this.release;
+				^SynthPlayer(argPlayer).play(argSource);
 			}
 		)
 	}

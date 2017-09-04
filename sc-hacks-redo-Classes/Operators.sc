@@ -25,14 +25,18 @@
 */
 
 + Symbol {
+	e { ^Nevent(this) }
+	p { | eventName | ^Nevent(eventName ? this).player(this) }
+	pp { | eventName | ^this.p(eventName).sourcePlayer }
+	ppp { | eventName | ^this.p(eventName).process }
+	
 	+> { | player, envir |
 		// play named SynthDef in player
 		^Nevent.play(envir ? player, player, this)
 	}
 
-	player { | envir |
-		^(envir ? this)
-	}
+	//	player { | envir | ^(envir ? this) }
+	
 	*> { | player, param |
 		// link receiver to argument via bus
 
@@ -66,4 +70,11 @@
 	}
 
 
+}
+
++ Event {
+
+	p {
+		^EventPattern(this).play;
+	}
 }

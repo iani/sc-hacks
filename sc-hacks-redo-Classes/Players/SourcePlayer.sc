@@ -21,11 +21,30 @@ PatternPlayer : SourcePlayer {
 SynthPlayer : SourcePlayer {
 	var <controlNames, <hasGate = false, <event;	
 
+	isPlaying { ^process.notNil }
+
+	release { | newSource |
+		/* New method to replace clearPreviousSynth.
+			If newSource is provided, then emit notification to remove previous one
+			if appropriate. */
+		if (process.isPlaying) {
+			newSource !? {
+				process.onEnd(newSource, {
+					"I am notifying 'clearDef' so that synthdef clears if appropriate".postln;
+					this.changed(\clearDef);
+				})
+			};
+			process.release (envir [\fadeTime] ? 0.02);
+			process = nil;
+		}{
+			/* If process not playing, then notify to remove source
+				synthdef if appropriate. */
+			newSource !? { this.changed(\clearDef) };
+		};
+	}
 	play { | argSource |
 		var outbus, target, server;
-		postf("% play %\n", this, argSource);
 		// if still waiting to start synth after def, then skip this play!
-		postf("playSource argSource is: %\n", argSource);
 		if (process.notNil and: { process.isPlaying.not}) {
 			"Waiting for created synth to start".postln;
 			^this
@@ -37,6 +56,15 @@ SynthPlayer : SourcePlayer {
 		this makeSynth: argSource;
 	}
 
+	/*
+		TODO: Rewrite this as release method.
+		Check again for consistency in all use scenarios: 
+		1. Release to stop the synth player but keep the current source for restarting.
+		2. Release and clear the source (remove the SynthDef from the server!).
+		   This is when: 
+		   1. A new source has been provided and the old source is temp, so cleanup is needed.
+		   2. This SynthPlayer will be discarded because it is replaced by a PatternPlayer.
+	*/
 	clearPreviousSynth { | funcOrDef |
 		// if previous synth is playing, release it.
 		// if funcOrDef is different than current def,
@@ -54,7 +82,7 @@ SynthPlayer : SourcePlayer {
 			defName !? { SynthDef removeAt: defName }
 		}{   // else remove def after end of released synth
 			process.objectClosed;
-			process.onEnd (this, {
+			process.onEnd (source, {
 				defName !? { SynthDef removeAt: defName }
 			});
 			process.release (envir [\fadeTime] ? 0.02);
@@ -74,7 +102,6 @@ SynthPlayer : SourcePlayer {
 			// then obtain def from them and use it.
 			// Else provide a def by guessing.
 			Function, {
-				"I will make a synth from a function".postln;
 				target = envir [\target].asTarget;
 				server = target.server;
 				// TODO: check if args already contain \out - outbus
@@ -91,9 +118,15 @@ SynthPlayer : SourcePlayer {
 					process.newMsg(target, [\i_out, outbus, \out, outbus] ++ args,
 						envir [\addAction] ? \addToHead);
 				);
+				// preparing better way to clear defs:
+				source.addNotifierOneShot(this, \clearDef, { | ... args |
+					"I received a \clearDef message meaning I should remove myself".postln;
+					postf("I am: %\n", source);
+					postf("I received this as arguments %\n", args);
+					
+				})
 			},
 			Symbol, {
-				"I will make a synth from a symbol".postln;
 				#args, busses = this.source_(
 					(SynthDescLib.at (argSource) ?? { SynthDescLib at: \default}).def
 				);
@@ -101,14 +134,14 @@ SynthPlayer : SourcePlayer {
 					source.name, args, target, envir [\addAction] ? \addToHead
 				)
 			},
-			{  // If no appropriate source was provided, then provide one by guessing:
-				// if no source is already stored, then get one from SynthDescLib
-				source ?? {
-					#args, busses = this.source_(
-						SynthDescLib.at (argSource) ?? { SynthDescLib at: \default}
-					).def;
-				};
-				// source was either present, or provided by the immediately preceding step:
+			{   // Always recreate args and busses from current envir
+				// To take current settings of envir into account (!)
+				#args, busses = this.source_(
+					// use source if it exists, else provide one by guessing:
+					source ?? {
+						(SynthDescLib.at (argSource) ?? { SynthDescLib at: \default}).def
+					}
+				);
 				process = Synth (
 					source.name, args, target, envir [\addAction] ? \addToHead
 				)
@@ -120,9 +153,6 @@ SynthPlayer : SourcePlayer {
 
 	source_ { | argDef |
 		var parName;
-		"Hello. This is source_".postln;
-		"I was just tiven the following as argDef:".postln;
-		argDef.postln;
 		
 		source = argDef;
 		hasGate = false;
@@ -194,6 +224,8 @@ SynthPlayer : SourcePlayer {
 				};
 				process.set(\gate, 1);
 			};
+			/* Furthermore make all controls of the synth listen to changes
+				in the players environment */
 			(controlNames add: \gate) do: { | param |
 				process.addNotifier (envir, param, { | val, notification |
 					// handle busses as well as numerical values;
@@ -221,6 +253,7 @@ SynthPlayer : SourcePlayer {
 	}
 	/*
 		// envir can do this to add control from self to this player by name.
+		// therefore move this method to Nevent, using appropriate new method name.
 	init {
 		this.addNotifier (envir, name, { | command |
 			this perform: command;
