@@ -45,8 +45,10 @@ SynthPlayer : SourcePlayer {
 			process, process.isPlaying);
 		if (process.isPlaying) {
 			newSource !? {
-				process.onEnd(newSource, {
+				process.onEnd(newSource, { | notification |
 					"I am notifying 'clearDef' so that synthdef clears if appropriate".postln;
+					postf("DETAILS! The listener is: %\n", notification.listener);
+					postf("DETAILS! The notifier is: %\n", notification.notifier);
 					this.changed(\clearDef);
 				})
 			};
@@ -217,7 +219,9 @@ SynthPlayer : SourcePlayer {
 			};
 			process.onEnd (this, {
 				this.changed(\stopped);
-				process.objectClosed;
+				process.objectClosed; // TODO: remove this since on end closes the synth anyway
+				// TODO: only set the process to nil if it is not the playing synth
+				// i.e. if notification.notifier === process 
 				process = nil;
 			});
 		});
