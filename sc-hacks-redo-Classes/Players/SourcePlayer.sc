@@ -52,15 +52,11 @@ SynthPlayer : SourcePlayer {
 		// Note: previous synth has been cleared and synthdef removed,
 		// or scheduled for removal after previous synth stops.
 		var target, server, outbus, args, busses, isTemp = false;
-		// Create synth according to source class
+		// remove temp SynthDef if leftover from previous release.
 		if (synthDefIsTemp and: { process.isNil } and: { argSource.notNil }) {
-			postf("the synthdef % was leftover and I will remove it\n", source.name);
 			SynthDef removeAt: source.name;
-		}{
-			postf("I WILL NOTTTT REMOVE SYNTHDEF % leftover\n",
-			 if (source.isNil) { "null synthdef"} { source.name }
-			);
 		};
+		// Create synth according to source class.
 		switch (argSource.class,
 			// Here decide from argSource's class: if argSource is Function or Symbol,
 			// then obtain def from them and use it.
@@ -69,7 +65,6 @@ SynthPlayer : SourcePlayer {
 				isTemp = true;
 				target = envir [\target].asTarget;
 				server = target.server;
-				// TODO: check if args already contain \out - outbus
 				#args, busses = this.source_(
 					argSource.asPlayerSynthDef (
 						fadeTime: envir [\fadeTime] ? 0.02,
@@ -83,8 +78,6 @@ SynthPlayer : SourcePlayer {
 					process.newMsg(target, [\i_out, outbus, \out, outbus] ++ args,
 						envir [\addAction] ? \addToHead);
 				);
-				// preparing better way to clear defs:
-				
 			},
 			Symbol, {
 				#args, busses = this.source_(
@@ -132,7 +125,6 @@ SynthPlayer : SourcePlayer {
 				// but could be replaced by getting the gui defaults from
 				// customized specs stored for each def. (TODO:!)
 				envir [parName] = cn.defaultValue;
-				// envir.changed(parName, cn.defaultValue)
 			};
 			parName;
 		};
@@ -213,20 +205,8 @@ SynthPlayer : SourcePlayer {
 			});
 			if (isTemp) {
 				source.addNotifier(process, \n_end, { | notification |
-					postf("will remove synthdef named %\n", notification.listener.name);
-					postf("but only if it has not been replaced by a different one\n");
-					postf("% and % different? %\n",
-						source.name, notification.listener.name,
-						source !== notification.listener
-					);
 					if (source !== notification.listener) {
-						postf("I am consistent and will remove synthdef named %\n",
-							notification.listener.name
-						);
 						SynthDef removeAt: notification.listener.name;
-					}{
-						postf("DAMMIT. I did NOT remove synthdef %\n",
-						notification.listener.name);
 					}
 				});
 			}

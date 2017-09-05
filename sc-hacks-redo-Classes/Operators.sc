@@ -31,8 +31,9 @@
 	ppp { | eventName | ^this.p(eventName).process }
 	
 	+> { | player, envir |
-		// play named SynthDef in player
-		^Nevent.play(envir ? player, player, this)
+		// play named SynthDef in player.
+		// Push environment before playing. See optional 4th argument in Nevent:play for push.
+		^Nevent.play(envir ? player, player, this);
 	}
 
 	//	player { | envir | ^(envir ? this) }

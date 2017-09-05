@@ -8,7 +8,7 @@
 
 + GraphBuilder {
 	*wrapPlayerOut { arg name, func, rates, prependArgs, outClass = \Out, fadeTime;
-		^SynthDef.new(name, { arg out = 0; // i_out is non-modifiable. replaced by out
+		^SynthDef.new(name, { arg out = 0; // i_out is non-modifiable. Use out instead.
 			var result, rate, env;
 			result = SynthDef.wrap(func, rates, prependArgs).asUGenInput;
 			rate = result.rate;

@@ -5,28 +5,32 @@ Nevent : EnvironmentRedirect {
 		^Registry.at(libRoot).values;
 	}
 
-	*play { | envirName, playerName, source |
+	*play { | envirName, playerName, source, doPush = true |
 		// Get player for environment by name and play source.
-		^this.new(envirName).player(playerName).play(source);
+		^this.new(envirName, doPush).player(playerName).play(source);
 	}
 	
-	*new { | name |
+	*new { | name, doPush = false |
 		^Registry(libRoot, name, {
-			this.newCopyArgs(
-				(),
-				Dispatch.newCopyArgs(
-					this, (
-						Integer: { | key, object |
-							[key, object]
-						},
-						Float: { | key, object |
-							[key, object]
-						}
-					)
-				),
-				name, ()
-			).setGroup(OrderedGroup.last);
-		})
+			this.newCopyArgs((), nil, name, ())
+			.makeDispatch(() putPairs: [
+				Integer, { | key, object |
+					[key, object]
+				},
+				Float, { | key, object |
+					[key, object]
+				}
+			])
+			.setGroup(OrderedGroup.last)
+		}).maybePush(doPush)
+	}
+
+	makeDispatch { | dispatcherEvent |
+		dispatch = Dispatch.newCopyArgs(this, dispatcherEvent);
+	}
+
+	maybePush { | doPush = false |
+		if (doPush and: { currentEnvironment !== this}) { this.push };
 	}
 
 	player { | playerName |
