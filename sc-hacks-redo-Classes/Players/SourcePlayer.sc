@@ -42,6 +42,8 @@ SynthPlayer : SourcePlayer {
 			If newSource is provided, then emit notification to remove previous one
 			if appropriate. */
 		process !? {
+			// Experimental: prevent /n_set Node xxxx not found
+			Notification.removeNotifiersOf(process);
 			process.release (envir [\fadeTime] ? 0.02);
 		};
 	}

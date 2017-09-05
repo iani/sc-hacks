@@ -6,15 +6,17 @@
 { WhiteNoise.ar(0.1) } +> \test;
 //:* looping
 \default +> \test;
-0.1.wait;
+0.5.wait;
 { WhiteNoise.ar(0.1) } +> \test;
-0.1.wait;
+0.5.wait;
 //:
 \default +> \test;
 ~freqStream = Pbrown(10, 100, 1).midicps.asStream;
 //:*
 ~freq = ~freqStream.next;
 0.01.wait;
+//:
+\test.pp.release;
 //: ... debugging release ...
 \test.ppp.addDependant({ | ... args | args.postln; });
 \test.ppp.release;
