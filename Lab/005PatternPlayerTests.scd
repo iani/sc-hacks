@@ -1,10 +1,16 @@
 //  6 Sep 2017 01:33
-a = () +> \test;
 b =\default +> \test;
+a = () +> \test;
 //:
-\test.ppp.addEvent((dur: 0.1));
+(dur: 0.1) +> \test;
+//:
+\test.ppp.clear.originalStream.event;
 //:
 (degree: Pwhite(0, 10)) +> \test;
+//:
+(degree: Pbrown(0, 10, 1)) +> \test.clear;
+//:
+\test.ppp.addEvent((dur: 0.1));
 //:
 a === b;
 //:

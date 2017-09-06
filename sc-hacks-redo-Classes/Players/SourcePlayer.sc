@@ -31,6 +31,12 @@ PatternPlayer : SourcePlayer {
 	}
 
 	stop { process.stop }
+
+	clear {
+		// empty process of PatternPlayer
+		// remove all keys except for target nodes and busses
+		process !? { process.clear }
+	}
 }
 
 SynthPlayer : SourcePlayer {
@@ -227,6 +233,12 @@ SynthPlayer : SourcePlayer {
 				});
 			}
 		});
+	}
+
+		clear {
+			// empty process of PatternPlayer
+			// SynthPlayer ignores this.
+			//	sourcePlayer !? { sourcePlayer.clear }
 	}
 	/*
 		// envir can do this to add control from self to this player by name.

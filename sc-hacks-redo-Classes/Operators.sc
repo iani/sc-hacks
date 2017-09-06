@@ -29,7 +29,10 @@
 	p { | eventName | ^Nevent(eventName ? this).player(this) }
 	pp { | eventName | ^this.p(eventName).sourcePlayer }
 	ppp { | eventName | ^this.p(eventName).process }
-	
+	clear { | eventName |
+		// empty process of PatternPlayer
+		^this.p(eventName).clear;
+	}
 	+> { | player, envir |
 		// play named SynthDef in player.
 		// Push environment before playing. See optional 4th argument in Nevent:play for push.

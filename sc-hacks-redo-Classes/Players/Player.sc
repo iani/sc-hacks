@@ -96,6 +96,11 @@ Player {
 		sourcePlayer = sourcePlayer.playSource(this, source);
 	}
 
+	clear {
+		// empty process of PatternPlayer
+		sourcePlayer !? { sourcePlayer.clear }
+	}
+
 	busses {
 		busses ?? { busses = ( )};
 		^busses;
