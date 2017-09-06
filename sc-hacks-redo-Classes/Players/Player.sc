@@ -10,19 +10,19 @@ If the source is a PatternPlayer or SynthPlayer, it either returns itself, or a 
 
 Decision table for playSource method according to types of receiver and argument:
 
-|---+---------------+----------+-------------------------+-------------------|
-| ! | receiver      | argument | method/action triggered | result returned   |
-|---+---------------+----------+-------------------------+-------------------|
-|   | Nil           | Function | makeSource              | new SythPlayer    |
-|   | Nil           | Symbol   | makeSource              | new SynthPlayer   |
-|   | Nil           | Event    | makeSource              | new PatternPlayer |
-|   | SynthPlayer   | Function | clearPreviousSynth      | old SynthPlayer   |
-|   | SynthPlayer   | Symbol   | clearPreviousSynth      | old SynthPlayer   |
-|   | SynthPlayer   | Event    | clearPreviousSynth      | new PatternPlayer |
-|   | PatternPlayer | Function | stop pattern            | new SynthPlayer   |
-|   | PatternPlayer | Symbol   | stop pattern            | new SynthPlayer   |
-|   | PatternPlayer | Event    | merge into pattern      | old PatternPlayer |
-|---+---------------+----------+-------------------------+-------------------|
++---------------+----------+-------------------------+-------------------|
+| receiver      | argument | method/action triggered | result returned   |
++---------------+----------+-------------------------+-------------------|
+| Nil           | Function | makeSource              | new SythPlayer    |
+| Nil           | Symbol   | makeSource              | new SynthPlayer   |
+| Nil           | Event    | makeSource              | new PatternPlayer |
+| SynthPlayer   | Function | clearPreviousSynth      | old SynthPlayer   |
+| SynthPlayer   | Symbol   | clearPreviousSynth      | old SynthPlayer   |
+| SynthPlayer   | Event    | clearPreviousSynth      | new PatternPlayer |
+| PatternPlayer | Function | stop pattern            | new SynthPlayer   |
+| PatternPlayer | Symbol   | stop pattern            | new SynthPlayer   |
+| PatternPlayer | Event    | merge into pattern      | old PatternPlayer |
++---------------+----------+-------------------------+-------------------|
 
 // ================================================================
 // Part 1: Create a new SourcePlayer and play it.
@@ -138,6 +138,7 @@ Player {
 	playSource { | argPlayer, argSource | ^argSource.makeSource(argPlayer).play(argSource) }
 }
 
++ Nil { makeSource { | player | ^SynthPlayer(player) } }
 + Function { makeSource { | player | ^SynthPlayer(player) } }
 + Symbol { makeSource { | player | ^SynthPlayer(player) } }
 + Event { makeSource { | player | ^PatternPlayer(player) } }
@@ -160,6 +161,9 @@ Player {
 		switch (argSource.class,
 			Event, {
 				this.play(argSource)				
+			},
+			Nil, {
+				process.play;
 			},{
 				this.release;
 				^SynthPlayer(argPlayer).play(argSource);

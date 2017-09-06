@@ -29,6 +29,9 @@
 	p { | eventName | ^Nevent(eventName ? this).player(this) }
 	pp { | eventName | ^this.p(eventName).sourcePlayer }
 	ppp { | eventName | ^this.p(eventName).process }
+	play { | source, eventName |
+		^this.p(eventName).play(source);
+	}
 	clear { | eventName |
 		// empty process of PatternPlayer
 		^this.p(eventName).clear;

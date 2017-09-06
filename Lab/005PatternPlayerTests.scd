@@ -2,9 +2,13 @@
 b =\default +> \test;
 a = (dur: 0.02, degree: Pbrown(0, 10, 1)) +> \test;
 //:
+{ WhiteNoise.ar(0.1) } +> \test;
+//:
 b = \test.clear;
 //:
 (dur: 0.1) +> \test;
+//:
+(dur: 1.1) +> \test;
 //:
 \test.ppp.clear.originalStream.event;
 //:
@@ -21,4 +25,13 @@ a
 
 Nevent.libRoot.class;
 
-Library.at(Nevent.libRoot)
+Library.at(Nevent.libRoot);
+
+\test.p.play;
+\x.p.play;
+
+//:
+() +> \x;
+//:
+Player
+\x.play;

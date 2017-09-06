@@ -1,0 +1,119 @@
+ROADMAP  6 Sep 2017 14:19
+* General TODOs
+  :PROPERTIES:
+  :DATE:     <2017-09-06 Wed 14:20>
+  :END:
+** TODO make SynthPlayer:release use ~fadeTime
+   :PROPERTIES:
+   :DATE:     <2017-09-06 Wed 14:20>
+   :END:
+** TODO implement release for Symbol, Player.
+   :PROPERTIES:
+   :DATE:     <2017-09-06 Wed 14:21>
+   :END:
+
+* Operators
+
+** Operator Overview
+
+: Examples of 4 operator types in sc-hacks
+
+#+BEGIN_SRC javascript
+// type 1: +>
+{ WhiteNoise.ar(0.1) } +> \test; // 1. function +>player
+(dur: 0.1, degree: Pwhite(1, 10)) +> \test; // 2. event +> player
+\default +> \test; // SynthDef name +> player
+// type 2: <+
+\freq <+ { LFNoise0.kr(5).range(500, 1500) }; // 1. parameter <+ Function
+\amp <+ Env.perc; // parameter <+ Envelope
+// type 3: *>
+\source *> \effect // source player *> effect player
+(freq: Pbrown(50, 90, 5), dur: 0.1) *> \effect; // 2. event *> player's environment
+// type 4: <*
+\test <* \hihat; // 1. parameter <* buffer name
+#+END_SRC
+
+As basic operators, /sc-hacks/ uses four combinations built from + and * with > and <.  They are in two groups (=+=-Group and =*=-Group):
+
+1. *+-Group* : =+>=, =<+=.  *+>* plays the receiver (left argument) object in the player whose name is named by the left argument.  *<+* plays the left argument object in the parameter whose name is named by the receiver.
+2. **-Group* : =*>, =<*=. The operators of the =*= group have parallel usage principles as that of the =+= group, but they interpret the same kinds of receiver in different ways, to provide additional functionality.
+
+Here is a tabular overview of operator actions associated to different types of receiver and argument:
+
+|------+------------+------------+------------+--------------------------------------|
+| *no* | *receiver* | *operator* | *argument* | *action*                             |
+|------+------------+------------+------------+--------------------------------------|
+|    1 | Symbol     | =+>=       | Symbol     | Play Synthdef                        |
+|    2 | Symbol     | =*>=       | Symbol     | Link Players                         |
+|    3 | Symbol     | =<+=       | Number     | Set parameter                        |
+|    4 | Symbol     | =<+=       | Function   | Map parameter                        |
+|    5 | Symbol     | =<+=       | Env        | Map parameter                        |
+|    6 | Symbol     | =<*=       | Symbol     | Set bufnum                           |
+|    7 | Symbol     | =<*=       | MIDI       | Bind MIDIFunc                        |
+|    8 | Symbol     | =<*=       | OSC        | Bind OSCFunc                         |
+|    9 | Symbol     | =<*=       | Widget     | Bind GUI Widget                      |
+|   10 | Function   | =+>=       | Symbol     | Play Synth                           |
+|   11 | Function   | =*>=       | Symbol     | Play Routine                         |
+|   12 | Event      | =+>=       | Symbol     | Play Pattern in Player               |
+|   13 | Event      | =*>=       | Symbol     | Play Pattern in Player's Environment |
+|   14 | UGen       | =<+=       | Symbol     | Read input from Player's Output      |
+|   15 | Symbol     | =@=        | Symbol     | Store Bus in player parameter |
+#+TBLFM: $1=@-1 + 1::@2$1=1
+
+** DONE 1. Symbol =+>= Symbol: Play Synthdef
+   CLOSED: [2017-09-06 Wed 14:13]
+
+#+BEGIN_SRC javascript
+\default +> \player1; // play SynthDef named default in player named player1
+#+END_SRC
+
+** TODO 2. Symbol =*>= Symbol: Link Players
+
+#+BEGIN_SRC javascript
+\source *> \effect; // use default i/o parameters (\out, \in)
+\source *>.input2 \effect; // specify custom input parameter
+\source @.output2 *> \effect // specify custom output parameter
+\source @.output2 *>.input2 \effect; // specify custom input and output parameter
+#+END_SRC
+
+Adverb specifies custom input parameter for the argument player.
+
+To specify a custom output parameter for the reader player, use the =@= operator:
+
+** TODO 3. Symbol =<+= Number: Set parameter
+** TODO 4. Symbol =<+= Function: Map parameter
+** TODO 5. Symbol =<+= Env: Map parameter
+** TODO 6. Symbol =<+= Symbol: Set bufnum
+** TODO 7. Symbol =<*= MIDI: Bind MIDIFunc
+** TODO 8. Symbol =<*= OSC: Bind OSCFunc
+** TODO 9. Symbol =<*= Widget: Bind GUI Widget
+** DONE 10. Function =+>= Symbol: Play Synth
+   CLOSED: [2017-09-06 Wed 14:14]
+** TODO 11. Function =*>= Symbol: Play Routine
+** DONE 12. Event =+>= Symbol: Play Pattern in Player
+   CLOSED: [2017-09-06 Wed 14:13]
+** TODO 13. Event =*>= Symbol: Play Pattern in Player's Environment
+** TODO 14. UGen =<+= Symbol: Read input from Player's Output
+
+The code examples to the right illustrate the action of different types of objects sent to players, which are:
+
+1. =+>= : Play the receiver in the Player named by the argument. 3 types of receivers can be used: 1. *Function:* Play as synth function into the Player named by the argument. 2. *Event:* Play as pattern (via EventStreamPlayer) into the Player named by the argument. 3. *Symbol:* Play as synth using the Receiver Symbol as name of the Synth to be player.
+2. =<+= : Use the argument as input to the environment variable named by the receiver (in the current environment). Several different types of argument are possible: Function, SimpleNumber (Integer, Float), MIDI and OSC-function templates (custom classes in this library), GUI type objects, Symbol (names of buffers or of players).
+3. =*>= : The =*>= operator functions like the =+>= operator in that it plays the receiver in the player named by the argument, but it interprets the types of the receiver in a different way: *Functions* get played as routines in the environment of the player.  *Events* get played as patterns, but using a custom type which instead of playing sounds with =play= event type, just set the environment variables of the environment of the player named by the receiver, with the values produced by each key in the event. A *Symbol* as receiver indicates to connect the output of the player named by the receiver to the input of the player named by the argument.
+4. =<*= This operator is used to send the bufnum of buffers to parameters.
+
+** TODO 15. Symbol =@= Symbol: Bind parameter to bus
+
+: Bus binding operator: Store bus in parameter of player.
+: Adverb indicates number of channels or environment.
+
+#+BEGIN_SRC javascript
+// create 2-channel bus for parameter \in of player \source:
+\source @.2 \in;
+// create 1-channel bus for parameter \in of player \source1 in environment \sourceEnvir:
+\source1 @.sourceEnvir \in;
+// Chain @ operator expressions to customize linked bus assignment:
+\source @.envir \out2 *> (\effect @.fxenvir \in3);
+#+END_SRC
+
+In addition to the 4 operators above, /sc-hacks/ uses =@= to configure busses bound to parameters of player.  The =@= operator returns a player-parameter-bus object that can be linked to another player-parameter-bus.

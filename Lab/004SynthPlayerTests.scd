@@ -4,6 +4,10 @@
 //: TESTING RELEASE and SynthDef cleanup
 \default +> \test;
 { WhiteNoise.ar(0.1) } +> \test;
+//:
+\test.pp.release;
+//:
+~fadeTime = 1;
 //:* looping
 \default +> \test;
 0.5.wait;
