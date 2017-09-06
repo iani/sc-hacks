@@ -22,7 +22,8 @@ Nevent : EnvironmentRedirect {
 				}
 			])
 			.setGroup(OrderedGroup.last)
-		}).maybePush(doPush)
+			.maybePush(doPush)
+		})
 	}
 
 	makeDispatch { | dispatcherEvent |

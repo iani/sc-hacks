@@ -74,7 +74,10 @@
 }
 
 + Event {
-
+	+> { | player, envir |
+		// play function as PatternPlayer
+		^Nevent.play(envir ? player, player, this)
+	}
 	p {
 		^EventPattern(this).play;
 	}

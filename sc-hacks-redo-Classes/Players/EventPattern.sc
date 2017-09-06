@@ -15,12 +15,11 @@ EventPattern : Pattern {
 
 	pattern { ^this }
 
-	addEventContents { | inEvent streamEvent |
+	addEvent { | inEvent |
 		// Add event's keys/values and also update the event
 		// of the currently playing stream.
 		inEvent keysValuesDo: { | key value |
 			event[key] = value;
-			streamEvent[key] = value.asStream;
 		}
 	}
 }
@@ -64,6 +63,12 @@ EventStream : Stream {
 		^outEvent;
 	}
 
+	addEvent { | inEvent |
+		inEvent keysValuesDo: { | key, value |
+			event[key] = value.asStream;
+		}
+	}
+	
 	/* Needed to embed an EventPattern in a Stream as in: 
 		Pseq([EventPattern((degree: (1..8).pseq(2)))]).play;
 	*/

@@ -12,10 +12,25 @@ SourcePlayer {
 
 PatternPlayer : SourcePlayer {
 	
-	play { | argSource |
-		
-
+	play { | argSource | // argSource shoud be a kind of Event.
+		if (source.isNil) {
+			source = EventPattern(argSource);			
+		}{
+			source.addEvent(argSource);			
+		};
+		if (process.isNil) {
+			process = source.play;			
+		}{
+			process.originalStream.addEvent(argSource);
+			if (process.isPlaying.not) { process.play };
+		}
 	}
+
+	release {
+		process.stop; // later maybe add fadeOut ...
+	}
+
+	stop { process.stop }
 }
 
 SynthPlayer : SourcePlayer {
@@ -30,8 +45,7 @@ SynthPlayer : SourcePlayer {
 			"Waiting for created synth to start".postln;
 			^this
 		};
-		// stop previous synth;
-		this.release;
+		this.release; // stop previous synth;
 		// If a function or symbol is provided, then make def, then synth,
 		// else use old def or default def:
 		this makeSynth: argSource;
@@ -42,7 +56,7 @@ SynthPlayer : SourcePlayer {
 			If newSource is provided, then emit notification to remove previous one
 			if appropriate. */
 		process !? {
-			// Experimental: prevent /n_set Node xxxx not found
+			// Experimental: prevent /n_set Node xxxx not found at unynchronized end of synth.
 			Notification.removeNotifiersOf(process);
 			process.release (envir [\fadeTime] ? 0.02);
 		};

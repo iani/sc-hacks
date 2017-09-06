@@ -1,4 +1,14 @@
-
+//:+  6 Sep 2017 01:15 Preparing PatternPlayer
+a = (dur: 0.1).p;
+0.1.wait;
+a.isPlaying.postln;
+2.0.wait;
+a.stop;
+a.isPlaying.postln;
+1.wait;
+a.isPlaying.postln;
+a.play;
+a.isPlaying.postln;
 //  3 Sep 2017 13:49 First study how to play EventPatterns
 //: Very basic
 a = (degree: Pseq((0..7), inf));

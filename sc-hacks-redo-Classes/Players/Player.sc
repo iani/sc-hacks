@@ -93,7 +93,6 @@ Player {
 	play { | source |
 		// play a function, symbol, or event.
 		// For definitions, see file playSource.sc
-		//		postf("% play %\n", this, source);
 		sourcePlayer = sourcePlayer.playSource(this, source);
 	}
 
