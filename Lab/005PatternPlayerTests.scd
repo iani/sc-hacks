@@ -1,6 +1,8 @@
 //  6 Sep 2017 01:33
 b =\default +> \test;
-a = () +> \test;
+a = (dur: 0.02, degree: Pbrown(0, 10, 1)) +> \test;
+//:
+b = \test.clear;
 //:
 (dur: 0.1) +> \test;
 //:
@@ -8,7 +10,7 @@ a = () +> \test;
 //:
 (degree: Pwhite(0, 10)) +> \test;
 //:
-(degree: Pbrown(0, 10, 1)) +> \test.clear;
+b = (degree: Pbrown(0, 10, 1)) +> \test.clear;
 //:
 \test.ppp.addEvent((dur: 0.1));
 //:

@@ -8,9 +8,7 @@ Add modification support to playing EventPatterns through their player: EventStr
 			// remove all keys except for target nodes
 			var prEvent;
 			prEvent = originalStream.event;
-			postf("clearing event: %\n", prEvent);
 			prEvent keysDo: { | key |
-				postf("key is: %\n", key);
 				if (key !== \target) { prEvent[key] = nil }
 			}
 	}

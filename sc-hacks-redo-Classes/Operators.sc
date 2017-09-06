@@ -33,10 +33,14 @@
 		// empty process of PatternPlayer
 		^this.p(eventName).clear;
 	}
+	asPlayer { | envir |
+		^Nevent(envir ? this).player(this);
+	}
 	+> { | player, envir |
 		// play named SynthDef in player.
 		// Push environment before playing. See optional 4th argument in Nevent:play for push.
-		^Nevent.play(envir ? player, player, this);
+		^player.asPlayer(envir).play(this);
+		// ^Nevent.play(envir ? player, player, this)
 	}
 
 	//	player { | envir | ^(envir ? this) }
@@ -65,7 +69,8 @@
 + Function {
 	+> { | player, envir |
 		// play function as SynthPlayer
-		^Nevent.play(envir ? player, player, this)
+		^player.asPlayer(envir).play(this);
+		// ^Nevent.play(envir ? player, player, this)
 	}
 
 	*> { | player, envir |
@@ -79,9 +84,15 @@
 + Event {
 	+> { | player, envir |
 		// play function as PatternPlayer
-		^Nevent.play(envir ? player, player, this)
+		^player.asPlayer(envir).play(this);
+		// ^Nevent.play(envir ? player, player, this)
 	}
 	p {
 		^EventPattern(this).play;
 	}
+}
+
++ Player {
+	asPlayer { ^this }
+	
 }
