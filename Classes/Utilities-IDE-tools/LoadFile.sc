@@ -23,7 +23,11 @@ LoadFile {
 				archivePath = Platform.userAppSupportDir ++ "/LoadFileList.sctxar";
 			};
 			types = (scd: \code, wav: \audio, aiff: \audio, aif: \audio);
-			files = Object.readArchive(archivePath);
+			if (File.exists(archivePath)) {
+				files = Object.readArchive(archivePath);
+			}{
+				files = IdentityDictionary();
+			};
 			Registry.put(libPath, files);
 			files[\code] do: { | f | f.init.loadCode };
 			ServerBoot add: {
