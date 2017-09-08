@@ -1,6 +1,6 @@
 Nevent : EnvironmentRedirect {
 	classvar <libRoot = \environments;
-	var <name, <players;
+	var <name, <players, busses;
 	*all {
 		^Registry.at(libRoot).values;
 	}
@@ -50,4 +50,36 @@ Nevent : EnvironmentRedirect {
 		});
 	}
 
+	getAudioBus { | param = \in, numChannels = 1 |
+		/* get an audio bus. If not present create one, store it under busses,
+			and set param's value to busses index in event. */
+		var bus;
+		^this.busses.atFail(
+			param,
+			{
+				bus = PersistentBus.setParam(this, param, numChannels);
+				busses[param] = bus;
+				bus;
+			}
+		)		
+	}
+
+	getControlBus { | param = \in, numChannels = 1 |
+		/* get an control rate bus. If not present create one, store it in event.
+			and set param's value to bus in event. */
+		var bus;
+		^envir.atFail(
+			param,
+			{
+				bus = PersistentBus.mapParam(this, param, numChannels);
+				envir[param] = bus;
+				bus;
+			}
+		)		
+	}
+
+	busses {
+		busses ?? { busses = ( ) };
+		^busses;
+	}
 }

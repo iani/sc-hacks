@@ -235,7 +235,8 @@ SynthPlayer : SourcePlayer {
 		});
 	}
 
-		clear {
+	
+	clear {
 			// empty process of PatternPlayer
 			// SynthPlayer ignores this.
 			//	sourcePlayer !? { sourcePlayer.clear }

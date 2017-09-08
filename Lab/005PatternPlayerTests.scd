@@ -1,5 +1,5 @@
 //  6 Sep 2017 01:33
-b =\default +> \test;
+b =\defaulCt +> \test;
 a = (dur: 0.02, degree: Pbrown(0, 10, 1)) +> \test;
 //:
 { WhiteNoise.ar(0.1) } +> \test;

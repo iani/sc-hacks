@@ -26,6 +26,7 @@
 
 + Symbol {
 	e { ^Nevent(this) }
+	push { ^this.e.push }
 	p { | eventName | ^Nevent(eventName ? this).player(this) }
 	pp { | eventName | ^this.p(eventName).sourcePlayer }
 	ppp { | eventName | ^this.p(eventName).process }
@@ -42,15 +43,19 @@
 	+> { | player, envir |
 		// play named SynthDef in player.
 		// Push environment before playing. See optional 4th argument in Nevent:play for push.
-		^player.asPlayer(envir).play(this);
-		// ^Nevent.play(envir ? player, player, this)
+		^player.asPlayer(envir).play(this); // accept non-symbol player arg
 	}
 
 	//	player { | envir | ^(envir ? this) }
 	
-	*> { | player, param |
-		// link receiver to argument via bus
+	*> { | player, param = \out |
+		// link receiver to argument via bus with default parameter order \out, \in
+		^PersistentBus.makeAudio(this.e, param, 1).addAudio2Envir(player.e, \in);
+	}
 
+	*< { | player, param = \in |
+		// link receiver to argument via bus, using reverse parameter order \in, \out
+		^PersistentBus.makeAudio(this.e, param, 1).addAudio2Envir(player.e, \out);		
 	}
 
 	<+ { | player, envir |
@@ -72,8 +77,7 @@
 + Function {
 	+> { | player, envir |
 		// play function as SynthPlayer
-		^player.asPlayer(envir).play(this);
-		// ^Nevent.play(envir ? player, player, this)
+		^player.asPlayer(envir).play(this); // accept non-symbol player arg	
 	}
 
 	*> { | player, envir |
@@ -86,9 +90,8 @@
 
 + Event {
 	+> { | player, envir |
-		// play function as PatternPlayer
-		^player.asPlayer(envir).play(this);
-		// ^Nevent.play(envir ? player, player, this)
+		// play Event as PatternPlayer
+		^player.asPlayer(envir).play(this); // accept non-symbol player arg	
 	}
 	p {
 		^EventPattern(this).play;

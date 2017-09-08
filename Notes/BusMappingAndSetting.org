@@ -1,0 +1,28 @@
+ 6 Sep 2017 19:47
+
+* Audio busses
+  :PROPERTIES:
+  :DATE:     <2017-09-06 Wed 20:43>
+  :END:
+
+Audio busses have not been implemented yet ( 6 Sep 2017 20:43 ).
+
+Can / should different players in the same environment have different busses for the same i/o parameters? NO.
+
+Trying to implement audio busses by storing their indexes directly in the environment as values.
+
+If we store the busses in Nevent in an instvar dictionary, what is the use?
+
+1. To be able to unset a bus.
+2. To be able to see what busses are in an Nenvir (introspection). That would also be possible if they were stored directly in the event, but storing busses in the event is reserved for control busses.
+
+* Control busses
+  :PROPERTIES:
+  :DATE:     <2017-09-06 Wed 20:40>
+  :END:
+
+Current implementation  6 Sep 2017 20:40
+
+Control busses are stored directly in Nenvir.  When a SynthPlayer starts its synth it maps its control parameters to any busses stored in their environment under the same name.
+
+All SynthPlayers in an environment will map their parameters with the same name to the same busses.

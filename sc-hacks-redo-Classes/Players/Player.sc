@@ -84,7 +84,6 @@ Decision table for playSource method according to types of receiver and argument
 
 Player {
 	var <envir, <name, <sourcePlayer;
-	var busses;
 
 	*new { | envir, name = \default |
 		^this.newCopyArgs (envir, name);
@@ -100,12 +99,7 @@ Player {
 		// empty process of PatternPlayer
 		sourcePlayer !? { sourcePlayer.clear }
 	}
-
-	busses {
-		busses ?? { busses = ( )};
-		^busses;
-	}
-
+	
 	isPlaying {
 		^sourcePlayer.isPlaying;
 	}
@@ -118,19 +112,6 @@ Player {
 		}{
 			^sourcePlayer.process
 		}
-	}
-	
-	getBus { | controlName = \in, numChannels = 1 |
-		// should be named getAudioBus ?
-		var bus;
-		^this.busses.atFail(
-			controlName,
-			{
-				bus = PersistentBus.audio(numChannels);
-				busses[controlName] = bus;
-				bus;
-			}
-		)		
 	}
 }
 
