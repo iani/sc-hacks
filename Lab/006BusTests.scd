@@ -17,3 +17,9 @@ currentEnvironment;
 \effect.e;
 //:
 \source.e;
+//:
+\source *> \effect;
+//:
+\source.e;
+//:
+\effect.e;
