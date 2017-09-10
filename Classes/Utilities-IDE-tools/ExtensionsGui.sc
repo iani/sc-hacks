@@ -29,7 +29,7 @@
 			.keyDownAction_({ | view, char, mod, unicode |
 				if (unicode == 13) {
 					this.makeClassMethodSelectionWindow(
-						paths[view.value].postln.asString)
+						paths[view.value].asString)
 				}
 			})
 		);
@@ -47,10 +47,9 @@
 				*/
 			}
 		).add((
-			path.postln ?? {
+			path ?? {
 				PathName (thisProcess.nowExecutingPath).pathOnly
 			}).asSymbol);
-		Registry.at(\extensionsGuiBase).postln;
 	}
 	
 	*makeClassMethodSelectionWindow { | base |
@@ -146,6 +145,6 @@
 			);
 		}).front;
 		// do this in each case to put the methods of the first class in the method pane:
-		{ classList.valueAction_(0).postln }.defer(0.1);
+		{ classList.valueAction_(0) }.defer(0.1);
 	}
 }
