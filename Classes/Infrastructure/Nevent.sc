@@ -53,14 +53,8 @@ Nevent : EnvironmentRedirect {
 	getAudioBus { | param = \in, numChannels = 1 |
 		/* get an audio bus. If not present create one, store it under busses,
 			and set param's value to busses index in event. */
-		var bus;
 		^this.busses.atFail(
-			param,
-			{
-				bus = PersistentBus.setParam(this, param, numChannels);
-				busses[param] = bus;
-				bus;
-			}
+			param, { PersistentBus.makeAudio(this, param, numChannels) }
 		)		
 	}
 
@@ -81,5 +75,12 @@ Nevent : EnvironmentRedirect {
 	busses {
 		busses ?? { busses = ( ) };
 		^busses;
+	}
+
+	printOn { | stream |
+		if (stream.atLimit) { ^this };
+		stream << name << "[ " ;
+		envir.printItemsOn(stream);
+		stream << " ]" ;
 	}
 }

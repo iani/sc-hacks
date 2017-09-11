@@ -5,6 +5,7 @@
 			{ this.makeLibSelectionWindow; }.defer(1);
 		*/
 		(Platform.userExtensionDir ++ "/*").pathMatch do: this.addLib(_);
+		this.addLib(Platform.classLibraryDir ++ "/");
 		this.makeLibSelectionWindow;
 	}
 
@@ -130,11 +131,11 @@
 						if (unicode == 13) { // return key
 							// methods.collect(_.name).postln;
 							methods[view.value].openCodeFile;
-							postf("method name: % charPos: %\n",
-								methods[view.value].name,
-								methods[view.value].charPos
-							);
 							{
+								postf("Method: %, start pos: %. Going there now.\n",
+									methods[view.value].name,
+									methods[view.value].charPos
+								);
 								Emacs.evalLispExpression(
 									format ("(goto-char %)", methods[view.value].charPos)
 								)

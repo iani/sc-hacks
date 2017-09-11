@@ -40,6 +40,11 @@
 	asPlayer { | envir |
 		^Nevent(envir ? this).player(this);
 	}
+
+	asPeristentBusProxy { | param = \out |
+		^PersistentBusProxy(this, param);
+	}
+
 	+> { | player, envir |
 		// play named SynthDef in player.
 		// Push environment before playing. See optional 4th argument in Nevent:play for push.
@@ -48,14 +53,22 @@
 
 	//	player { | envir | ^(envir ? this) }
 	
-	*> { | player, param = \out |
-		// link receiver to argument via bus with default parameter order \out, \in
-		^PersistentBus.makeAudio(this.e, param, 1).addAudio2Envir(player.e, \in);
+	*> { | reader, param = \out |
+		// The left argument gives its bus to the right argument.
+		// Link receiver to argument via bus with default parameter order \out, \in.
+		// Param defines the param name of the receiver.
+		// Use proxy to permit fuller specs via @ composition.
+		^PersistentBusProxy(this, param).linkTo(reader.asPeristentBusProxy(\in))
 	}
 
-	*< { | player, param = \in |
+	*< { | writer, param = \out |
+		// The right argument gives its bus to the left argument, and the default parameters
+		// are reversed so that 
 		// link receiver to argument via bus, using reverse parameter order \in, \out
-		^PersistentBus.makeAudio(this.e, param, 1).addAudio2Envir(player.e, \out);		
+		// get the bus of the argument first.  In this case the argument is the writer.
+		// so the argument (the writer) will get the bus of the receiver (reader)
+		// Param defines the param name of the receiver, who reads the signal, therefore default = \in.
+		^PersistentBusProxy(writer, \in).linkTo(this.asPeristentBusProxy(param));
 	}
 
 	<+ { | player, envir |
@@ -68,9 +81,9 @@
 
 		}
 
-	@ { | player, envir |
-		// play function as routine
-
+	@ { | param, numChannels = 1 |
+		// Create PersistentBusProxy. Useful for linking enirs with busses.
+		^PersistentBusProxy(this, param, numChannels);
 	}
 }
 
@@ -101,4 +114,13 @@
 + Player {
 	asPlayer { ^this }
 	
+}
+
++ PersistentBusProxy {
+	*> { | envirOrProxy, inParam = \in |
+		^this linkTo:  envirOrProxy.asPeristentBusProxy(inParam);
+	}
+	*< { | envirOrProxy, outParam = \out |
+		^this linkTo:  envirOrProxy.asPeristentBusProxy(outParam);		
+	}
 }
