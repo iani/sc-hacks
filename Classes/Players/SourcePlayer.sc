@@ -13,11 +13,17 @@ SourcePlayer {
 PatternPlayer : SourcePlayer {
 	
 	play { | argSource | // argSource shoud be a kind of Event.
+		postf("playing PatternPlayer. player is: %, envir is: %\n", player, envir);
+		
 		if (source.isNil) {
 			source = EventPattern(argSource);			
 		}{
 			source.addEvent(argSource);			
 		};
+		source.put (\target, envir[\target]);
+		envir.busses.keysValuesDo({ | key, value |
+			source.put(key, value.index);
+		});
 		if (process.isNil) {
 			process = source.play;			
 		}{

@@ -15,13 +15,18 @@ EventPattern : Pattern {
 
 	pattern { ^this }
 
-	addEvent { | inEvent |
+	addEvent { | inEvent | // also accepts key-value pairs in Arrays
 		// Add event's keys/values and also update the event
 		// of the currently playing stream.
 		inEvent keysValuesDo: { | key value |
 			event[key] = value;
 		}
 	}
+	
+	put { | key, value |
+		event[key] = value
+	}
+ 
 }
 
 EventStream : Stream {

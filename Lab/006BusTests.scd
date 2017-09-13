@@ -1,9 +1,13 @@
 //: 11 Sep 2017 18:03
 \source *> \effect;
 //:
-{ WhiteNoise.ar(0.01) } +> \source;
+{ WhiteNoise.ar(0.1) } +> \source;
 //:
-{ Ringz.ar(Fin(), LFNoise1.kr(5).range(100, 1000), 0.05) } +> \effect;
+(dur: 0.1, degree: Pbrown(0, 10)) +> \source;
+//:
+(degree: Pwhite(0, 10)) +> \source;
+//:
+{ Ringz.ar(Fin(), LFNoise1.kr(10).range(100, 200), 5) } +> \effect;
 //:
 { Fin() } +> \effect;
 
