@@ -30,6 +30,15 @@
 	p { | eventName | ^Nevent(eventName ? this).player(this) }
 	pp { | eventName | ^this.p(eventName).sourcePlayer }
 	ppp { | eventName | ^this.p(eventName).process }
+	newIn { | param = \in, numChannels = 1 |
+		/* give this event a private newly-allocated bus.
+			This prevents synths using Fin from feedbacking on the 0 bus,
+			without having to link them to any other event. */
+		var event;
+		event = Nevent(this);
+		PersistentBus.makeAudio(event, param, numChannels);
+		// ^this.asPlayer; // return this. Will work with *>
+	}
 	play { | source, eventName |
 		^this.p(eventName).play(source);
 	}

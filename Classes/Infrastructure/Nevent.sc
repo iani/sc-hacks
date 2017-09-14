@@ -1,6 +1,13 @@
 Nevent : EnvironmentRedirect {
 	classvar <libRoot = \environments;
 	var <name, <players, busses;
+
+	/* // not needed? Check?
+	e {
+		// return self.
+		//	Used in PersistentBusProxy in conjunction with *> and newIn
+	}
+	*/
 	*all {
 		^Registry.at(libRoot).values;
 	}

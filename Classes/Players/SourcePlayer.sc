@@ -14,8 +14,10 @@ PatternPlayer : SourcePlayer {
 
 	init {
 		// listen to changes of busses
+		postf("% adding notifier to envir: %\n \\busChanged.\n ", this, envir);
+		"Method init incomplete - busChanged will have no effect".postln;
 		this.addNotifier(envir, \busChanged, { | ... args |
-			postf ("% received busChanged from: %\n", this, args);
+			postf ("% received \\busChanged from: %\n", this, args);
 		});
 	}
 	play { | argSource | // argSource shoud be a kind of Event.
