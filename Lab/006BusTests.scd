@@ -10,6 +10,18 @@
 { Ringz.ar(Fin(), LFNoise1.kr(10).range(100, 200), 5) } +> \effect;
 //:
 { Fin() } +> \effect;
+//: Exploring PatternPlayer updates for busses
+(dur: 0.1, degree: Pbrown(0, 10)) +> \source2;
+//:
+\source2.p.sourcePlayer.source.put(\out, 40);
+//:
+\source2.p.sourcePlayer.source;
+//:
+\source2.p.sourcePlayer.process.originalStream.event.put(\out, 40);
+//:
+
+//:
+{ PinkNoise.ar(0.1) } +> \source2;
 
 // ================================================================
 //  7 Sep 2017 13:17

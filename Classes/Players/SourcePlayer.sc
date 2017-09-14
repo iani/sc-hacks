@@ -2,8 +2,8 @@
 SourcePlayer {
 	var <player, <envir, <source, <process;
 
-	*new { | player, source | // plays immediately:
-		^this.newCopyArgs(player, player.envir);
+	*new { | player |
+		^this.newCopyArgs(player, player.envir).init;
 	}
 
 	isPlaying { ^process.isPlaying }
@@ -11,25 +11,38 @@ SourcePlayer {
 
 
 PatternPlayer : SourcePlayer {
-	
+
+	init {
+		// listen to changes of busses
+		this.addNotifier(envir, \busChanged, { | ... args |
+			postf ("% received busChanged from: %\n", this, args);
+		});
+	}
 	play { | argSource | // argSource shoud be a kind of Event.
-		postf("playing PatternPlayer. player is: %, envir is: %\n", player, envir);
+		var stream, event;
+		// postf("playing PatternPlayer. player is: %, envir is: %\n", player, envir);
 		
 		if (source.isNil) {
 			source = EventPattern(argSource);			
 		}{
 			source.addEvent(argSource);			
 		};
-		source.put (\target, envir[\target]);
-		envir.busses.keysValuesDo({ | key, value |
-			source.put(key, value.index);
-		});
 		if (process.isNil) {
-			process = source.play;			
+			source.put (\target, envir[\target]);
+			envir.busses.keysValuesDo({ | key, value |
+				source.put(key, value.index);
+			});
+			process = source.play;
 		}{
-			process.originalStream.addEvent(argSource);
+			stream = process.originalStream;
+			event = stream.event;
+			stream.addEvent(argSource);
+			stream.addEvent([\target, envir[\target]]);
+			envir.busses.keysValuesDo({ | key, value |
+				event.put(key, value.index);
+			});
 			if (process.isPlaying.not) { process.play };
-		}
+		};		
 	}
 
 	release {
@@ -48,6 +61,9 @@ PatternPlayer : SourcePlayer {
 SynthPlayer : SourcePlayer {
 	var <controlNames, <hasGate = false, <event;	
 	var <synthDefIsTemp = false;
+
+	init { /* used by PatternPlayer */ }
+
 	isPlaying { ^process.notNil }
 
 	play { | argSource |

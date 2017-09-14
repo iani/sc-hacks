@@ -37,7 +37,11 @@ PersistentBus {
 	addAudio2Envir { | envir, param |
 		envir.busses[param] = this;
 		envir.put(param, bus.index);
-		envir.addNotifier(this, \audioBus, { envir.put(param, bus.index) });
+		envir.changed(\busChanged, param, bus.index); // permit updates of PatternPlayers
+		envir.addNotifier(this, \audioBus, {
+			envir.put(param, bus.index);
+			envir.changed(\busChanged, param, bus.index);
+		});
 	}
 	
 	*makeControl { | envir, param = \amp, numChannels = 1 |
