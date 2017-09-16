@@ -108,6 +108,8 @@ SynthPlayer : SourcePlayer {
 		if (synthDefIsTemp and: { process.isNil } and: { argSource.notNil }) {
 			SynthDef removeAt: source.name;
 		};
+		target = envir [\target].asTarget;
+		server = target.server;
 		// Create synth according to source class.
 		switch (argSource.class,
 			// Here decide from argSource's class: if argSource is Function or Symbol,
@@ -115,8 +117,6 @@ SynthPlayer : SourcePlayer {
 			// Else provide a def by guessing.
 			Function, {
 				isTemp = true;
-				target = envir [\target].asTarget;
-				server = target.server;
 				#args, busses = this.source_(
 					argSource.asPlayerSynthDef (
 						fadeTime: envir [\fadeTime] ? 0.02,

@@ -39,10 +39,15 @@ SynthDef("ring", { | out = 0 |
 \impulse +> \source1;
 \decay +> \source2;
 //: source2, effect, source1
-//: Here the source1 = impulse is lost.
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// Here the source1 = impulse is lost.
 \impulse +> \source1;
 \ring +> \effect1;
 \decay +> \source2;
+//:
+/*
+Therefore need to order the synths of linked players in the correct order.
+*/
 //:
 
 \source1 *> \effect1;
@@ -56,3 +61,6 @@ SynthDef("ring", { | out = 0 |
 \impulse +> \source1;
 //:
 \source1.stop;
+//:
+\source1.e;
+//:

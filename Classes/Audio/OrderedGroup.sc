@@ -26,21 +26,24 @@ OrderedGroup {
 
 	*last {
 		if (all.isNil) {
-			warn("You need to boot the default server to get groups.");
+			warn("OrderedGroup: You need to boot the default server to get groups.");
 		}{
 			^all.last;
 		}
 	}
 
 	*before { | group |
-		var found, index = 0;
+		var found, index;
 		if (all.isNil) {
-			^warn("You need to boot the default server to get groups.");
+			^warn("OrderedGroup: You need to boot the default server to get groups.");
 		};
-		all detect: { | g |
-			index = index + 1;		
+		index = all indexOf: 
+		all.detect({ | g, i |			
+			index = i;
 			g.group === group
-		};
+		});
+		postf("Implementing before. index found is: %\n", index);
+		/*
 		if (index == 1) {
 			found = this.new.getGroup;
 			all addFirst: found;
@@ -49,6 +52,7 @@ OrderedGroup {
 			^all[index - 2];
 			
 		}
+		*/
 		
 	}
 
