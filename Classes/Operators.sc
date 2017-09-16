@@ -30,6 +30,7 @@
 	p { | eventName | ^Nevent(eventName ? this).player(this) }
 	pp { | eventName | ^this.p(eventName).sourcePlayer }
 	ppp { | eventName | ^this.p(eventName).process }
+	stop { | eventName | ^this.p(eventName).stop }
 	newIn { | param = \in, numChannels = 1 |
 		/* give this event a private newly-allocated bus.
 			This prevents synths using Fin from feedbacking on the 0 bus,

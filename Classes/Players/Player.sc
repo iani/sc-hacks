@@ -113,6 +113,10 @@ Player {
 			^sourcePlayer.process
 		}
 	}
+
+	stop {
+		sourcePlayer !? { sourcePlayer.stop }
+	}
 }
 
 + Nil {

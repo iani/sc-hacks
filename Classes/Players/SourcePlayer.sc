@@ -80,7 +80,9 @@ SynthPlayer : SourcePlayer {
 		// else use old def or default def:
 		this makeSynth: argSource;
 	}
-	
+
+	stop { this.release }
+
 	release { | newSource |
 		/* New method to replace clearPreviousSynth.
 			If newSource is provided, then emit notification to remove previous one
@@ -88,7 +90,11 @@ SynthPlayer : SourcePlayer {
 		process !? {
 			// Experimental: prevent /n_set Node xxxx not found at unynchronized end of synth.
 			Notification.removeNotifiersOf(process);
-			process.release (envir [\fadeTime] ? 0.02);
+			if (hasGate) {
+				process.release (envir [\fadeTime] ? 0.02);
+			}{
+				process.free;
+			}
 		};
 	}
 

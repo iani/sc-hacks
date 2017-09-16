@@ -1,8 +1,6 @@
 /*
 Cases to test: 
-Redirecting sources.
 
-2 effects, 
 */
 //: 
 \source1 *> \effect1;
@@ -10,7 +8,7 @@ Redirecting sources.
 { WhiteNoise.ar(0.1) } +> \source1;
 { Ringz.ar(Fin(), LFNoise0.kr(4).range(100, 1200), 0.15) } +> \effect1;
 //:
-{ Ringz.ar(Fin(), LFNoise1.kr(8).range(500, 2200), 0.15) } +> \effect2.newIn;
+{ Ringz.ar(Fin(), LFNoise0.kr(10).range(5000, 12200), 1.15) } +> \effect2;
 //:
 \source1 *> \effect2;
 //:
