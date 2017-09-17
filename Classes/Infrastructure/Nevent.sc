@@ -1,6 +1,6 @@
 Nevent : EnvironmentRedirect {
 	classvar <libRoot = \environments;
-	var <name, <players, busses;
+	var <name, <players, busses, <writers;
 
 	/* // not needed? Check?
 	e {
@@ -29,6 +29,7 @@ Nevent : EnvironmentRedirect {
 				}
 			])
 			.setGroup(OrderedGroup.last)
+			.initWriters
 			.maybePush(doPush)
 		})
 	}
@@ -36,6 +37,8 @@ Nevent : EnvironmentRedirect {
 	makeDispatch { | dispatcherEvent |
 		dispatch = Dispatch.newCopyArgs(this, dispatcherEvent);
 	}
+
+	initWriters { writers = Set() }
 
 	maybePush { | doPush = false |
 		if (doPush and: { currentEnvironment !== this}) { this.push };
@@ -48,12 +51,6 @@ Nevent : EnvironmentRedirect {
 			player = Player(this, playerName);
 			players[playerName] = player;
 			player;
-		});
-	}
-	setGroup { | orderedGroup |
-		this.put(\target, orderedGroup.group);
-		this.addNotifier(orderedGroup, \group, { | group |
-			this.put(\target, group);
 		});
 	}
 
@@ -89,5 +86,37 @@ Nevent : EnvironmentRedirect {
 		stream << name << "[ " ;
 		envir.printItemsOn(stream);
 		stream << " ]" ;
+	}
+
+	addWriter { | writer |
+		if (this canAddWriter: writer) {
+			writers add: writer;
+			writer.setGroup(OrderedGroup.before(this[\target]));
+		}{
+			postf("cannot add % as writer: cycles not permitted\n", writer);
+		}
+	}
+	
+	canAddWriter { | writer |
+		^writer.allWriters(Set()).includes(this).not;
+	}
+
+	allWriters { | set |
+		/* help method for canAddWriter.
+			Collect yourself, and all your writers, and all your writers writers etc. into set.
+			Return set. */
+		writers do: _.allWriters(set);
+		^set add: this;
+	}
+
+	setGroup { | group |
+		// First set groups of your writers, then your own group.
+		// This moves your writers before you, preventing any signal fallouts.
+		var beforeGroup;
+		if (writers.size > 0) {
+			beforeGroup = OrderedGroup.before(group);
+			writers do: _.setGroup(beforeGroup);			
+		};
+		this[\target] = group;  // SynthPlayers move their Synth to the head of this group
 	}
 }

@@ -4,7 +4,6 @@ Cases to test:
 */
 //: 
 \source1 *> \effect1;
-\source2 *> \effect2;
 { WhiteNoise.ar(0.1) } +> \source1;
 { Ringz.ar(Fin(), LFNoise0.kr(4).range(100, 1200), 0.15) } +> \effect1;
 //:

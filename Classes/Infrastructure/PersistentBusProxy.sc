@@ -9,7 +9,9 @@ PersistentBusProxy {
 	}
 
 	linkTo { | persistentBusProxy |
+		// Set envir of receiver as writer of envir of argument.
 		// makeAudio creates bus.  addAudio2Envir adds it to the second envir.
+		persistentBusProxy.envir addWriter: envir;
 		^envir.getAudioBus(param, numChannels).addAudio2Envir(
 			persistentBusProxy.envir, persistentBusProxy.param);
 	}

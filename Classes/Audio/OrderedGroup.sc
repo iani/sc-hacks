@@ -7,7 +7,7 @@ See Nevent.
 
 
 OrderedGroup {
-	classvar <all;
+	classvar all;
 	var <group;
 	*initClass {
 		ServerTree add: {
@@ -15,48 +15,54 @@ OrderedGroup {
 		}
 	}
 
+	*new { ^super.new.init; }
+
+	init {
+		group = Group();
+		this.all addFirst: this;
+	}
+
+	all {
+		all ?? { all = List() };
+		^all;
+	}
+	
 	*makeGroups {
-		(all ?? { all = List() add: this.new }).reverse do: _.getGroup;
+		// on ServerTree, remake all real groups in the right order.
+		(all ?? { all = List() }).reverse do: _.getGroup;
 	}
 
 	getGroup {
+		// get a new real group from the server, and notify dependants.
 		group = Group();
-		this.changed(\group, group);
+		// this.changed(\group, group); // not needed any more.
 	}
 
 	*last {
+		// get the last group from the list of all.
+	^	// this is the first group that was made, and is therefore the last group in the server's order.
 		if (all.isNil) {
 			warn("OrderedGroup: You need to boot the default server to get groups.");
 		}{
+			if (all.size == 0) { this.new };
 			^all.last;
 		}
 	}
 
-	*before { | group |
-		var found, index;
+	*before { | argGroup |
+		// get the group before argGroup. If argGroup is the first group, then make a new one.
+		var index;
 		if (all.isNil) {
 			^warn("OrderedGroup: You need to boot the default server to get groups.");
 		};
-		index = all indexOf: 
-		all.detect({ | g, i |			
-			index = i;
-			g.group === group
-		});
-		postf("Implementing before. index found is: %\n", index);
-		/*
-		if (index == 1) {
-			found = this.new.getGroup;
-			all addFirst: found;
-			^found;
-		}{
-			^all[index - 2];
-			
-		}
-		*/
-		
+		index = (all indexOf: argGroup) ? -1;
+		if (index < 1) {^this.new; }{ ^all[index-1] }
 	}
 
+	asTarget { ^group }
+	asNodeID { ^group.nodeID }
+	
 	printOn { | stream |
-		stream << "OrderedGroup(" << group.nodeID << ")";
+		stream << "OrderedGroup(" << (if (group.isNil) {} { group.nodeID }) << ")";
 	}
 }

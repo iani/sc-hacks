@@ -131,6 +131,6 @@
 		^this linkTo:  envirOrProxy.asPeristentBusProxy(inParam);
 	}
 	*< { | envirOrProxy, outParam = \out |
-		^this linkTo:  envirOrProxy.asPeristentBusProxy(outParam);		
+		^envirOrProxy.asPeristentBusProxy(outParam) linkTo: this;
 	}
 }

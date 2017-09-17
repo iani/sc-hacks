@@ -247,8 +247,11 @@ SynthPlayer : SourcePlayer {
 							notification.listener.set (param, val);							
 						}
 					)
-				});
+				});				
 			};
+			process.addNotifier(envir, \target, { | val |
+				postf("INCOMPLETE. TESTING. Received target: %\n", val);
+			});
 			process.onEnd (this, { | notification |				
 				if (process === notification.notifier) {
 					this.changed(\stopped);
