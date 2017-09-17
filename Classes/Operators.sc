@@ -68,17 +68,19 @@
 		// Link receiver to argument via bus with default parameter order \out, \in.
 		// Param defines the param name of the receiver.
 		// Use proxy to permit fuller specs via @ composition.
-		^PersistentBusProxy(this, param).linkTo(reader.asPeristentBusProxy(\in))
+		var bus;
+		// bus = 
+		^PersistentBusProxy(this, param).addReader(reader.asPeristentBusProxy(\in))
 	}
 
-	*< { | writer, param = \out |
-		// The right argument gives its bus to the left argument, and the default parameters
-		// are reversed so that 
-		// link receiver to argument via bus, using reverse parameter order \in, \out
-		// get the bus of the argument first.  In this case the argument is the writer.
-		// so the argument (the writer) will get the bus of the receiver (reader)
-		// Param defines the param name of the receiver, who reads the signal, therefore default = \in.
-		^PersistentBusProxy(writer, \in).linkTo(this.asPeristentBusProxy(param));
+	*< { | reader, param = \out |
+		// the reader should give its bus to the writer.
+		postf("*<: writer is: %,\n reader is: %\n",
+			this.e, reader.e
+		);
+		"*< Must be redesigned. Please wait for next version".postln;
+		// writer 
+		^PersistentBusProxy(reader, \in).addReader(this.asPeristentBusProxy(param));
 	}
 
 	<+ { | player, envir |

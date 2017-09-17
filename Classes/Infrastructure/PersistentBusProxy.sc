@@ -8,9 +8,12 @@ PersistentBusProxy {
 		^this.newCopyArgs(envir.e, param, numChannels)
 	}
 
-	linkTo { | persistentBusProxy |
+	addReader { | persistentBusProxy |
 		// Set envir of receiver as writer of envir of argument.
 		// makeAudio creates bus.  addAudio2Envir adds it to the second envir.
+		postf("PersistentBusProxy addReader. writer is: %\nreader is: %\n",
+			envir, persistentBusProxy.envir;
+		);
 		persistentBusProxy.envir addWriter: envir;
 		^envir.getAudioBus(param, numChannels).addAudio2Envir(
 			persistentBusProxy.envir, persistentBusProxy.param);

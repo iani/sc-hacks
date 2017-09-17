@@ -2,25 +2,50 @@
 Testing linking of environments with ordered groups.
 */
 
-\source1 *> \effect1;
-\source2 *< \effect1;
-// OK: start order: effect, source1, source2
-{ Ringz.ar(Fin(), LFNoise0.kr(1).range(150, 1000), 0.1) } +> \effect1;
-{ Impulse.ar(4, 0, 0.1) } +> \source1;
-{ WhiteNoise.ar(Decay2.kr(Impulse.kr(0.5, 0, 0.1), 0.3, 1, 0.1)) } +> \source2;
-//: OK: start order: source 1, source2, effect
-{ Impulse.ar(4, 0, 0.1) } +> \source1;
-{ WhiteNoise.ar(Decay2.kr(Impulse.kr(0.5, 0, 0.1), 0.3, 1, 0.1)) } +> \source2;
-{ Ringz.ar(Fin(), LFNoise0.kr(1).range(150, 1000), 0.1) } +> \effect1;
-//: start order: source 1, effect, source2
-// PROBLEM: source2 overwrites source1
-{ Impulse.ar(4, 0, 0.1) } +> \source1;
-{ Ringz.ar(Fin(), LFNoise0.kr(1).range(150, 1000), 0.1) } +> \effect1;
-{ WhiteNoise.ar(Decay2.kr(Impulse.kr(0.5, 0, 0.1), 0.3, 1, 0.1)) } +> \source2;
+
 
 //:
-\source1.e.writers;
-\effect1.e.writers;
+SynthDef("impulse", { | out = 0 |
+        Out.ar(out, Impulse.ar(4, 0, 0.1))
+}).add;
+SynthDef("decay", { | out = 0 |
+        Out.ar(out,
+                WhiteNoise.ar(
+                        Decay2.kr(Impulse.kr(1), 0.3, 0.4, 0.1)
+                )
+        )
+}).add;
+SynthDef("ring", {
+        Ringz.ar(Fin(), LFNoise0.kr(1).range(150, 500))
+}).add;
+//:
+\writer1 *> \reader1;
+\writer2 *< \reader1;
+//:
+\ring +> \reader1;
+\impulse +> \writer1;
+
+
+//:
+\writer1 *> \reader1;
+\writer2 *< \reader1;
+// OK: start order: reader, writer1, writer2
+{ Ringz.ar(Fin(), LFNoise0.kr(1).range(150, 1000), 0.1) } +> \reader1;
+{ Impulse.ar(4, 0, 0.1) } +> \writer1;
+{ WhiteNoise.ar(Decay2.kr(Impulse.kr(0.5, 0, 0.1), 0.3, 1, 0.1)) } +> \writer2;
+//: OK: start order: writer 1, writer2, reader
+{ Impulse.ar(4, 0, 0.1) } +> \writer1;
+{ WhiteNoise.ar(Decay2.kr(Impulse.kr(0.5, 0, 0.1), 0.3, 1, 0.1)) } +> \writer2;
+{ Ringz.ar(Fin(), LFNoise0.kr(1).range(150, 1000), 0.1) } +> \reader1;
+//: start order: writer 1, reader, writer2
+// PROBLEM: writer2 overwrites writer1
+{ Impulse.ar(4, 0, 0.1) } +> \writer1;
+{ Ringz.ar(Fin(), LFNoise0.kr(1).range(150, 1000), 0.1) } +> \reader1;
+{ WhiteNoise.ar(Decay2.kr(Impulse.kr(0.5, 0, 0.1), 0.3, 1, 0.1)) } +> \writer2;
+
+//:
+\writer1.e.writers;
+\reader1.e.writers;
 //:
 \w1.e.writers add: \w2.e;
 \w2.e.writers add: \w3.e;

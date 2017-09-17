@@ -36,11 +36,14 @@ PersistentBus {
 
 	addAudio2Envir { | envir, param |
 		envir.busses[param] = this;
-		envir.put(param, bus.index);
-		envir.changed(\busChanged, param, bus.index); // permit updates of PatternPlayers
+		envir.updateBus(param, this);
+		//		envir.put(param, bus.index);
 		envir.addNotifier(this, \audioBus, {
+			envir.updateBus(param, this);
+			/*
 			envir.put(param, bus.index);
 			envir.changed(\busChanged, param, bus.index);
+			*/
 		});
 	}
 	

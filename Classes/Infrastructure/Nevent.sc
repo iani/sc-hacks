@@ -1,6 +1,6 @@
 Nevent : EnvironmentRedirect {
 	classvar <libRoot = \environments;
-	var <name, <players, busses, <writers;
+	var <name, <players, busses, <writers, <readers;
 
 	/* // not needed? Check?
 	e {
@@ -29,7 +29,7 @@ Nevent : EnvironmentRedirect {
 				}
 			])
 			.setGroup(OrderedGroup.last)
-			.initWriters
+			.init
 			.maybePush(doPush)
 		})
 	}
@@ -38,7 +38,10 @@ Nevent : EnvironmentRedirect {
 		dispatch = Dispatch.newCopyArgs(this, dispatcherEvent);
 	}
 
-	initWriters { writers = Set() }
+	init {
+		writers = Set();
+		readers = Set();
+	}
 
 	maybePush { | doPush = false |
 		if (doPush and: { currentEnvironment !== this}) { this.push };
@@ -59,7 +62,22 @@ Nevent : EnvironmentRedirect {
 			and set param's value to busses index in event. */
 		^this.busses.atFail(
 			param, { PersistentBus.makeAudio(this, param, numChannels) }
-		)		
+		)
+	}
+
+	setAudioBus { | param = \out, bus |
+		/* Set audio bus to given bus at parameter param.
+			If previous bus exists, remove it. 
+			Also remove dependency from previous bus. */
+		
+
+		
+	}
+
+	updateAudioBus { | param, bus |
+		/* update index of an audio bus that was re-allocated after server boot.
+		*/
+		
 	}
 
 	getControlBus { | param = \in, numChannels = 1 |
@@ -91,7 +109,11 @@ Nevent : EnvironmentRedirect {
 	addWriter { | writer |
 		if (this canAddWriter: writer) {
 			writers add: writer;
-			writer.setGroup(OrderedGroup.before(this[\target]));
+			postf("addWriter: this %\n writer: %\n", this, writer);
+			postf("this target: %\n", this[\target]);
+			postf("group before this target: %\n",
+			OrderedGroup.before(this[\target]));
+			writer.setGroup(OrderedGroup.before(this[\target]).postln);
 		}{
 			postf("cannot add % as writer: cycles not permitted\n", writer);
 		}
