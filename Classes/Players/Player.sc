@@ -117,6 +117,15 @@ Player {
 	stop {
 		sourcePlayer !? { sourcePlayer.stop }
 	}
+
+	put { | key, value |
+		// used by Nevent:updateBusIndex.  SynthPlayer ignores this.
+		sourcePlayer !? { sourcePlayer.put(key, value); }
+	}
+
+	setTarget { | orderedGroup |
+		sourcePlayer !? { sourcePlayer.setTarget(orderedGroup); }
+	}
 }
 
 + Nil {

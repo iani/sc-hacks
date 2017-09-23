@@ -35,11 +35,48 @@ PersistentBus {
 	makeAudio { bus = Bus.audio(this.server, numChannels) }
 
 	addAudio2Envir { | envir, param |
+		// Store self in envir's busses.
+		// Immediately update contents and any playing synths or patterns.
+		// If previous bus in same param existed, remove self from its dependants.
+		// Add envir to be notified when bus is reallocated on server boot:
+		// any envirs sharing this bus will set their param keys to the new bus index.
+		// Besides setting the param key in the environment, the envirs must also
+		// notify any playing processes of their players to change their parameters accordingly.
+		// This is done as follows: 
+		/*
+			When a new bus is set in the middle of things (while players are possibly playing):
+			
+			Any playing SynthPlayers must set their synth's params to change outputs/outputs controls.
+			Any non-playing SynthPlayers will use the environment to start with the proper i/o indices.
+			Any playing PatternPlayers must set both the EventPatterns events keys and the StreamPlayers 
+                   events keys.
+			Any non-playing PatternPlayers set only the EventPatterns envents keys.
+
+			When a bus gets a new index after server reboot (no players are playing yet):
+			SynthPlayers do nothing, since they are not playing yet.  The updated key values
+			of the envir will take effect when the SynthPlayers start.
+			PatternPlayers must set their patterns events keys to new indices, in case they restart,
+			for example by receiving the message play.
+		*/
+		/*
+		var previousBus;
+		previousBus = this.busses[param];
+		previousBus !? {
+			// TODO: Remove dependencies from previous bus.
+			"INCOMPLETE:".postln;
+			postf("I should remove dependencies of %\nfrom bus %\n", this, previousBus);
+		};
+		persistentBus.addAudio2Envir(this, param);
+		*/
+		var previousBus;
+		previousBus = envir.busses[param];
+		previousBus !? {
+			this.removeNotifier(previousBus, \audioBus);
+		};
 		envir.busses[param] = this;
-		envir.updateBus(param, this);
-		//		envir.put(param, bus.index);
+		envir.updateBusIndex(param, this.index);
 		envir.addNotifier(this, \audioBus, {
-			envir.updateBus(param, this);
+			envir.updateAudioBus(param, this);
 			/*
 			envir.put(param, bus.index);
 			envir.changed(\busChanged, param, bus.index);

@@ -20,3 +20,17 @@
 \reader2.e[\target] isBefore: \writer2.e[\target];
 //: continuing above
 \reader2 *> \reader2;
+//: 5. Testing *> vs *<
+\writer1a *> \reader1a;
+\writer2a *> \reader1a;
+\writer1b *< \reader1b;
+\writer1b *< \reader2b;
+\writer1a.e.busses;
+\writer1a.e[\out];
+\writer2a.e[\out];
+\writer1a.e[\out];
+\reader1a.e[\out];
+//:
+\writer1b.e[\out];
+\reader1b.e[\out];
+\reader2b.e[\out];

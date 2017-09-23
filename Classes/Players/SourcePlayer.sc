@@ -9,7 +9,6 @@ SourcePlayer {
 	isPlaying { ^process.isPlaying }
 }
 
-
 PatternPlayer : SourcePlayer {
 
 	init {
@@ -54,9 +53,22 @@ PatternPlayer : SourcePlayer {
 	stop { process.stop }
 
 	clear {
-		// empty process of PatternPlayer
-		// remove all keys except for target nodes and busses
-		process !? { process.clear }
+		// remove from source and EventPattern source and EventStreamPlayer process
+		// all keys except for target nodes and busses.
+		// TODO: implement clear for EventStreamPlayer and EventPattern.
+		// process !? { process.clear }
+		postf("% does not know how to clear yet\n", this);
+	}
+
+	put { | key, value |
+		// used by Nevent:updateBusIndex.  SynthPlayer ignores this.
+		// add a new key value pair to the source and if playing also to the process
+		source !? { source.put(key, value) };
+		process !? { process.put(key, value)};
+	}
+
+	setTarget { | orderedGroup |
+		this.put(\target, orderedGroup.group);
 	}
 }
 
@@ -66,7 +78,7 @@ SynthPlayer : SourcePlayer {
 
 	init { /* used by PatternPlayer */ }
 
-	isPlaying { ^process.notNil }
+	// isPlaying { ^process.notNil }
 
 	play { | argSource |
 		var outbus, target, server;
@@ -268,10 +280,22 @@ SynthPlayer : SourcePlayer {
 		});
 	}
 
-	
+	put { | key, value |
+		// used by Nevent:updateBusIndex.  SynthPlayer ignores this,
+		// because they update their synths controls, if they are running, through
+		// the the  Notifications created by connectPlayer method.
+	}
+
+	setTarget { | orderedGroup |
+		if (process.isPlaying) {
+			process.moveToHead(orderedGroup.group);
+		}
+	}
 	clear {
-			// empty process of PatternPlayer
-			// SynthPlayer ignores this.
+		// empty process of PatternPlayer
+		// SynthPlayer ignores this.
+		// TODO: Possibly clear source?
+		// source = nil; // ?????
 			//	sourcePlayer !? { sourcePlayer.clear }
 	}
 	/*

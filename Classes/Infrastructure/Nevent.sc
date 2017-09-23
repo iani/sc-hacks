@@ -65,24 +65,15 @@ Nevent : EnvironmentRedirect {
 	}
 
 	addAudioBus { | param = \out, persistentBus |
-		/* Set audio bus to given bus at parameter param.
-			If previous bus exists, remove it. 
-			Also remove dependency from previous bus. */
-
-		var previousBus;
-		previousBus = this.busses[param];
-		previousBus !? {
-			// TODO: Remove dependencies from previous bus.
-			"INCOMPLETE:".postln;
-			postf("I should remove dependencies of %\nfrom bus %\n", this, previousBus);
-		};
 		persistentBus.addAudio2Envir(this, param);
 	}
 
-	updateAudioBus { | param, bus |
-		/* update index of an audio bus that was re-allocated after server boot.
-		*/
-		postf("% - I do not know how to updateAudioBus yet\n", this);
+	updateBusIndex { | param, busIndex |
+		// make sure all players update their processes or settings with the new index.
+		this.put[param, busIndex];
+		// SynthPlayers immediately respond to this through their connectPlayer notification method.
+		// PatternPlayers update their source or process.
+		players do: _.put(param, busIndex); // only PatternPlayers respond to this.
 	}
 
 	getControlBus { | param = \in, numChannels = 1 |
@@ -119,7 +110,6 @@ Nevent : EnvironmentRedirect {
 		};		
 	}
 
-	
 	moveGroupBefore { | argGroup |
 		var myGroup, newGroup;
 		myGroup = this[\target];
@@ -130,6 +120,7 @@ Nevent : EnvironmentRedirect {
 
 	setGroup { | orderedGroup |
 		this[\target] = orderedGroup;
+		players do: _.setTarget(orderedGroup);
 		"INCOMPLETE!:".postln;
 		postf("% does not know how to inform that it has set group to %\n", this, orderedGroup);
 	}
