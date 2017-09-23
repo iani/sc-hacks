@@ -1,6 +1,6 @@
 Nevent : EnvironmentRedirect {
 	classvar <libRoot = \environments;
-	var <name, <players, busses, <writers, <readers;
+	var <name, <players, busses, <writers;
 
 	/* // not needed? Check?
 	e {
@@ -28,7 +28,6 @@ Nevent : EnvironmentRedirect {
 					[key, object]
 				}
 			])
-			.setGroup(OrderedGroup.last)
 			.init
 			.maybePush(doPush)
 		})
@@ -39,8 +38,8 @@ Nevent : EnvironmentRedirect {
 	}
 
 	init {
-		writers = Set();
-		readers = Set();
+		this[\target] = OrderedGroup.last;
+ 		writers = Set();
 	}
 
 	maybePush { | doPush = false |
@@ -65,19 +64,25 @@ Nevent : EnvironmentRedirect {
 		)
 	}
 
-	setAudioBus { | param = \out, bus |
+	addAudioBus { | param = \out, persistentBus |
 		/* Set audio bus to given bus at parameter param.
 			If previous bus exists, remove it. 
 			Also remove dependency from previous bus. */
-		
 
-		
+		var previousBus;
+		previousBus = this.busses[param];
+		previousBus !? {
+			// TODO: Remove dependencies from previous bus.
+			"INCOMPLETE:".postln;
+			postf("I should remove dependencies of %\nfrom bus %\n", this, previousBus);
+		};
+		persistentBus.addAudio2Envir(this, param);
 	}
 
 	updateAudioBus { | param, bus |
 		/* update index of an audio bus that was re-allocated after server boot.
 		*/
-		
+		postf("% - I do not know how to updateAudioBus yet\n", this);
 	}
 
 	getControlBus { | param = \in, numChannels = 1 |
@@ -106,39 +111,34 @@ Nevent : EnvironmentRedirect {
 		stream << " ]" ;
 	}
 
-	addWriter { | writer |
-		if (this canAddWriter: writer) {
-			writers add: writer;
-			postf("addWriter: this %\n writer: %\n", this, writer);
-			postf("this target: %\n", this[\target]);
-			postf("group before this target: %\n",
-			OrderedGroup.before(this[\target]));
-			writer.setGroup(OrderedGroup.before(this[\target]).postln);
+	moveBefore { | readerEnvir |
+		if (this.allWriters(Set()) includes: readerEnvir) {
+			postf("cannot move % before %: cycles not permitted\n", this, readerEnvir);			
 		}{
-			postf("cannot add % as writer: cycles not permitted\n", writer);
-		}
-	}
-	
-	canAddWriter { | writer |
-		^writer.allWriters(Set()).includes(this).not;
+			this moveGroupBefore: readerEnvir[\target];
+		};		
 	}
 
+	
+	moveGroupBefore { | argGroup |
+		var myGroup, newGroup;
+		myGroup = this[\target];
+		newGroup = myGroup getGroupBefore: argGroup;
+		writers do: _.moveBefore(newGroup);
+		if (newGroup !== myGroup) { this setGroup: newGroup };
+	}
+
+	setGroup { | orderedGroup |
+		this[\target] = orderedGroup;
+		"INCOMPLETE!:".postln;
+		postf("% does not know how to inform that it has set group to %\n", this, orderedGroup);
+	}
+	
 	allWriters { | set |
-		/* help method for canAddWriter.
-			Collect yourself, and all your writers, and all your writers writers etc. into set.
-			Return set. */
+		// Collect yourself, and all your writers, and all your writers writers etc. into set.
+		//	Return set.
 		writers do: _.allWriters(set);
 		^set add: this;
 	}
 
-	setGroup { | group |
-		// First set groups of your writers, then your own group.
-		// This moves your writers before you, preventing any signal fallouts.
-		var beforeGroup;
-		if (writers.size > 0) {
-			beforeGroup = OrderedGroup.before(group);
-			writers do: _.setGroup(beforeGroup);			
-		};
-		this[\target] = group;  // SynthPlayers move their Synth to the head of this group
-	}
 }

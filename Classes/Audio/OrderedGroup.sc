@@ -8,7 +8,7 @@ See Nevent.
 
 OrderedGroup {
 	classvar all;
-	var <group;
+	var <group, <count;
 	*initClass {
 		ServerTree add: {
 			this.makeGroups;
@@ -20,6 +20,7 @@ OrderedGroup {
 	init {
 		group = Group();
 		this.all addFirst: this;
+		count = all.size;
 	}
 
 	all {
@@ -49,16 +50,26 @@ OrderedGroup {
 		}
 	}
 
+	getGroupBefore { | otherGroup |
+		if (this isBefore: otherGroup) { ^this } { ^OrderedGroup before: otherGroup }
+	}
+	
 	*before { | argGroup |
 		// get the group before argGroup. If argGroup is the first group, then make a new one.
-		var index;
 		if (all.isNil) {
 			^warn("OrderedGroup: You need to boot the default server to get groups.");
 		};
-		index = (all indexOf: argGroup) ? -1;
-		if (index < 1) {^this.new; }{ ^all[index-1] }
+		if (argGroup.isFirst) {
+			^this.new;
+		}{
+			^all[all.size - argGroup.count - 1];
+		}
 	}
 
+	isFirst { ^all.size == count }
+
+	isBefore { | otherGroup | ^count > otherGroup.count }
+	
 	asTarget { ^group }
 	asNodeID { ^group.nodeID }
 	

@@ -64,23 +64,15 @@
 	//	player { | envir | ^(envir ? this) }
 	
 	*> { | reader, param = \out |
-		// The left argument gives its bus to the right argument.
-		// Link receiver to argument via bus with default parameter order \out, \in.
-		// Param defines the param name of the receiver.
-		// Use proxy to permit fuller specs via @ composition.
-		var bus;
-		// bus = 
-		^PersistentBusProxy(this, param).addReader(reader.asPeristentBusProxy(\in))
+		// the argument/reader gets one more writer.
+		// result: several sources/writers to one effect/reader configuration.
+		^PersistentBusProxy(this, param) *> reader.asPeristentBusProxy(\in);
 	}
 
 	*< { | reader, param = \out |
-		// the reader should give its bus to the writer.
-		postf("*<: writer is: %,\n reader is: %\n",
-			this.e, reader.e
-		);
-		"*< Must be redesigned. Please wait for next version".postln;
-		// writer 
-		^PersistentBusProxy(reader, \in).addReader(this.asPeristentBusProxy(param));
+		// the receiver/writer gets one more reader.
+		// result: one source/writer to several effects/writers configuration.
+		^PersistentBusProxy(this, param) *< reader.asPeristentBusProxy(\in);
 	}
 
 	<+ { | player, envir |
@@ -125,14 +117,21 @@
 
 + Player {
 	asPlayer { ^this }
-	
 }
 
 + PersistentBusProxy {
 	*> { | envirOrProxy, inParam = \in |
-		^this linkTo:  envirOrProxy.asPeristentBusProxy(inParam);
+		// the argument/reader gets one more writer.
+		// result: several sources/writers to one effect/reader configuration.
+		// receiver is writer, argument is reader.
+		// argument as reader                                 receiver as writer
+		^envirOrProxy.asPeristentBusProxy(inParam) addWriter: this;
 	}
-	*< { | envirOrProxy, outParam = \out |
-		^envirOrProxy.asPeristentBusProxy(outParam) linkTo: this;
+	*< { | envirOrProxy, inParam = \in |
+		// the receiver/writer gets one more reader.
+		// result: one source/writer to several effects/writers configuration.
+		// receiver is writer, argument is reader.
+		// receiver as writer / argument as reader
+		^this addReader: envirOrProxy.asPeristentBusProxy(inParam);
 	}
 }
