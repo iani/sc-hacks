@@ -121,8 +121,8 @@ Nevent : EnvironmentRedirect {
 	setGroup { | orderedGroup |
 		this[\target] = orderedGroup;
 		players do: _.setTarget(orderedGroup);
-		"INCOMPLETE!:".postln;
-		postf("% does not know how to inform that it has set group to %\n", this, orderedGroup);
+		// "INCOMPLETE!:".postln;
+		// postf("% does not know how to inform that it has set group to %\n", this, orderedGroup);
 	}
 	
 	allWriters { | set |
