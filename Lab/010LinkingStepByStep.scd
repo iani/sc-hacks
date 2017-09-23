@@ -11,3 +11,12 @@
 ~reader1.envir[\target] isBefore: ~writer1.envir[\target];
 //: 4. Testing unpermitted adding of reader to self
 ~reader1 *> ~reader1;
+//: Start testing as above, with symbols instead of PersistentBusProxies.
+\writer2 *> \reader2;
+//: continuing above
+\writer2.e[\target];
+\reader2.e[\target];
+\writer2.e[\target] isBefore: \reader2.e[\target];
+\reader2.e[\target] isBefore: \writer2.e[\target];
+//: continuing above
+\reader2 *> \reader2;
