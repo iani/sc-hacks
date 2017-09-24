@@ -35,10 +35,17 @@
 \writer1b.e[\out];
 \reader1b.e[\out];
 \reader2b.e[\out];
-//: 6. Testing with sound.
+//: 6. Testing with sound a: many to 1 (*>)
 \writer1a *> \reader1a;
 \writer2a *> \reader1a;
 //:
 { WhiteNoise.ar(Decay2.kr(Impulse.kr(0.5), 0.2, 0.5, 0.1)) } +> \writer1a;
 { Ringz.ar(In.ar(\in.kr), LFNoise1.kr(10.1).range(300, 1000), 0.02, 0.5) } +> \reader1a;
 { WhiteNoise.ar(Decay2.kr(Impulse.kr(5), 0.02, 0.15, 0.1)) } +> \writer2a;
+//: 7. Testing with sound b: 1 to many (*<)
+\writer1b *< \reader1b;
+\writer1b *< \reader2b;
+//:
+{ WhiteNoise.ar(0.1) } +> \writer1b;
+{ Ringz.ar(In.ar(\in.kr), LFNoise1.kr(0.5).range(300, 1000), 0.02, 0.5) } +> \reader1b;
+{ Ringz.ar(In.ar(\in.kr), LFNoise0.kr(10.5).range(1300, 2000), 0.02, 0.5) } +> \reader2b;
