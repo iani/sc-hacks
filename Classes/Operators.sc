@@ -113,6 +113,13 @@
 	p {
 		^EventPattern(this).play;
 	}
+
+	playFunc { | function, rates, prependArgs, outClass=\Out, fadeTime = 0.02, name |
+		// play given function as instrument in the event.
+		name = name ?? { SystemSynthDefs.generateTempName };
+		function.asPlayerSynthDef (rates, prependArgs, outClass, fadeTime, name).add;
+		this.put(\instrument, name);
+	}
 }
 
 + Player {

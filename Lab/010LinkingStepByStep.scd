@@ -46,6 +46,25 @@
 \writer1b *< \reader1b;
 \writer1b *< \reader2b;
 //:
-{ WhiteNoise.ar(0.1) } +> \writer1b;
+{ WhiteNoise.ar(0.01) } +> \writer1b;
 { Ringz.ar(In.ar(\in.kr), LFNoise1.kr(0.5).range(300, 1000), 0.02, 0.5) } +> \reader1b;
 { Ringz.ar(In.ar(\in.kr), LFNoise0.kr(10.5).range(1300, 2000), 0.02, 0.5) } +> \reader2b;
+//:
+(dur: 3.25, legato: 0.5).playFunc({ WhiteNoise.ar(0.02) }) +> \writer1b;
+(dur: 0.2, freq: Pbrown(70, 100, 10).midicps).playFunc({ Ringz.ar(In.ar(\in.kr), \freq.kr, 0.2, 0.5) }) +> \reader1b;
+(legato: 1.95) +> \reader1b;
+\reader2b.stop;
+//:
+(addMethod: \addAfter) +> \writer1b;
+//:
+\writer1b.e[\target];
+//:
+\writer1b.ppp.stream.event;
+//:
+~g = Group();
+//:
+e = EventPattern((amp: 0.01)).play;
+e.put(\freq, 1000);
+e.put(\group, ~g);
+//:
+Event

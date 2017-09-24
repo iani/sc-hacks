@@ -1,4 +1,5 @@
 + Function {
+	
 	asPlayerSynthDef { arg rates, prependArgs, outClass=\Out, fadeTime, name;
 		^GraphBuilder.wrapPlayerOut(name ?? { this.identityHash.abs.asSymbol },
 			this, rates, prependArgs, outClass, fadeTime

@@ -3,7 +3,7 @@ SourcePlayer {
 	var <player, <envir, <source, <process;
 
 	*new { | player |
-		^this.newCopyArgs(player, player.envir).init;
+		^this.newCopyArgs(player, player.envir);
 	}
 
 	isPlaying { ^process.isPlaying }
@@ -11,14 +11,6 @@ SourcePlayer {
 
 PatternPlayer : SourcePlayer {
 
-	init {
-		// listen to changes of busses
-		postf("% adding notifier to envir: %\n \\busChanged.\n ", this, envir);
-		"Method init incomplete - busChanged will have no effect".postln;
-		this.addNotifier(envir, \busChanged, { | ... args |
-			postf ("% received \\busChanged from: %\n", this, args);
-		});
-	}
 	play { | argSource | // argSource shoud be a kind of Event.
 		var stream, event;
 		// postf("playing PatternPlayer. player is: %, envir is: %\n", player, envir);
@@ -29,7 +21,7 @@ PatternPlayer : SourcePlayer {
 			source.addEvent(argSource);			
 		};
 		if (process.isNil) {
-			source.put (\target, envir[\target]);
+			source.put (\group, envir[\target].asTarget);
 			envir.busses.keysValuesDo({ | key, value |
 				source.put(key, value.index);
 			});
@@ -38,7 +30,7 @@ PatternPlayer : SourcePlayer {
 			stream = process.originalStream;
 			event = stream.event;
 			stream.addEvent(argSource);
-			stream.addEvent([\target, envir[\target]]);
+			stream.addEvent([\group, envir[\target].asTarget]);
 			envir.busses.keysValuesDo({ | key, value |
 				event.put(key, value.index);
 			});
@@ -68,15 +60,13 @@ PatternPlayer : SourcePlayer {
 	}
 
 	setTarget { | orderedGroup |
-		this.put(\target, orderedGroup.group);
+		this.put(\group, orderedGroup.asTarget);
 	}
 }
 
 SynthPlayer : SourcePlayer {
 	var <controlNames, <hasGate = false, <event;	
 	var <synthDefIsTemp = false;
-
-	init { /* used by PatternPlayer */ }
 
 	// isPlaying { ^process.notNil }
 
@@ -298,15 +288,6 @@ SynthPlayer : SourcePlayer {
 		// source = nil; // ?????
 			//	sourcePlayer !? { sourcePlayer.clear }
 	}
-	/*
-		// envir can do this to add control from self to this player by name.
-		// therefore move this method to Nevent, using appropriate new method name.
-	init {
-		this.addNotifier (envir, name, { | command |
-			this perform: command;
-		});
-	}
-	*/
 
 	/*
 		TODO: Rewrite this as release method.
