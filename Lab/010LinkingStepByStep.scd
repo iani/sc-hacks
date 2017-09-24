@@ -27,6 +27,7 @@
 \writer1b *< \reader2b;
 \writer1a.e.busses;
 \writer1a.e[\out];
+\writer1a.e;
 \writer2a.e[\out];
 \writer1a.e[\out];
 \reader1a.e[\out];
@@ -34,3 +35,10 @@
 \writer1b.e[\out];
 \reader1b.e[\out];
 \reader2b.e[\out];
+//: 6. Testing with sound.
+\writer1a *> \reader1a;
+\writer2a *> \reader1a;
+//:
+{ WhiteNoise.ar(Decay2.kr(Impulse.kr(0.5), 0.2, 0.5, 0.1)) } +> \writer1a;
+{ Ringz.ar(In.ar(\in.kr), LFNoise1.kr(10.1).range(300, 1000), 0.02, 0.5) } +> \reader1a;
+{ WhiteNoise.ar(Decay2.kr(Impulse.kr(5), 0.02, 0.15, 0.1)) } +> \writer2a;

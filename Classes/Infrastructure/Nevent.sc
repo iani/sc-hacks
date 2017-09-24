@@ -70,9 +70,11 @@ Nevent : EnvironmentRedirect {
 
 	updateBusIndex { | param, busIndex |
 		// make sure all players update their processes or settings with the new index.
-		this.put[param, busIndex];
-		// SynthPlayers immediately respond to this through their connectPlayer notification method.
-		// PatternPlayers update their source or process.
+		this.put(param, busIndex);
+		// Now update players:
+		// SynthPlayers update per default through their connectPlayer notification method.
+		// But PatternPlayers need to update their source or process manually,
+		// because they do not have connectPlayer, because they set their streams per explicit separate code.
 		players do: _.put(param, busIndex); // only PatternPlayers respond to this.
 	}
 
