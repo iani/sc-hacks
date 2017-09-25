@@ -59,8 +59,12 @@
 		{ In.ar(\in.kr, numChans) } +> linker.name.persist;
 	}
 	persist { | eventName |
-		// make this player auto-start whenever groups are re-created.
+		// make this player restart whenever groups are re-created.
 		^this.p(eventName).persist;
+	}
+	auto { | eventName |
+		// make this player restart whenever Main-run is called
+		^this.p(eventName).auto;
 	}
 	play { | source, eventName |
 		^this.p(eventName).play(source);

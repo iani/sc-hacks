@@ -1,3 +1,3 @@
 + Main {
-    run { OrderedGroup.changed(\groups) }
+    run { Player.changed(\run) }
 }

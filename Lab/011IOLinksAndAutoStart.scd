@@ -114,8 +114,8 @@ writer.copyAudio(reader, numChans, outparam, inparam);
 { WhiteNoise.ar(Decay.kr(Impulse.kr([2, 2] / 2, [0, 0.5]), 0.1, 0.5)) } +> \testWriter;
 { Ringz.ar(In.ar(\in. kr, 2), [400, 600], 0.4, 0.1) } +> \testReader;
 
-//: Testing stereo - counterexample with 1 channel link
-// The stereo output of the writer wraps onto 1 channel.
+//: Testing stereo - counterexample with 1 channel link, (user error.)
+// The second channel of the stereo output of the writer is copied onto the first input channel.
 /* Explanation of resulting error:
 	\testWriter2.e.busses[\out].index; // 4
 	\testReader2.e.busses[\in].index; // 5
@@ -142,3 +142,14 @@ the input of channel 5, which contains both channels output by testWriter3.
 \testWriter3.copyAudio(\testReader3, 1);
 { WhiteNoise.ar(Decay.kr(Impulse.kr([2, 2] / 2, [0, 0.5]), 0.1, 0.5)) } +> \testWriter3;
 { Ringz.ar(In.ar(\in.kr, 1), [400, 600], 0.4, 0.1) } +> \testReader3;
+// ================================================================
+// Demonstrating persist and auto messages
+//: 1: Persist. Always restarts after stopping with C-c C-s (SCIDE: Command-period).
+\testWriter.copyAudio(\testReader, 2); // link is persistent per default
+// these players must be made persistent explicitly:
+{ WhiteNoise.ar(Decay.kr(Impulse.kr([2, 2] / 2, [0, 0.5]), 0.1, 0.5)) } +> \testWriter.persist;
+{ Ringz.ar(In.ar(\in. kr, 2), [400, 600], 0.4, 0.1) } +> \testReader.persist;
+//: 2: Auto.  Restart when user issues Main.run message. (In emacs: C-c C-r. In SCIDE?)
+\testWriter.copyAudio(\testReader, 2); // link is persistent per default
+{ WhiteNoise.ar(Decay.kr(Impulse.kr([2, 2] / 2, [0, 0.5]), 0.1, 0.5)) } +> \testWriter.auto;
+{ Ringz.ar(In.ar(\in. kr, 2), [400, 600], 0.4, 0.1) } +> \testReader.auto;

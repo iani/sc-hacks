@@ -90,8 +90,15 @@ Player {
 	}
 
 	persist {
-		// make this player auto-start whenever groups are re-created.
+		// make this player restart whenever groups are re-created.
 		this.addNotifier(OrderedGroup, \groups, { this.play });
+	}
+
+	auto {
+		// make this player restart when user calls Main:run
+		// In emacs bindings this is with keyboard command C-c C-r
+		this.addNotifier(Player, \run, { this.play });
+		
 	}
 	play { | source |
 		// play a function, symbol, or event.

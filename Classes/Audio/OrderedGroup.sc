@@ -31,13 +31,14 @@ OrderedGroup {
 	*makeGroups {
 		// on ServerTree, remake all real groups in the right order.
 		(all ?? { all = List() }).reverse do: _.getGroup;
+		// Player:persist adds notifications so that these players will always restart here:
+		{ OrderedGroup.changed(\groups) }.defer(0.5);
 	}
 
 	getGroup {
 		// get a new real group from the server
 		group = Group();
 		// Groups are always re-created before any synths at ServerTree.
-		// No update needed. Synths, Patterns use the new groups when they start.
 	}
 
 	*last {
