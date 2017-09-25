@@ -112,14 +112,33 @@ writer.copyAudio(reader, numChans, outparam, inparam);
 // correct 2 channel link: 2 pulses off-phase coming out of 2 channels processed separately
 \testWriter.copyAudio(\testReader, 2);
 { WhiteNoise.ar(Decay.kr(Impulse.kr([2, 2] / 2, [0, 0.5]), 0.1, 0.5)) } +> \testWriter;
-{ Ringz.ar(In.ar(\in.kr, 2), [400, 600], 0.4, 0.1) } +> \testReader;
+{ Ringz.ar(In.ar(\in. kr, 2), [400, 600], 0.4, 0.1) } +> \testReader;
 
 //: Testing stereo - counterexample with 1 channel link
+// The stereo output of the writer wraps onto 1 channel.
+/* Explanation of resulting error:
+	\testWriter2.e.busses[\out].index; // 4
+	\testReader2.e.busses[\in].index; // 5
+	\testReader2.e.writers.asArray.first; // in index: 4. Out index: 5
+
+testWriter2 writes its output to bus \out with 1 channel, at index 4.
+But the actual output has 2 channels, so it writes in channel 4 and 5.
+The link environment/player _link_1002_ reads input at in = 4 and writes output at out  = 5.
+Therefore it copies the first of the 2 channels of output of testWriter2 from 4 to 5.
+So 5 receives the output of 4. So 5 has both the second channel of output of testWriter2 and the first.
+\testReader2 reads channel 5, and thus reads both channels output by testWriter2.
+Note that if we make the input of testReader2 have 2 channels, then it will read silence in the 
+second channel, and thus the second channel of its output will remain silent.
+In contrast, in the example after that (testWriter3), testReader3 has 1 channel input,
+which it expands to 2 channels because of the frequency argument, and therefore it expands
+the input of channel 5, which contains both channels output by testWriter3.
+*/
 \testWriter2.copyAudio(\testReader2, 1);
 { WhiteNoise.ar(Decay.kr(Impulse.kr([2, 2] / 2, [0, 0.5]), 0.1, 0.5)) } +> \testWriter2;
 { Ringz.ar(In.ar(\in.kr, 2), [400, 600], 0.4, 0.1) } +> \testReader2;
 
 //: Testing stereo - counterexample with 1 channel link 2
+// The 2 channels wrap onto 1, which is expanded back by the reader.
 \testWriter3.copyAudio(\testReader3, 1);
 { WhiteNoise.ar(Decay.kr(Impulse.kr([2, 2] / 2, [0, 0.5]), 0.1, 0.5)) } +> \testWriter3;
 { Ringz.ar(In.ar(\in.kr, 1), [400, 600], 0.4, 0.1) } +> \testReader3;
