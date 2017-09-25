@@ -50,9 +50,11 @@
 { Ringz.ar(In.ar(\in.kr), LFNoise1.kr(0.5).range(300, 1000), 0.02, 0.5) } +> \reader1b;
 { Ringz.ar(In.ar(\in.kr), LFNoise0.kr(10.5).range(1300, 2000), 0.02, 0.5) } +> \reader2b;
 //:
-(dur: 3.25, legato: 0.5).playFunc({ WhiteNoise.ar(0.02) }) +> \writer1b;
-(dur: 0.2, freq: Pbrown(70, 100, 10).midicps).playFunc({ Ringz.ar(In.ar(\in.kr), \freq.kr, 0.2, 0.5) }) +> \reader1b;
+(dur: 0.5, legato: 0.5).playFunc({ WhiteNoise.ar(0.02) }) +> \writer1b;
+(dur: 6, freq: Pbrown(40, 60, 10).midicps).playFunc({ Ringz.ar(In.ar(\in.kr), \freq.kr, 0.2, 0.05) }) +> \reader1b;
 (legato: 1.95) +> \reader1b;
+(dur: 0.2, legato: 5, freq: Pbrown(90, 100, 10).midicps).playFunc({ Ringz.ar(In.ar(\in.kr), \freq.kr, 2, 0.05) }) +> \reader1b;
+
 \reader2b.stop;
 //:
 (addMethod: \addAfter) +> \writer1b;

@@ -89,6 +89,10 @@ Player {
 		^this.newCopyArgs (envir, name);
 	}
 
+	persist {
+		// make this player auto-start whenever groups are re-created.
+		this.addNotifier(OrderedGroup, \groups, { this.play });
+	}
 	play { | source |
 		// play a function, symbol, or event.
 		// For definitions, see file playSource.sc

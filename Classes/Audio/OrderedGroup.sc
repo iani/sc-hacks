@@ -34,9 +34,10 @@ OrderedGroup {
 	}
 
 	getGroup {
-		// get a new real group from the server, and notify dependants.
+		// get a new real group from the server
 		group = Group();
-		// this.changed(\group, group); // not needed any more.
+		// Groups are always re-created before any synths at ServerTree.
+		// No update needed. Synths, Patterns use the new groups when they start.
 	}
 
 	*last {

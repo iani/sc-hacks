@@ -56,6 +56,13 @@ Nevent : EnvironmentRedirect {
 		});
 	}
 
+	audioBusChans { | param |
+		// return the number of channels of the bus stored at param, or nil if no such bus is found.
+		var bus;
+		bus = this.busses[param];
+		if (bus.isNil) { ^nil } { ^bus.numChannels };
+	}
+
 	getAudioBus { | param = \in, numChannels = 1 |
 		/* get an audio bus. If not present create one, store it under busses,
 			and set param's value to busses index in event. */
@@ -104,19 +111,28 @@ Nevent : EnvironmentRedirect {
 		stream << " ]" ;
 	}
 
-	moveBefore { | readerEnvir |
+	addReader { | readerEnvir |
 		if (this.allWriters(Set()) includes: readerEnvir) {
 			postf("cannot move % before %: cycles not permitted\n", this, readerEnvir);			
 		}{
+			readerEnvir.writers add: this;
 			this moveGroupBefore: readerEnvir[\target];
-		};		
+		}
+	}
+
+	allWriters { | set |
+		// Collect yourself, and all your writers, and all your writers writers etc. into set.
+		//	eturn set.
+		writers do: _.allWriters(set);
+		^set add: this;
 	}
 
 	moveGroupBefore { | argGroup |
+		// set the group of this environment to be before argGroup in Server order of execution.
 		var myGroup, newGroup;
 		myGroup = this[\target];
 		newGroup = myGroup getGroupBefore: argGroup;
-		writers do: _.moveBefore(newGroup);
+		writers do: _.moveGroupBefore(newGroup);
 		if (newGroup !== myGroup) { this setGroup: newGroup };
 	}
 
@@ -126,12 +142,4 @@ Nevent : EnvironmentRedirect {
 		// "INCOMPLETE!:".postln;
 		// postf("% does not know how to inform that it has set group to %\n", this, orderedGroup);
 	}
-	
-	allWriters { | set |
-		// Collect yourself, and all your writers, and all your writers writers etc. into set.
-		//	Return set.
-		writers do: _.allWriters(set);
-		^set add: this;
-	}
-
 }

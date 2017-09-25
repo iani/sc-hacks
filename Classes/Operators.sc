@@ -31,14 +31,36 @@
 	pp { | eventName | ^this.p(eventName).sourcePlayer }
 	ppp { | eventName | ^this.p(eventName).process }
 	stop { | eventName | ^this.p(eventName).stop }
-	newIn { | param = \in, numChannels = 1 |
-		/* give this event a private newly-allocated bus.
-			This prevents synths using Fin from feedbacking on the 0 bus,
-			without having to link them to any other event. */
-		var event;
-		event = Nevent(this);
-		PersistentBus.makeAudio(event, param, numChannels);
-		// ^this.asPlayer; // return this. Will work with *>
+	
+	copyAudio { | reader, numChans = 1, outParam = \out, inParam = \in |
+		/* Connect writer with reader via an intermediate player which copies 
+			the output from the writer's output bus to the reader's input bus.
+			numChans only matters if neither the reader nor the writer already have a bus.
+		*/
+		var writer, writersChans, readersChans, linker;
+		writer = this.e;
+		reader = reader.e;
+		writersChans = writer.audioBusChans(outParam);
+		readersChans = reader.audioBusChans(inParam);
+		/* writers channels overwrite channels if existent.
+			otherwise readers channels overwrite channels if existent.
+			otherwise numChans argument provides the number of channels. */
+		if (writersChans.notNil) {
+			numChans = writersChans;
+		}{ // if no writersChans were present, try to get these from reader
+			readersChans !? { numChans = readersChans }
+		};
+		// Use buses from writer and reader, if they exist.
+		linker = format("_link_%_", UniqueID.next).asSymbol.e;
+		linker.addAudioBus(\in, writer.getAudioBus(outParam, numChans));
+		linker.addAudioBus(\out, reader.getAudioBus(inParam, numChans));
+		writer addReader: linker;
+		linker addReader: reader;
+		{ In.ar(\in.kr, numChans) } +> linker.name.persist;
+	}
+	persist { | eventName |
+		// make this player auto-start whenever groups are re-created.
+		^this.p(eventName).persist;
 	}
 	play { | source, eventName |
 		^this.p(eventName).play(source);

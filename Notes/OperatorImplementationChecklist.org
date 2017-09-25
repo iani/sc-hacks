@@ -7,7 +7,8 @@ ROADMAP  6 Sep 2017 14:19
    :PROPERTIES:
    :DATE:     <2017-09-06 Wed 14:20>
    :END:
-** TODO implement release for Symbol, Player.
+** DONE implement release for Symbol, Player.
+   CLOSED: [2017-09-24 Sun 06:50]
    :PROPERTIES:
    :DATE:     <2017-09-06 Wed 14:21>
    :END:
@@ -67,7 +68,8 @@ Here is a tabular overview of operator actions associated to different types of 
 \default +> \player1; // play SynthDef named default in player named player1
 #+END_SRC
 
-** TODO 2. Symbol =*>= Symbol: Link Players
+** DONE 2. Symbol =*>= Symbol: Link Players
+   CLOSED: [2017-09-24 Sun 06:50]
 
 #+BEGIN_SRC javascript
 \source *> \effect; // use default i/o parameters (\out, \in)
