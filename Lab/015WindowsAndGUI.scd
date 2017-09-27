@@ -3,3 +3,7 @@
 
 w = \test.window;
 //:
+// LoadFiles.gui;
+StartupFiles.gui;
+AudioFiles.gui;
+//:

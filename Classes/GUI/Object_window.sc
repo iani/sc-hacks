@@ -1,6 +1,6 @@
 // 27 Sep 2017 13:59
 // Any object can create a unique, re-opening window for itself.
-// To open multiple objects for the same object, add a name other than \default
+// To open multiple objects for the same object, use keys other than \default
 // as argument to the method call.
 
 + Object {
@@ -21,6 +21,7 @@
 			window.view.mouseUpAction_({ | topview |
 				Registry.put(\windowRects, this, key, topview.findWindow.bounds);
 			});
+			initFunc.(window);
 			window;
 		}).front;	
 	}
