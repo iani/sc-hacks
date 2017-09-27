@@ -25,6 +25,7 @@
 */
 
 + Symbol {
+	b { ^AudioFiles.buffers[this] }
 	e { ^Nevent(this) }
 	push { ^this.e.push }
 	p { | eventName | ^Nevent(eventName ? this).player(this) }
@@ -74,7 +75,7 @@
 		^this.p(eventName).clear;
 	}
 	asPlayer { | envir |
-		^Nevent(envir ? this).player(this);
+		^Nevent(envir ? this).push.player(this);
 	}
 
 	asPeristentBusProxy { | param = \out |
@@ -101,9 +102,10 @@
 		^PersistentBusProxy(this, param) *< reader.asPeristentBusProxy(\in);
 	}
 
-	<+ { | player, envir |
-		// bind kr synth-function to parameter
-		
+	<+ { | argument, envir |
+		// argument interprets this differently according to class
+		// See file ArgSetParameter.sc
+		argument.setParameter(this, envir);
 	}
 
 	<* { | player, envir |

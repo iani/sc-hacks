@@ -62,6 +62,9 @@ PatternPlayer : SourcePlayer {
 	setTarget { | orderedGroup |
 		this.put(\group, orderedGroup.asTarget);
 	}
+
+	// replaced by notifier in SynthPlayer
+	// map {/* ignore. only synthplayers map parameters */ }
 }
 
 SynthPlayer : SourcePlayer {
@@ -70,6 +73,15 @@ SynthPlayer : SourcePlayer {
 
 	// isPlaying { ^process.notNil }
 
+	// replaced by notifier in connectPlayer
+	/*
+	map { | param, index |
+		// if sourcePlayer is a SynthPlayer and is playing, then
+		// map param to bus of index.
+		if (process.isPlaying) { process.map(param, index) };
+	}
+	*/
+	
 	play { | argSource |
 		var outbus, target, server;
 		// if still waiting to start synth after def, then skip this play!
@@ -253,6 +265,9 @@ SynthPlayer : SourcePlayer {
 			};
 			process.addNotifier(envir, \target, { | val |
 				postf("INCOMPLETE. TESTING. Received target: %\n", val);
+			});
+			process.addNotifier(envir, \mapBus, { | param, bus |
+				process.map(param, bus.index);
 			});
 			process.onEnd (this, { | notification |				
 				if (process === notification.notifier) {

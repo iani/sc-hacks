@@ -8,6 +8,11 @@ Nevent : EnvironmentRedirect {
 		//	Used in PersistentBusProxy in conjunction with *> and newIn
 	}
 	*/
+
+	*initClass {
+		StartUp add: { \default.asPlayer } // pushes \default to current environment
+	}
+	
 	*all {
 		^Registry.at(libRoot).values;
 	}
@@ -26,6 +31,9 @@ Nevent : EnvironmentRedirect {
 				},
 				Float, { | key, object |
 					[key, object]
+				},
+				Bus, { | key, object |
+					[\mapBus, key, object]
 				}
 			])
 			.init
@@ -141,5 +149,9 @@ Nevent : EnvironmentRedirect {
 		players do: _.setTarget(orderedGroup);
 		// "INCOMPLETE!:".postln;
 		// postf("% does not know how to inform that it has set group to %\n", this, orderedGroup);
+	}
+
+	atFail { | key, action |
+		^envir.atFail(key, action);
 	}
 }

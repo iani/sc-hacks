@@ -134,8 +134,15 @@ which it expands to 2 channels because of the frequency argument, and therefore 
 the input of channel 5, which contains both channels output by testWriter3.
 */
 \testWriter2.copyAudio(\testReader2, 1);
-{ WhiteNoise.ar(Decay.kr(Impulse.kr([2, 2] / 2, [0, 0.5]), 0.1, 0.5)) } +> \testWriter2;
+{ WhiteNoise.ar(Decay.kr(Impulse.kr([10, 2] / 2, [0, 0.5]), 0.1, 0.5)) } +> \testWriter2;
 { Ringz.ar(In.ar(\in.kr, 2), [400, 600], 0.4, 0.1) } +> \testReader2;
+//:
+(dur: 0.1) +> \testWriter2;
+
+(degree: Pbrown(0, 10)) +> \testWriter2;
+
+{  In.ar(\in.kr, 2) } +> \testReader2;
+
 
 //: Testing stereo - counterexample with 1 channel link 2
 // The 2 channels wrap onto 1, which is expanded back by the reader.
@@ -144,7 +151,7 @@ the input of channel 5, which contains both channels output by testWriter3.
 { Ringz.ar(In.ar(\in.kr, 1), [400, 600], 0.4, 0.1) } +> \testReader3;
 // ================================================================
 // Demonstrating persist and auto messages
-//: 1: Persist. Always restarts after stopping with C-c C-s (SCIDE: Command-period).
+//: 1: Persist. Always restarts after stopping with C-c C-s (emacs) or Command-period (SCIDE).
 \testWriter.copyAudio(\testReader, 2); // link is persistent per default
 // these players must be made persistent explicitly:
 { WhiteNoise.ar(Decay.kr(Impulse.kr([2, 2] / 2, [0, 0.5]), 0.1, 0.5)) } +> \testWriter.persist;

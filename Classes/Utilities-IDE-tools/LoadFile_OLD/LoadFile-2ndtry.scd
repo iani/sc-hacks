@@ -41,7 +41,7 @@ LoadFile {
 	}
 
 	loadCode {
-		File.doIfExists(path, { 
+		File.doIfExists(path, {
 			postf("Loading code file: %\n", path);
 			path.load;
 		},{
@@ -84,6 +84,7 @@ LoadFile {
 		postf("Loading audio file: %\n", path);
 		buffer = Buffer.read(Server.default, path, action: { | b |
 			this.class.calculateTotalAudioBytes;
+			Library.put(\buffers, name, b);
 			postf("LOADED: %\n", b);
 		});
 	}

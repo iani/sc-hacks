@@ -3,15 +3,25 @@ ROADMAP  6 Sep 2017 14:19
   :PROPERTIES:
   :DATE:     <2017-09-06 Wed 14:20>
   :END:
-** TODO make SynthPlayer:release use ~fadeTime
-   :PROPERTIES:
-   :DATE:     <2017-09-06 Wed 14:20>
-   :END:
 ** DONE implement release for Symbol, Player.
    CLOSED: [2017-09-24 Sun 06:50]
    :PROPERTIES:
    :DATE:     <2017-09-06 Wed 14:21>
    :END:
+** TODO make SynthPlayer:release use ~fadeTime
+   :PROPERTIES:
+   :DATE:     <2017-09-06 Wed 14:20>
+   :END:
+** TODO redo file loading scheme
+   :PROPERTIES:
+   :DATE:     <2017-09-27 Wed 09:30>
+   :END:
+** TODO redo window scheme
+   :PROPERTIES:
+   :DATE:     <2017-09-27 Wed 09:30>
+   :END:
+*** attach windows to Registry(\window, name or environment)
+*** review control spec adapter mechanism.
 
 * Operators
 
@@ -82,9 +92,12 @@ Adverb specifies custom input parameter for the argument player.
 
 To specify a custom output parameter for the reader player, use the =@= operator:
 
-** TODO 3. Symbol =<+= Number: Set parameter
-** TODO 4. Symbol =<+= Function: Map parameter
-** TODO 5. Symbol =<+= Env: Map parameter
+** DONE 3. Symbol =<+= Number: Set parameter
+   CLOSED: [2017-09-27 Wed 09:12]
+** DONE 4. Symbol =<+= Function: Map parameter
+   CLOSED: [2017-09-27 Wed 09:13]
+** DONE 5. Symbol =<+= Env: Map parameter
+   CLOSED: [2017-09-27 Wed 09:13]
 ** TODO 6. Symbol =<+= Symbol: Set bufnum
 ** TODO 7. Symbol =<*= MIDI: Bind MIDIFunc
 ** TODO 8. Symbol =<*= OSC: Bind OSCFunc

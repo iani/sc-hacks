@@ -43,13 +43,17 @@ OrderedGroup {
 
 	*last {
 		// get the last group from the list of all.
-	^	// this is the first group that was made, and is therefore the last group in the server's order.
-		if (all.isNil) {
+		// this is the first group that was made, and is therefore the last group in the server's order.
+		/*
+			if (all.isNil) {
 			warn("OrderedGroup: You need to boot the default server to get groups.");
-		}{
+			}{
 			if (all.size == 0) { this.new };
 			^all.last;
-		}
+			}
+		*/
+		if (all.size == 0) { this.new };
+		^all.last;
 	}
 
 	getGroupBefore { | otherGroup |

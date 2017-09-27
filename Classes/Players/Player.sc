@@ -106,6 +106,12 @@ Player {
 		sourcePlayer = sourcePlayer.playSource(this, source);
 	}
 
+	map { | param, index |
+		// if sourcePlayer is a SynthPlayer and is playing, then
+		// map param to bus of index.
+		sourcePlayer !? { sourcePlayer.map(param, index) }
+	}
+
 	clear {
 		// empty process of PatternPlayer
 		sourcePlayer !? { sourcePlayer.clear }
