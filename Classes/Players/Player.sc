@@ -116,6 +116,8 @@ Player {
 		// empty process of PatternPlayer
 		sourcePlayer !? { sourcePlayer.clear }
 	}
+
+	push { envir.push }
 	
 	isPlaying {
 		^sourcePlayer.isPlaying;

@@ -26,6 +26,48 @@
 
 + Symbol {
 	b { ^AudioFiles.buffers[this] }
+	bufnum {
+		var buffer;
+		buffer = this.b;
+		if (buffer.isNil) {
+			postf("could not find buffer named '%'. Returning 0\n", this);
+			^0;
+		} {
+			^buffer.bufnum;
+		}
+	}
+
+	toggle { | source, eventName |
+		// if playing, stop. If not playing start.
+		//	play in player named by receiver.
+		//	Use source as source, if available. 
+		var player;
+		player = this.p(eventName);
+		if (player.isPlaying) { player.stop} { player.push.play(source) };
+	}
+
+	toggleBuf { | bufferName, eventName |
+		// like toggle, but use as source a PlayBuf func with appropriate number of channels.
+		var buffer, numChans, bufnum;
+		bufferName ?? { bufferName = this };
+		buffer = bufferName.b;
+		if (buffer.isNil) {
+			postf("could not find buffer named %\n", bufferName);
+		}{
+			numChans = buffer.numChannels;
+			bufnum = buffer.bufnum;
+			this.toggle({
+				PlayBuf.ar(numChans, \bufnum.kr(bufnum),
+					\rate.kr(1),
+					\trigger.kr(1),
+					\startPos.kr(0),
+					\loop.kr(1),
+					2 // doneAction: free synth when done
+				);
+			}, eventName);
+		}
+	}
+	
 	e { ^Nevent(this) }
 	push { ^this.e.push }
 	p { | eventName | ^Nevent(eventName ? this).player(this) }

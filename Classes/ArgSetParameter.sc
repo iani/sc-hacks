@@ -48,3 +48,16 @@
 		{ EnvGen.kr(this, 1, doneAction: 2) }.setParameter(paramName, envir);
 	}
 }
+
++ Symbol {
+	// set parameter to bufnum of buffer.
+	setParameter { | paramName, envir |
+		var buffer;
+		buffer = this.b;
+		if (buffer.isNil) {
+			postf("Could not find a buffer named '%'\n", this);
+		}{
+			buffer.bufnum.setParameter(paramName, envir);			
+		}		
+	}
+}

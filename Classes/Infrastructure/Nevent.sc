@@ -54,6 +54,10 @@ Nevent : EnvironmentRedirect {
 		if (doPush and: { currentEnvironment !== this}) { this.push };
 	}
 
+	push { // Avoid pushing if already current.
+		if (currentEnvironment === this) {} { super.push }
+	}
+
 	player { | playerName |
 		// return player corresponding to playerName
 		var player;

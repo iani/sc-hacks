@@ -20,7 +20,8 @@ ROADMAP  6 Sep 2017 14:19
    :PROPERTIES:
    :DATE:     <2017-09-27 Wed 09:30>
    :END:
-*** attach windows to Registry(\window, name or environment)
+*** DONE attach windows to Registry(\window, name or environment)
+    CLOSED: [2017-09-27 Wed 22:30]
 *** review control spec adapter mechanism.
 
 * Operators
@@ -98,7 +99,8 @@ To specify a custom output parameter for the reader player, use the =@= operator
    CLOSED: [2017-09-27 Wed 09:13]
 ** DONE 5. Symbol =<+= Env: Map parameter
    CLOSED: [2017-09-27 Wed 09:13]
-** TODO 6. Symbol =<+= Symbol: Set bufnum
+** DONE 6. Symbol =<+= Symbol: Set bufnum
+   CLOSED: [2017-09-27 Wed 22:46]
 ** TODO 7. Symbol =<*= MIDI: Bind MIDIFunc
 ** TODO 8. Symbol =<*= OSC: Bind OSCFunc
 ** TODO 9. Symbol =<*= Widget: Bind GUI Widget
