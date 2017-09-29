@@ -78,16 +78,20 @@ LoadFiles {
 					switch (key,
 						127, { this.remove(this.all[view.value]) },
 						13, { this.performEnterAction(this.all [view.value]) },
+						32, { this.toggle(this.all [view.value]) },
 						0, {},
 						{ key.postln }
 					)
 				})
 				.addNotifier(this, \all, { | notification |
 					notification.listener.items = this.all ? []
-				});
+				})
+				.focus(true); // focus here, away from load button.
 			)
 		})
 	}
+
+	*toggle { /* only AudioFiles uses this */ }
 }
 
 StartupFiles : LoadFiles {
@@ -159,11 +163,16 @@ AudioFiles : LoadFiles {
 	*getBuffer { | path |
 		^path.asName.b;
 	}
-	*actionString { ^"backspace: delete, enter: play" }
+	*actionString { ^"backspace: delete, enter: set bufnum, space: toggle play" }
 
 	*performEnterAction { | item |
-		item.asName.postln.b.play; 
+		currentEnvironment.put(\bufnum, item.asName.postln.b.bufnum.postln);
 	}
+
+	*toggle { | item |
+		item.asName.postln.toggleBuf; 
+	}
+	
 }
 
 

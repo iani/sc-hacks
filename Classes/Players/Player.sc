@@ -85,6 +85,10 @@ Decision table for playSource method according to types of receiver and argument
 Player {
 	var <envir, <name, <sourcePlayer;
 
+	*all { // return all Player instances
+		^Nevent.all.collect({|e| e.players.values.asArray}).flat;
+	}
+
 	*new { | envir, name = \default |
 		^this.newCopyArgs (envir, name);
 	}
@@ -117,7 +121,7 @@ Player {
 		sourcePlayer !? { sourcePlayer.clear }
 	}
 
-	push { envir.push }
+	push { envir.push; postf("pushed: %\n", this) }
 	
 	isPlaying {
 		^sourcePlayer.isPlaying;
@@ -137,6 +141,10 @@ Player {
 		sourcePlayer !? { sourcePlayer.stop }
 	}
 
+	toggle { | source |
+		if (this.isPlaying) { this.stop} { this.push.play(source) };
+	}
+
 	put { | key, value |
 		// used by Nevent:updateBusIndex.  SynthPlayer ignores this.
 		sourcePlayer !? { sourcePlayer.put(key, value); }
@@ -144,6 +152,12 @@ Player {
 
 	setTarget { | orderedGroup |
 		sourcePlayer !? { sourcePlayer.setTarget(orderedGroup); }
+	}
+
+	printOn { | stream |
+		if (stream.atLimit) { ^this };
+		stream << envir.name << "|" << name;
+		envir.printItemsOn(stream);
 	}
 }
 

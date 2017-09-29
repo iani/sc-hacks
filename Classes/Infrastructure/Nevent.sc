@@ -1,6 +1,6 @@
 Nevent : EnvironmentRedirect {
 	classvar <libRoot = \environments;
-	var <name, <players, busses, <writers;
+	var <name, <players, busses, <writers, routines;
 
 	/* // not needed? Check?
 	e {
@@ -9,14 +9,15 @@ Nevent : EnvironmentRedirect {
 	}
 	*/
 
+	*all {
+		// return array with all environments (Nevent instances).
+		^Registry.at(libRoot).values;
+	}
+	
 	*initClass {
 		StartUp add: { \default.asPlayer } // pushes \default to current environment
 	}
 	
-	*all {
-		^Registry.at(libRoot).values;
-	}
-
 	*play { | envirName, playerName, source, doPush = true |
 		// Get player for environment by name and play source.
 		^this.new(envirName, doPush).player(playerName).play(source);
@@ -157,5 +158,27 @@ Nevent : EnvironmentRedirect {
 
 	atFail { | key, action |
 		^envir.atFail(key, action);
+	}
+
+	routines {
+		routines ?? { routines = () };
+		^routines;
+	}
+
+	routine { | key |
+		^this.routines[key];
+	}
+
+	playRoutine { | key, func |
+		var oldRoutine;
+		oldRoutine = this.routine(key);
+		oldRoutine !? { oldRoutine.stop };
+		// this.routines[key] = envir.use({ func.fork });
+		this.push;
+		this.routines[key] = func.fork;
+	}
+
+	playLoop { | key, func |
+		this.playRoutine(key, { func.loop })
 	}
 }

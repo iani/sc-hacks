@@ -8,21 +8,24 @@ ROADMAP  6 Sep 2017 14:19
    :PROPERTIES:
    :DATE:     <2017-09-06 Wed 14:21>
    :END:
-** TODO make SynthPlayer:release use ~fadeTime
-   :PROPERTIES:
-   :DATE:     <2017-09-06 Wed 14:20>
-   :END:
-** TODO redo file loading scheme
+** DONE redo file loading scheme
+   CLOSED: [2017-09-28 Thu 18:16]
    :PROPERTIES:
    :DATE:     <2017-09-27 Wed 09:30>
    :END:
-** TODO redo window scheme
+** DONE redo window scheme
+   CLOSED: [2017-09-28 Thu 18:16]
    :PROPERTIES:
    :DATE:     <2017-09-27 Wed 09:30>
    :END:
 *** DONE attach windows to Registry(\window, name or environment)
     CLOSED: [2017-09-27 Wed 22:30]
 *** review control spec adapter mechanism.
+** DONE make SynthPlayer:release use ~fadeTime
+   CLOSED: [2017-09-28 Thu 18:22]
+   :PROPERTIES:
+   :DATE:     <2017-09-06 Wed 14:20>
+   :END:
 
 * Operators
 
@@ -71,6 +74,8 @@ Here is a tabular overview of operator actions associated to different types of 
 |   14 | UGen       | =<+=       | Symbol     | Read input from Player's Output      |
 |   15 | Symbol     | =@=        | Symbol     | Store Bus in player parameter |
 #+TBLFM: $1=@-1 + 1::@2$1=1
+** DONE 10. Function =+>= Symbol: Play Synth
+   CLOSED: [2017-09-06 Wed 14:14]
 
 ** DONE 1. Symbol =+>= Symbol: Play Synthdef
    CLOSED: [2017-09-06 Wed 14:13]
@@ -78,6 +83,8 @@ Here is a tabular overview of operator actions associated to different types of 
 #+BEGIN_SRC javascript
 \default +> \player1; // play SynthDef named default in player named player1
 #+END_SRC
+** DONE 12. Event =+>= Symbol: Play Pattern in Player
+   CLOSED: [2017-09-06 Wed 14:13]
 
 ** DONE 2. Symbol =*>= Symbol: Link Players
    CLOSED: [2017-09-24 Sun 06:50]
@@ -101,15 +108,12 @@ To specify a custom output parameter for the reader player, use the =@= operator
    CLOSED: [2017-09-27 Wed 09:13]
 ** DONE 6. Symbol =<+= Symbol: Set bufnum
    CLOSED: [2017-09-27 Wed 22:46]
+** DONE 11. Function =*>= Symbol: Play Routine
+   CLOSED: [2017-09-29 Fri 12:28]
+** TODO 13. Event =*>= Symbol: Play Pattern in Player's Environment
 ** TODO 7. Symbol =<*= MIDI: Bind MIDIFunc
 ** TODO 8. Symbol =<*= OSC: Bind OSCFunc
 ** TODO 9. Symbol =<*= Widget: Bind GUI Widget
-** DONE 10. Function =+>= Symbol: Play Synth
-   CLOSED: [2017-09-06 Wed 14:14]
-** TODO 11. Function =*>= Symbol: Play Routine
-** DONE 12. Event =+>= Symbol: Play Pattern in Player
-   CLOSED: [2017-09-06 Wed 14:13]
-** TODO 13. Event =*>= Symbol: Play Pattern in Player's Environment
 ** TODO 14. UGen =<+= Symbol: Read input from Player's Output
 
 The code examples to the right illustrate the action of different types of objects sent to players, which are:

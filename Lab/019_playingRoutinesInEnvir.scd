@@ -27,23 +27,17 @@ currentEnvironment.playRoutine(\test, { loop {
 //:
 \test.e.playRoutine(\blah,
 	{
-			loop {
-		~freq = 400 rrand: 1000;
-		0.1.wait;
-
-		
-	}	
-}
+		loop {
+			~freq = 400 rrand: 1000;
+			0.1.wait;
+		}	
+	}
 )
 //:
 \test.e.playLoop(\blah, {
 	~freq = 400 rrand: 1000;
 	0.5.wait;
 })
-//:
-\default.play;
-//:
-\default +> \default;
 //:
 { SinOsc.ar(\freq.kr(400) * [1, 1.2], 0, 0.1) } +> \default;
 {

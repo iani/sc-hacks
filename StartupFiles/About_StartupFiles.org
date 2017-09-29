@@ -1,0 +1,7 @@
+This folder contains a collection of code snippets useful for different tasks.
+
+Run this to add or remove any of these files to your startup setup.
+
+#+BEGIN_SRC sclang
+StartupFiles.gui;
+#+END_SRC

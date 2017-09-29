@@ -41,9 +41,7 @@
 		// if playing, stop. If not playing start.
 		//	play in player named by receiver.
 		//	Use source as source, if available. 
-		var player;
-		player = this.p(eventName);
-		if (player.isPlaying) { player.stop} { player.push.play(source) };
+		this.p(eventName).toggle(source);
 	}
 
 	toggleBuf { | bufferName, eventName |
@@ -74,6 +72,9 @@
 	pp { | eventName | ^this.p(eventName).sourcePlayer }
 	ppp { | eventName | ^this.p(eventName).process }
 	stop { | eventName | ^this.p(eventName).stop }
+
+	playRoutine { | key, func | ^this.e.playRoutine(key, func)}
+	playLoop { | key, func | ^this.e.playLoop(key, func)}
 	
 	copyAudio { | reader, numChans = 1, outParam = \out, inParam = \in |
 		/* Connect writer with reader via an intermediate player which copies 
@@ -167,9 +168,18 @@
 		^player.asPlayer(envir).play(this); // accept non-symbol player arg	
 	}
 
-	*> { | player, envir |
-		// play function as routine
+	*> { | key, envir |
+		// play function as routine. Note different argumnent+adverb convention:
+		// name: name where the routine will be stored.
+		// envir: The (name of the) envir to play the routine in. If nil, defaults to currentEnvir.
+		(envir ? currentEnvironment).playRoutine(key, this);
+	}
 
+	**> { | key, envir |
+		// play function as routine. Note different argumnent+adverb convention:
+		// name: name where the routine will be stored.
+		// envir: The (name of the) envir to play the routine in. If nil, defaults to currentEnvir.
+		(envir ? currentEnvironment).playLoop(key, this);
 	}
 
 
