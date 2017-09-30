@@ -134,6 +134,8 @@ Event.parentEvents.default.eventTypes [\envEvent] = #{|server|
 	}
 };
 //:
+\default +> \default;
+//:
 EventPattern ((type: \envEvent, dur: 0.1, freq: Pwhite (1000, 2000, inf), envir: currentEnvironment)).play;
 //:
 \window.vlayout (
