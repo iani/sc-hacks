@@ -89,6 +89,10 @@ PersistentBusProxy(\io, \out, 2).getBus;
 { In.ar(\in.kr, \stereoWriterTest.e.getAudioBus(\out).numChannels) } +> \io.persist;
 { WhiteNoise.ar(0.1) } +> \stereoWriterTest.persist;
 { Ringz.ar(In.ar(\in.kr), LFNoise0.kr(5).range(400, 2000), 0.5, 0.1) } +> \stereoReaderTest.persist;
+//: HELLO, SPARROW...
+{ Ringz.ar(In.ar(\in.kr), LFNoise1.kr(15).range(1400, 12000), 0.5, 0.1) } +> \stereoReaderTest.persist;
+{ WhiteNoise.ar(Decay.kr(Dust.kr(2), 0.1, 0.1)) } +> \stereoWriterTest.persist;
+
 //: Retrying the above in one block of code: Perhaps defer is necessary for starting the synths
 // Splitting this so that the writer and reader are started at any other later point is also ok.
 \stereoWriterTest.e.addAudioBus(\out, \io.e.getAudioBus(\in, 2));

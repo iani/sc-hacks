@@ -8,3 +8,84 @@ This is more compact than writing routine loops to set environment vars.
 */
 
 //: This must be done at StartUp to initialize the envEvent event type.
+//:
+\default +> \default;
+//:
+EventPattern ((type: \envEvent, dur: 0.1, freq: Pwhite (1000, 2000, inf), envir: currentEnvironment)).play;
+//: Trying to package this to implement as method in *> operator
+
+\default +> \default;
+//:
+(dur: 0.1, freq: Pwhite (1000, 2000, inf)) *>.default \freq;
+//: Problem: Random retriggering of synths happens when we add this?
+(dur: 0.1, amp: Pn (Pseries (0.1, 0.01, 20), inf)) *>.default \amp;
+//: DEBUGGING:
+\default +> \default;
+//:
+(dur: 0.1, degree: Pn (Pseries (1, 1, 10), inf)) *>.default \freq;
+//:
+(dur: 0.01, degree: Pbrown (1, 10, 1)) *>.default \freq;
+//: Retrying after the debugging:
+\default  +> \default;
+//:
+(dur: 0.5, degree: Pn (Pseries (1, 1, 10), inf)) *>.default \freq;
+//:
+(dur: 2, amp: Pwhite(0.01, 0.9)) *>.default \amp;
+//: Redoing again: Player should implement playEnvEvent.
+(\freq p: \default).inspect;
+//:
+(\freq p: currentEnvironment).inspect;
+//:
+(\freq p: currentEnvironment).envir.name.class;
+//:
+currentEnvironment.name;
+//: Debugging p method for symbols:
+\player p: \environment;
+//:
+\player.p;
+//:
+\environment.e;
+//:
+\environment.e.name;
+//:
+\environment.e.players[\player];
+//:
+\environment.e.players[\player].name;
+//:
+\environment.e.players[\player].envir;
+//:
+\environment.e.players[\player].envir.name;
+//:
+\environment.e.players[\player].envir.name.class;
+//:
+currentEnvironment;
+//:
+currentEnvironment.name;
+//:
+currentEnvironment.name.class;
+//: Preparing playEnvEvent
+\player.p(\environment).play({ WhiteNoise.ar(0.1) });
+//:
+\player.p(\environment).play({ SinOsc.ar(400, 0, 0.1) });
+//:
+\player.p(\environment).play((dur: 0.1));
+//:
+\player.p(\environment).play(\default);
+//:
+\freqPlayer.p(\environment).playEnvEvent((dur: 0.1, freq: Pwhite(400, 4000)));
+//:
+\freqPlayer.p(\environment).playEnvEvent((dur: 0.15, freq: Pbrown(400, 4000, 10)));
+//:
+\ampPlayer.p(\environment).playEnvEvent((dur: 0.01, amp: Pbrown(0.0, 0.4, 0.05)));
+//: Conclusion: Prepare *> method code. Prototype:
+// Event *>.envir playerName // translates to: 
+// playerName.p(envir ? currentEnvironment).playEnvEvent(this)
+// ================================================================
+// Redoing with p message:
+\default +> \default;
+//:
+(dur: 0.01, freq: Pbrown(400, 1000, 50)) *>.default \freqPlayer;
+//:
+(dur: 0.5, amp: Pseq([0.1, 0.5], inf)) *>.default \ampPlayer;
+
+

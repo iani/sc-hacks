@@ -75,6 +75,7 @@
 
 	playRoutine { | key, func | ^this.e.playRoutine(key, func)}
 	playLoop { | key, func | ^this.e.playLoop(key, func)}
+	playEnvEvent { | key, func | ^this.e.playEnvEvent(key, func)}
 	
 	copyAudio { | reader, numChans = 1, outParam = \out, inParam = \in |
 		/* Connect writer with reader via an intermediate player which copies 
@@ -189,6 +190,13 @@
 	+> { | player, envir |
 		// play Event as PatternPlayer
 		^player.asPlayer(envir).play(this); // accept non-symbol player arg	
+	}
+
+	*> { | playerName, envir |
+		// play Event as PatternPlayer of type \envEvent;
+		// playerName: name where the PatternPalayer will be stored.
+		// envir: The (name of the) envir to play the routine in. If nil, defaults to currentEnvir.
+		playerName.p(envir ? currentEnvironment).playEnvEvent(this)
 	}
 	p {
 		^EventPattern(this).play;

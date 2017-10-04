@@ -85,6 +85,24 @@ Decision table for playSource method according to types of receiver and argument
 Player {
 	var <envir, <name, <sourcePlayer;
 
+		*initClass {
+		// Add custom event type to Event class, to work with playEnvEvent
+		Class.initClassTree(Event);
+		Event.parentEvents.default.eventTypes [\envEvent] = #{|server|
+			
+			var envir;
+			~freq = ~detunedFreq.value;
+
+			// msgFunc gets the synth's control values from the Event
+			~amp = ~amp.value;
+			~sustain = ~sustain.value;
+			envir = ~envir;
+			~getMsgFunc.valueEnvir.valueEnvir;
+			currentEnvironment['_keys_'] do: { | key |
+				envir[key] = currentEnvironment[key].next;
+			};
+		};
+	}
 	*all { // return all Player instances
 		^Nevent.all.collect({|e| e.players.values.asArray}).flat;
 	}
@@ -110,6 +128,20 @@ Player {
 		sourcePlayer = sourcePlayer.playSource(this, source);
 	}
 
+	playEnvEvent { | event |
+		/*  Play event in a different way than a standard EventPattern:
+			Prepare event to be played by changing keys in envir
+			instead of creating its own synth events. */
+		var keys;
+		keys = event.keys.asArray;
+		// provide freq if it is deduced from other keys via default event playing functions:
+		if (keys includes: \degree or: { keys includes: \note}) { keys add: \freq };
+		event.put('_keys_', keys); // only these are updated in environment when playing.
+		event.put(\type, \envEvent); // tell the event to play as envEvent.
+		event.put(\envir, envir); // give access to self whne playing.
+		this.play(event);
+	}
+	
 	map { | param, index |
 		// if sourcePlayer is a SynthPlayer and is playing, then
 		// map param to bus of index.

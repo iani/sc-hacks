@@ -15,7 +15,7 @@ Nevent : EnvironmentRedirect {
 	}
 	
 	*initClass {
-		StartUp add: { \default.asPlayer } // pushes \default to current environment
+		StartUp add: { this.new (\default, true) } // pushes \default to current environment
 	}
 	
 	*play { | envirName, playerName, source, doPush = true |
@@ -181,4 +181,5 @@ Nevent : EnvironmentRedirect {
 	playLoop { | key, func |
 		this.playRoutine(key, { func.loop })
 	}
+
 }

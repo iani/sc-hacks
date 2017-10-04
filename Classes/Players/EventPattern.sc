@@ -26,7 +26,6 @@ EventPattern : Pattern {
 	put { | key, value |
 		event[key] = value
 	}
- 
 }
 
 EventStream : Stream {
