@@ -56,12 +56,20 @@ Registry {
 	}
 }
 
-/* // NOTE: Remove this method???? !!!!
-+ Function {
+// Use Registry to add events as custom variables to any object:
 
-	at { | ... path |
-		^Registry(*(path add: this))
-	}
-	
++ Object {
+	// Return object stored at varName, this, key, or nil if not found
+	at_ { | varName, key | ^Registry.at(varName, this, key) }
+
+	// Store object stored at varName, this, key, 
+	put_ { | varName, key, object | Registry.put(varName, this, key, object) }
+
+	// Return object stored at varName, this, key.
+	// If not found, create new object with found and store it, and return it.
+	get_ { | varName, key, func | ^Registry(varName, this, key, func) }
+
+	// Run objectClosed on stored object.  This releases all Notification connections of the object,
+	// And removes it from Registry at varName, this, key. 
+	free_ { | varName, key, func | Registry.at(varName, this, key).objectClosed }
 }
-*/

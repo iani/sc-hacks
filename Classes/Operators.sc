@@ -152,11 +152,6 @@
 		argument.setParameter(this, envir);
 	}
 
-	<* { | player, envir |
-		// play function as routine
-
-		}
-
 	@ { | param, numChannels = 1 |
 		// Create PersistentBusProxy. Useful for linking enirs with busses.
 		^PersistentBusProxy(this, param, numChannels);

@@ -1,4 +1,31 @@
 ROADMAP  6 Sep 2017 14:19
+* Implementation notes
+  :PROPERTIES:
+  :DATE:     <2017-10-05 Thu 17:31>
+  :END:
+
+Here notes about considerations made during implementation.
+** Use Registry to store additional Nevent data items?
+   :PROPERTIES:
+   :DATE:     <2017-10-05 Thu 17:33>
+   :END:
+
+Instead of adding more instance variables to Nevent, use Registry to access additional objects attached to each Nevent instance.
+
+Currently Nevent has the following 5 instance variables:
+
+#+BEGIN_SRC sclang
+	var <name, <players, busses, <writers, routines;
+#+END_SRC
+
+Of the above, only name is required, for printing.  =players=, =busses=, =writers=, =routines= could be implemented through access methods in a similar way as outlined in method =Object:window=.  At this stage, these variables will be left as they have been coded. However several new state-items are planned, which will be implemented with methods using =Registry=:
+
+- =spec= ControlSpecs or similar specs attached to a =Nevent= instance.
+- =midi= MIDIFuncs attached to a =Nevent= instance.
+- =osc= OSCFuncs attached to a =Nevent= instance.
+
+At a later revision of the library, the 4 instance variables of =Nevent=: =players=, =busses=, =writers=, =routines= may be gradually migrated to methods using =Registry=.
+
 * General TODOs
   :PROPERTIES:
   :DATE:     <2017-09-06 Wed 14:20>
@@ -27,9 +54,12 @@ ROADMAP  6 Sep 2017 14:19
    :DATE:     <2017-09-06 Wed 14:20>
    :END:
 
-* Operators
+* Operator TODOs
+  :PROPERTIES:
+  :DATE:     <2017-10-05 Thu 18:04>
+  :END:
 
-** Operator Overview
+** Operator Design Draft
 
 : Examples of 4 operator types in sc-hacks
 
@@ -112,6 +142,11 @@ To specify a custom output parameter for the reader player, use the =@= operator
    CLOSED: [2017-09-29 Fri 12:28]
 ** DONE 10. Event =*>= Symbol: Play Pattern in Player's Environment
    CLOSED: [2017-10-04 Wed 17:19]
+** TODO Symbol =<*= ControlSpec: Bind ControlSpec to parameter in Environment
+   :PROPERTIES:
+   :DATE:     <2017-10-05 Thu 18:32>
+   :END:
+
 ** TODO 7. Symbol =<*= MIDI: Bind MIDIFunc
 ** TODO 8. Symbol =<*= OSC: Bind OSCFunc
 ** TODO 9. Symbol =<*= Widget: Bind GUI Widget

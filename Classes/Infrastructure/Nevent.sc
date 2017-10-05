@@ -52,7 +52,7 @@ Nevent : EnvironmentRedirect {
 	}
 
 	maybePush { | doPush = false |
-		if (doPush and: { currentEnvironment !== this}) { this.push };
+		if (doPush) { this.push };
 	}
 
 	push { // Avoid pushing if already current.
