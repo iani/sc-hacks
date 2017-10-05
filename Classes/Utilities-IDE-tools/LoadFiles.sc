@@ -76,10 +76,13 @@ LoadFiles {
 				ListView().items_(this.all)
 				.keyDownAction_({ | view, char, mod, key |
 					switch (key,
+						// Delete / backspace key:
 						127, { this.remove(this.all[view.value]) },
+						// Enter key
 						13, { this.performEnterAction(this.all [view.value]) },
+						// Space key
 						32, { this.toggle(this.all [view.value]) },
-						0, {},
+						0, {}, // cursor keys: IGNORE
 						{ key.postln }
 					)
 				})

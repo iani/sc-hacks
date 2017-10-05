@@ -74,19 +74,19 @@ Here is a tabular overview of operator actions associated to different types of 
 |   14 | UGen       | =<+=       | Symbol     | Read input from Player's Output      |
 |   15 | Symbol     | =@=        | Symbol     | Store Bus in player parameter |
 #+TBLFM: $1=@-1 + 1::@2$1=1
-** DONE 10. Function =+>= Symbol: Play Synth
+** DONE 1. Function =+>= Symbol: Play Synth
    CLOSED: [2017-09-06 Wed 14:14]
 
-** DONE 1. Symbol =+>= Symbol: Play Synthdef
+** DONE 2. Symbol =+>= Symbol: Play Synthdef
    CLOSED: [2017-09-06 Wed 14:13]
 
 #+BEGIN_SRC javascript
 \default +> \player1; // play SynthDef named default in player named player1
 #+END_SRC
-** DONE 12. Event =+>= Symbol: Play Pattern in Player
+** DONE 3. Event =+>= Symbol: Play Pattern in Player
    CLOSED: [2017-09-06 Wed 14:13]
 
-** DONE 2. Symbol =*>= Symbol: Link Players
+** DONE 4. Symbol =*>= Symbol: Link Players
    CLOSED: [2017-09-24 Sun 06:50]
 
 #+BEGIN_SRC javascript
@@ -100,17 +100,18 @@ Adverb specifies custom input parameter for the argument player.
 
 To specify a custom output parameter for the reader player, use the =@= operator:
 
-** DONE 3. Symbol =<+= Number: Set parameter
+** DONE 5. Symbol =<+= Number: Set parameter
    CLOSED: [2017-09-27 Wed 09:12]
-** DONE 4. Symbol =<+= Function: Map parameter
+** DONE 6. Symbol =<+= Function: Map parameter
    CLOSED: [2017-09-27 Wed 09:13]
-** DONE 5. Symbol =<+= Env: Map parameter
+** DONE 7. Symbol =<+= Env: Map parameter
    CLOSED: [2017-09-27 Wed 09:13]
-** DONE 6. Symbol =<+= Symbol: Set bufnum
+** DONE 8. Symbol =<+= Symbol: Set bufnum
    CLOSED: [2017-09-27 Wed 22:46]
-** DONE 11. Function =*>= Symbol: Play Routine
+** DONE 9. Function =*>= Symbol: Play Routine
    CLOSED: [2017-09-29 Fri 12:28]
-** TODO 13. Event =*>= Symbol: Play Pattern in Player's Environment
+** DONE 10. Event =*>= Symbol: Play Pattern in Player's Environment
+   CLOSED: [2017-10-04 Wed 17:19]
 ** TODO 7. Symbol =<*= MIDI: Bind MIDIFunc
 ** TODO 8. Symbol =<*= OSC: Bind OSCFunc
 ** TODO 9. Symbol =<*= Widget: Bind GUI Widget
