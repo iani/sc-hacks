@@ -152,6 +152,12 @@
 		argument.setParameter(this, envir);
 	}
 
+	/* // ????????????????
+	<* { | argument, envir |
+		//		argument.
+	}
+	*/
+
 	@ { | param, numChannels = 1 |
 		// Create PersistentBusProxy. Useful for linking enirs with busses.
 		^PersistentBusProxy(this, param, numChannels);
@@ -224,4 +230,8 @@
 		// receiver as writer / argument as reader
 		^this addReader: envirOrProxy.asPeristentBusProxy(inParam);
 	}
+}
+
++ Nil {
+	e { ^currentEnvironment }
 }

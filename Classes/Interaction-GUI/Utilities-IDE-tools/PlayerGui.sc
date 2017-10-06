@@ -1,4 +1,10 @@
 // 28 Sep 2017 17:15
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+// INCOMPLETE !!!!!!!!!!!!!!!!
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 /* List all players.
 Space toggle-plays the selected player.
 Enter pushes the player's envir.

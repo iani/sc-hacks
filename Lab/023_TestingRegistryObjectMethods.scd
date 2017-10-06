@@ -31,3 +31,28 @@ Library.at(\primes, 1000, \bigtest);
 1000.put_(\primes, \bigtest, "ERROR-CHANGED");
 //:
 1000.at_(\primes, \bigtest);
+// ================================================================
+//:
+\default.play;
+~windowFunc = {
+	var w, spec;
+	spec= \freq.asSpec;
+	w = Window(format ("try closing me! %", ~name), Rect(100.rand, 300.rand, 100 + 200.rand, 50 + 300.rand));
+	w.view.layout = VLayout(
+		Slider().orientation_(\horizontal)
+		.action_({ | me |
+			~freq = spec.map(me.value);
+		})
+		.value_(spec.unmap(~freq))
+	);
+	w;
+};
+//:
+{
+	loop {
+		\default.e.get_(\windows, ~name = \window1, ~windowFunc).front;
+		2.wait;
+		\default.e.get_(\windows, ~name = \window2, ~windowFunc).front;
+		2.wait;
+	}
+}.fork(AppClock)

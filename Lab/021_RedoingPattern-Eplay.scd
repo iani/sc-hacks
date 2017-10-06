@@ -87,5 +87,10 @@ currentEnvironment.name.class;
 (dur: 0.01, freq: Pbrown(400, 1000, 50)) *>.default \freqPlayer;
 //:
 (dur: 0.5, amp: Pseq([0.1, 0.5], inf)) *>.default \ampPlayer;
+\default +> \default2;
+//:
+(dur: 0.01, freq: Pbrown(400, 1000, 50)) *>.default2 \freqPlayer;
+//:
+(dur: 0.5, amp: Pseq([0.1, 0.5], inf)) *>.default2 \ampPlayer;
 
 

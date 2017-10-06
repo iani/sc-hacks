@@ -21,7 +21,8 @@
 	// The mapping is done through code in dispatcher of Nevent and in SynthPlayer.
 	setParameter { | paramName, envir |
 		var bus, synth;
-		(if(envir.isNil) { envir = currentEnvironment } { envir = envir.e });
+		// (if(envir.isNil) { envir = currentEnvironment } { envir = envir.e });
+		envir = envir.e; // see Nil:e, Symbol:e
 		bus = envir.at(paramName);
 		if (bus isKindOf: Bus) {
 			// this releases previous synths.

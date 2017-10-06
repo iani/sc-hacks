@@ -15,7 +15,10 @@ Nevent : EnvironmentRedirect {
 	}
 	
 	*initClass {
-		StartUp add: { this.new (\default, true) } // pushes \default to current environment
+		StartUp add: {
+			ControlSpec.makeMoreDefaults; // method defined in sc-hacks
+			this.new (\default, true); // pushes \default to current environment
+		}; 
 	}
 	
 	*play { | envirName, playerName, source, doPush = true |
@@ -56,7 +59,12 @@ Nevent : EnvironmentRedirect {
 	}
 
 	push { // Avoid pushing if already current.
-		if (currentEnvironment === this) {} { super.push }
+		if (currentEnvironment === this) {} {
+			// let listeners switch listening from old to new environment:
+			Nevent.changed(\oldEnvir, currentEnvironment); // GUIs remove old envir
+			super.push;
+			Nevent.changed(\newEnvir, this); // dependent GUIs start listening to new envir updates
+		}
 	}
 
 	player { | playerName |
@@ -135,7 +143,7 @@ Nevent : EnvironmentRedirect {
 
 	allWriters { | set |
 		// Collect yourself, and all your writers, and all your writers writers etc. into set.
-		//	eturn set.
+		// Return set.
 		writers do: _.allWriters(set);
 		^set add: this;
 	}
@@ -152,8 +160,6 @@ Nevent : EnvironmentRedirect {
 	setGroup { | orderedGroup |
 		this[\target] = orderedGroup;
 		players do: _.setTarget(orderedGroup);
-		// "INCOMPLETE!:".postln;
-		// postf("% does not know how to inform that it has set group to %\n", this, orderedGroup);
 	}
 
 	atFail { | key, action |
@@ -173,7 +179,6 @@ Nevent : EnvironmentRedirect {
 		var oldRoutine;
 		oldRoutine = this.routine(key);
 		oldRoutine !? { oldRoutine.stop };
-		// this.routines[key] = envir.use({ func.fork });
 		this.push;
 		this.routines[key] = func.fork;
 	}
@@ -182,4 +187,29 @@ Nevent : EnvironmentRedirect {
 		this.playRoutine(key, { func.loop })
 	}
 
+
+	putSpec { | param, prototype |
+		this.put_(\specs, param, prototype.asSpec);
+	}
+
+	getSpec { | param |
+		^this.at_(\specs, param) ?? {
+			// If none is found, a new one is stored for defaults here.
+			// But this can be overwritten at any time later, by:
+			// ControSpec.put_(\specs, param, <new spec>);
+			ControlSpec.get_(\specs, param, {
+				param.asSpec ?? { \unipolar.asSpec }
+			}) 
+		};
+	}
+
+	toggle {
+		// If any players are playing, stop them.
+		// If no players are playing, play all players.
+		if (players.select(_.isPlaying).size == 0) {
+			players do: _.play;
+		}{
+			players do: _.stop;
+		}
+	}
 }

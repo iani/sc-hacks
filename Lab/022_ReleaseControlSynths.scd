@@ -21,3 +21,10 @@ Testing before implementing:
 ~freq = 1400;
 //:
 \default.stop;
+// ================================================================
+//: Test with routine. Note that the number of synths remains constant.
+\default.play;
+//:* This is the loop. Run this snippet with C-M-x
+\freq <+ { [LFNoise0, LFNoise1].choose.kr(1.0 exprand: 20.0).range(100 + 200.rand, 350 + 1000.rand) };
+2.wait;
+//:

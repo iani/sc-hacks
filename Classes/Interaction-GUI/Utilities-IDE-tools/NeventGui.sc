@@ -1,0 +1,103 @@
+//  6 Oct 2017 21:04
+
+/* Display current environment, and its Event's contents.
+*/
+
+NeventGui {
+	classvar <currentEnvironmentDisplay;
+	classvar <environmentListView, <environmentList;
+	classvar <selectedEnvironmentDisplay;
+	classvar <selectedEnvironment;
+	classvar <currentEnvirAction, <updateUserEnvirAction;
+
+	*initClass {
+		StartUp add: {
+			{ this.gui } defer: 0.1;
+		}
+	}
+	*gui {
+		this.window({ | w |
+			w.bounds = Rect(100, 400, 400, 600);
+			w.view.layout = VLayout(
+				StaticText().string_("all environments: (enter: push, space: toggle players)"),
+				environmentListView = ListView()
+				.keyDownAction_({ | view, char, mod, key |
+					switch (key,
+						// Enter key
+						13, { this.pushSelectedEnvir; },
+						// Space key
+						32, { this.toggleSelectedEnvir; },
+						0, {}, // cursor keys: IGNORE
+						{ key.postln }
+					)
+				}),
+				TextField().string_("user selected environment:"),
+				selectedEnvironmentDisplay = StaticText()
+				.background_(Color(0.9, 0.9, 1.0)),
+				TextField().string_("currentEnvironment:"),
+				currentEnvironmentDisplay = StaticText().string_(currentEnvironment.asString)
+				.background_(Color(1.0, 0.9, 0.9))
+			);
+			this.initUserEnvinDisplay;
+			this.initCurrentEnvirDisplay;
+		})
+	}
+
+	*initUserEnvinDisplay {
+		updateUserEnvirAction = {
+			{ selectedEnvironmentDisplay.string = selectedEnvironment.asString }.defer;
+		};
+		environmentListView.action = { | me |
+			selectedEnvironment removeDependant: updateUserEnvirAction;
+			selectedEnvironment = environmentList[me.value];
+			selectedEnvironment addDependant: updateUserEnvirAction;
+			updateUserEnvirAction.value;
+		};
+		environmentListView.addNotifier(Nevent, \newEnvir, { | environment |
+			this.updateEnvironmentListView(environment);
+		});
+		this.updateEnvironmentListView;
+	}
+
+	*initCurrentEnvirDisplay {
+		currentEnvirAction = {
+			{ currentEnvironmentDisplay.string = currentEnvironment.asString; }.defer;
+		};
+		currentEnvironment addDependant: currentEnvirAction;
+		
+		currentEnvironmentDisplay.addNotifier(Nevent, \oldEnvir, { | environment |
+			environment removeDependant: currentEnvirAction;
+		});
+		currentEnvironmentDisplay.addNotifier(Nevent, \newEnvir, { | environment |				
+			{this.update}.defer; // allow updates from SystemAppClock routines
+			environment addDependant: currentEnvirAction;
+		})
+	}
+
+	*updateEnvironmentListView {
+		var envir;
+		envir = selectedEnvironment ? currentEnvironment;
+		{
+			environmentList = Nevent.all.sort({ | a, b | a.name < b.name });
+			environmentListView.items = environmentList collect: _.name;
+			postf("items: %\nfound: %\n",
+				environmentListView.items,
+				environmentListView.items indexOf: envir.name;
+			);
+			environmentListView.valueAction = environmentListView.items indexOf: envir.name;
+		}.defer;
+	}
+
+	*update {
+		// display full envir when it chages. defer: allow updates from SystemAppClock routines
+		{currentEnvironmentDisplay.string = currentEnvironment.asString;}.defer;
+	}
+
+	*pushSelectedEnvir {
+		selectedEnvironment.push;
+	}
+
+	*toggleSelectedEnvir {
+		selectedEnvironment.toggle;
+	}
+}
