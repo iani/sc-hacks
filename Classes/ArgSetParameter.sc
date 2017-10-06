@@ -32,12 +32,17 @@
 		synth = this.play(outbus: bus.index);
 		synth.onStart(this, { // map the bus only after the source has started.
 			// The mapping is done through code in dispatcher of Nevent and in SynthPlayer.
-			envir.put(paramName, bus);			
+			envir.put(paramName, bus);
+			synth.addNotifier(bus, \newSource, {
+				synth.free;
+				synth.objectClosed;
+			});
+			synth.addNotifier(envir, paramName, {
+				synth.free;
+				synth.objectClosed;
+			});
 		});
-		synth.addNotifier(bus, \newSource, {
-			synth.free;
-			synth.objectClosed;
-		});
+
 		^bus;
 	}
 }
