@@ -6,7 +6,11 @@ MIDI {
 	var <type, <chan, <num, <srcID, <func;
 
 	*new { | type = \cc, chan = 0, num = 0, srcID, func |
-		^this.newCopyArgs(type, chan, num, srcID, func);
+		^this.newCopyArgs(type, chan, num, srcID, func ?? { | ... args |
+			postf("empty midi func: type: %, chan: %, num: %, received: %\n",
+				type, chan, num, args
+			);
+		});
 	}
 
 	setParameter { | paramName, envir |
@@ -14,14 +18,10 @@ MIDI {
 		^envir.e.setMIDIparam(paramName, this);
 	}
 
-	asMIDIFunc { | envir, paramName, spec |
+	asMIDIFunc { | argFunc |
 		// Create MIDIFunc setting paramName in envir.
 		// Use spec to map input midi values to target values
-		if (func.isNil) {
-			func = { | ... args |
-				args.postln;
-			};
-		};
+		argFunc !? { func = argFunc };
 		^MIDIFunc.perform(type, func, num, chan, srcID);
 	}
 }
@@ -30,10 +30,18 @@ MIDI {
 	setMIDIparam { | paramName, midi |
 		// Limitation of this implementation:
 		// Only one MIDIFunc allowed per parameter name and Nevent.
-		var midiFunc;
-		midiFunc = this.at_(\midi, paramName);
-		midiFunc !? { midiFunc.free };
-		this.put_(\midi, paramName, midi.asMIDIFunc);
+		var spec;
+		this.at_(\midi, paramName).free;
+		spec = this.getSpec(paramName);
+		this.put_(\midi, paramName, midi asMIDIFunc: { | val |
+			this.put(paramName, spec.map(val / 127));			
+		});
 	}
 	
+}
+
++ Integer {
+	cc { | chan = 0, srcID, func |
+		^MIDI(\cc, chan, this, srcID, func);
+	}
 }

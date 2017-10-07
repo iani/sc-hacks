@@ -26,8 +26,10 @@ LoadFiles {
 		if (this.all.containsString(path)) {
 			^postf("% skipped loading existing:\n %\n", this, path);			
 		};
+		postf("% adding file: \n%\n", this, path);
 		this.all = this.all add: path;
 		this.save;
+		this.changed(\all);
 		if (loadNow) { this load: path };
 	}
 
