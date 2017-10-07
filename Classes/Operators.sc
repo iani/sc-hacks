@@ -198,7 +198,7 @@
 		// playerName: name where the PatternPalayer will be stored.
 		// envir: The (name of the) envir to play the routine in. If nil, defaults to currentEnvir.
 		//		playerName.p(envir.e).playEnvEvent(this)
-				playerName.p(envir ? currentEnvironment).playEnvEvent(this)
+		playerName.p(envir.e.name).playEnvEvent(this)
 	}
 	p {
 		^EventPattern(this).play;
