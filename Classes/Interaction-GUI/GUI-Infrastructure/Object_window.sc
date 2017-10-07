@@ -31,7 +31,7 @@
 			window.view.mouseUpAction_({ | topview |
 				Registry.put(\windowRects, this, key, topview.findWindow.bounds);
 			});
-			initFunc.(window);
+			initFunc.(window, this);
 			window;
 		}).front;	
 	}

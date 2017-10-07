@@ -135,7 +135,20 @@ Player {
 		var keys;
 		keys = event.keys.asArray;
 		// provide freq if it is deduced from other keys via default event playing functions:
-		if (keys includes: \degree or: { keys includes: \note}) { keys add: \freq };
+		
+		// if (keys includes: \degree or: { keys includes: \note}) { keys add: \freq };
+		// also erase freq or note if degree or note are provided - to reset freq to original default func.
+		
+		if (keys includes: \degree) {
+			event.put(\freq, nil);
+			event.put(\note, nil);
+			keys add: \freq;
+		};
+		if (keys includes: \note) {
+			event.put(\freq, nil);
+			keys add: \freq;
+		};
+		
 		event.put('_keys_', keys); // only these are updated in environment when playing.
 		event.put(\type, \envEvent); // tell the event to play as envEvent.
 		event.put(\envir, envir); // give access to self whne playing.

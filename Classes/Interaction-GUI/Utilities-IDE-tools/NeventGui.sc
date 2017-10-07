@@ -4,46 +4,50 @@
 */
 
 NeventGui {
-	classvar <currentEnvironmentDisplay;
-	classvar <environmentListView, <environmentList;
-	classvar <selectedEnvironmentDisplay;
-	classvar <selectedEnvironment;
-	classvar <currentEnvirAction, <updateUserEnvirAction;
+	var <currentEnvironmentDisplay;
+	var <environmentListView, <environmentList;
+	var <selectedEnvironmentDisplay;
+	var <selectedEnvironment;
+	var <currentEnvirAction, <updateUserEnvirAction;
 
 	*initClass {
 		StartUp add: {
-			{ this.gui } defer: 0.1;
+			// { this.gui } defer: 0.1;
 		}
 	}
 	*gui {
-		this.window({ | w |
-			w.bounds = Rect(100, 400, 400, 600);
-			w.view.layout = VLayout(
-				StaticText().string_("all environments: (enter: push, space: toggle players)"),
-				environmentListView = ListView()
-				.keyDownAction_({ | view, char, mod, key |
-					switch (key,
-						// Enter key
-						13, { this.pushSelectedEnvir; },
-						// Space key
-						32, { this.toggleSelectedEnvir; },
-						0, {}, // cursor keys: IGNORE
-						{ key.postln }
-					)
-				}),
-				TextField().string_("user selected environment:"),
-				selectedEnvironmentDisplay = StaticText()
-				.background_(Color(0.9, 0.9, 1.0)),
-				TextField().string_("currentEnvironment:"),
-				currentEnvironmentDisplay = StaticText().string_(currentEnvironment.asString)
-				.background_(Color(1.0, 0.9, 0.9))
-			);
-			this.initUserEnvinDisplay;
-			this.initCurrentEnvirDisplay;
-		})
+		this.get_(\guis, \default, {
+			this.new;
+		}).window({ | w, me | me initWindow: w})
 	}
 
-	*initUserEnvinDisplay {
+	initWindow { | w |
+		w.bounds = Rect(0, 400, 400, 600);
+		w.view.layout = VLayout(
+			StaticText().string_("all environments: (enter: push, space: toggle players)"),
+			environmentListView = ListView()
+			.keyDownAction_({ | view, char, mod, key |
+				switch (key,
+					// Enter key
+					13, { this.pushSelectedEnvir; },
+					// Space key
+					32, { this.toggleSelectedEnvir; },
+					0, {}, // cursor keys: IGNORE
+					{ key.postln }
+				)
+			}),
+			TextField().string_("user selected environment:"),
+			selectedEnvironmentDisplay = StaticText()
+			.background_(Color(0.9, 0.9, 1.0)),
+			TextField().string_("currentEnvironment:"),
+			currentEnvironmentDisplay = StaticText().string_(currentEnvironment.asString)
+			.background_(Color(1.0, 0.9, 0.9))
+		);
+		this.initUserEnvinDisplay;
+		this.initCurrentEnvirDisplay;
+	}
+
+	initUserEnvinDisplay {
 		updateUserEnvirAction = {
 			{ selectedEnvironmentDisplay.string = selectedEnvironment.asString }.defer;
 		};
@@ -59,7 +63,7 @@ NeventGui {
 		this.updateEnvironmentListView;
 	}
 
-	*initCurrentEnvirDisplay {
+	initCurrentEnvirDisplay {
 		currentEnvirAction = {
 			{ currentEnvironmentDisplay.string = currentEnvironment.asString; }.defer;
 		};
@@ -74,7 +78,7 @@ NeventGui {
 		})
 	}
 
-	*updateEnvironmentListView {
+	updateEnvironmentListView {
 		var envir;
 		envir = selectedEnvironment ? currentEnvironment;
 		{
@@ -88,16 +92,16 @@ NeventGui {
 		}.defer;
 	}
 
-	*update {
+	update {
 		// display full envir when it chages. defer: allow updates from SystemAppClock routines
 		{currentEnvironmentDisplay.string = currentEnvironment.asString;}.defer;
 	}
 
-	*pushSelectedEnvir {
+	pushSelectedEnvir {
 		selectedEnvironment.push;
 	}
 
-	*toggleSelectedEnvir {
+	toggleSelectedEnvir {
 		selectedEnvironment.toggle;
 	}
 }

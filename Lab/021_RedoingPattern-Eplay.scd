@@ -84,7 +84,11 @@ currentEnvironment.name.class;
 // Redoing with p message:
 \default +> \default;
 //:
-(dur: 0.01, freq: Pbrown(400, 1000, 50)) *>.default \freqPlayer;
+(dur: 0.01, freq: Pbrown(100, 1000, 50)) *>.default \freqPlayer;
+//:
+(dur: 0.05, degree: Pbrown(-20, 10, 15)) *>.default \freqPlayer;
+//:
+(dur: 0.01, freq: Pbrown(400, 1000, 50)) *> \freqPlayer;
 //:
 (dur: 0.5, amp: Pseq([0.1, 0.5], inf)) *>.default \ampPlayer;
 \default +> \default2;
