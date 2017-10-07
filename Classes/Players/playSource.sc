@@ -1,6 +1,4 @@
-/* 21 Aug 2017 02:00
-
-
+// 21 Aug 2017 02:00
 
 // TODO: Factor this out to other class
 /*

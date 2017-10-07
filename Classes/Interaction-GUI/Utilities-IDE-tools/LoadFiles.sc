@@ -22,13 +22,13 @@ LoadFiles {
 		this.all.writeArchive(this.archivePath);
 	}
 
-	*add { | path |
+	*add { | path, loadNow = false |
 		if (this.all.containsString(path)) {
 			^postf("% skipped loading existing:\n %\n", this, path);			
 		};
 		this.all = this.all add: path;
 		this.save;
-		this load: path;
+		if (loadNow) { this load: path };
 	}
 
 	*remove { | path |
@@ -120,6 +120,17 @@ StartupFiles : LoadFiles {
 AudioFiles : LoadFiles {
 	classvar <>all;
 	classvar buffers;
+
+	*previewAudio { | path |
+		// add+load buffer and play it immediately for preview
+		if (this.all.containsString(path)) {
+			this.buffers[path.asName].play;
+			^postf("% :\n %\n playing buffer which is already loaded!\n", this, path);			
+		};
+		this.all = this.all add: path;
+		this.save;
+		this.loadBuffer(path, true); // true: preview when loaded	
+	}
 	*archivePath {
 		^Platform.userAppSupportDir ++ "/AudioFiles.sctxar";
 	}
@@ -140,7 +151,7 @@ AudioFiles : LoadFiles {
 		};
 	}
 
-	*loadBuffer { | path |
+	*loadBuffer { | path, preview = false |
 		var name;
 		path.doIfExists(
 			{
@@ -149,6 +160,7 @@ AudioFiles : LoadFiles {
 					this.buffers[name] = b;
 					postf("Loaded %\n", b);
 					this.changed(\buffer, name, b);
+					if (preview) { b.play };
 				});
 			},{
 				postf("% could not find %\n", this, path);
