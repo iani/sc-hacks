@@ -2,69 +2,16 @@
 // Redo from scratch
 
 LoadFiles {
-	*initClass {
-		StartUp add: { this.allSubclasses do: _.loadFromArchive; };
+	var <all;
+
+	*new { | name = \default |
+		^Registry(this, name, { super.new });
 	}
 	
-	*loadFromArchive {
-		this.archivePath.doIfExists({ | path |
-			postf("% getting paths from %\n", this, path);
-			this.all = Object readArchive: path;
-			postf("% will load % files\n", this, this.all.size);
-		}, { | path |
-			postf("% could not find file to load paths:\n %\n", this, path);
-		});
-		// copy array because we will remove non-existing files from original.
-		this.all.copy do: this.load(_);
-	}
-
-	*save {
-		this.all.writeArchive(this.archivePath);
-	}
-
-	*add { | path, loadNow = false |
-		if (this.all.containsString(path)) {
-			^postf("% skipped loading existing:\n %\n", this, path);			
-		};
-		postf("% adding file: \n%\n", this, path);
-		this.all = this.all add: path;
-		this.save;
-		this.changed(\all);
-		if (loadNow) { this load: path };
-	}
-
-	*remove { | path |
-		this.all = this.all.removeUniqueString(path);
-		this.save;
-		this.freeAudio(path); // CodePlayer ignores this
-		this.changed(\all);
-	}
-
-	*freeAudio { /* AudioFiles adds code to free buffer here" */ }
-
-	*loadDialog {
-		Dialog.openPanel({ | paths |
-			paths do: this.add(_);
-		}, {
-			"cancelled".postln;
-		},
-			true
-		)
-	}
-
-	*load { | path |
-		path.doIfExists({
-			postf("% loading %\n", this, path);
-			this prLoad: path;
-		}, {
-			postf("% could not find %\n", this, path);
-			"removing file from paths".postln;
-			this remove: path;
-			this.changed(\all)
-		});
-	}
-
-	*gui {
+	*default { ^this.get_(\guis, \default, { this.new }) }
+	*gui { ^this.default.gui }
+	// TODO: Replace this method by separate implementations in subclasses?
+	gui {
 		this.window({ | w |
 			w.view.layout = VLayout(
 				HLayout(
@@ -89,71 +36,102 @@ LoadFiles {
 					)
 				})
 				.addNotifier(this, \all, { | notification |
-					notification.listener.items = this.all ? []
+					notification.listener.items = this.getItems;
 				})
 				.focus(true); // focus here, away from load button.
 			)
 		})
 	}
+	loadFromArchive {
+		this.archivePath.doIfExists({ | path |
+			postf("% getting paths from %\n", this, path);
+			all = Object readArchive: path;
+			postf("% read % files.\n", this, all.size);
+		}, { | path |
+			postf("% could not find file to load paths:\n %\n", this, path);
+		});
+		// copy array because we will remove non-existing files from original.
+		// all.copy do: this.load(_);
+	}
+
+	save { all.writeArchive(this.archivePath); }
+
+	add { | path, loadNow = false |
+		// Add path to the list of paths in all.
+		// If loadNow is true, then load the file of this path now.
+		if (all.containsString(path)) {
+			^postf("% skipped loading existing:\n %\n", this, path);			
+		};
+		postf("% adding file: \n%\n", this, path);
+		all = all add: path;
+		this.save;
+		this.changed(\all);
+		if (loadNow) { this load: path };
+	}
+
+	remove { | path |
+		all = all.removeUniqueString(path);
+		this.save;
+		this.changed(\all);
+	}
+
+	loadDialog {
+		Dialog.openPanel({ | paths |
+			paths do: this.add(_);
+		}, {
+			"cancelled".postln;
+		},  // allow multiple selection:
+			true
+		)
+	}
+
+	load { | path |
+		path.doIfExists({
+			postf("% loading %\n", this, path);
+			this prLoad: path;
+		}, {
+			postf("% could not find %\n", this, path);
+			"removing file from paths".postln;
+			this remove: path;
+		});
+	}
 
 	*toggle { /* only AudioFiles uses this */ }
+
+	*getItems {
+		^this.all ? [] collect: _.asName;
+	}
 }
 
 StartupFiles : LoadFiles {
 	classvar <>all;
 
-	*archivePath {
+	*initClass { StartUp add: { this.new.loadFromArchive.loadAll } }
+
+	archivePath {
 		^Platform.userAppSupportDir ++ "/StartupFiles.sctxar";
 	}
 
-	*prLoad { | path |
+	loadAll { all do: this.load(_) }
+
+	prLoad { | path |
+		postf("loading: %\n", path);
 		path.load;
-		this changed: \all;
+		// this changed: \all;
 	}
 
-	*actionString { ^"backspace: delete, enter: load file" }
+	actionString { ^"backspace: delete, enter: load file" }
 
-	*performEnterAction { | item |
-		postf("loading: %\n", item);
-		item.load; 
-	}
+	performEnterAction { | item | item.load }
 }
 
 AudioFiles : LoadFiles {
-	classvar <>all;
-	classvar buffers;
 
-	*previewAudio { | path |
-		// add+load buffer and play it immediately for preview
-		if (this.all.containsString(path)) {
-			this.buffers[path.asName].play;
-			^postf("% :\n %\n playing buffer which is already loaded!\n", this, path);			
-		};
-		this.all = this.all add: path;
-		this.save;
-		this.loadBuffer(path, true); // true: preview when loaded	
-	}
-	*archivePath {
-		^Platform.userAppSupportDir ++ "/AudioFiles.sctxar";
-	}
+	*initClass { StartUp add: { this.new.loadFromArchive.loadOnBoot } }
 
-	*buffers {
-		buffers ?? { buffers = () };
-		^buffers;
-	}
-
-	*prLoad { | path |
-		// Only load if server is already running.
-		if (Server.default.serverRunning) { this.loadBuffer(path) };
-	}
-
-	*initClass {
-		StartUp add: {
-			ServerBoot add: { this.all do: this.loadBuffer(_) }
-		};
-	}
-
-	*loadBuffer { | path, preview = false |
+	loadOnBoot { ServerBoot add: { this.loadAll } }
+	loadAll { all do: this.loadBuffer(_) }
+	loadBuffer { | path, preview = false |
 		var name;
 		path.doIfExists(
 			{
@@ -167,29 +145,50 @@ AudioFiles : LoadFiles {
 			},{
 				postf("% could not find %\n", this, path);
 				"Removing file from paths".postln;
-				this remove: path;
+				this remove: path; // ok if buffer does not exist.
 			}
 		);
-		this.changed(\all);
+		// this.changed(\all);
+	}
+	previewAudio { | path |
+		// add+load buffer and play it immediately for preview.
+		// This method can be refactored to use add (!?)
+		if (all.containsString(path)) {
+			this.buffers[path.asName].play;
+			^postf("% :\n %\n playing buffer which is already loaded!\n", this, path);			
+		};
+		this.all = this.all add: path;
+		this.save;
+		this.loadBuffer(path, true); // true: preview when loaded	
+	}
+	archivePath {
+		^Platform.userAppSupportDir ++ "/AudioFiles.sctxar";
 	}
 
-	*freeAudio { | path |
-		this.getBuffer(path).free;
+	buffers {
+		^Buffer.get_(\buffers, \default,{ () } ) ;
 	}
 
-	*getBuffer { | path |
-		^path.asName.b;
+	prLoad { | path |
+		// Only load if server is already running.
+		if (Server.default.serverRunning) { this.loadBuffer(path) };
 	}
-	*actionString { ^"backspace: delete, enter: set bufnum, space: toggle play" }
 
-	*performEnterAction { | item |
+	remove { | path |
+		super remove: path;
+		this.freeAudio(path); // ok if buffer does not exist.
+	}
+	
+	freeAudio { | path |  this.getBuffer(path).free } // ok if buffer does not exist.
+
+	getBuffer { | path | ^path.asName.b }
+	actionString { ^"backspace: delete, enter: set bufnum, space: toggle play" }
+
+	performEnterAction { | item |
 		currentEnvironment.put(\bufnum, item.asName.postln.b.bufnum.postln);
 	}
 
-	*toggle { | item |
-		item.asName.postln.toggleBuf; 
-	}
-	
+	toggle { | item | item.asName.postln.toggleBuf }
 }
 
 

@@ -22,8 +22,11 @@ MIDI {
 		// Create MIDIFunc setting paramName in envir.
 		// Use spec to map input midi values to target values
 		argFunc !? { func = argFunc };
-		^MIDIFunc.perform(type, func, num, chan, srcID);
+		//		^MIDIFunc.perform(type, func, num, chan, srcID); 
+		// This works also for touch, bend, and program MIDIFunc types:
+		^MIDIFunc(func, num, chan, type, srcID);
 	}
+	
 }
 
 + Nevent {
@@ -34,14 +37,19 @@ MIDI {
 		this.at_(\midi, paramName).free;
 		spec = this.getSpec(paramName);
 		this.put_(\midi, paramName, midi asMIDIFunc: { | val |
-			this.put(paramName, spec.map(val / 127));			
+			this.put(paramName, spec.map(val / 127));
 		});
 	}
 	
 }
 
 + Integer {
-	cc { | chan = 0, srcID, func |
-		^MIDI(\cc, chan, this, srcID, func);
-	}
+	cc { | chan = 0, srcID, func | ^MIDI(\control, chan, this, srcID, func) }
+	noteOn { | chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, this, srcID, func) }
+	noteOff { | chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, this, srcID, func) }
+	polytouch { | chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, this, srcID, func) }
+	touch { | chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, nil, srcID, func) }
+	bend { | chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, nil, srcID, func) }
+	program { | chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, nil, srcID, func) }
+	
 }
