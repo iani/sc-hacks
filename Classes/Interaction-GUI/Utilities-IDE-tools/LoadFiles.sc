@@ -98,8 +98,8 @@ LoadFiles {
 
 	*toggle { /* only AudioFiles uses this */ }
 
-	*getItems {
-		^this.all ? [] collect: _.asName;
+	getItems {
+		^all ? [] collect: _.asName;
 	}
 }
 
@@ -107,6 +107,76 @@ StartupFiles : LoadFiles {
 	classvar <>all;
 
 	*initClass { StartUp add: { this.new.loadFromArchive.loadAll } }
+
+	gui {
+		this.window({ | w |
+			var listview;
+			w.bounds = Rect(400, 0, 600, 400);
+			w.view.layout = VLayout(
+				HLayout(
+					listview = ListView().items_(this.getItems)
+					.keyDownAction_({ | view, char, mod, key |
+						switch (key,
+							// Delete / backspace key:
+							127, { this.remove(this.all[view.value]) },
+							// Enter key
+							13, { this.prLoad(this.all [view.value]) },
+							// Space key
+							32, { this.toggle(this.all [view.value]) },
+							0, {}, // cursor keys: IGNORE
+							{ key.postln }
+						)
+					})
+					.addNotifier(this, \all, { | notification |
+						notification.listener.items = this.getItems.postln;
+					})
+					.action_({ | me |
+						this.changed(\item, all[me.value]);
+					})
+					.focus(true), // focus here, away from load button.,
+					VLayout(
+						Button()
+						.states_([["load file"]])
+						.action_({ this.loadDialog })
+						.maxWidth_(90),
+						/*
+							Button()
+							.states_([["save"]])
+							.action_({ this.changed(\save) })
+							.maxWidth_(90),
+						*/
+						StaticText().string_(this.actionString)
+						.align_(\center)
+					)
+				),
+				StaticText()
+				// .background_(Color(0.5, 0.9, 1.0))
+				.font_(Font("Helvetica", 10, true))
+				.addNotifier(this, \item, { | item, notification |
+					notification.listener.string = item
+				})
+				.addNotifier(this, \save, { | notification |
+					this.changed(\saveItem, notification.listener.string)
+				}),
+				TextView().font_(Font("Monaco", 10))
+				.tabWidth_(20)
+				.mouseLeaveAction_({ this.changed(\save) })
+				.addNotifier(this, \item, { | item, notification |
+					File.readFunc(item, { | string |
+						notification.listener.string = string;
+						// notification.listener.syntaxColorize; // does not work?
+					});
+				})
+				.addNotifier(this, \saveItem, { | item, notification |
+					File.writeFunc(item, {
+						postf("Saving code in file:\n%\n", item);
+						notification.listener.string
+					})
+				})
+			);
+			listview.valueAction_(0);
+		})
+	}
 
 	archivePath {
 		^Platform.userAppSupportDir ++ "/StartupFiles.sctxar";
@@ -120,24 +190,48 @@ StartupFiles : LoadFiles {
 		// this changed: \all;
 	}
 
-	actionString { ^"backspace: delete, enter: load file" }
+	actionString { ^"List view keyboard commands:
 
-	performEnterAction { | item | item.load }
+Backspace: delete entry.
+Enter: evaluate file code now.
+
+
+File code is auto-saved\n when mouse leaves code edit field." }
+
+	performEnterAction { | item |
+		postf("performing enter action. item is: % \n", item);
+		item.load;
+	}
 }
+
 
 AudioFiles : LoadFiles {
 
-	*initClass { StartUp add: { this.new.loadFromArchive.loadOnBoot } }
+	*initClass { StartUp add: { this.default.loadFromArchive.loadOnBoot } }
 
-	loadOnBoot { ServerBoot add: { this.loadAll } }
+	*loadBuffer { | path, preview = false | this.default.loadBuffer(path, preview) }
+	*getBuffer { | name | ^this.default.getBuffer(name) }
+	getBuffer { | name | ^this.at_(\buffers, name) }
+	
+	loadOnBoot {
+		ServerBoot add: {
+			Library.put(this, nil); // right after boot, there are no buffers.
+			this.loadAll;
+		}
+	}
 	loadAll { all do: this.loadBuffer(_) }
 	loadBuffer { | path, preview = false |
 		var name;
+		name = path.asName;
+		if (this.getBuffer(name).notNil) {
+			postf("Buffer named % already exists. Try a different filename.\n", name);
+			^this;
+		};
 		path.doIfExists(
 			{
 				Buffer.read(Server.default, path, action: { | b |
-					name = b.path.asName;
-					this.buffers[name] = b;
+					// this.buffers[name] = b;
+					this.put_(\buffers, name, b);
 					postf("Loaded %\n", b);
 					this.changed(\buffer, name, b);
 					if (preview) { b.play };
@@ -161,6 +255,7 @@ AudioFiles : LoadFiles {
 		this.save;
 		this.loadBuffer(path, true); // true: preview when loaded	
 	}
+
 	archivePath {
 		^Platform.userAppSupportDir ++ "/AudioFiles.sctxar";
 	}
@@ -178,10 +273,9 @@ AudioFiles : LoadFiles {
 		super remove: path;
 		this.freeAudio(path); // ok if buffer does not exist.
 	}
-	
+
 	freeAudio { | path |  this.getBuffer(path).free } // ok if buffer does not exist.
 
-	getBuffer { | path | ^path.asName.b }
 	actionString { ^"backspace: delete, enter: set bufnum, space: toggle play" }
 
 	performEnterAction { | item |
@@ -189,8 +283,8 @@ AudioFiles : LoadFiles {
 	}
 
 	toggle { | item | item.asName.postln.toggleBuf }
-}
 
+}
 
 + Nil {
 	containsString { | string | ^false; }

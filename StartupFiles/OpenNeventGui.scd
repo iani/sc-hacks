@@ -4,4 +4,4 @@
 
 ServerBoot add: {
 	NeventGui.gui;
-}
+};

@@ -84,10 +84,10 @@ NeventGui {
 		{
 			environmentList = Nevent.all.sort({ | a, b | a.name < b.name });
 			environmentListView.items = environmentList collect: _.name;
-			postf("items: %\nfound: %\n",
+			/* postf("items: %\nfound: %\n",
 				environmentListView.items,
 				environmentListView.items indexOf: envir.name;
-			);
+				); */
 			environmentListView.valueAction = environmentListView.items indexOf: envir.name;
 		}.defer;
 	}

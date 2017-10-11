@@ -25,7 +25,7 @@
 */
 
 + Symbol {
-	b { ^AudioFiles.buffers[this] }
+	b { ^AudioFiles getBuffer: this }
 	bufnum {
 		var buffer;
 		buffer = this.b;
