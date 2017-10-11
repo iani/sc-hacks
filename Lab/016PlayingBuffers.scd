@@ -17,4 +17,4 @@ currentEnvironment;
 //:
 \rate <+ { LFNoise0.kr(10).range(0.2, 5) };
 //:
-(dur: 0.01, rate: Pwhite(0.1, 10, inf)) *>.loop \rate_example;
+(dur: 1, rate: Pwhite(0.1, 10, inf)) *> \x;

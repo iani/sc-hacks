@@ -56,6 +56,9 @@ LoadFiles {
 
 	save { all.writeArchive(this.archivePath); }
 
+	*add { | path, loadNow  = false |
+		this.default.add(path, loadNow);
+	}
 	add { | path, loadNow = false |
 		// Add path to the list of paths in all.
 		// If loadNow is true, then load the file of this path now.
@@ -322,6 +325,5 @@ AudioFiles : LoadFiles {
 }
 
 + String {
-	asName { ^PathName(this).fileNameWithoutExtension.asSymbol }
-	
+	asName { ^PathName(this).fileNameWithoutExtension.asSymbol }	
 }
