@@ -109,7 +109,7 @@
 				if (path.notNil) { // false: do not notify AudioFiles for gui updeate
 					path.doIfExists({
 						Buffer.read(Server.default, path).storeInlibrary(false);						
-					}{
+					},{
 						postf("Could not find audio file: %\n", path);
 					})
 				}
