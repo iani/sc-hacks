@@ -67,3 +67,20 @@
 		}		
 	}
 }
+
++ Nil {
+	// if function is playing in bus in this parameter,
+	// then stop the function and set the parameter to nil.
+	// TODO: Do we want to free the bus also? What if other parameters are also listening to the same bus?
+	setParameter { | paramName, envir |
+		var bus, synth;
+		envir = envir.e; // see Nil:e, Symbol:e
+		bus = envir.at(paramName);
+		if (bus isKindOf: Bus) {
+			// this releases previous synths.
+			bus.changed(\newSource);
+			envir[paramName] = nil;
+		};
+	}
+	
+}

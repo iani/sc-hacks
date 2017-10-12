@@ -18,3 +18,7 @@ currentEnvironment;
 \rate <+ { LFNoise0.kr(10).range(0.2, 5) };
 //:
 (dur: 1, rate: Pwhite(0.1, 10, inf)) *> \x;
+//:
+nil *> \x;
+//:
+currentEnvironment.players[\x].envir;

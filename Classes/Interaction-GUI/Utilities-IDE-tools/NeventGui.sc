@@ -16,27 +16,40 @@ NeventGui {
 		}
 	}
 	*gui {
-		this.get_(\guis, \default, {
-			this.new;
-		}).window({ | w, me | me initWindow: w})
+			this.get_(\guis, \default, { this.new}).gui;	
+		}
+
+	gui {
+		this window: { | w, me | me initWindow: w}		
 	}
 
 	initWindow { | w |
 		w.bounds = Rect(0, 400, 400, 600);
 		w.view.layout = VLayout(
-			StaticText().string_("all environments: (enter: push, space: toggle players)"),
-			environmentListView = ListView()
-			.keyDownAction_({ | view, char, mod, key |
-				switch (key,
-					// Enter key
-					13, { this.pushSelectedEnvir; },
-					// Space key
-					32, { this.toggleSelectedEnvir; },
-					0, {}, // cursor keys: IGNORE
-					{ key.postln }
-				)
-			}),
-			TextField().string_("user selected environment:"),
+			StaticText().string_("(enter: push, space: toggle)"),
+			HLayout(
+				VLayout(
+					StaticText().string_("Environments"),
+					environmentListView = ListView()
+					.keyDownAction_({ | view, char, mod, key |
+						switch (key,
+							// Enter key
+							13, { this.pushSelectedEnvir; },
+							// Space key
+							32, { this.toggleSelectedEnvir; },
+							0, {}, // cursor keys: IGNORE
+							{ key.postln }
+						)
+					})),
+				VLayout(
+					StaticText().string_("Players"),
+					ListView())
+			),
+			StaticText().string_("Parameters:"),
+			ListView(),
+			StaticText().string_("Parameter value/code:"),
+			TextView(),
+			StaticText().string_("user selected environment:"),
 			selectedEnvironmentDisplay = StaticText()
 			.background_(Color(0.9, 0.9, 1.0)),
 			TextField().string_("currentEnvironment:"),
