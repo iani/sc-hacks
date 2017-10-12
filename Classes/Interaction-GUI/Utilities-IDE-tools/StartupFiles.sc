@@ -101,7 +101,7 @@ StartupFiles : LoadFiles {
 		})
 	}
 
-	getItems { ^all.collect(_.asName).sort }
+	getItems { ^all.collect(_.asName) }
 
 	makeSavePath { | filename |
 		^Platform.userAppSupportDir ++ "/" ++ filename;

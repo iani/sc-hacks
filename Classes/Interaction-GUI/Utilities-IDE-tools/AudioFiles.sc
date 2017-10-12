@@ -3,9 +3,31 @@
 // Create a gui for adding and playing buffers.
 
 AudioFiles : LoadFiles {
+	*initClass {
+		StartUp add: {
+			this.new.loadFromArchive.all do: _.loadBuffer;
+		};
+
+		ServerBoot add: {
+			var path;
+			Library.at(\buffers) do: { | b |
+				path = b.path;
+				if (path.notNil) { // false: do not notify AudioFiles for gui updeate
+					path.doIfExists({
+						Buffer.read(Server.default, path).storeInLibrary(false);						
+					},{
+						postf("Could not find audio file: %\n", path);
+					})
+				}
+			}
+ 		}
+	}
+
 	archivePath { ^Platform.userAppSupportDir ++ "/AudioFiles.sctxar" }
 
 	gui {
+		this.loadFromArchive;
+		all do: _.loadBuffer;
 		this.window({ | w |
 			w.view.layout = VLayout(
 				HLayout(
@@ -33,7 +55,8 @@ AudioFiles : LoadFiles {
 				  	{ notification.listener.items = this.getItems; }.defer;
 				})
 				.focus(true); // focus here, away from load button.
-			)
+			);
+			this.changed(\all)
 		})
 	}
 

@@ -2,5 +2,6 @@
 // At ServerBoot, initialize default event with default player+source, without starting it.
 //: Note: If server has not booted then \default.makeSource results in error.
 ServerBoot add: {
+	"Making source".postln;
 	\default.makeSource(\default.p);
 }

@@ -93,7 +93,7 @@
 			buffer = Buffer.read(Server.default, this, action: doneAction);
 		}{
 			postf("Server not booted. Cannot load %\n", this);
-			buffer = Buffer().path_(this);
+			buffer = Buffer.newCopyArgs.path_(this);
 		};
 		buffer.storeInLibrary(true); // true: notify AudioFiles for gui update
 	}
@@ -101,22 +101,6 @@
 }
 
 + Buffer {
-	*initClass {
-		ServerBoot add: {
-			var path;
-			Library.at(\buffers) do: { | b |
-				path = b.path;
-				if (path.notNil) { // false: do not notify AudioFiles for gui updeate
-					path.doIfExists({
-						Buffer.read(Server.default, path).storeInlibrary(false);						
-					},{
-						postf("Could not find audio file: %\n", path);
-					})
-				}
-			}
-		}
-	}
-
 	storeInLibrary { | notify = true |
 		var name;
 		if (path.notNil) {
