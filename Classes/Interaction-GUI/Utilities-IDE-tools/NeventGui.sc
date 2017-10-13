@@ -30,7 +30,7 @@ NeventGui {
 			HLayout(
 				VLayout(
 					StaticText().string_("Environments"),
-					environmentListView = ListView()
+					environmentListView = ListView() 
 					.keyDownAction_({ | view, char, mod, key |
 						switch (key,
 							// Enter key
@@ -43,7 +43,8 @@ NeventGui {
 					})),
 				VLayout(
 					StaticText().string_("Players"),
-					ListView())
+					ListView() 
+				)
 			),
 			StaticText().string_("Parameters:"),
 			ListView(),
