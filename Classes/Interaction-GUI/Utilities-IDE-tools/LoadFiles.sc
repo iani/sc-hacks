@@ -1,9 +1,9 @@
 // 25 Sep 2017 22:30
-// Redo from scratch
+// TODO: Implement active selection + saving. Use ListView multi selection mode.
 
 LoadFiles {
 	var <all;
-	var <notFound;
+	var <active; // array of boolean. Only active items are loaded
 
 	*new { | name = \default |
 		^Registry(this, name, { super.new });

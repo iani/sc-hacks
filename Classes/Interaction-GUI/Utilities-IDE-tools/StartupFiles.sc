@@ -3,7 +3,6 @@
 // Create a gui for managing this list.
 
 StartupFiles : LoadFiles {
-	classvar <>all;
 
 	*initClass { StartUp add: { this.new.loadFromArchive.loadAll } }
 

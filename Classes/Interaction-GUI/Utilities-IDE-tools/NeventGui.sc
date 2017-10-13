@@ -1,7 +1,7 @@
 //  6 Oct 2017 21:04
-
-/* Display current environment, and its Event's contents.
-*/
+// Display current environment, and its Event's contents
+// Under development: Also display players of selected event, and
+// display parameters 
 
 NeventGui {
 	var <currentEnvironmentDisplay;

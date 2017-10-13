@@ -146,17 +146,3 @@
 		}
 	}
 }
-
-/*
- 		path.doIfExists({
-			postf("% adding file: \n%\n", this, path);
-			all = all add: path;
-			this.save;
-			this.changed(\all);
-		}, {
-			postf("% could not find %\n", this, path);
-			"removing file from paths".postln;
-			this remove: path;
-			notFound = notFound add: path;
-		});
-*/
