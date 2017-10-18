@@ -10,7 +10,8 @@
 
 FileItem {
 	var <path, <>active = true;
-	var <name;
+	var <name; // Symbol
+	var <customFields; // Event for storing custom fields (variables) in various applications.
 
 	*new { | path |
 		^this.newCopyArgs(path).init
@@ -20,6 +21,7 @@ FileItem {
 		name = path.asName;
 		// if path does not exist, mark item as inactive:
 		path.doIfExists({}, active = false);
+		customFields = ();
 	}
 	
 	asName { ^name }

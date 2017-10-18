@@ -3,6 +3,8 @@
 // GUI classes can use this class in different ways as their model in MVC manner.
 
 FileItemList : List {
-	
+	*load { | path |
+		// load new instance from data stored in .sctxar file
+	}
 	
 }
