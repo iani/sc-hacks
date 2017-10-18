@@ -7,3 +7,7 @@ b = FileItemList.loadAS("test");
 b.array;
 //:
 FileItemList.loadAS("test").array;
+//:
+FileItemList.add(\xyz, \test);
+//:
+

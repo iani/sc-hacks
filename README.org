@@ -1,3 +1,3 @@
 In this repository, I will review the techniques developed in my libraries for SuperCollider [[https://github.com/iani/tiny-sc][tiny-sc]] and [[https://github.com/iani/tiny-inc][tiny-inc]].  I will try to build a cleaner structure step-by-step, and reducing the code to essential features, as far as possible.
 
-Documentqtion on the new library is available here: http://iani.github.io/sc-hacks-doc/.
+Documentation on the new library is available here: http://iani.github.io/sc-hacks-doc/.

@@ -18,8 +18,9 @@ FileItemList : List {
 		// load from application support. Provide AS part.
 		^this.load(this.appSupportPath(path));
 	}
+
 	*appSupportPath { | path |
-		^Platform.userAppSupportDir +/+ path ++ ".sctxar";
+		^Platform.userAppSupportDir +/+ path.asString ++ ".sctxar";
 	}
 
 	save {
@@ -28,9 +29,24 @@ FileItemList : List {
 	}
 
 	add { | item |
-		super add: item;
-		this.save;
-		this.changed(\add, item);
+		// Item is a kind of FileItem.
+		// It will not be added if a FileItem with the same path exists already.
+		var itemPath;
+		if (this.containsItemPath(item.path)) {
+			postf("Path already exists. Skipping %\n", item.path);
+		}{
+			postf("Adding item. Path: %\n", item.path);
+			super add: item;
+			this.save;
+			this.changed(\add, item);
+		}
 	}
 
+	containsItemPath { | itemPath |
+		^array.detect({ | i | i.path == itemPath }).notNil;
+	}
+
+	*add { | item, listName = \default |
+		this.get_(\fileLists, listName,  { this.loadAS(listName) }).add(item)
+	}
 }

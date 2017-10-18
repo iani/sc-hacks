@@ -32,10 +32,10 @@ FileItem {
 
 	load { | action |
 		// If the file is found, then load it.
-		// Load action depends on action function passed as argument:
-		// Compile code, pass contents to load function, etc.
+		// The action argument provides the function to use for loading.
+		// For example: Compile code, pass contents to load function, etc.
 		// (action argument instead of method overwrite in subclass seems better.)
-
+		// The plan is to let the GUI part provide the action.
 		
 	}
 }
