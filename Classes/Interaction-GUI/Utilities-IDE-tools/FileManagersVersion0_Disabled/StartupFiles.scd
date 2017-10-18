@@ -4,14 +4,26 @@
 
 StartupFiles : LoadFiles {
 
-	*initClass { StartUp add: { this.new.loadFromArchive.loadAll } }
+	*gui {
+		^this.default.loadFromArchive.gui;
+	}
 
-	loadAll { all.copy do: this.load(_); }
+	loadFromArchive {
+		this.archivePath.doIfExists({ | p |
+			all = Object.readArchive(p);
+		}, { | p |
+			postf("% could not load from path %\n", this, p);
+		})
+	}
+	
+	loadAll {
+		all.copy do: this.load(_);
+	}
 	
 	gui {
 		this.window({ | w |
 			var listview;
-			w.bounds = Rect(400, 0, 600, 400);
+			w.bounds = this.rect;
 			w.view.layout = VLayout(
 				HLayout(
 					listview = this.fileSelectionListView,
@@ -23,6 +35,8 @@ StartupFiles : LoadFiles {
 			if (all.size > 0) { listview.valueAction_(0) };
 		})
 	}
+
+	rect { ^Rect(400, 0, 600, 400) }
 
 	fileSelectionListView {
 		^ListView().items_(this.getItems) 
@@ -80,13 +94,13 @@ StartupFiles : LoadFiles {
 
 	selectedFilePathDisplay {
 		^StaticText()
-					.font_(Font("Helvetica", 10, true))
-					.addNotifier(this, \item, { | item, notification |
-						notification.listener.string = item
-					})
-					.addNotifier(this, \save, { | notification |
-						this.changed(\saveItem, notification.listener.string)
-					})
+		.font_(Font("Helvetica", 10, true))
+		.addNotifier(this, \item, { | item, notification |
+			notification.listener.string = item.path;
+		})
+		.addNotifier(this, \save, { | notification |			
+			this.changed(\saveItem, notification.listener.string)
+		})
 	}
 
 	codeDisplay {
@@ -100,14 +114,16 @@ StartupFiles : LoadFiles {
 			});
 		})
 		.addNotifier(this, \saveItem, { | item, notification |
-			File.writeFunc(item, {
-				postf("Saving code in file:\n%\n", item);
-				{ this.changed(\index, all.indexOfString(item)) ? 0 }.defer(0.5);
-				notification.listener.string
-			})
+			if (all.size > 0 ) {
+				File.writeFunc(item, {
+					postf("Saving code in file:\n%\n", item);
+					{ this.changed(\index, all.indexOfString(item)) ? 0 }.defer(0.5);
+					notification.listener.string
+				})
+			}
 		})
-		
 	}
+	 
 	getItems { ^all.collect(_.asName) }
 
 	makeSavePath { | filename |
@@ -117,14 +133,16 @@ StartupFiles : LoadFiles {
 		^Platform.userAppSupportDir ++ "/StartupFiles.sctxar";
 	}
 	
-	load { | path |
+	load { | item |
+		var path;
+		path = item.path;
 		path.doIfExists({
 			postf("loading code: %\n", path);
 			path.load;
 		},{
 			postf("removing missing file: %\n", path);
 			"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".postln;
-			all removeUniqueString: path;
+			all remove: item;
 			this changed: \all;
 		})
 	}
