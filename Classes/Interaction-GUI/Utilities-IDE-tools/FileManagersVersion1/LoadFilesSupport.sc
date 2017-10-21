@@ -61,7 +61,7 @@
 		// Only add file path to StartupFiles, if it exists.
 		this.doIfExists {
 			postf("Adding to startup: %\n", this);
-			StartupFiles.default add: this;
+			FileItemList.add(this, \startup);
 		}{
 			postf("Could not find path: %\n", this);
 		}
@@ -79,25 +79,11 @@
 		// Load the audio file if it exists, and store in library. 
 		this.doIfExists {
 			postf("Loading buffer: %\n", this);
-			this.loadBufferOrProxy(action);
+			FileItemList.add(FileItem(this), \buffers);
 		}{
 			postf("Could not find path: %\n", this);
 		}		
-	}
-
-	loadBufferOrProxy { | doneAction |
-		// Load buffer in server if running, or proxy if not. Store in Library.
-		var buffer;
-		if (Server.default.serverRunning) {
-			postf("Loading buffer from: %\n", this);
-			buffer = Buffer.read(Server.default, this, action: doneAction);
-		}{
-			postf("Server not booted. Cannot load %\n", this);
-			buffer = Buffer.newCopyArgs.path_(this);
-		};
-		buffer.storeInLibrary(true); // true: notify AudioFiles for gui update
-	}
-
+	}	
 }
 
 + Buffer {

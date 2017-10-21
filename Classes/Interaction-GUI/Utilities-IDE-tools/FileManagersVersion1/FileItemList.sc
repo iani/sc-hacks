@@ -28,6 +28,21 @@ FileItemList : List {
 		postf("Saved file list to: %\n", path);
 	}
 
+	*add { | item, listName = \default |
+		this.get_(\fileLists, listName,  { this.loadAS(listName) }).add(item)
+	}
+
+	add { | item |
+		super add: item;
+			this.save;
+			this.changed(\add, item);
+	}
+
+	/*
+		// Avoid adding duplicate items with the same path. 
+		// This implementation can be used for cases such as adding buffers or startup files.
+        // However, for data files we may want to add several copies of the same path,
+		// in order to use different loading versions for each copy.
 	add { | item |
 		// Item is a kind of FileItem.
 		// It will not be added if a FileItem with the same path exists already.
@@ -41,12 +56,10 @@ FileItemList : List {
 			this.changed(\add, item);
 		}
 	}
+	*/
 
 	containsItemPath { | itemPath |
 		^array.detect({ | i | i.path == itemPath }).notNil;
 	}
 
-	*add { | item, listName = \default |
-		this.get_(\fileLists, listName,  { this.loadAS(listName) }).add(item)
-	}
 }

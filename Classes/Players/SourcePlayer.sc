@@ -3,13 +3,18 @@ SourcePlayer {
 	var <player, <envir, <source, <process;
 
 	*new { | player |
-		^this.newCopyArgs(player, player.envir);
+		^this.newCopyArgs(player, player.envir).listenToServerBoot;
 	}
 
 	isPlaying { ^process.isPlaying }
 }
 
 PatternPlayer : SourcePlayer {
+
+	listenToServerBoot {
+		// only SynthPlayer reacts to this
+		
+	}
 
 	play { | argSource | // argSource shoud be a kind of Event.
 		var stream, event;
@@ -81,7 +86,11 @@ SynthPlayer : SourcePlayer {
 		if (process.isPlaying) { process.map(param, index) };
 	}
 	*/
-	
+
+	listenToServerBoot {
+		ServerBoot add: { process = nil }
+	}
+
 	play { | argSource |
 		var outbus, target, server;
 		// if still waiting to start synth after def, then skip this play!

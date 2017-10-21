@@ -5,7 +5,8 @@
 AudioFiles : LoadFiles {
 	*initClass {
 		StartUp add: {
-			this.new.loadFromArchive.all do: _.loadBuffer;
+			this.new.loadFromArchive.all do: _.
+			loadBuffer;
 		};
 
 		ServerBoot add: {
