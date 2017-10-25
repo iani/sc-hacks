@@ -88,6 +88,7 @@ SynthPlayer : SourcePlayer {
 	*/
 
 	listenToServerBoot {
+		// Fix hanging synth process when starting before booting server by mistake.
 		ServerBoot add: { process = nil }
 	}
 
