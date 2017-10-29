@@ -1,0 +1,23 @@
+How the MIDI interface for sc-hacks should work.
+
+Notes.
+
+* First objective: Construct midi func that sets a parameter in an environment.
+  :PROPERTIES:
+  :DATE:     <2017-10-29 Κυρ 19:33>
+  :END:
+
+Given the name of the parameter e.g. =\freq=, and an optional argument for the target environment to which this parameter belongs, send the parameter a message naming the type of MIDIFunc to construct. For example:
+
+#+BEGIN_SRC sclang
+\freq.cc(1);
+#+END_SRC
+
+The above means:
+Create a MIDIFunc of type =cc=, listening on cc number 1 and channel 0.  The action function of the =MIDIFunc=, will be constructed as follows:
+
+1. Take the value of the first argument, i.e. the =val= argument which gives the value of the midi controller input from the device.
+2. Map the value from the range 0-127 to the range 0-1.
+3. Map the mapped value from 0-1 to the target range of the parameter.
+   - Note: the spec for doing this mapping is obtained from the environment.  *A scheme for storing specs in environments must be implemented yet*. Alternatively, use the name of the parameter to convert this to a spec, or provide the spec as argument to the cc method.  (!!!!)
+4. Set the parameter in the environment to the final mapped value obtained from step 3 above.
