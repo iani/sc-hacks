@@ -20,6 +20,13 @@ EventPattern : Pattern {
 		// of the currently playing stream.
 		inEvent keysValuesDo: { | key value |
 			event[key] = value;
+			if (key === \degree) {
+				event[\freq] = nil;
+				event[\note] = nil;
+			};
+			if (key === \note) {
+				event[\freq] = nil;
+			}
 		}
 	}
 	
@@ -70,9 +77,16 @@ EventStream : Stream {
 	addEvent { | inEvent |
 		inEvent keysValuesDo: { | key, value |
 			event[key] = value.asStream;
+			if (key === \degree) {
+				event[\freq] = nil;
+				event[\note] = nil;
+			};
+			if (key === \note) {
+				event[\freq] = nil;
+			}
 		}
 	}
-	
+
 	/* Needed to embed an EventPattern in a Stream as in: 
 		Pseq([EventPattern((degree: (1..8).pseq(2)))]).play;
 	*/

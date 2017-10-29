@@ -97,6 +97,11 @@ Player {
 			~amp = ~amp.value;
 			~sustain = ~sustain.value;
 			envir = ~envir;
+			//	postf("DEBUGGING. envir is: %\ncurrentEnvironment is: %\n", envir, currentEnvironment);
+			// 
+			// TODO: Review this.  If freq is set as pattern, then
+			// setting degree in next event will not set freq to nil.
+			// see notes TODO below in method playEnvEvent!
 			~getMsgFunc.valueEnvir.valueEnvir;
 			currentEnvironment['_keys_'] do: { | key |
 				envir[key] = currentEnvironment[key].next;
@@ -138,7 +143,9 @@ Player {
 		
 		// if (keys includes: \degree or: { keys includes: \note}) { keys add: \freq };
 		// also erase freq or note if degree or note are provided - to reset freq to original default func.
-		
+
+		// TODO: freq and note should be set to nil also in
+		// the eventstreamplayer's event, if one is already playing in the player
 		if (keys includes: \degree) {
 			event.put(\freq, nil);
 			event.put(\note, nil);

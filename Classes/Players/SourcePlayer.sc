@@ -16,7 +16,7 @@ PatternPlayer : SourcePlayer {
 		
 	}
 
-	play { | argSource | // argSource shoud be a kind of Event.
+	play { | argSource | // argSource should be a kind of Event.
 		var stream, event;
 		// postf("playing PatternPlayer. player is: %, envir is: %\n", player, envir);
 		
@@ -266,6 +266,7 @@ SynthPlayer : SourcePlayer {
 								notification.listener,
 								param, val);
 							*/
+							// postf("Debugging multichannel set bus. Param: %, bus: %\n", param, val);
 							notification.listener.map(param, val);								
 						},{
 							notification.listener.set (param, val);							
@@ -277,6 +278,7 @@ SynthPlayer : SourcePlayer {
 				postf("INCOMPLETE. TESTING. Received target: %\n", val);
 			});
 			process.addNotifier(envir, \mapBus, { | param, bus |
+				//	postf("Debugging multichannel set bus. THIS IS MAPBUS. Param: %, bus: %\n", param, bus);
 				process.map(param, bus.index);
 			});
 			process.onEnd (this, { | notification |				

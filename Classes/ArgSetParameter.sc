@@ -19,16 +19,22 @@
 	// Create bus if needed, play function using bus index for outbus,
 	// then set parameter to bus.
 	// The mapping is done through code in dispatcher of Nevent and in SynthPlayer.
-	setParameter { | paramName, envir |
-		var bus, synth;
+	setParameter { | paramName, adverb |
+		var envir, bus, synth, numChannels = 1;
 		// (if(envir.isNil) { envir = currentEnvironment } { envir = envir.e });
-		envir = envir.e; // see Nil:e, Symbol:e
+		if (adverb isKindOf: Integer) {
+			envir = nil.e;
+			numChannels = adverb;
+		}{
+			envir = adverb.e;
+		};
+		// envir = envir.e; // see Nil:e, Symbol:e
 		bus = envir.at(paramName);
 		if (bus isKindOf: Bus) {
 			// this releases previous synths.
 			bus.changed(\newSource);			
 		}{
-			bus = Bus.control;
+			bus = Bus.control(Server.default, numChannels);
 		};
 		synth = this.play(outbus: bus.index);
 		synth.onStart(this, { // map the bus only after the source has started.
