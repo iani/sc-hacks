@@ -17,7 +17,48 @@ The above means:
 Create a MIDIFunc of type =cc=, listening on cc number 1 and channel 0.  The action function of the =MIDIFunc=, will be constructed as follows:
 
 1. Take the value of the first argument, i.e. the =val= argument which gives the value of the midi controller input from the device.
-2. Map the value from the range 0-127 to the range 0-1.
+2. Map the value from the range 0-127 to the range 0-1. (simply calculate val / 127).
 3. Map the mapped value from 0-1 to the target range of the parameter.
    - Note: the spec for doing this mapping is obtained from the environment.  *A scheme for storing specs in environments must be implemented yet*. Alternatively, use the name of the parameter to convert this to a spec, or provide the spec as argument to the cc method.  (!!!!)
 4. Set the parameter in the environment to the final mapped value obtained from step 3 above.
+
+* Prerequisite: store in players specs for mapping midi->params
+
+Use get_ put_ methods for this. API:
+
+#+BEGIN_SRC sclang
+object.get_(varName, key, func);
+object.put_(varName, key, object);
+#+END_SRC
+
+Next using this API to store specs in players.  Developing this in very small steps now:
+
+\player.put_(paramName, \spec, \freq.asSpec);
+
+\player.get_(paramName, \spec, { paramName.asSpec });
+
+Next step:
+
+How to shorten this further for the end user?
+
+Option:
+
+player.getSpec(paramName, envir);
+player.putSpec(paramName, envir);
+
+But the end user will want to access players by their names. So implement this also for symbols.
+
+* Syntax design issues
+
+\param <+ MIDI;
+
+has the advantage that we can specify the player as adverb.
+But the environment name of the player cannot be given then.
+
+\player.cc(\param, chan, num, srcID)
+
+also requires the environment - and no convenient arg position to put it in.
+
+Third alternative would be:
+
+\player <+.envir param.cc(chan, num, srcID);

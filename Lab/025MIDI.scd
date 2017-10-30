@@ -1,6 +1,10 @@
 //  6 Oct 2017 20:22
 // implement Symbol <+ MIDI
 //:
+MIDIClient.init;
+//:
+MIDIIn.connectAll;
+//:
 MIDIFunc.trace(true);
 //:
 MIDIFunc.trace(false);
@@ -21,3 +25,4 @@ nil.free;
 //:
 a = \unipolar.asSpec;
 a.map(0.5)
+

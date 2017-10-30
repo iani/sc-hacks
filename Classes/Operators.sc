@@ -129,6 +129,27 @@
 		// Create PersistentBusProxy. Useful for linking enirs with busses.
 		^PersistentBusProxy(this, param, numChannels);
 	}
+
+	// ================================================================
+	// For MIDI, custom messages are needed to construct the MIDI func
+	// with the message that sets the parameter receiver as player symbol parameter.
+
+	cc { | chan, num, srcID |
+		
+		func ?? { func =
+			{ | val |
+				
+			}
+		};
+	}
+
+	putSpec { | param, spec, envir |
+		this.p(envir).putSpec(param, spec.asSpec);
+	}
+
+	getSpec { | param, envir |
+		this.p(envir).getSpec(param, param.asSpec)
+	}
 }
 
 + Function {
@@ -150,8 +171,6 @@
 		// envir: The (name of the) envir to play the routine in. If nil, defaults to currentEnvir.
 		(envir ? currentEnvironment).playLoop(key, this);
 	}
-
-
 }
 
 + Event {
