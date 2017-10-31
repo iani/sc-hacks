@@ -26,7 +26,6 @@ MIDI {
 		// This works also for touch, bend, and program MIDIFunc types:
 		^MIDIFunc(func, num, chan, type, srcID);
 	}
-	
 }
 
 + Nevent {
