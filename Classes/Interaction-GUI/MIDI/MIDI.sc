@@ -34,7 +34,9 @@ MIDI {
 		// Only one MIDIFunc allowed per parameter name and Nevent.
 		var spec;
 		this.at_(\midi, paramName).free;
-		spec = this.getSpec(paramName);
+		spec = midi.spec ?? {
+			this.getSpec(paramName);
+		};
 		this.put_(\midi, paramName, midi asMIDIFunc: { | val |
 			this.put(paramName, spec.map(val / 127));
 		});
@@ -54,15 +56,14 @@ MIDI {
 			}) 
 		};
 	}
-
 }
 
 + Object {
-	cc { | num, chan = 0, srcID, func | ^MIDI(\control, chan, num, func) }
-	noteOn { | num, chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, num, srcID, func) }
-	noteOff { | num, chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, num, srcID, func) }
-	polytouch { | num, chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, num, srcID, func) }
-	touch { | chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, nil, srcID, func) }
-	bend { | chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, nil, srcID, func) }
-	program { | chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, nil, srcID, func) }
+	cc { | num, chan = 0, srcID, func | ^MIDI(this, \control, chan, num, func) }
+	noteOn { | num, chan = 0, srcID, func | ^MIDI(this, thisMethod.name, chan, num, srcID, func) }
+	noteOff { | num, chan = 0, srcID, func | ^MIDI(this, thisMethod.name, chan, num, srcID, func) }
+	polytouch { | num, chan = 0, srcID, func | ^MIDI(this, thisMethod.name, chan, num, srcID, func) }
+	touch { | chan = 0, srcID, func | ^MIDI(this, thisMethod.name, chan, nil, srcID, func) }
+	bend { | chan = 0, srcID, func | ^MIDI(this, thisMethod.name, chan, nil, srcID, func) }
+	program { | chan = 0, srcID, func | ^MIDI(this, thisMethod.name, chan, nil, srcID, func) }
 }

@@ -64,4 +64,28 @@ object is MIDI instance created by spec.cc
 
 ** spec.cc(num, chan, srcID)
 
+done.  Example method:
+
+#+BEGIN_SRC sclang
++ Object {
+	cc { | num, chan = 0, srcID, func | ^MIDI(this, \control, chan, num, func) }
+        /* ... */
+}
+#+END_SRC
+
 ** midiInstance.setParameter(symbol)
+
+** First tests with MIDI cc fun cs
+
+#+BEGIN_SRC sclang
+  //: Testing with a CODE 2 controller from LividInstruments.
+  MIDIIn.connectAll(verbose: true);
+  //:
+  \test.push;
+  //: First knob on top left corner
+  \freq <+ \freq.cc(1);
+  //:
+  { SinOsc.ar(\freq.kr(400), 0, \amp.kr(0.1)) } +> \test;
+  //: Second knob from the top on the leftmost row
+  \amp <+ \amp.cc(2);
+#+END_SRC
