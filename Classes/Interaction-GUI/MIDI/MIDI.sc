@@ -3,10 +3,10 @@
 
 MIDI {
 	// proxy for creating MIDIfuncs with operators
-	var <type, <chan, <num, <srcID, <func;
+	var <spec, <type, <chan, <num, <srcID, <func;
 
-	*new { | type = \cc, chan = 0, num = 0, srcID, func |
-		^this.newCopyArgs(type, chan, num, srcID, func ?? { | ... args |
+	*new { | spec, type = \cc, chan = 0, num = 0, srcID, func |
+		^this.newCopyArgs(spec.asSpec, type, chan, num, srcID, func ?? { | ... args |
 			postf("empty midi func: type: %, chan: %, num: %, received: %\n",
 				type, chan, num, args
 			);
@@ -40,16 +40,30 @@ MIDI {
 			this.put(paramName, spec.map(val / 127));
 		});
 	}
-	
+
+	putSpec { | param, prototype |
+		this.put_(\specs, param, prototype.asSpec);
+	}
+
+	getSpec { | param |
+		^this.at_(\specs, param) ?? {
+			// If none is found, a new one is stored for defaults here.
+			// But this can be overwritten at any time later, by:
+			// ControSpec.put_(\specs, param, <new spec>);
+			ControlSpec.get_(\specs, param, {
+				param.asSpec ?? { \unipolar.asSpec }
+			}) 
+		};
+	}
+
 }
 
-+ Integer {
-	cc { | chan = 0, srcID, func | ^MIDI(\control, chan, this, srcID, func) }
-	noteOn { | chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, this, srcID, func) }
-	noteOff { | chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, this, srcID, func) }
-	polytouch { | chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, this, srcID, func) }
++ Object {
+	cc { | num, chan = 0, srcID, func | ^MIDI(\control, chan, num, func) }
+	noteOn { | num, chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, num, srcID, func) }
+	noteOff { | num, chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, num, srcID, func) }
+	polytouch { | num, chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, num, srcID, func) }
 	touch { | chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, nil, srcID, func) }
 	bend { | chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, nil, srcID, func) }
 	program { | chan = 0, srcID, func | ^MIDI(thisMethod.name, chan, nil, srcID, func) }
-	
 }

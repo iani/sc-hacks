@@ -187,22 +187,6 @@ Nevent : EnvironmentRedirect {
 		this.playRoutine(key, { func.loop })
 	}
 
-
-	putSpec { | param, prototype |
-		this.put_(\specs, param, prototype.asSpec);
-	}
-
-	getSpec { | param |
-		^this.at_(\specs, param) ?? {
-			// If none is found, a new one is stored for defaults here.
-			// But this can be overwritten at any time later, by:
-			// ControSpec.put_(\specs, param, <new spec>);
-			ControlSpec.get_(\specs, param, {
-				param.asSpec ?? { \unipolar.asSpec }
-			}) 
-		};
-	}
-
 	toggle {
 		// If any players are playing, stop them.
 		// If no players are playing, play all players.

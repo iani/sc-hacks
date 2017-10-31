@@ -22,7 +22,7 @@ Create a MIDIFunc of type =cc=, listening on cc number 1 and channel 0.  The act
    - Note: the spec for doing this mapping is obtained from the environment.  *A scheme for storing specs in environments must be implemented yet*. Alternatively, use the name of the parameter to convert this to a spec, or provide the spec as argument to the cc method.  (!!!!)
 4. Set the parameter in the environment to the final mapped value obtained from step 3 above.
 
-* Prerequisite: store in players specs for mapping midi->params
+* Prerequisite: store in environment specs for mapping midi->params
 
 Use get_ put_ methods for this. API:
 
@@ -33,9 +33,9 @@ object.put_(varName, key, object);
 
 Next using this API to store specs in players.  Developing this in very small steps now:
 
-\player.put_(paramName, \spec, \freq.asSpec);
+\environment.put_(paramName, \spec, \freq.asSpec);
 
-\player.get_(paramName, \spec, { paramName.asSpec });
+\environment.get_(paramName, \spec, { paramName.asSpec });
 
 Next step:
 
@@ -43,22 +43,11 @@ How to shorten this further for the end user?
 
 Option:
 
-player.getSpec(paramName, envir);
-player.putSpec(paramName, envir);
+environment.getSpec(paramName, envir);
+environment.putSpec(paramName, envir);
 
-But the end user will want to access players by their names. So implement this also for symbols.
+But the end user will want to access environments by their names. So implement this also for symbols.
 
-* Syntax design issues
+* Syntax
 
-\param <+ MIDI;
-
-has the advantage that we can specify the player as adverb.
-But the environment name of the player cannot be given then.
-
-\player.cc(\param, chan, num, srcID)
-
-also requires the environment - and no convenient arg position to put it in.
-
-Third alternative would be:
-
-\player <+.envir param.cc(chan, num, srcID);
+\parameter <+.environment spec.cc(num, chan, srcID);

@@ -211,14 +211,6 @@ Player {
 		stream << envir.name << "|" << name;
 		envir.printItemsOn(stream);
 	}
-
-	getSpec { | param |
-		^this.get_(param, \spec, { param.asSpec });
-	}
-
-	putSpec { | param, spec |
-		this.put_(param, \spec, spec.asSpec);
-	}
 }
 
 + Nil {

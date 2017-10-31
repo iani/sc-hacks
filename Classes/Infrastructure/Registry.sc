@@ -70,6 +70,7 @@ Registry {
 	get_ { | varName, key, func | ^Registry(varName, this, key, func) }
 
 	// Run objectClosed on stored object.  This releases all Notification connections of the object,
-	// And removes it from Registry at varName, this, key. 
+	// And removes it from Registry at varName, this, key.
+	// If no object found, then send objectClosed to nil, which has no effect.
 	free_ { | varName, key, func | Registry.at(varName, this, key).objectClosed }
 }
