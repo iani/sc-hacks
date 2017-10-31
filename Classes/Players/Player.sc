@@ -85,7 +85,7 @@ Decision table for playSource method according to types of receiver and argument
 Player {
 	var <envir, <name, <sourcePlayer;
 
-		*initClass {
+	*initClass {
 		// Add custom event type to Event class, to work with playEnvEvent
 		Class.initClassTree(Event);
 		Event.parentEvents.default.eventTypes [\envEvent] = #{|server|
@@ -108,6 +108,11 @@ Player {
 			};
 		};
 	}
+
+	*named { | name |
+		^this.all detect: { | p | p.name === name }
+	}
+	
 	*all { // return all Player instances
 		^Nevent.all.collect({|e| e.players.values.asArray}).flat;
 	}
@@ -194,7 +199,7 @@ Player {
 	}
 
 	toggle { | source |
-		if (this.isPlaying) { this.stop} { this.push.play(source) };
+		if (this.isPlaying) { this.stop } { this.push.play(source) };
 	}
 
 	put { | key, value |

@@ -64,7 +64,7 @@ object is MIDI instance created by spec.cc
 
 ** spec.cc(num, chan, srcID)
 
-done.  Example method:
+Done.  Example method:
 
 #+BEGIN_SRC sclang
 + Object {

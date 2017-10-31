@@ -244,7 +244,8 @@ SynthPlayer : SourcePlayer {
 		*/
 		process = argSynth;
 		process.onStart (this, {
-			this.changed(\started);
+			// this.changed(\started);
+			player.changed(\started);
 			/* If busses exist, then start the synth's gated envelope after mapping them */
 			if (busses.size > 0) {
 				busses keysValuesDo: { | key, value |
@@ -283,7 +284,7 @@ SynthPlayer : SourcePlayer {
 			});
 			process.onEnd (this, { | notification |				
 				if (process === notification.notifier) {
-					this.changed(\stopped);
+					player.changed(\stopped);
 					process = nil;
 				}
 			});

@@ -94,9 +94,26 @@
 			if (notify) { AudioFiles.default.changed(\all) };
 		}
 	}
+
+	*names {
+		^Library.at(\buffers).keys.asArray.sort;
+	}
+
+	*toggle { | name |
+		var buf, numChans, player;
+		buf = name.b;
+		numChans = buf.numChannels;
+		player = Player.named(name);
+		if (player.isNil) {
+			{ PlayBuf.ar(numChans, buf, doneAction: 2)} +> name;
+		}{
+			player.toggle
+		}
+	}
 }
 
 + Symbol {
+
 	b { ^Library.at(\buffers, this) }
 
 	bufnum {

@@ -8,7 +8,7 @@ FileItemList : List {
 		// load new instance from data stored in .sctxar file
 		^path.doIfExists({
 			Object.readArchive(path).path_(path);
-		},{
+		}, {
 			postf("path not found: %\n", path);
 			this.new.path_(path);
 		})
