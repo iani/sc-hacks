@@ -10,7 +10,7 @@ SourcePlayer {
 }
 
 PatternPlayer : SourcePlayer {
-
+	// var <>clock, <>quant;
 	listenToServerBoot {
 		// only SynthPlayer reacts to this
 		
@@ -30,7 +30,7 @@ PatternPlayer : SourcePlayer {
 			envir.busses.keysValuesDo({ | key, value |
 				source.put(key, value.index);
 			});
-			process = source.play;
+			process = source.play; // source.play(clock);
 		}{
 			stream = process.originalStream;
 			event = stream.event;
@@ -39,7 +39,7 @@ PatternPlayer : SourcePlayer {
 			envir.busses.keysValuesDo({ | key, value |
 				event.put(key, value.index);
 			});
-			if (process.isPlaying.not) { process.play };
+			if (process.isPlaying.not) { process.play /* process.play(clock) */ };
 		};		
 	}
 

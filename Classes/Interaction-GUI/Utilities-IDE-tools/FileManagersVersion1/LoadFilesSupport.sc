@@ -2,6 +2,23 @@
 // Support methods for LoadFiles and its subclasses
 
 
+BufferLoader {
+	*initClass {
+		StartUp add: {
+			ServerBoot add: {
+				var files, buffers;
+				files = (Platform.userAppSupportDir ++ "/sounds/\*").pathMatch;
+				buffers = files collect: { | f |
+					Buffer.read(Server.default, f);
+				};
+				buffers do: { | buffer |
+					Registry.put(\buffers, PathName(buffer.path).fileNameWithoutExtension.asSymbol, buffer);
+				};				
+			};
+		}
+	}
+}
+
 + Nil {
 	containsString { | string | ^false; }
 	addUniqueString { | string |
@@ -99,14 +116,31 @@
 		^Library.at(\buffers).keys.asArray.sort;
 	}
 
+	*buffers {
+		
+		
+	}
+
 	*toggle { | name |
 		var buf, numChans, player;
 		buf = name.b;
 		numChans = buf.numChannels;
 		player = Player.named(name);
 		if (player.isNil) {
-			{ PlayBuf.ar(numChans, buf, doneAction: 2)} +> name;
+			player = { PlayBuf.ar(numChans, buf, doneAction: 2) } +> name;
+			player.addNotifier(player, \started, { | notification |
+				Buffer.changed(\buffers);
+			});
+			player.addNotifier(player, \stopped, { | notification |
+				Buffer.changed(\buffers);
+			});
 		}{
+			player.addNotifier(player, \started, { | notification |
+				Buffer.changed(\buffers);
+			});
+			player.addNotifier(player, \stopped, { | notification |
+				Buffer.changed(\buffers);
+			});
 			player.toggle
 		}
 	}

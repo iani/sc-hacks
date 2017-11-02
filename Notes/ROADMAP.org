@@ -125,6 +125,15 @@ In addition to the 4 operators above, /sc-hacks/ uses =@= to configure busses bo
   :PROPERTIES:
   :DATE:     <2017-09-06 Wed 14:20>
   :END:
+** TODO Implement synchronization to next beat using TempoClock
+
+Starting point: (from: http://doc.sccode.org/Classes/TempoClock.html#-nextTimeOnGrid)
+#+BEGIN_SRC sclang
+
+t= TempoClock.default;
+t.nextTimeOnGrid(t.beatsPerBar) == t.nextBar // => true
+
+#+END_SRC
 ** DONE implement release for Symbol, Player.
    CLOSED: [2017-09-24 Sun 06:50]
    :PROPERTIES:

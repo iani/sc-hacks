@@ -65,5 +65,6 @@ MIDI {
 	polytouch { | num, chan = 0, srcID, func | ^MIDI(this, thisMethod.name, chan, num, srcID, func) }
 	touch { | chan = 0, srcID, func | ^MIDI(this, thisMethod.name, chan, nil, srcID, func) }
 	bend { | chan = 0, srcID, func | ^MIDI(this, thisMethod.name, chan, nil, srcID, func) }
-	program { | chan = 0, srcID, func | ^MIDI(this, thisMethod.name, chan, nil, srcID, func) }
+	// program conflicts with Server.default.program
+	programChange { | chan = 0, srcID, func | ^MIDI(this, \program, chan, nil, srcID, func) }
 }

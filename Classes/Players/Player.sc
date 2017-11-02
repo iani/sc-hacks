@@ -132,6 +132,13 @@ Player {
 		this.addNotifier(Player, \run, { this.play });
 		
 	}
+
+	setSource { | source |
+		// Create a sourceplayer from the source and store it in sourcePlayer.
+		// But do not start the sourcePlayer;
+		sourcePlayer = source.makeSource(this);
+	}
+
 	play { | source |
 		// play a function, symbol, or event.
 		// For definitions, see file playSource.sc

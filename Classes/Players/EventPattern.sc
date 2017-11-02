@@ -103,5 +103,3 @@ EventStream : Stream {
 		nil;
 	}	
 }
-
-
