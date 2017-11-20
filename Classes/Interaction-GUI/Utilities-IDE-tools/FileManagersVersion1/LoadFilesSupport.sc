@@ -112,13 +112,13 @@ BufferLoader {
 		}
 	}
 
-	*names {
-		^Library.at(\buffers).keys.asArray.sort;
+	*put { | name, buffer |
+		Library.put(\buffers, name, buffer);
+		this.changed(\buffers);
 	}
 
-	*buffers {
-		
-		
+	*names {
+		^Library.at(\buffers).keys.asArray.sort;
 	}
 
 	*toggle { | name |
@@ -147,6 +147,22 @@ BufferLoader {
 }
 
 + Symbol {
+	alloc { | seconds = 1, numChannels = 1 |
+		// alloc buffer and store under receiver - only if not already present
+		var buffer;
+		buffer = this.b;
+		if (buffer.isNil) {
+			buffer = Buffer.alloc(Server.default,
+				seconds * Server.default.sampleRate,
+				numChannels,
+			);
+			buffer.path = this.asString;
+			Buffer.put(this, buffer);
+		}{
+			postf("NOT ALLOCATING! Buffer exists already: %\n", buffer);
+		};
+		^buffer;
+	}
 
 	b { ^Library.at(\buffers, this) }
 
