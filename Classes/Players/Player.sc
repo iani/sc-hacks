@@ -142,7 +142,19 @@ Player {
 	play { | source |
 		// play a function, symbol, or event.
 		// For definitions, see file playSource.sc
-		sourcePlayer = sourcePlayer.playSource(this, source);
+		var clock, beats;
+		clock = envir[\clock];
+		beats = envir[\beats] ?? { [\beat] };
+		if (clock.isNil) {
+			sourcePlayer = sourcePlayer.playSource(this, source);	
+		}{
+			beats do: { | beat |
+				this.addNotifier(clock, beat, {
+					sourcePlayer = sourcePlayer.playSource(this, source);
+				})
+			}
+		}
+		
 	}
 
 	playEnvEvent { | event |
