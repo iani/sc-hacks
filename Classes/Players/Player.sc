@@ -152,7 +152,8 @@ Player {
 				this.addNotifier(clock, beat, {
 					sourcePlayer = sourcePlayer.playSource(this, source);
 				})
-			}
+			};
+			clock.play;
 		}
 		
 	}
@@ -235,6 +236,18 @@ Player {
 		stream << envir.name << "|" << name;
 		envir.printItemsOn(stream);
 	}
+
+	// ================================================================
+	// Synchronisation with clocks
+	addClock { | playerClock |
+		this.clock(playerClock ?? { PlayerClock() });
+	}
+
+	clock_ { | playerClock |
+		envir[\clock] = playerClock;
+	}
+
+	clock { ^envir[\clock] }
 }
 
 + Nil {

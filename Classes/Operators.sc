@@ -35,6 +35,16 @@
 
 	e { ^Nevent(this) }
 	push { ^this.e.push }
+
+	addClock { | clock |
+		this.clock_(clock ?? { PlayerClock() })
+	}
+
+	clock_ { | clock |
+		this.e[\clock] = clock;
+	}
+	clock { ^this.e.clock }
+	
 	p { | eventName | ^Nevent(eventName ? this).player(this) }
 	pp { | eventName | ^this.p(eventName).sourcePlayer }
 	ppp { | eventName | ^this.p(eventName).process }
@@ -48,7 +58,7 @@
 		/* Connect writer with reader via an intermediate player which copies 
 			the output from the writer's output bus to the reader's input bus.
 			numChans only matters if neither the reader nor the writer already have a bus.
-		*/
+		*/ 
 		var writer, writersChans, readersChans, linker;
 		writer = this.e;
 		reader = reader.e;

@@ -55,11 +55,54 @@ TempoClock.default.playScore(
 \player.addNotifier(TempoClock.default, \three, {
 	(degree: 4, dur: 0.2).play;
 });
+// ================================================================
+// Playing EventPatterns and EventStreams with custom clock.
+//: How does Pattern play in EventStreamPlayer with play?
+~clock = TempoClock();
+~streamPlayer = Pbind(\dur, 1, \degree, Pseq((0..7), inf)).play(~clock);
+//: change tempo
+~clock.tempo = 2;
+
+//: change tempo
+~clock.tempo = 4;
+
+//: change tempo
+~clock.tempo = 8;
+
+//: change tempo
+~clock.tempo = 1.5;
+//: Testing with sc-hacks Player;
+\tempoPlayer.push;
+~clock = TempoClock();
+(degree: Pseq((..7), inf)) +> \tempoPlayer;
 //:
-
-//: Note: Probably obsolete - see notes above.
-
-
-//: Also investigate Quant:
-// http://doc.sccode.org/Classes/Quant.html
-
+~clock.tempo = 10;
+//: Test tempoClock playScore
+a = TempoClock.default.schedAbs(TempoClock.default.beats.ceil, {
+	1.postln;
+	1
+});
+//:
+a;
+//: Testing PlayerClock
+p = PlayerClock();
+//:
+p.isPlaying;
+//:
+p.play;
+//:
+p.isPlaying;
+//:
+p.clock.tempo = 1;
+//:
+\player1.addNotifier(p, \beat, { (degree: 20).play.postln; });
+//:
+\player2.addNotifier(p, \beat, { (degree: 22).play.postln; });
+//:
+\player2.removeNotifier(p, \beat, { (degree: 12).play.postln; });
+//:
+\player1.removeNotifier(p, \beat, { (degree: 12).play.postln; });
+//:
+p.clock.tempo = 0.5;
+//:
+p.clock.tempo = 0.5;

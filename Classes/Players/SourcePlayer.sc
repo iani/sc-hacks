@@ -30,7 +30,7 @@ PatternPlayer : SourcePlayer {
 			envir.busses.keysValuesDo({ | key, value |
 				source.put(key, value.index);
 			});
-			process = source.play; // source.play(clock);
+			process = source.play(envir[\clock] ?? { TempoClock.default }); // source.play(clock);
 		}{
 			stream = process.originalStream;
 			event = stream.event;
@@ -39,8 +39,8 @@ PatternPlayer : SourcePlayer {
 			envir.busses.keysValuesDo({ | key, value |
 				event.put(key, value.index);
 			});
-			if (process.isPlaying.not) { process.play /* process.play(clock) */ };
-		};		
+			if (process.isPlaying.not) { process.play(envir[\clock] ?? { TempoClock.default }) };
+		};
 	}
 
 	release {
