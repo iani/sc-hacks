@@ -229,3 +229,15 @@
 	}
 }
 
+// ================================================================
+// new, 11 Feb 2018 11:59: support playing buffers in beat patterns.  Inspired by tidal.
++ String {
+	+> { | player, clockPlayer |
+		/* parse the string as a sequence of buffer names from SuperDirt
+			Play these in player player, and use clockPlayer as a name of the kr player
+			that generates the beats. 
+			The kr player must output the beats in a kr bus.
+		*/
+	}
+	
+}
