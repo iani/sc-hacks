@@ -191,3 +191,29 @@ Of the above, only name is required, for printing.  =players=, =busses=, =writer
 - =osc= OSCFuncs attached to a =Nevent= instance.
 
 At a later revision of the library, the 4 instance variables of =Nevent=: =players=, =busses=, =writers=, =routines= may be gradually migrated to methods using =Registry=.
+* Extensions, Projects
+** StartupFiles : save and recall configurations of startup files
+   :PROPERTIES:
+   :DATE:     <2018-07-11 Wed 18:22>
+   :END:
+
+Purpose: Instead of having a single startup file that is stored in the Users Application Support directory, permit to use multiple startup files, and have these stored in subfolders contiained in the present library's main folder. 
+**  Advantages 
+
+There are two advantages:
+
+1. One can use multiple files to combine different tested parts of code for one application.
+2. The files are found and loaded even when the library is moved to a different folder, because their path is relative to the location of the =SstartupFiles= class, which is stored inside the library. 
+** Protecting user's custom files from overwriting by git repository updates
+
+If a user edits the files in the startup folder, the edits will be overwritten when the user pulls a newer version of the library.  For this reason, =StartupFiles= looks for startup files in two folders: 
+
+1. In =sc-hacks/Startup/= folder.
+2. In User Application Support Directory/Startup folder.
+
+The folder outside of =sc-hacks= is safe because it will not be overwritten even if the user does not use =git= but downloads the library as zipped file from github instead.
+** GUI
+
+| text input for new sc-hacks file name | text input for new user file name         |
+| sc-hacks startup files list pane      | user startup files list pane              |
+| list of configurations                | files selected by user for current config |
