@@ -192,28 +192,43 @@ Of the above, only name is required, for printing.  =players=, =busses=, =writer
 
 At a later revision of the library, the 4 instance variables of =Nevent=: =players=, =busses=, =writers=, =routines= may be gradually migrated to methods using =Registry=.
 * Extensions, Projects
-** StartupFiles : save and recall configurations of startup files
+** StartupFiles : Select a startup file from a list of files stored in "Startups"
    :PROPERTIES:
    :DATE:     <2018-07-11 Wed 18:22>
    :END:
+*** Purpose: easily customize startup behavior
 
-Purpose: Instead of having a single startup file that is stored in the Users Application Support directory, permit to use multiple startup files, and have these stored in subfolders contiained in the present library's main folder. 
-**  Advantages 
+Permit a user to customize the behavior of SuperCollider on startup by composing the startup file from a list of files contained in a folder.
 
-There are two advantages:
+Note: This emulates a kind of "include" behavior: The startup can include a number of other files.
 
-1. One can use multiple files to combine different tested parts of code for one application.
-2. The files are found and loaded even when the library is moved to a different folder, because their path is relative to the location of the =SstartupFiles= class, which is stored inside the library. 
-** Protecting user's custom files from overwriting by git repository updates
+*** GUI
 
-If a user edits the files in the startup folder, the edits will be overwritten when the user pulls a newer version of the library.  For this reason, =StartupFiles= looks for startup files in two folders: 
+A window with a list showing all scd files contained in the =Startups= folder, and following buttons / text fields, stacked vertically, from top to bottom as follows:
 
-1. In =sc-hacks/Startup/= folder.
-2. In User Application Support Directory/Startup folder.
+|---+-------------+-------------------------------------------------------------------------|
+| ! | widget type | contents                                                                |
+|---+-------------+-------------------------------------------------------------------------|
+|   | list        | all scd files contained in =Startups= folder                            |
+|   | static text | "currently installed: =x=". Where =x= is the currently installed script |
+|   | button      | "install script: =x="" where =x= is the currently selected item in list |
+|   | button      | "refresh file list contents"                                            |
+|---+-------------+-------------------------------------------------------------------------|
 
-The folder outside of =sc-hacks= is safe because it will not be overwritten even if the user does not use =git= but downloads the library as zipped file from github instead.
-** GUI
+*** Implementation
 
-| text input for new sc-hacks file name | text input for new user file name         |
-| sc-hacks startup files list pane      | user startup files list pane              |
-| list of configurations                | files selected by user for current config |
+The files used for StartupFiles are included in the folder =StartupFiles= inside the root 
+
+
+The startup files are stored in folder <sc-hacks-home>/Startups.  
+On startup, class =StartupFiles= opens a GUI showing a list of the scd files in the =Startups= folder. The list also shows the currently selected file as selected item in the list. 
+
+When the user selects a different file the following things happen: 
+
+1. The Name of the file selected by the user is stored in User Application Support Directory of SuperCollider under file =UserStartupFile.sctxar=.  This is used in order to show the last selection at the next time that the library is compiled. 
+2. The selected file is copied to =Platform.userAppSupportDir ++ "/startup1.sc1"=.  This file is run by StartupFiles class at startup.
+
+** Include: I
+
+
+
