@@ -219,14 +219,15 @@ A window with a list showing all scd files contained in the =Startups= folder, a
 
 The files used for StartupFiles are included in the folder =StartupFiles= inside the root 
 
-
 The startup files are stored in folder <sc-hacks-home>/Startups.  
 On startup, class =StartupFiles= opens a GUI showing a list of the scd files in the =Startups= folder. The list also shows the currently selected file as selected item in the list. 
 
 When the user selects a different file the following things happen: 
 
 1. The Name of the file selected by the user is stored in User Application Support Directory of SuperCollider under file =UserStartupFile.sctxar=.  This is used in order to show the last selection at the next time that the library is compiled. 
-2. The selected file is copied to =Platform.userAppSupportDir ++ "/startup1.sc1"=.  This file is run by StartupFiles class at startup.
+2. The selected file is loaded.  This specifies how to create the code .... for ...
+
+ copied to =Platform.userAppSupportDir ++ "/startup1.sc1"=.  This file is run by StartupFiles class at startup.
 
 ** Include: I
 

@@ -16,19 +16,44 @@ StartupFiles {
 			and the last saved startup script selection.
 			Then load the last saved startup file. */
 		StartUp add: {
-			this.loadStartupFile;
+			// boot server if needed, and then call loadStartupFile after booting:
+			this.loadServerSetup;
 			this.gui;
 		}
 	}
 
-	*loadStartupFile {
-		this.startupFile.doIfExists { | path |
-				path.load;
-			}{ | path |
-				postf("Could not find:\n%\nat startup\n", path)
-			};
+	*loadServerSetup {
+		/* load StartupServer.scd
+			If Include.server statements been included, in config script,
+			then StartupServer encloses loadStartupFile in a server.waitForBoot function.
+			Else it merely calls "StartupFiles.loadStartupFile;".
+		*/
+		this.loadServerFile;
+	}
+
+	*loadServerFile {
+		this.loadIfExists(this.serverFile);
 	}
 	
+	*serverFile {
+		^Platform.userAppSupportDir +/+ "serverStart.scd";		
+	}
+
+	*loadStartupFile {
+		this.loadIfExists(this.startupFile);
+	}
+
+	*loadIfExists { | argPath |
+		argPath.doIfExists { | path |
+			"================================================================".postln;
+			postf("Loading \n%\n", path);
+			path.load;
+			"================= DONE ===============================================".postln;
+		}{ | path |
+			postf("Could not find:\n%\nat startup\n", path)
+		};
+	}
+
 	*startupFile {
 		^Platform.userAppSupportDir +/+ "startup1.scd";
 	}
@@ -41,7 +66,7 @@ StartupFiles {
 
 	*makeWindow {
 		var window;
-		window = Window("Startup Scripts", Rect(0, 0, 250, 300));
+		window = Window("Startup Scripts", Rect(0, 0, 350, 200));
 		window.layout = VLayout(
 			// list of files in Startups folder
 			ListView() 
@@ -69,8 +94,8 @@ StartupFiles {
 				// Button to install currently selected script
 				Button()
 				.states_([["run"]])
-				.action_({ this.loadStartupFile; })
-				.maxHeight_(18)
+				.action_({ this.loadServerFile })
+				.maxHeight_(18).maxWidth_(50)
 			),
 			HLayout(
 				// Display name of currently selected script
@@ -82,7 +107,7 @@ StartupFiles {
 				Button()
 				.states_([["install"]])
 				.action_({ this.changed(\installScript)})
-				.maxHeight_(18)
+				.maxHeight_(18).maxWidth_(50)
 			),	
 			// Button to refresh script list from folder
 			Button()
@@ -132,10 +157,23 @@ StartupFiles {
 				// Include.all do: { | i | i.fileName.postln; i.contents.postln; };
 				1.wait;
 				// postf("should create startup file now: \n%\n", StartupFiles.startupFile);
+				File.use(this.serverFile, "w", { | file |
+					file.putString("\n\n//============================================");
+					file.putString(
+						format("\n// Server setup created from script '%' on: %",
+							script,
+							Date.localtime.stamp
+						)
+					);
+					file.putString("\n//===============================================\n");
+					file.putString(Include.makeServerCode);
+				});
+				//1.wait;
 				File.use(this.startupFile, "w", { | file |
-					// file.putString("// this is a first test.\n");
-					// file.putString("// this is a second test.\n");
-					Include.all do: { | i | file.putString(i.contents); };
+					Include.all do: { | i |
+						//		postf("contents of include are:\n%\n", i.contents).postln;
+						file.putString(i.contents);
+					};
 					file.putString("\n\n//============================================");
 					file.putString(format("\n// Startup created from script '%' on: %",
 						script,
@@ -159,49 +197,4 @@ StartupFiles {
 		^Platform.userAppSupportDir +/+ "UserStartupScriptName.sctxar"
 	}
 
-	*makeStartupFile { | scriptName |
-		/*
-			A new config script has been chosen.
-			Save the name of the new script.
-			Load the config script, then:
-			Compose the startup file from the Include instances created in the 
-			currently selected startup script. 
-		*/
-		postf("will make startup file from this script: %\n", scriptName)
-		// Run the startup script to create the Include instances:
-		/*
-			this.loadStartupConfig;
-			// Run this in routine to pause 1 second after reading file contents:
-			{
-			// Rename the previous startup file to make place for the new one:
-			this.renameOldStartupFile;
-			// Initialize the sting contents of all Include instances:
-			Include.getaAllStrings; // read strings from files
-			1.wait; // wait for all files to be read and closed
-			this.writeStartupFile;
-			}.fork(Appclock);
-		*/
-	}
-
-	*loadStartupConfig {
-		this.getConfigPath.doIfExists({ | path |
-			path.load;
-		}, { | path |
-			postf("could not fine config file: \n%\n", path);
-		});
-	}
-
-	*renameOldStartupFile {
-		var basePath, stamp, command;
-		basePath = Platform.userAppSupportDir.escapeChar($ );
-		stamp = Date.localtime.stamp;
-		command = format("mv %/startup1.scd %/startup%.scd", basePath, basePath, stamp);
-		command.unixCmd;
-	}
-
-	*writeStartupfile {
-		File.use(this.startupFile, "w", {
-			Include.writeAll2File;
-		});
-	}
 }
