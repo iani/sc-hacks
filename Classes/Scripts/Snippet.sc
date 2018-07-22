@@ -27,7 +27,7 @@ Snippet {
 	}
 
 	addCode { | string = "" |
-		code = code ++ string;
+		code = code ++ if (code.size == 0) { "" }{ "\n" } ++ string;
 	}
 }
 
@@ -67,6 +67,7 @@ SnippetList {
 	getSnippetsFromSource {
 		var snippet;
 		snippet = Snippet(name, "");
+		all = [];
 		source.split($
 		) do: { | l |
 			if ("^//:" matchRegexp: l) {
@@ -77,6 +78,12 @@ SnippetList {
 			};
 		};
 		all = all add: snippet;
+	}
+
+	save {
+		File.use(path, "w", { | f |
+			f.write(source);
+		});
 	}
 
 	*gui {
@@ -113,13 +120,14 @@ SnippetList {
 					fileIndex = me.value;
 					this.changed(\file)
 				}),
-				ListView() // List 2: Select snippet
+				ListView() // List 2: List of snippets in selected file
 				.addNotifier(this, \file, { | n |
 					snippets = this.new(folders[folderIndex][1][fileIndex]);
 					n.listener.items = snippets.all collect: _.name;
 					n.listener.doAction;
 				})
 				.addNotifier(this, \userEdited, { | n |
+					n.listener.items = snippets.all collect: _.name;
 					n.listener.valueAction_(0);
 				})
 				.action_({ | me |
@@ -128,8 +136,24 @@ SnippetList {
 				})
 				// On keyboard return: run selected snippet
 				.enterKeyAction_({ | me |
-					"the enter key was pressed".postln;
-				})
+					snippets.all[snippetIndex].code.interpret;
+				}),
+				HLayout(
+					Button().states_([["Boot Server"], ["Quit Server"]])
+					.action_({| me |
+						[{ Server.default.boot }, { Server.default.quit} ][
+							1 - me.value
+						].value
+					})
+					.addNotifier(Server.default, \counts, { | n |
+						n.listener.value = 1;
+					})
+					.addNotifier(Server.default, \didQuit, { | n |
+						n.listener.value = 0;
+					}),
+					Button().states_([["Stop all"]])
+					.action_({ CmdPeriod.run })
+				)
 			),
 			[
 				VLayout(
@@ -139,28 +163,26 @@ SnippetList {
 							n.listener.string = snippets.source;
 							edited = false;
 						}) // on edit per keyboard mark as changed
+						/*
 						.keyDownAction_({ | me, char, modifiers, unicode, keycode, key |
-							[me, char].postln;
 							edited = true;
 							me.defaultKeyDownAction(
 								char, modifiers, unicode, keycode, key
 							);
 						})
-
+						*/
 						// on mouse leave, save changes
 						.mouseLeaveAction_({ | me |
-							if (edited) {
+							/*	if (edited) { */
+							if (true) {
+								// string obtained from view
 								snippets.source = me.string;
 								snippets.getSnippetsFromSource;
-								postf("was edited. saving to path:\n%\n", snippets.path);
+								// postf("was edited. saving to path:\n%\n", snippets.path);
+								snippets.save;
+								// snippets = 
 								this.changed(\userEdited);
-								/*
-								snippetIndex = 0;
-								this.changed(\snippet;)
-								*/
-							}{
-								// "was NOT edited, WILL NOT save".postln;
-							}
+							}{}
 						})
 						, s: 5
 					],
