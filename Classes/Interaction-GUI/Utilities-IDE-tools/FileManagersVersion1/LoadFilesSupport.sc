@@ -164,7 +164,15 @@ BufferLoader {
 		^buffer;
 	}
 
-	b { ^Library.at(\buffers, this) }
+	// 20 Jul 2018 22:31 reimplementing this with registry.
+	b { | seconds = 1, numChannels = 1 |
+		^Registry(\buffers, this, {
+			Buffer.alloc(Server.default,
+				seconds * Server.default.sampleRate,
+				numChannels,			
+			).path_(this.asString)
+		});
+	}
 
 	bufnum {
 		var buffer;

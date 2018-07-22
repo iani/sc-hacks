@@ -14,11 +14,12 @@
 */
 
 + Object {
-	window { | initFunc, key = \default |
-		var rect;
-		rect = Registry(\windowRects, this, key, {
-			Rect(0, 0, 400, 400)}
-		);
+	window { | initFunc, key = \default, rect |
+		rect ?? {
+			rect = Registry(\windowRects, this, key, {
+				Rect(0, 0, 400, 400)}
+			);
+		};
 		^Registry(\windows, this, key, {
 			var window;
 			// when window closes it removes itself from registry.
@@ -36,3 +37,5 @@
 		}).front;	
 	}
 }
+
+

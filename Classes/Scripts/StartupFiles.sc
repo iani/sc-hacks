@@ -59,14 +59,13 @@ StartupFiles {
 	}
 
 	*gui {
-		Registry(this, \gui, {
-			this.makeWindow;
-		}).front;
+		this.window({ | window |
+			this.makeWindow(window)}, \gui, Rect(0, 0, 350, 200)
+		);
 	}
 
-	*makeWindow {
-		var window;
-		window = Window("Startup Scripts", Rect(0, 0, 350, 200));
+	*makeWindow { | window |
+		// window = Window("Startup Scripts", Rect(0, 0, 350, 200));
 		window.layout = VLayout(
 			// list of files in Startups folder
 			ListView() 
@@ -191,6 +190,7 @@ StartupFiles {
 
 	*startupFolderPath {
 		^PathName(this.filenameSymbol.asString).pathOnly ++ "Startups/"
+		//	^Registry(\paths, \startupFolder, )
 	}
 
 	*userInstalledScriptPath {

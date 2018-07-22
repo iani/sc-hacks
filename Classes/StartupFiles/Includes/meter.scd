@@ -1,1 +1,0 @@
-ServerMeter(Server.default);
