@@ -2,6 +2,8 @@
 Create a horizontal slider with label and number box, which controls a parameter
 of a player in an environment by setting the environment variable.
 Return a HLayout that can be used when building a GUI through an array of Layout elements.
+
+Additional utilities and shortcuts: v, h, watch, close.
 */
 
 + Symbol {
@@ -9,9 +11,20 @@ Return a HLayout that can be used when building a GUI through an array of Layout
 	// controlspec and envir are optional, defaulting to this.asSpec and
 	// current environment.
 	// Envir must be either nil or a symbol.
+	close { | key = \default |
+		var window;
+		window = Library.at(\windows, this, key);
+		window !? { {window.close}.defer }
+	}
+
+	watch { | key, action |
+		// perform action when key is set in envir named by symbol
+		this.e.addNotifier(this.e, key, action);
+	}
+	
 	slider { | controlspec, envir |
 		// var mappedValue;
-		controlspec ?? { controlspec = this.asSpec };
+		controlspec = (controlspec ? this).asSpec;
 		if (envir.isNil) {
 			envir = currentEnvironment;
 		}{
@@ -37,6 +50,9 @@ Return a HLayout that can be used when building a GUI through an array of Layout
 			}),
 			NumberBox()
 			.maxWidth_(80)
+			.clipLo_(controlspec.minval)
+			.clipHi_(controlspec.maxval)
+			.decimals_(5)
 			.action_({ | me |
 				envir.put(this, controlspec constrain: (me.value));
 			})
@@ -45,14 +61,19 @@ Return a HLayout that can be used when building a GUI through an array of Layout
 			})
 		)
 	}
+	
 
 	// Shortcuts for VLayout and Hlayout
 	v { | ... items |
-		this.window({ | w |
-			w.layout = VLayout(
-				*items
-			)
-		});
+		{
+			this.close;
+			0.1.wait;
+			this.window({ | w |
+				w.layout = VLayout(
+					*items
+				)
+			})
+		}.fork(AppClock);
 	}
 
 	h { | ... items |

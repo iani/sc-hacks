@@ -110,6 +110,12 @@ SnippetList {
 					this.changed(\folder)
 				}),
 				ListView() // List 1: Select file
+				.keyDownAction_({ | me, char, modifier ... args |
+					if (char === $\r) {
+						Document.open(folders[folderIndex][1][fileIndex]);
+					};
+					me.defaultKeyDownAction(char, modifier, *args);
+				})
 				.addNotifier(this, \folder, { | n |
 					n.listener.items = folders[folderIndex][1] collect: { | p |
 						PathName(p).fileNameWithoutExtension;
@@ -121,6 +127,7 @@ SnippetList {
 					this.changed(\file)
 				}),
 				ListView() // List 2: List of snippets in selected file
+				.hiliteColor_(Color.red)
 				.addNotifier(this, \file, { | n |
 					snippets = this.new(folders[folderIndex][1][fileIndex]);
 					n.listener.items = snippets.all collect: _.name;
@@ -159,6 +166,8 @@ SnippetList {
 				VLayout(
 					[
 						TextView() // full code of file: all snippets
+						.tabWidth_(30)
+						.font_(Font("Courier", 11))
 						.addNotifier(this, \snippet, { | n |
 							n.listener.string = snippets.source;
 							edited = false;
@@ -187,6 +196,10 @@ SnippetList {
 						, s: 5
 					],
 					StaticText()
+					//.tabWidth_(30)
+					.font_(Font("Courier", 14/*, true */))
+					.background_(Color(0.92, 0.92, 0.92))
+					.stringColor_(Color.red)
 					.addNotifier(this, \snippet, { | n |
 						n.listener.string = snippets.all[snippetIndex].code;
 					})

@@ -82,6 +82,12 @@ StartupFiles {
 				this.installScript(
 					notification.listener.items[notification.listener.value]
 				)
+			})
+			.keyDownAction_({ | me, char ... args |
+				if (char === $\r) {
+					Document.open(this.scripts[me.value])
+				};
+				me.defaultKeyDownAction(char, *args);
 			}),
 			HLayout(
 				// Button to install currently installed script
@@ -125,10 +131,11 @@ StartupFiles {
 	}
 
 	*updateScriptList {
-		this.changed(
-			\scriptList,
-			pathMatch(PathName(this.filenameSymbol.asString).pathOnly +/+ "Startups/*.scd")
-		);
+		this.changed(\scriptList, this.scripts);
+	}
+
+	*scripts {
+		^pathMatch(PathName(this.filenameSymbol.asString).pathOnly +/+ "Startups/*.scd")	
 	}
 
 	*readInstalledScriptName {
