@@ -44,7 +44,14 @@
 	PlayBuf.ar(1, \rb.b, startPos: 1 * BufSampleRate.kr(\rb.b), loop: 1);
 } +> \rp;
 
-//:Record/PlayBuf 3: variable startPos offset
+//:Record/PlayBuf 2: startPos offset
+{
+	var pb;
+	pb = PlayBuf.ar(1, \rb.b, startPos: 1 * BufSampleRate.kr(\rb.b), loop: 1);
+	RecordBuf.ar(In.ar(2) + (pb * \fb.kr(1)), \rb.b(3), loop: 1);
+} +> \rp;
+
+//:Broken: Record/PlayBuf 3: variable startPos offset
 {
 	RecordBuf.ar(In.ar(2), \rb.b(3), loop: 1);
 	PlayBuf.ar(1, \rb.b,
@@ -61,3 +68,5 @@
 	}).postln.next;
 	)
 });
+//:
+\rp.envir.addDependant({ | ... args | args.postln ;});

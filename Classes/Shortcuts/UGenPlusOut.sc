@@ -37,6 +37,11 @@ IZ Wed, 26 Feb 2014 08:22:41
 */
 
 + UGen {
+	stereo { // make a single output stereo using pan
+		// does not work for array outputs
+		^Pan2.ar(this, \pos.kr(0), \level.kr(1))
+	}
+
 	out { | outName = \out, outValue = 0 |
 		^Out.perform(
 			if (this.rate == \control) { \kr } { \ar },

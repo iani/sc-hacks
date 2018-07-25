@@ -174,6 +174,12 @@ BufferLoader {
 		});
 	}
 
+	loadBuffer { | path |
+		^Registry(\buffers, this, {
+			Buffer.read(Server.default, path);
+		});
+	}
+
 	bufnum {
 		var buffer;
 		buffer = this.b;

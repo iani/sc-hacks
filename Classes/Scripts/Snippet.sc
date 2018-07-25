@@ -32,7 +32,7 @@ Snippet {
 }
 
 SnippetList {
-	classvar <folders, <folderIndex, <fileIndex, <snippetIndex, <snippets;
+	classvar <folders, <folderIndex, <fileIndex, <snippetIndex = 0, <snippets;
 	classvar <edited;
 	var <path, // path of file containing snippets
 	<all,      // array of snippets created from code in file
@@ -95,9 +95,13 @@ SnippetList {
 	}
 
 	*makeWindow { | window |
+		// Reread current file when entering window:
+		// This synchronizes file contents with possible edits
+		// by user on different editor.
+		window.view.mouseEnterAction_({ this.changed(\file) });
 		window.layout = HLayout(
 			VLayout(
-				PopUpMenu() // Popup: Select folder
+				PopUpMenu() // Popup: Select folder =============================
 				.addNotifier(this, \folders, { | notification |
 					this.readFolders;
 					notification.listener.items = folders collect: { | f |
@@ -109,7 +113,7 @@ SnippetList {
 					folderIndex = me.value;
 					this.changed(\folder)
 				}),
-				ListView() // List 1: Select file
+				ListView() // List 1: Select file ================================
 				.keyDownAction_({ | me, char, modifier ... args |
 					if (char === $\r) {
 						Document.open(folders[folderIndex][1][fileIndex]);
@@ -126,16 +130,18 @@ SnippetList {
 					fileIndex = me.value;
 					this.changed(\file)
 				}),
-				ListView() // List 2: List of snippets in selected file
+				ListView() // List 2: List of snippets in selected file ==========
 				.hiliteColor_(Color.red)
 				.addNotifier(this, \file, { | n |
 					snippets = this.new(folders[folderIndex][1][fileIndex]);
 					n.listener.items = snippets.all collect: _.name;
-					n.listener.doAction;
+					// keep previously selected snippet if possible:
+					n.listener.valueAction_(snippetIndex min: (n.listener.items.size - 1));
+					//					n.listener.doAction;
 				})
 				.addNotifier(this, \userEdited, { | n |
 					n.listener.items = snippets.all collect: _.name;
-					n.listener.valueAction_(0);
+					n.listener.valueAction_(snippetIndex min: (n.listener.items.size - 1));
 				})
 				.action_({ | me |
 					snippetIndex = me.value;
@@ -170,7 +176,8 @@ SnippetList {
 						.font_(Font("Courier", 11))
 						.addNotifier(this, \snippet, { | n |
 							n.listener.string = snippets.source;
-							edited = false;
+							// n.listener.syntaxColorize; // syntaxColorize does not work?
+							// edited = false;
 						}) // on edit per keyboard mark as changed
 						/*
 						.keyDownAction_({ | me, char, modifiers, unicode, keycode, key |
@@ -183,15 +190,15 @@ SnippetList {
 						// on mouse leave, save changes
 						.mouseLeaveAction_({ | me |
 							/*	if (edited) { */
-							if (true) {
-								// string obtained from view
-								snippets.source = me.string;
-								snippets.getSnippetsFromSource;
-								// postf("was edited. saving to path:\n%\n", snippets.path);
-								snippets.save;
-								// snippets = 
-								this.changed(\userEdited);
-							}{}
+							// if (true) {
+							// string obtained from view
+							snippets.source = me.string;
+							snippets.getSnippetsFromSource;
+							// postf("was edited. saving to path:\n%\n", snippets.path);
+							snippets.save;
+							// snippets = 
+							this.changed(\userEdited);
+							// }{}
 						})
 						, s: 5
 					],
