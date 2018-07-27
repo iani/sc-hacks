@@ -245,7 +245,12 @@ SynthPlayer : SourcePlayer {
 		process = argSynth;
 		process.onStart (this, {
 			// this.changed(\started);
+			//			postf("Debugging groups. Player: %, Group: %\n", this, envir[\target]);
 			player.changed(\started);
+			// catch any link busses that were set while you were starting:
+			envir.busses keysValuesDo: { | key, bus |
+					process.set(key, bus.index);
+			};
 			/* If busses exist, then start the synth's gated envelope after mapping them */
 			if (busses.size > 0) {
 				busses keysValuesDo: { | key, value |
@@ -307,6 +312,23 @@ SynthPlayer : SourcePlayer {
 	setTarget { | orderedGroup |
 		if (process.isPlaying) {
 			process.moveToHead(orderedGroup.group);
+		}{
+			// ensure that linking works in any order of execution:
+			this.addNotifierOneShot(player, \started, {
+				//	postf("will move to head now %\n", player);
+				// orderedGroup.postln;
+				process.moveToHead(orderedGroup.group);
+				/*
+				// TODO: Must also set in/out busses
+				"must stet busses now".postln;
+				envir.busses.postln;
+				envir.busses do: { | b | b.bus.postln; };
+					// Moved this to connectplayer method:
+				envir.busses keysValuesDo: { | key, bus |
+					process.set(key, bus.index);
+				};
+				*/
+			})
 		}
 	}
 	clear {

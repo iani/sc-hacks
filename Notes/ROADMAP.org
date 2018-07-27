@@ -125,6 +125,49 @@ In addition to the 4 operators above, /sc-hacks/ uses =@= to configure busses bo
   :PROPERTIES:
   :DATE:     <2017-09-06 Wed 14:20>
   :END:
+** TODO Move synth of linked player to appropriate group when linked
+   :PROPERTIES:
+   :DATE:     <2018-07-26 Thu 13:24>
+   :END:
+
+This will not work now:
+#+BEGIN_SRC sclang
+  //:
+  //Server.default.plotTree;
+  //Fixed.
+  //play something in the source player
+  { WhiteNoise.ar(0.2) } +> \source3;
+  //play something in the effect player
+  { Resonz.ar(In.ar(\in.kr),
+          //	\freq.kr(440),
+          LFNoise0.kr(2).range(200, 2000),
+          \bwr.kr(0.05))
+          ,* 5
+  } +> \effect3;
+  //Link source and effect player. This statement should work in any order.
+  \source3 *> \effect3;
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+//:
+//Server.default.plotTree;
+//Fixed.
+//play something in the source player
+{ WhiteNoise.ar(0.2) } +> \source3;
+//play something in the effect player
+{ Resonz.ar(In.ar(\in.kr),
+        //	\freq.kr(440),
+        LFNoise0.kr(2).range(200, 2000),
+        \bwr.kr(0.05))
+        ,* 5
+} +> \effect3;
+//Link source and effect player. This statement should work in any order.
+\source3 *> \effect3;
+#+end_example
+
+This is because the synth of the source is not moved to the appropriate group after the players are linked.  Therefore issue a "changed" notification when linking, and catch it to move the synth of the writing player to a group before the reading player. 
+
 ** TODO Implement synchronization to next beat using TempoClock
 
 Starting point: (from: http://doc.sccode.org/Classes/TempoClock.html#-nextTimeOnGrid)

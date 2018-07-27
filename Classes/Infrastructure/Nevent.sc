@@ -138,6 +138,12 @@ Nevent : EnvironmentRedirect {
 		}{
 			readerEnvir.writers add: this;
 			this moveGroupBefore: readerEnvir[\target];
+			/*
+			// debugging:
+			players do: { | p |
+				postf("must move this player: %\n", p);
+			}
+			*/
 		}
 	}
 
