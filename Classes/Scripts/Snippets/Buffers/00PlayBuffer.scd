@@ -1,15 +1,39 @@
-//:load default sample
-// Normally done by include. Will do nothing if allwk has already been loaded:
+//:preload default sample once
+/* This snippet is *automatically* run once only, 
+before running a snippet from this file for the first time. 
+*/
 \allwk.loadBuffer(Platform.resourceDir +/+ "sounds/a11wlk01.wav");
+\s28.loadBuffer("~/Music/sounds/sounds-tetatet/hi/28.wav".standardizePath);
+\s12.loadBuffer("~/Music/sounds/sounds-tetatet/hi/12.wav".standardizePath);
+\clap.loadBuffer("~/Music/sounds/sounds-lindrum-etc/clap.wav".standardizePath);
 
 //:play with default method
 \allwk.b.play;
+//:test another sample from buffer
+\s28.b.play;
 //:Ask number of channels
 \allwk.b.numChannels;
 //:play with PlayBuf
 {
 	PlayBuf.ar(\allwk.b.numChannels, \allwk.b, loop: 1);	
 } +> \playbuf;
+//:play with PlayBuf and controllable bufnum
+{ | bufnum = 0 |
+	PlayBuf.ar(1, bufnum, loop: 1);	
+} +> \playbuf;
+//:Manually change bufnum
+\bufnum <+ 1;
+//:Manually change bufnum back
+\bufnum <+ 0;
+//:Change bufnum to "allwk" by buffer name
+\bufnum <+ \allwk;
+//:Change bufnum to "s28" by buffer name
+\bufnum <+ \s28;
+//:Change bufnum to "s12" by buffer name
+currentEnvironment.postln;
+\bufnum <+ \s12;
+//:Change bufnum to "clap" by buffer name
+\bufnum <+ \clap;
 //:play with startPos
 {
 	PlayBuf.ar(\allwk.b.numChannels,
@@ -58,4 +82,14 @@
 	\sp.slider([0.0, 3.0])
 )
 //:reset start to random point;
-\sp <+ 3.0.rand;
+\sp <+ 3.0.rand; // must use trigger when starting point changes source below
+//:trigger when starting point changes, using Changed.kr
+{
+	var sp;
+	sp = \sp.kr(0);
+	PlayBuf.ar(\allwk.b.numChannels,
+		\allwk.b,
+		trigger: Changed.kr(sp),
+		startPos: sp * \sp.b.sampleRate,
+		loop: 0);	
+} +> \playbuf;

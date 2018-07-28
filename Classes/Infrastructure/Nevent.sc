@@ -63,7 +63,8 @@ Nevent : EnvironmentRedirect {
 			// let listeners switch listening from old to new environment:
 			Nevent.changed(\oldEnvir, currentEnvironment); // GUIs remove old envir
 			super.push;
-			Nevent.changed(\newEnvir, this); // dependent GUIs start listening to new envir updates
+			Nevent.changed(\newEnvir, this); // dependent GUIs start listening to
+			                                 // new envir updates
 		}
 	}
 
@@ -132,7 +133,7 @@ Nevent : EnvironmentRedirect {
 		stream << " ]" ;
 	}
 
-	addReader { | readerEnvir |
+	addReaderEnvir { | readerEnvir |
 		if (this.allWriters(Set()) includes: readerEnvir) {
 			postf("cannot move % before %: cycles not permitted\n", this, readerEnvir);			
 		}{

@@ -99,7 +99,7 @@
 		^Nevent(envir ? this).push.player(this);
 	}
 
-	asPeristentBusProxy { | param = \out |
+	asPersistentBusProxy { | param = \out |
 		^PersistentBusProxy(this, param);
 	}
 
@@ -110,17 +110,31 @@
 	}
 
 	//	player { | envir | ^(envir ? this) }
-	
+	/*
 	*> { | reader, param = \out |
 		// the argument/reader gets one more writer.
 		// result: several sources/writers to one effect/reader configuration.
 		^PersistentBusProxy(this, param) *> reader.asPeristentBusProxy(\in);
 	}
+	*/
+	// New version.  27 Jul 2018 15:34
+	*> { | reader, param = \out | // many writers to one reader. Readers bus stays same
+		// copy 
+	     ^reader.asPersistentBusProxy(\in) linkReadersBus2Writer: (
+	           PersistentBusProxy(this, param)
+         )
+	}
 
-	*< { | reader, param = \out |
+	// New version. 27 Jul 2018 16:31
+	*< { | reader, param = \out | // many readers to one writer. Writers bus stays same
 		// the receiver/writer gets one more reader.
 		// result: one source/writer to several effects/writers configuration.
-		^PersistentBusProxy(this, param) *< reader.asPeristentBusProxy(\in);
+		// Old version:
+		// ^PersistentBusProxy(this, param) *< reader.asPeristentBusProxy(\in);
+		// New version:
+	     ^reader.asPersistentBusProxy(\in) linkWritersBus2Reader: (
+	           PersistentBusProxy(this, param)
+         )		
 	}
 
 	<+ { | argument, envir |
@@ -208,7 +222,7 @@
 		// the argument/reader gets one more writer.
 		// result: several sources/writers to one effect/reader configuration.
 		// receiver is writer, argument is reader.
-		// argument as reader                                 receiver as writer
+		// argument as reader / receiver as writer
 		^envirOrProxy.asPeristentBusProxy(inParam) addWriter: this;
 	}
 	*< { | envirOrProxy, inParam = \in |
@@ -223,7 +237,7 @@
 + Nil {
 	e { ^currentEnvironment }
 
-	*> { | player, envir |
+	+> { | player, envir |
 		// stop envir-player named player in envir
 		player.p(envir.e.name).stop;
 	}

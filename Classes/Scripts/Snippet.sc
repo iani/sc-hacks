@@ -37,8 +37,9 @@ SnippetList {
 	var <path, // path of file containing snippets
 	<all,      // array of snippets created from code in file
 	<>source,   // full source code from which snippets were made
-	<name;     // name of file from which snippets were read
-
+	<name,     // name of file from which snippets were read
+	<preloadSnippets; // preload marked snippets once only, before running first item.
+	
 	*snippetFolders {
 		^(this.folderPath ++ "*").pathMatch select: { | p |
 			p.last == $/
@@ -73,6 +74,9 @@ SnippetList {
 			if ("^//:" matchRegexp: l) {
 				all = all add: snippet;
 				snippet = Snippet(l[3..], "");
+				if("^preload" matchRegexp: snippet.name) {
+					preloadSnippets = preloadSnippets add: snippet;
+				}
 			}{
 				snippet addCode: l;
 			};
@@ -137,7 +141,6 @@ SnippetList {
 					n.listener.items = snippets.all collect: _.name;
 					// keep previously selected snippet if possible:
 					n.listener.valueAction_(snippetIndex min: (n.listener.items.size - 1));
-					//					n.listener.doAction;
 				})
 				.addNotifier(this, \userEdited, { | n |
 					n.listener.items = snippets.all collect: _.name;
@@ -148,8 +151,10 @@ SnippetList {
 					this.changed(\snippet)
 				})
 				// On keyboard return: run selected snippet
-				.enterKeyAction_({ | me |
-					snippets.all[snippetIndex].code.interpret;
+				.enterKeyAction_({
+					// snippets.all[snippetIndex].code.interpret;
+					// new version to test:
+					snippets.runSnippet;
 				}),
 				HLayout(
 					Button().states_([["Boot Server"], ["Quit Server"]])
@@ -216,6 +221,18 @@ SnippetList {
 		^window;
 	}
 
+	runSnippet {
+		/*  Run snippets marked with "preload" in this file just once
+			before the first execution of any snippet. 
+			Useful for preloading buffers.
+		*/
+			preloadSnippets do: { | snippet |
+				snippet.code.postln.interpret;
+			};
+			all[snippetIndex].code.postln.interpret;
+			preloadSnippets = nil; // cancel preloads.
+	}
+	
 	*readFolders {
 		folders = this.snippetFolders collect: { | p |
 			[p, (p +/+ "*.scd").pathMatch]

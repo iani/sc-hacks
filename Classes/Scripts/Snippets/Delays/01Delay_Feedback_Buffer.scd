@@ -109,7 +109,7 @@ This allows delay time as long as buffer size.
 )
 
 //:Like above, + move playback position anywhere
-\delay30.b(30); // max delay time with this buffer is 5 seconds
+\delay30.b(30); // max delay time with this buffer is 30 seconds
 {
 	var trigger; // triggers both record and playback looping to limit duration of delay
 	var startPos; // start position is a control that we use several times.

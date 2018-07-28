@@ -24,6 +24,7 @@ PersistentBusProxy {
 		The writer/receiver must be moved to a group before the group of the reader/argument,
 		but only if the group of the writer is not already before the group of the reader.
 	*/
+	// obsolete version. See new version: linkWritersBus2Reader
 	addReader { | readerBusProxy |  // CREATE ONE-TO-MANY CONNECTIONS BY ADDING READERS.
 		// Pass the bus of the writer to the reader, thereby adding one more reader to the writer.
 		/*
@@ -43,16 +44,43 @@ PersistentBusProxy {
 		envir.addAudioBus(param, persistentBus);
 	}	
 
-	addWriter { | writerBusProxy | // CREATE MANY-TO-ONE CONNECTIONS BY ADDING WRITERS.
+	// new version
+	linkReadersBus2Writer { | writerBusProxy |
+		// CREATE MANY-TO-ONE CONNECTIONS BY ADDING WRITERS.
 		/*
-		addWriter: The receiver is a reader.  The argument/writer will get the bus of the receiver.
+		addWriter: The receiver is a reader.  The argument/writer will get the bus of 
+			the receiver.
 		The writer loses its previous readers and the reader gets one more writer.
 
 		The writer/receiver must be moved to a group before the group of the reader/argument,
 		but only if the group of the writer is not already before the group of the reader.
 		*/
+		// first get bus from own envir (i.e. reader's bus),
+		// then add reader envir to he writer envir bus via the proxy
 		writerBusProxy.addAudioBus(envir.getAudioBus(param, numChannels));
-		writerBusProxy.envir.addReader(envir);
+		writerBusProxy.envir.addReaderEnvir(envir);
+	}
+
+	// new version
+	linkWritersBus2Reader { | writerBusProxy |
+		// CREATE MANY-TO-ONE CONNECTIONS BY ADDING WRITERS.
+		/*
+		addWriter: The receiver is a reader.  The argument/writer will get the bus of 
+			the receiver.
+		The writer loses its previous readers and the reader gets one more writer.
+
+		The writer/receiver must be moved to a group before the group of the reader/argument,
+		but only if the group of the writer is not already before the group of the reader.
+		*/
+		// first get bus from envir of writerBusProxy
+		// then add it to the readers bus
+		this.addAudioBus(
+			writerBusProxy.envir.getAudioBus(
+				writerBusProxy.param,
+				writerBusProxy.numChannels
+			)
+		);
+		writerBusProxy.envir.addReaderEnvir(envir);
 	}
 
 	asPeristentBusProxy { ^this }
