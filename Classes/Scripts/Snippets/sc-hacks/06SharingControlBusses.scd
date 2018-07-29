@@ -12,3 +12,5 @@
 \test.stop;
 //:restart first source
 \test.start;
+//:play different ar source in second environment
+{ LFSaw.ar(\freq.kr(400) * [0.25, 0.2], 0, 0.1 * SinOsc.kr(0.25)) } +> \test2;

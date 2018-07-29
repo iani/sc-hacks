@@ -230,18 +230,7 @@ BufferLoader {
 			})
 		});
 	}
-
-	bufnum {
-		var buffer;
-		buffer = this.b;
-		if (buffer.isNil) {
-			postf("could not find buffer named '%'. Returning 0\n", this);
-			^0;
-		} {
-			^buffer.bufnum;
-		}
-	}
-
+	
 	toggleBuf { | bufferName, eventName |
 		// like toggle, but use as source a PlayBuf func with appropriate number of channels.
 		var buffer, numChans, bufnum;
