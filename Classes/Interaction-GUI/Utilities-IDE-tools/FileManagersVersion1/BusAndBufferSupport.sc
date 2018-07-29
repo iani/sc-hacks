@@ -187,11 +187,11 @@ BufferLoader {
 
 	bn { | seconds = 1, numChannels = 1 |
 		// shortcut for bufnum
-		^this.bufnum(seconds, numChannels).index;
+		^this.bufnum(seconds, numChannels);
 	}
 	bufnum { | seconds = 1, numChannels = 1 |
 		// return the index of the associated buffer 
-		^this.b(seconds, numChannels).index;
+		^this.b(seconds, numChannels).bufnum;
 	}
 	
 	// 20 Jul 2018 22:31 reimplementing this with registry.

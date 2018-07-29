@@ -9,8 +9,20 @@
 
 + SimpleNumber {
 	// if Symbol <+ SimpleNumber, then set symbol as parameter in envir to number.
-	setParameter { | paramName, envir |	
-		^(if(envir.isNil) { currentEnvironment } { envir.e }).put(paramName, this);
+	/*
+	setParameter { | paramName, envir |
+		postf("Debuging: envir, %, currentEnvironment %, using: %\n",
+			envir, currentEnvironment, if(envir.isNil) { currentEnvironment } { envir.e };
+		);
+		envir.e.put(paramName, this);
+		// ^(if(envir.isNil) { currentEnvironment } { envir.e }).put(paramName, this);
+	}
+	*/
+
+	setParameter { | paramName = \test, envir |
+		// currentEnvironment.postln;
+		// envir.e.postln;
+		envir.put(paramName, this);
 	}
 }
 
