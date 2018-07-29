@@ -88,6 +88,9 @@
 		// make this player restart whenever Main-run is called
 		^this.p(eventName).auto;
 	}
+	start { | source, eventName |
+		^this.play(source, eventName);
+	}
 	play { | source, eventName |
 		^this.p(eventName).play(source);
 	}
@@ -140,7 +143,7 @@
 	<+ { | argument, envir |
 		// argument interprets this differently according to class
 		// See file ArgSetParameter.sc
-		argument.setParameter(this, envir);
+		argument.setParameter(this, envir.e);
 	}
 
 	/* // ????????????????

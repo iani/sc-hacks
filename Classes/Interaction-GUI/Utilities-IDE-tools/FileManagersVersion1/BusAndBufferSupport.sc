@@ -92,15 +92,20 @@ BufferLoader {
 		})
 	}
 
-	loadBuffer { | action |
-		// Load the audio file if it exists, and store in library. 
-		this.doIfExists {
-			postf("Loading buffer: %\n", this);
-			FileItemList.add(FileItem(this), \buffers);
-		}{
-			postf("Could not find path: %\n", this);
-		}		
-	}	
+	loadBuffers {
+		// Load all audio files contained in folder and store them under their filenames
+		var standardized;
+		standardized = this.standardizePath;
+		(standardized +/+ "*.wav").pathMatch do: { | p |
+			PathName(p).fileNameWithoutExtension.asSymbol.loadBuffer(p);
+		};
+		(standardized +/+ "*.aif").pathMatch do: { | p |
+			PathName(p).fileNameWithoutExtension.asSymbol.loadBuffer(p);
+		};
+		(standardized +/+ "*.aiff").pathMatch do: { | p |
+			PathName(p).fileNameWithoutExtension.asSymbol.loadBuffer(p);
+		}
+	}
 }
 
 + Buffer {
@@ -147,7 +152,22 @@ BufferLoader {
 }
 
 + Symbol {
-	alloc { | seconds = 1, numChannels = 1 |
+	////////////////////////////////////////////////////////////////
+	// Bus support
+	////////////////////////////////////////////////////////////////
+	bus { | numChannels = 1 |
+		// get bus named by symbol
+		^Registry(\busses, this, {
+			Bus.control(Server.default, numChannels)
+		})
+	}
+
+	
+	////////////////////////////////////////////////////////////////
+	// Buffer support
+	////////////////////////////////////////////////////////////////
+	/* // obsolete?
+    alloc { | seconds = 1, numChannels = 1 |
 		// alloc buffer and store under receiver - only if not already present
 		var buffer;
 		buffer = this.b;
@@ -163,20 +183,51 @@ BufferLoader {
 		};
 		^buffer;
 	}
+	*/
 
+	bn { | seconds = 1, numChannels = 1 |
+		// shortcut for bufnum
+		^this.bufnum(seconds, numChannels).index;
+	}
+	bufnum { | seconds = 1, numChannels = 1 |
+		// return the index of the associated buffer 
+		^this.b(seconds, numChannels).index;
+	}
+	
 	// 20 Jul 2018 22:31 reimplementing this with registry.
 	b { | seconds = 1, numChannels = 1 |
 		^Registry(\buffers, this, {
-			Buffer.alloc(Server.default,
-				seconds * Server.default.sampleRate,
-				numChannels,			
-			).path_(this.asString)
+			// mutate to loadBuffer if given string argument
+			if (seconds isKindOf: String) {
+				seconds = seconds.standardizePath;
+				seconds.doIfExists({
+					Buffer.read(Server.default, seconds);
+				},{
+					Buffer.alloc(Server.default,
+						1 * Server.default.sampleRate,
+						numChannels,			
+					).path_(this.asString)
+				})
+			}{
+				Buffer.alloc(Server.default,
+					seconds * Server.default.sampleRate,
+					numChannels,			
+				).path_(this.asString)
+			}
 		});
 	}
 
 	loadBuffer { | path |
+		path = path.standardizePath;
 		^Registry(\buffers, this, {
-			Buffer.read(Server.default, path);
+			path.doIfExists({
+				Buffer.read(Server.default, path);
+			},{
+				postf("could not find file:\n%\n", path);
+				"Allocating empty buffer of 1 second".postln;
+				Buffer.alloc(Server.default, 1 * Server.default.sampleRate, 1,)
+				.path_(this.asString)
+			})
 		});
 	}
 

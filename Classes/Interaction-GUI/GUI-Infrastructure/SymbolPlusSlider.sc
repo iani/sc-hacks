@@ -71,8 +71,9 @@ Additional utilities and shortcuts: v, h, watch, close.
 			this.window({ | w |
 				w.layout = VLayout(
 					*items
-				)
-			})
+				);
+				w.bounds = w.bounds.height_(items.size * 20);
+			});
 		}.fork(AppClock);
 	}
 

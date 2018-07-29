@@ -76,7 +76,7 @@ This allows delay time as long as buffer size.
 		loop: 0)).stereo;	
 } +> \delay2;
 //:Variable delay using impulse. Buffer size: Max 30 seconds daly
-\delay30.b(30); // max delay time with this buffer is 5 seconds
+\delay30.b(30); // max delay time with this buffer is 30 seconds
 {
 	var trigger; // triggers both record and playback looping to limit duration of delay
 	trigger = Impulse.kr(\dt.kr(1).reciprocal); // trigger every dt seconds

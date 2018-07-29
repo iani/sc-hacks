@@ -225,6 +225,30 @@ SnippetList {
 		/*  Run snippets marked with "preload" in this file just once
 			before the first execution of any snippet. 
 			Useful for preloading buffers.
+			Weit after each preload snippet to give time for buffers to initialize.
+			Restore current environment, because forking executes the routine in 
+			own pushed one. 
+		*/
+		var newEnvir;
+		{
+			preloadSnippets do: { | snippet |
+				snippet.code.postln.interpret;
+				0.5.wait;
+			};
+			all[snippetIndex].code.postln.interpret;
+			newEnvir = currentEnvironment;
+			preloadSnippets = nil; // cancel preloads.
+			{ newEnvir.push }.defer(0.001);
+		}.fork(AppClock);
+	}
+
+	/*
+		// simpler version without wait.
+		// occasionally playbuf synths will fail because number of channels is not yet known?
+	runSnippet {
+		/*  Run snippets marked with "preload" in this file just once
+			before the first execution of any snippet. 
+			Useful for preloading buffers.
 		*/
 			preloadSnippets do: { | snippet |
 				snippet.code.postln.interpret;
@@ -232,7 +256,7 @@ SnippetList {
 			all[snippetIndex].code.postln.interpret;
 			preloadSnippets = nil; // cancel preloads.
 	}
-	
+	*/
 	*readFolders {
 		folders = this.snippetFolders collect: { | p |
 			[p, (p +/+ "*.scd").pathMatch]

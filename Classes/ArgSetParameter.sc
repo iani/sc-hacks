@@ -54,6 +54,8 @@
 	}
 }
 
+
+
 + Env {
 	// Create function playing env in control EnvGen, and setParameter to it.
 	setParameter { | paramName, envir |
@@ -62,6 +64,13 @@
 }
 
 + Symbol {
+	// new version:
+	// set parameter to bus named by self
+	setParameter { | paramName, envir |
+		envir.put(paramName, this.bus);
+	}
+
+	/* // old version:
 	// set parameter to bufnum of buffer.
 	setParameter { | paramName, envir |
 		var buffer;
@@ -72,6 +81,7 @@
 			buffer.bufnum.setParameter(paramName, envir);			
 		}		
 	}
+	*/
 }
 
 + Nil {
@@ -88,5 +98,4 @@
 			envir[paramName] = nil;
 		};
 	}
-	
 }

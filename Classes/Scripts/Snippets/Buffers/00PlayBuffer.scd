@@ -1,3 +1,4 @@
+
 //:preload default sample once
 /* This snippet is *automatically* run once only, 
 before running a snippet from this file for the first time. 
@@ -93,3 +94,18 @@ currentEnvironment.postln;
 		startPos: sp * \sp.b.sampleRate,
 		loop: 0);	
 } +> \playbuf;
+//:retriggering loop without routine, using Impulse UGen
+{
+	var sp;
+	sp = \sp.kr(0);
+	PlayBuf.ar(\allwk.b.numChannels,
+		\allwk.b,
+		trigger: Impulse.kr(\period.kr(1).reciprocal) + Changed.kr(sp),
+		startPos: sp * \sp.b.sampleRate,
+		loop: 0);	
+} +> \playbuf2;
+\playbuf2.v(
+	// less than 0.1 delay risks entering perceptible frequency range
+	\period.slider([0.1, 3.0]),
+	\sp.slider([0.0, 3.0])
+)

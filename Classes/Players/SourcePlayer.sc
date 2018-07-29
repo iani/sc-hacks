@@ -73,8 +73,9 @@ PatternPlayer : SourcePlayer {
 }
 
 SynthPlayer : SourcePlayer {
-	var <controlNames, <hasGate = false, <event;	
+	var <controlNames, <hasGate = false; //, <event;
 	var <synthDefIsTemp = false;
+	var <startActions; // do stuff when synth starts. Reliably.
 
 	// isPlaying { ^process.notNil }
 
@@ -89,7 +90,20 @@ SynthPlayer : SourcePlayer {
 
 	listenToServerBoot {
 		// Fix hanging synth process when starting before booting server by mistake.
-		ServerBoot add: { process = nil }
+		ServerBoot add: { process = nil };
+		// TODO: FIXING map bus
+		this.addNotifier(envir, \mapBus, { | param, bus |
+			//			args.postln;
+			// "I Need to map bus next. TODO!".postln;
+			// postf("process is playing? %, isNil? %\n", process.isPlaying, process.isNil);
+			//			if(process.isPlaying.not)
+			param.addNotifierOneShot(player, \started, {
+				// postf("% mapping param % to bus % in process %\n", player, param, bus, process);
+				// "i removed the process map so addNotifierOneShot is not the culprit".postln;
+				//	process.map(param, bus.index);
+			})
+		
+		});
 	}
 
 	play { | argSource |
@@ -184,6 +198,11 @@ SynthPlayer : SourcePlayer {
 	source_ { | argDef |
 		var parName;
 		
+		//   Use hack to guess rate:
+		if (argDef.children.detect({ | c | c.class === Out; }).rate === \control) {
+			// if rate is control, then output to control bus.
+			envir[\outbus] = envir.name.bus.index;
+		}; // else ignore.
 		source = argDef;
 		hasGate = false;
 		controlNames = source.allControlNames reject: { | a |
@@ -213,6 +232,7 @@ SynthPlayer : SourcePlayer {
 		numCtls = argControlNames.size + 1 * 2;
 		args = Array.new(numCtls);
 		busses = Array.new(numCtls);
+		// postf("makeSynthArgs. check for busses: %\n", argControlNames collect: envir[_]);
 		argControlNames do: { | name |
 			val = envir[name];
 			switch(val.class,
@@ -243,18 +263,34 @@ SynthPlayer : SourcePlayer {
 			2.3 Initialize auto-removal on end.
 		*/
 		process = argSynth;
+		this.addNotifier(envir, \target, { | val |
+			postf("INCOMPLETE. TESTING. Received target: %\n", val);
+		});
+		this.addNotifier(envir, \mapBus, { | param, bus |
+			// postf("notifier mapping bus. Param: %, bus: % synth:%\n", param, bus, process);
+			if (process.isPlaying) {
+				process.map(param, bus.index);
+			}{
+				if (process.notNil) {
+					startActions = startActions add: { process.map(param, bus.index); }
+				}	
+			}
+		});
+
 		process.onStart (this, {
 			// this.changed(\started);
-			//			postf("Debugging groups. Player: %, Group: %\n", this, envir[\target]);
+			// postf("Debugging process on start multiple run. process: %\n", process);
+			startActions do: _.(this);
+			startActions = nil;
 			player.changed(\started);
 			// catch any link busses that were set while you were starting:
 			envir.busses keysValuesDo: { | key, bus |
-					process.set(key, bus.index);
+				process.set(key, bus.index);
 			};
 			/* If busses exist, then start the synth's gated envelope after mapping them */
 			if (busses.size > 0) {
 				busses keysValuesDo: { | key, value |
-					// postf("mapping synth: %, param: % to bus: %\n", this, key, value);
+					// postf("mapping synth: %, param: % to bus: %, process: %\n", this, key, value, process);
 					process.map(key, value);
 				};
 				process.set(\gate, 1);
@@ -266,32 +302,30 @@ SynthPlayer : SourcePlayer {
 					// handle busses as well as numerical values;
 					switch (val.class,
 						Nil, {},
-						Bus, {
-							/*
-								postf("MAPPING SYNTH %. PARAM: %, VAL: %\n", 
+						/*
+						Bus, { // TODO: remove this because it never runs?
+							
+							postf("MAPPING SYNTH %. PARAM: %, VAL: %\n", 
 								notification.listener,
 								param, val);
-							*/
+							
 							// postf("Debugging multichannel set bus. Param: %, bus: %\n", param, val);
-							notification.listener.map(param, val);								
-						},{
+							// notification.listener.map(param, val);								
+						},
+						*/
+						{
 							notification.listener.set (param, val);							
 						}
 					)
 				});				
 			};
-			process.addNotifier(envir, \target, { | val |
-				postf("INCOMPLETE. TESTING. Received target: %\n", val);
-			});
-			process.addNotifier(envir, \mapBus, { | param, bus |
-				//	postf("Debugging multichannel set bus. THIS IS MAPBUS. Param: %, bus: %\n", param, bus);
-				process.map(param, bus.index);
-			});
-			process.onEnd (this, { | notification |				
+			process.onEnd (this, { | notification |
+				// postf("process of % on end, notifier is: %\n", this, notification.notifier);
 				if (process === notification.notifier) {
 					player.changed(\stopped);
 					process = nil;
-				}
+				};
+				// process.objectClosed;
 			});
 			if (isTemp) {
 				source.addNotifier(process, \n_end, { | notification |
