@@ -8,14 +8,15 @@ Snippet {
 	var <includes, <type;
 
 	*readAll { | path |
-		var snippet, snippets, pathName;
+		var snippet, snippets, pathName, pathOnly;
 		pathName = PathName(path);
-		snippet = this.new(pathName.fileNameWithoutExtension, "", pathName.pathOnly);
+		pathOnly = pathName.pathOnly;
+		snippet = this.new(pathName.fileNameWithoutExtension, "", pathOnly);
 		File.readAllString (path).split($
 		) do: { | l |
 			if ("^//:" matchRegexp: l) {
 				snippets = snippets add: snippet;
-				snippet = this.new(l[3..], "", path);
+				snippet = this.new(l[3..], "", pathOnly);
 			}{
 				snippet addCode: l;
 			}
@@ -31,12 +32,23 @@ Snippet {
 	init {
 		includes = name.split($ );
 		type = includes.first.asSymbol;
-		if ([\include, \server, \preload] includes: type) {
-			includes = includes[1..];
-		}{
-			includes = nil;
-			type = '-';
-		}
+		switch (type,
+			\include, { includes = includes[1..]; },
+			\server, {
+				if (includes[1] == "include") {
+					includes = includes[2..]
+				}{ includes = nil }
+			},
+			\preload, {
+				if (includes[1] == "include") {
+					includes = includes[2..]
+				}{ includes = nil }
+			},
+			{
+				includes = nil;
+				type = '-';
+			}
+		);
 	}
 
 	addCode { | string = "" |
@@ -44,7 +56,17 @@ Snippet {
 	}
 
 	run {
-		
+		postf("running snippet: %. includes are: %\n", name, includes);
+		includes do: { | i |
+			(path ++ i ++ ".scd").doIfExists({ | p |
+				postf("Running include:\n%\n", p);
+				p.load;
+			},{ | p |
+				postf("Did not find include:\n%\n", p);
+				
+			})
+		};
+		code.postln.interpret;
 	}
 }
 
@@ -114,36 +136,12 @@ SnippetList {
 			);
 		}
 	}
-	/*
-	getSnippetsFromSource {
-		var snippet;
-		snippet = Snippet(name, "");
-		all = [];
-		source.split($
-		) do: { | l |
-			if ("^//:" matchRegexp: l) {
-				all = all add: snippet;
-				snippet = Snippet(l[3..], "");
-				if("^preload" matchRegexp: snippet.name) {
-					head = head add: snippet;
-				}
-			}{
-				snippet addCode: l;
-			};
-		};
-		all = all add: snippet;
-	}
-	*/
 
-	save {
-		File.use(path, "w", { | f |
-			f.write(source);
-		});
+	save { | newSource |
+		File.use(path, "w", { | f | f.write(newSource ? source); });
 	}
 
 	*gui {
-		// this.window(\gui, Rect(200, 200, 800, 600));
-		
 		this.window({ | window |
 			this.makeWindow(window)}, \gui, Rect(200, 250, 1000, 600)
 		);
@@ -272,10 +270,10 @@ SnippetList {
 						.focusColor_(Color.red)
 						// on mouse leave, save changes
 						.mouseLeaveAction_({ | me |
-							snippets.source = me.string;
-							snippets.getSnippetsFromSource;
-							snippets.save;
-							this.changed(\file);
+							if (snippets.source != me.string) {
+								snippets.save(me.string);
+								this.changed(\file);
+							}
 						})
 						, s: 5
 					],
@@ -319,42 +317,40 @@ SnippetList {
 			own pushed one. 
 		*/
 		var newEnvir;
-		if (snippetOnServer === this) {
-			^all[snippetIndex].code.postln.interpret;
+		if (snippetOnServer === this or:
+			{ head.size + before.size == 0 }
+		) {
+			^all[snippetIndex].run;
+			// ^all[snippetIndex].code.postln.interpret;
 		};
+		snippetOnServer = this;
 		if (Server.default.serverRunning) {
 			^{
 				head do: { | snippet |
-					snippet.code.postln.interpret;
+					snippet.run;
 					1.5.wait; // make sure info has reached all buffers
 				};
-				all[snippetIndex].code.postln.interpret;
+				all[snippetIndex].run;
 				newEnvir = currentEnvironment;
 				{ newEnvir.push }.defer(0.001);
 			}.fork(AppClock);
 		};
-		before do: { | snippet |
-		};
+		before do: _.run;
 		Server.default.waitForBoot(
 			{
 				3.wait; // Need to wait for Buffer::read to provide buffers with info
 				head do: { | snippet |
-					snippet.code.postln.interpret;
+					snippet.run;
 					1.5.wait; // make sure info has reached all buffers
 				};
-				all[snippetIndex].code.postln.interpret;
+				all[snippetIndex].run;
 				newEnvir = currentEnvironment;
 				{ newEnvir.push }.defer(0.001);
 			}.fork(AppClock)
 		);
-		snippetOnServer = this;
 	}
 
 	runSnippetAsStartup {
-		// this.resetExecutionOrder;
-		// this.makeExecutionOrder;
-		// 
-		// this.resetExecutionOrder;
 		before = nil; head = nil; tail = nil;
 		all do: { | s |
 			switch (
