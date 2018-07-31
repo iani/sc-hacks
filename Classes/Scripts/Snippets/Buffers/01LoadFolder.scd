@@ -1,7 +1,7 @@
 // Loading all wav, aif, aiff audio files in a folder.
 //:preload files in a folder.
 // CHECK THAT FOLDER EXISTS BEFORE RUNNING:
-"~/Music/sounds/sounds-lindrum-etc/".loadBuffers;
+(Sch.homedir ++ "Sounds/lindrum/").loadBuffers;
 //:list loaded buffers
 Library.at(\buffers).keys.postln;
 //:test one file.

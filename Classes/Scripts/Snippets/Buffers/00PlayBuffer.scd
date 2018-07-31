@@ -1,15 +1,8 @@
-
 //:preload default sample once
 /* This snippet is *automatically* run once only, 
 before running a snippet from this file for the first time. 
 */
 \allwk.loadBuffer(Platform.resourceDir +/+ "sounds/a11wlk01.wav");
-/*
-\s28.loadBuffer("~/Music/sounds/sounds-tetatet/hi/28.wav".standardizePath);
-\s12.loadBuffer("~/Music/sounds/sounds-tetatet/hi/12.wav".standardizePath);
-\clap.loadBuffer("~/Music/sounds/sounds-lindrum-etc/clap.wav".standardizePath);
-*/
-
 (Sch.homedir ++ "Sounds/lindrum/").loadBuffers;
 
 //:play with default method

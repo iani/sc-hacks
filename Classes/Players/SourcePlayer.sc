@@ -270,7 +270,7 @@ SynthPlayer : SourcePlayer {
 			// postf("notifier mapping bus. Param: %, bus: % synth:%\n", param, bus, process);
 			if (process.isPlaying) {
 				process.map(param, bus.index);
-			}{
+			}{  // schedule busses added while starting to map after synth starts.
 				if (process.notNil) {
 					startActions = startActions add: { process.map(param, bus.index); }
 				}	
@@ -278,19 +278,16 @@ SynthPlayer : SourcePlayer {
 		});
 
 		process.onStart (this, {
-			// this.changed(\started);
-			// postf("Debugging process on start multiple run. process: %\n", process);
 			startActions do: _.(this);
 			startActions = nil;
 			player.changed(\started);
-			// catch any link busses that were set while you were starting:
+			// catch any link busses that were set before you started.
 			envir.busses keysValuesDo: { | key, bus |
 				process.set(key, bus.index);
 			};
 			/* If busses exist, then start the synth's gated envelope after mapping them */
 			if (busses.size > 0) {
 				busses keysValuesDo: { | key, value |
-					// postf("mapping synth: %, param: % to bus: %, process: %\n", this, key, value, process);
 					process.map(key, value);
 				};
 				process.set(\gate, 1);
@@ -299,33 +296,18 @@ SynthPlayer : SourcePlayer {
 				in the players environment */
 			(controlNames add: \gate) do: { | param |
 				process.addNotifier (envir, param, { | val, notification |
-					// handle busses as well as numerical values;
+					// handle nil as well as numerical values;
 					switch (val.class,
 						Nil, {},
-						/*
-						Bus, { // TODO: remove this because it never runs?
-							
-							postf("MAPPING SYNTH %. PARAM: %, VAL: %\n", 
-								notification.listener,
-								param, val);
-							
-							// postf("Debugging multichannel set bus. Param: %, bus: %\n", param, val);
-							// notification.listener.map(param, val);								
-						},
-						*/
-						{
-							notification.listener.set (param, val);							
-						}
+						{ notification.listener.set (param, val); }
 					)
 				});				
 			};
 			process.onEnd (this, { | notification |
-				// postf("process of % on end, notifier is: %\n", this, notification.notifier);
 				if (process === notification.notifier) {
 					player.changed(\stopped);
 					process = nil;
 				};
-				// process.objectClosed;
 			});
 			if (isTemp) {
 				source.addNotifier(process, \n_end, { | notification |
@@ -349,8 +331,6 @@ SynthPlayer : SourcePlayer {
 		}{
 			// ensure that linking works in any order of execution:
 			this.addNotifierOneShot(player, \started, {
-				//	postf("will move to head now %\n", player);
-				// orderedGroup.postln;
 				process.moveToHead(orderedGroup.group);
 				/*
 				// TODO: Must also set in/out busses
@@ -370,7 +350,7 @@ SynthPlayer : SourcePlayer {
 		// SynthPlayer ignores this.
 		// TODO: Possibly clear source?
 		// source = nil; // ?????
-			//	sourcePlayer !? { sourcePlayer.clear }
+		//	sourcePlayer !? { sourcePlayer.clear }
 	}
 
 	/*
@@ -409,6 +389,3 @@ SynthPlayer : SourcePlayer {
 	}
 	*/
 }
-
-
-

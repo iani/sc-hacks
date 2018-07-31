@@ -1,1 +1,0 @@
-ServerMeter(Server.default).window.bounds = Rect(5, 225, 172, 230);

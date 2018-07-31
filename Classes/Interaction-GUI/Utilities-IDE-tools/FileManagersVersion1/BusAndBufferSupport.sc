@@ -1,62 +1,11 @@
 // 12 Oct 2017 13:26
 // Support methods for LoadFiles and its subclasses
 
-
-BufferLoader {
-	*initClass {
-		StartUp add: {
-			ServerBoot add: {
-				var files, buffers;
-				files = (Platform.userAppSupportDir ++ "/sounds/\*").pathMatch;
-				buffers = files collect: { | f |
-					Buffer.read(Server.default, f);
-				};
-				buffers do: { | buffer |
-					Registry.put(\buffers, PathName(buffer.path).fileNameWithoutExtension.asSymbol, buffer);
-				};				
-			};
-		}
-	}
-}
-
 + Nil {
-	containsString { | string | ^false; }
-	addUniqueString { | string |
-		^[string]
-	}
 
-	removeUniqueString { | string |
-		^[]
-	}
-	
-}
-
-+ Array {
-	containsString { | string | ^this.detect({ | s | s == string }).notNil; }
-
-	addUniqueString { | string |
-		if (this containsString: string) {
-			postf("prevented adding duplicate string:\n%\n", string);
-			^false;
-		}{
-			^this add: string;
-		}		
-	}
-
-	removeUniqueString { | string |
-		var found;
-		found = this.detect({ | s | s == string });
-		if (found.isNil) {
-			postf("could not remove string because it was not found:\n%\n", string);
-		}{
-			this remove: found;
-		}
-	}
-
-	indexOfString { | string |
-		var found;
-		found = this.detect({ | s | s == string });
-		if (found.notNil) { ^this indexOf: found; } { ^nil }
+	b {
+		"nil.b: returning empty buffer".postln;
+		^'___empty___'.b;
 	}
 }
 
@@ -162,29 +111,15 @@ BufferLoader {
 		})
 	}
 
-	
 	////////////////////////////////////////////////////////////////
 	// Buffer support
 	////////////////////////////////////////////////////////////////
-	/* // obsolete?
-    alloc { | seconds = 1, numChannels = 1 |
-		// alloc buffer and store under receiver - only if not already present
-		var buffer;
-		buffer = this.b;
-		if (buffer.isNil) {
-			buffer = Buffer.alloc(Server.default,
-				seconds * Server.default.sampleRate,
-				numChannels,
-			);
-			buffer.path = this.asString;
-			Buffer.put(this, buffer);
-		}{
-			postf("NOT ALLOCATING! Buffer exists already: %\n", buffer);
-		};
-		^buffer;
+	*initClass {
+		ServerQuit add: {
+			Library.put(\buffers, IdentityDictionary());
+		}		
 	}
-	*/
-
+	
 	bn { | seconds = 1, numChannels = 1 |
 		// shortcut for bufnum
 		^this.bufnum(seconds, numChannels);

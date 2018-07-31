@@ -113,28 +113,16 @@
 	}
 
 	//	player { | envir | ^(envir ? this) }
-	/*
-	*> { | reader, param = \out |
-		// the argument/reader gets one more writer.
-		// result: several sources/writers to one effect/reader configuration.
-		^PersistentBusProxy(this, param) *> reader.asPeristentBusProxy(\in);
-	}
-	*/
-	// New version.  27 Jul 2018 15:34
+
 	*> { | reader, param = \out | // many writers to one reader. Readers bus stays same
-		// copy 
+		// The new writer gets the reader's bus. Thus a new writer is added to the reader.
 	     ^reader.asPersistentBusProxy(\in) linkReadersBus2Writer: (
 	           PersistentBusProxy(this, param)
          )
 	}
 
-	// New version. 27 Jul 2018 16:31
 	*< { | reader, param = \out | // many readers to one writer. Writers bus stays same
-		// the receiver/writer gets one more reader.
-		// result: one source/writer to several effects/writers configuration.
-		// Old version:
-		// ^PersistentBusProxy(this, param) *< reader.asPeristentBusProxy(\in);
-		// New version:
+		// The new reader gets the writer's bus.  Thus a new reader is added to the writer.
 	     ^reader.asPersistentBusProxy(\in) linkWritersBus2Reader: (
 	           PersistentBusProxy(this, param)
          )		
