@@ -4,16 +4,18 @@ select snippet from list of snippets, type return to evaluate snippet.
 */
 
 Snippet {
-	var <name, <>code;
+	var <name, <>code, <path;
+	var <includes, <type;
 
 	*readAll { | path |
-		var snippet, snippets;
-		snippet = this.new(PathName(path).fileNameWithoutExtension);
+		var snippet, snippets, pathName;
+		pathName = PathName(path);
+		snippet = this.new(pathName.fileNameWithoutExtension, "", pathName.pathOnly);
 		File.readAllString (path).split($
 		) do: { | l |
 			if ("^//:" matchRegexp: l) {
 				snippets = snippets add: snippet;
-				snippet = this.new(l[3..], "");
+				snippet = this.new(l[3..], "", path);
 			}{
 				snippet addCode: l;
 			}
@@ -22,23 +24,44 @@ Snippet {
 		^snippets;
 	}
 
-	*new { | name, code |
-		^this.newCopyArgs(name, code ? "");
+	*new { | name, code, path |
+		^this.newCopyArgs(name, code ? "", path).init;
+	}
+
+	init {
+		includes = name.split($ );
+		type = includes.first.asSymbol;
+		if ([\include, \server, \preload] includes: type) {
+			includes = includes[1..];
+		}{
+			includes = nil;
+			type = '-';
+		}
 	}
 
 	addCode { | string = "" |
 		code = code ++ if (code.size == 0) { "" }{ "\n" } ++ string;
 	}
+
+	run {
+		
+	}
 }
 
 SnippetList {
 	classvar <folders, <folderIndex, <fileIndex, <snippetIndex = 0, <snippets;
-	classvar <edited;
+	classvar <snippetOnServer; /* Snippet last loaded on server boot.
+		If different from that beeing run, then load its head snippets. */
 	var <path, // path of file containing snippets
 	<all,      // array of snippets created from code in file
 	<>source,   // full source code from which snippets were made
 	<name,     // name of file from which snippets were read
-	<head; // preload marked snippets once only, before running first item.
+	<before,   // snippets to run before booting server
+	<head,     // snippets to run after booting server but before everything else
+	/* There is a wait of 3 seconds between server boot and the first head snippet,
+		and of 1.5 seconds between head and tail snippets, to allow buffer info
+		when reading buffers and before playing them.	*/
+	<tail;     // snippets to run after the head snippets
 
 	*initClass {
 		StartUp add: {
@@ -49,12 +72,10 @@ SnippetList {
 				this.gui;
 			};
 			ServerQuit add: {
-				// When server quits, reload current file to remake preload snippets
-				this.changed(\file);
+				// prepare to load before and/or head snippets at next run
+				snippetOnServer = nil;
 			}
-			
 		}
-		
 	}
 	
 	*snippetFolders {
@@ -83,6 +104,18 @@ SnippetList {
 	}
 
 	getSnippetsFromSource {
+		// TODO: get snippets from source var. Do not reread from file.
+		all = Snippet.readAll(path);
+		all do: { | s |
+			switch (s.type,
+				\server, { before = before add: s },
+				\preload, { head = head add: s },
+				{ tail = tail add: s }
+			);
+		}
+	}
+	/*
+	getSnippetsFromSource {
 		var snippet;
 		snippet = Snippet(name, "");
 		all = [];
@@ -100,6 +133,7 @@ SnippetList {
 		};
 		all = all add: snippet;
 	}
+	*/
 
 	save {
 		File.use(path, "w", { | f |
@@ -260,6 +294,7 @@ SnippetList {
 	}
 
 	*loadSnippets {
+		// Only make snippets instance if currnt instance source has changed on file.
 		var newPath, newSource;
 		//	"running loadSnippets".postln;
 		newPath = folders[folderIndex][1][fileIndex];
@@ -284,11 +319,24 @@ SnippetList {
 			own pushed one. 
 		*/
 		var newEnvir;
-		postf("runSnippet: head is: %\n", head);
-		if (head.isNil) {
-			all[snippetIndex].code.postln.interpret;
-		}{
-			Server.default.waitForBoot({
+		if (snippetOnServer === this) {
+			^all[snippetIndex].code.postln.interpret;
+		};
+		if (Server.default.serverRunning) {
+			^{
+				head do: { | snippet |
+					snippet.code.postln.interpret;
+					1.5.wait; // make sure info has reached all buffers
+				};
+				all[snippetIndex].code.postln.interpret;
+				newEnvir = currentEnvironment;
+				{ newEnvir.push }.defer(0.001);
+			}.fork(AppClock);
+		};
+		before do: { | snippet |
+		};
+		Server.default.waitForBoot(
+			{
 				3.wait; // Need to wait for Buffer::read to provide buffers with info
 				head do: { | snippet |
 					snippet.code.postln.interpret;
@@ -296,27 +344,29 @@ SnippetList {
 				};
 				all[snippetIndex].code.postln.interpret;
 				newEnvir = currentEnvironment;
-				head = nil; // cancel preloads.
 				{ newEnvir.push }.defer(0.001);
-			}.fork(AppClock);)
-		}
+			}.fork(AppClock)
+		);
+		snippetOnServer = this;
 	}
 
-	/*
-		// simpler version without wait.
-		// occasionally playbuf synths will fail because number of channels is not yet known?
-	runSnippet {
-		/*  Run snippets marked with "preload" in this file just once
-			before the first execution of any snippet. 
-			Useful for preloading buffers.
-		*/
-			head do: { | snippet |
-				snippet.code.postln.interpret;
-			};
-			all[snippetIndex].code.postln.interpret;
-			head = nil; // cancel preloads.
+	runSnippetAsStartup {
+		// this.resetExecutionOrder;
+		// this.makeExecutionOrder;
+		// 
+		// this.resetExecutionOrder;
+		before = nil; head = nil; tail = nil;
+		all do: { | s |
+			switch (
+				s.type,
+				\preload, { head = head add: s },
+				\server, { before = before add: s },
+				{ tail = tail add: s }		
+			);
+		};
+		
 	}
-	*/
+
 	*readFolders {
 		folders = this.snippetFolders collect: { | p |
 			[p, (p +/+ "*.scd").pathMatch]

@@ -136,6 +136,18 @@ In addition to the 4 operators above, /sc-hacks/ uses =@= to configure busses bo
    :PROPERTIES:
    :DATE:     <2018-07-30 Mon 08:25>
    :END:
+
+Will use a different scheme for includes and server includes for this one: 
+
+//:include file1 file2 folder1/file3
+
+//:server file optional file names here
+// optional extra server code permissible in snippet ...
+
+//:other snippets possible inline.
+
+// includes and other snippets are loaded in the order that they appear.
+
 ** DONE For next item: Check that preloads do not run again when running twice the same snippet without quitting server
    CLOSED: [2018-07-31 Tue 12:44]
 ** TODO On server boot: run preloads of curently selected file and remove them from the preload list.
