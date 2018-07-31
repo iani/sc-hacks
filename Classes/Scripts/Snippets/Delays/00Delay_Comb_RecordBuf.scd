@@ -1,3 +1,6 @@
+//:preload load buffer
+\rb.b(3); // store 3 second buffer in \rb
+
 //:Delay 1 sec
 { DelayN.ar(In.ar(2), 1, 1) } +> \delay;
 
@@ -51,7 +54,7 @@
 	RecordBuf.ar(In.ar(2) + (pb * \fb.kr(1)), \rb.b(3), loop: 1);
 } +> \rp;
 
-//:Broken: Record/PlayBuf 3: variable startPos offset
+//:Record/PlayBuf 3: variable startPos offset
 {
 	RecordBuf.ar(In.ar(2), \rb.b(3), loop: 1);
 	PlayBuf.ar(1, \rb.b,
@@ -68,5 +71,5 @@
 	}).postln.next;
 	)
 });
-//:
-\rp.envir.addDependant({ | ... args | args.postln ;});
+//:Test Nenvirs before and after startup
+Library.at(\environments).values.postln;

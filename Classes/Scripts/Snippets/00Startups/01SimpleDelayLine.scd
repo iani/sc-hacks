@@ -2,7 +2,7 @@
 Include.server;
 Include("meter");
 Include("scope");
-//: 2 seconds delay.
+//: 2 seconds delay. TESTING
 /*
 {
 	var in;

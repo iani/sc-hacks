@@ -125,15 +125,20 @@ In addition to the 4 operators above, /sc-hacks/ uses =@= to configure busses bo
   :PROPERTIES:
   :DATE:     <2017-09-06 Wed 14:20>
   :END:
-** Move Startup files and Includes to Snippet folder
+** DONE Move Startup files and Includes to Snippet folder
+   CLOSED: [2018-07-31 Tue 12:18]
    :PROPERTIES:
    :DATE:     <2018-07-30 Mon 08:25>
    :END:
-** Execute any file in Snippet folder with shift-return.
+   - State "DONE"       from "TODO"       [2018-07-31 Tue 12:18] \\
+     done
+** TODO Execute any file in Snippet folder as Startup with shift-return.
    :PROPERTIES:
    :DATE:     <2018-07-30 Mon 08:25>
    :END:
-** On server boot: run preloads of curently selected file and remove them from the preload list.
+** DONE For next item: Check that preloads do not run again when running twice the same snippet without quitting server
+   CLOSED: [2018-07-31 Tue 12:44]
+** TODO On server boot: run preloads of curently selected file and remove them from the preload list.
    :PROPERTIES:
    :DATE:     <2018-07-30 Mon 08:25>
    :END:

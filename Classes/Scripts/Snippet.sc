@@ -38,7 +38,7 @@ SnippetList {
 	<all,      // array of snippets created from code in file
 	<>source,   // full source code from which snippets were made
 	<name,     // name of file from which snippets were read
-	<preloadSnippets; // preload marked snippets once only, before running first item.
+	<head; // preload marked snippets once only, before running first item.
 
 	*initClass {
 		StartUp add: {
@@ -92,7 +92,7 @@ SnippetList {
 				all = all add: snippet;
 				snippet = Snippet(l[3..], "");
 				if("^preload" matchRegexp: snippet.name) {
-					preloadSnippets = preloadSnippets add: snippet;
+					head = head add: snippet;
 				}
 			}{
 				snippet addCode: l;
@@ -119,7 +119,11 @@ SnippetList {
 		// Reread current file when entering window:
 		// This synchronizes file contents with possible edits
 		// by user on different editor.
-		window.view.mouseEnterAction_({ this.changed(\file) });
+		window.view.mouseEnterAction_({
+			this.changed(\file);
+			//	this.reloadIfFileChanged
+
+		});
 		window.layout = HLayout(
 			VLayout(
 				PopUpMenu() // Popup: Select folder =============================
@@ -163,13 +167,25 @@ SnippetList {
 				.focusColor_(Color.red)
 				.addNotifier(this, \file, { | n |
 					if (folders[folderIndex][1].size > 0) {
-						snippets = this.new(folders[folderIndex][1][fileIndex]);
+						// postf("RELOADING FILE: %\n", folders[folderIndex][1][fileIndex]);
+						
+						// postf("% received file update.\n", n.listener);
+						this.loadSnippets;
 						n.listener.items = snippets.all collect: _.name;
 					// keep previously selected snippet if possible:
 						n.listener.valueAction_(snippetIndex min: (n.listener.items.size - 1));
 					}{
 						postf("folder is empty: %\n", folders[folderIndex]);
 					}
+				})
+				.addNotifier(this, \snippets, { | n |
+					/* Update selected snippet text view when new 
+						snippet file is read. Issued by this.loadSnippets
+					*/
+					postf("% received snippets update.\n", n.listener);
+						n.listener.items = snippets.all collect: _.name;
+					// keep previously selected snippet if possible:
+						n.listener.valueAction_(snippetIndex min: (n.listener.items.size - 1));
 				})
 				.addNotifier(this, \userEdited, { | n |
 					n.listener.items = snippets.all collect: _.name;
@@ -218,31 +234,14 @@ SnippetList {
 						.font_(Font("Courier", 11))
 						.addNotifier(this, \snippet, { | n |
 							n.listener.string = snippets.source;
-							// n.listener.syntaxColorize; // syntaxColorize does not work?
-							// edited = false;
-						}) // on edit per keyboard mark as changed
-						.focusColor_(Color.red)
-
-						/*
-						.keyDownAction_({ | me, char, modifiers, unicode, keycode, key |
-							edited = true;
-							me.defaultKeyDownAction(
-								char, modifiers, unicode, keycode, key
-							);
 						})
-						*/
+						.focusColor_(Color.red)
 						// on mouse leave, save changes
 						.mouseLeaveAction_({ | me |
-							/*	if (edited) { */
-							// if (true) {
-							// string obtained from view
 							snippets.source = me.string;
 							snippets.getSnippetsFromSource;
-							// postf("was edited. saving to path:\n%\n", snippets.path);
 							snippets.save;
-							// snippets = 
-							this.changed(\userEdited);
-							// }{}
+							this.changed(\file);
 						})
 						, s: 5
 					],
@@ -260,6 +259,22 @@ SnippetList {
 		^window;
 	}
 
+	*loadSnippets {
+		var newPath, newSource;
+		//	"running loadSnippets".postln;
+		newPath = folders[folderIndex][1][fileIndex];
+		if (snippets.isNil) {
+			snippets = this.new(newPath);
+		}{
+			newSource = File.readAllString(newPath);
+			if ( snippets.source == newSource ) {
+				// do not reload file if it has not changed. 
+			}{
+				snippets = this.new(newPath); 
+			}
+		}
+	}
+
 	runSnippet {
 		/*  Run snippets marked with "preload" in this file just once
 			before the first execution of any snippet. 
@@ -269,21 +284,21 @@ SnippetList {
 			own pushed one. 
 		*/
 		var newEnvir;
-		if (preloadSnippets.isNil) {
+		postf("runSnippet: head is: %\n", head);
+		if (head.isNil) {
 			all[snippetIndex].code.postln.interpret;
 		}{
 			Server.default.waitForBoot({
 				3.wait; // Need to wait for Buffer::read to provide buffers with info
-				preloadSnippets do: { | snippet |
+				head do: { | snippet |
 					snippet.code.postln.interpret;
 					1.5.wait; // make sure info has reached all buffers
 				};
 				all[snippetIndex].code.postln.interpret;
 				newEnvir = currentEnvironment;
-				preloadSnippets = nil; // cancel preloads.
+				head = nil; // cancel preloads.
 				{ newEnvir.push }.defer(0.001);
 			}.fork(AppClock);)
-			
 		}
 	}
 
@@ -295,11 +310,11 @@ SnippetList {
 			before the first execution of any snippet. 
 			Useful for preloading buffers.
 		*/
-			preloadSnippets do: { | snippet |
+			head do: { | snippet |
 				snippet.code.postln.interpret;
 			};
 			all[snippetIndex].code.postln.interpret;
-			preloadSnippets = nil; // cancel preloads.
+			head = nil; // cancel preloads.
 	}
 	*/
 	*readFolders {
@@ -312,11 +327,7 @@ SnippetList {
 		"loading startup:".postln;
 		folders[folderIndex][1][fileIndex].postln;
 		CmdPeriod.run; // stop synths + routines + patterns
-		Server.quit;
-		/* must remove following keys from Library.global:
-			- environments
-			- buffers
-			
-		*/
+		Server.default.quit;   // this also removes buffers from Library.
+		Nevent.reset; // close and remove all Nevents.
 	}
 }

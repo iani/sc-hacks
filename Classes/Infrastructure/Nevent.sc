@@ -203,4 +203,20 @@ Nevent : EnvironmentRedirect {
 			players do: _.stop;
 		}
 	}
+
+	*reset {
+		// Used when resetting entire setup, to load different startup file or script.
+		Library.at(libRoot).keys do: _.close;
+		\default.push;
+	}
+	
+	close {
+		// Used when resetting entire setup, to load different startup file or script.
+		players do: { | p |
+			p.stop;
+			p.changed(\closed);
+		};
+		this.objectClosed; // remove all notifications + remove from library
+	}
+	
 }

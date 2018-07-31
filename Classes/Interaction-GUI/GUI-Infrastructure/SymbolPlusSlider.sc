@@ -65,24 +65,25 @@ Additional utilities and shortcuts: v, h, watch, close.
 
 	// Shortcuts for VLayout and Hlayout
 	v { | ... items |
+		this.prLayout(items, VLayout);
+	}
+
+	h { | ... items |
+		this.prLayout(items, HLayout);
+	}
+
+	prLayout { | items, layoutClass |
+		// helper method for v and h methods
 		{
 			this.close;
 			0.1.wait;
 			this.window({ | w |
-				w.layout = VLayout(
+				w.layout = layoutClass.new(
 					*items
 				);
 				w.bounds = w.bounds.height_(items.size * 20);
 			});
-		}.fork(AppClock);
-	}
-
-	h { | ... items |
-		this.window({ | w |
-			w.layout = HLayout(
-				*items
-			)
-		});
+		}.fork(AppClock);	
 	}
 }
 
