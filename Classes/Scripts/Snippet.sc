@@ -96,7 +96,9 @@ SnippetList {
 			ServerQuit add: {
 				// prepare to load before and/or head snippets at next run
 				snippetOnServer = nil;
-			}
+			};
+			// this.addNotifier(Server.default, \notified, { | ... args | args.postln;
+			// } );
 		}
 	}
 	
@@ -324,8 +326,10 @@ SnippetList {
 			// ^all[snippetIndex].code.postln.interpret;
 		};
 		snippetOnServer = this;
-		if (Server.default.serverRunning) {
-			^{
+		before do: _.run;
+		this.doAfterBooting(
+			{
+				{
 				head do: { | snippet |
 					snippet.run;
 					1.5.wait; // make sure info has reached all buffers
@@ -333,9 +337,11 @@ SnippetList {
 				all[snippetIndex].run;
 				newEnvir = currentEnvironment;
 				{ newEnvir.push }.defer(0.001);
-			}.fork(AppClock);
-		};
-		before do: _.run;
+			}.fork(AppClock)
+				
+			}
+		);
+		/*
 		Server.default.waitForBoot(
 			{
 				3.wait; // Need to wait for Buffer::read to provide buffers with info
@@ -348,6 +354,7 @@ SnippetList {
 				{ newEnvir.push }.defer(0.001);
 			}.fork(AppClock)
 		);
+		*/	
 	}
 
 	runSnippetAsStartup {

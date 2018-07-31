@@ -1,4 +1,5 @@
 // Operator overview
+//:server (this empty snippet boots the server)
 //:Function +> (play function in player)
 { WhiteNoise.ar(0.1) } +> \test;
 //:Event +> (play event in player)
