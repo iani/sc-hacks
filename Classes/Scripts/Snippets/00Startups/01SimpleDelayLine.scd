@@ -1,15 +1,14 @@
 // This is a test only also. It is test2;
-Include.server;
-Include("meter");
-Include("scope");
-//: 2 seconds delay. TESTING
+//:server include meter
+//:preload include scope
+//:2 seconds delay. TESTING
 /*
 {
 	var in;
 	in = In.ar(2);
 	DelayN.ar(in, 2, 2, 1, in) } +> \delay;
 */
-//: 10 seconds delay.
+//:10 seconds delay.
 {
 	var in;
 	in = In.ar(2);

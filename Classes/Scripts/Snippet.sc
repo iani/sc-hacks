@@ -176,8 +176,8 @@ SnippetList {
 				.keyDownAction_({ | me, char, modifier ... args |
 					if (char === $\r) {
 						switch (modifier,
-							0, { Document.open(folders[folderIndex][1][fileIndex]); },
-							131072, { this.loadStartup; }
+							131072, { Document.open(folders[folderIndex][1][fileIndex]); },
+							0, { snippets.runSnippet(0); }
 						);
 						me.defaultKeyDownAction(char, modifier, *args);
 					};
@@ -310,7 +310,7 @@ SnippetList {
 		}
 	}
 
-	runSnippet {
+	runSnippet { | argSnippet |
 		/*  Run snippets marked with "preload" in this file just once
 			before the first execution of any snippet. 
 			Useful for preloading buffers.
@@ -319,6 +319,7 @@ SnippetList {
 			own pushed one. 
 		*/
 		var newEnvir;
+		argSnippet = argSnippet ? snippetIndex;
 		if (snippetOnServer === this or:
 			{ head.size + before.size == 0 }
 		) {
@@ -330,13 +331,20 @@ SnippetList {
 		this.doAfterBooting(
 			{
 				{
-				head do: { | snippet |
-					snippet.run;
-					1.5.wait; // make sure info has reached all buffers
-				};
-				all[snippetIndex].run;
-				newEnvir = currentEnvironment;
-				{ newEnvir.push }.defer(0.001);
+					head do: { | snippet |
+						snippet.run;
+						1.5.wait; // make sure info has reached all buffers
+					};
+					if (argSnippet > 0) {
+						all[argSnippet].run;
+						newEnvir = currentEnvironment;
+					}{
+						tail do: { | s |
+							s.run;
+							newEnvir = currentEnvironment;
+						};
+					};
+					{ newEnvir.push }.defer(0.001);
 			}.fork(AppClock)
 				
 			}
