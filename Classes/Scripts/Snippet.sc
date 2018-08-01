@@ -177,7 +177,7 @@ SnippetList {
 					if (char === $\r) {
 						switch (modifier,
 							131072, { Document.open(folders[folderIndex][1][fileIndex]); },
-							0, { snippets.runSnippet(0); }
+							0, { snippets.runSnippet(snippets.tail); }
 						);
 						me.defaultKeyDownAction(char, modifier, *args);
 					};
@@ -231,9 +231,12 @@ SnippetList {
 				})
 				// On keyboard return: run selected snippet
 				.enterKeyAction_({
-					// snippets.all[snippetIndex].code.interpret;
-					// new version to test:
-					snippets.runSnippet;
+					// If on first snippet, then run all snippets
+					if (snippetIndex == 0) {
+						snippets.runSnippet(snippets.tail)
+					}{
+						snippets.runSnippet([snippets.all[snippetIndex]]);
+					}
 				}),
 				HLayout(
 					Button().states_([["Boot Server"], ["Quit Server"]])
@@ -310,7 +313,7 @@ SnippetList {
 		}
 	}
 
-	runSnippet { | argSnippet |
+	runSnippet { | argSnippets |
 		/*  Run snippets marked with "preload" in this file just once
 			before the first execution of any snippet. 
 			Useful for preloading buffers.
@@ -319,11 +322,8 @@ SnippetList {
 			own pushed one. 
 		*/
 		var newEnvir;
-		argSnippet = argSnippet ? snippetIndex;
-		if (snippetOnServer === this or:
-			{ head.size + before.size == 0 }
-		) {
-			^all[snippetIndex].run;
+		if (snippetOnServer === this or: { head.size + before.size == 0 }) {
+			^argSnippets do: _.run;
 			// ^all[snippetIndex].code.postln.interpret;
 		};
 		snippetOnServer = this;
@@ -335,33 +335,29 @@ SnippetList {
 						snippet.run;
 						1.5.wait; // make sure info has reached all buffers
 					};
-					if (argSnippet > 0) {
-						all[argSnippet].run;
-						newEnvir = currentEnvironment;
-					}{
-						tail do: { | s |
-							s.run;
-							newEnvir = currentEnvironment;
-						};
+					//if (argSnippet > 0) {
+					argSnippets do: { | snippet |
+						snippet.run;
+						newEnvir = currentEnvironment;					
 					};
 					{ newEnvir.push }.defer(0.001);
-			}.fork(AppClock)
+				}.fork(AppClock)
 				
 			}
 		);
 		/*
-		Server.default.waitForBoot(
+			Server.default.waitForBoot(
 			{
-				3.wait; // Need to wait for Buffer::read to provide buffers with info
-				head do: { | snippet |
-					snippet.run;
-					1.5.wait; // make sure info has reached all buffers
-				};
-				all[snippetIndex].run;
-				newEnvir = currentEnvironment;
-				{ newEnvir.push }.defer(0.001);
+			3.wait; // Need to wait for Buffer::read to provide buffers with info
+			head do: { | snippet |
+			snippet.run;
+			1.5.wait; // make sure info has reached all buffers
+			};
+			all[snippetIndex].run;
+			newEnvir = currentEnvironment;
+			{ newEnvir.push }.defer(0.001);
 			}.fork(AppClock)
-		);
+			);
 		*/	
 	}
 
