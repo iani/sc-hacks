@@ -52,7 +52,7 @@ Additional utilities and shortcuts: v, h, watch, close.
 			.maxWidth_(80)
 			.clipLo_(controlspec.minval)
 			.clipHi_(controlspec.maxval)
-			.decimals_(5)
+			// .decimals_(10)
 			.action_({ | me |
 				envir.put(this, controlspec constrain: (me.value));
 			})
