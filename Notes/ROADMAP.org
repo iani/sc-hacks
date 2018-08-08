@@ -125,6 +125,12 @@ In addition to the 4 operators above, /sc-hacks/ uses =@= to configure busses bo
   :PROPERTIES:
   :DATE:     <2017-09-06 Wed 14:20>
   :END:
+** TODO Prevent "Waiting for created synth to start" message when rebooting server
+   :PROPERTIES:
+   :DATE:     <2018-08-08 Wed 22:19>
+   :END:
+
+
 ** DONE Move Startup files and Includes to Snippet folder
    CLOSED: [2018-07-31 Tue 12:18]
    :PROPERTIES:

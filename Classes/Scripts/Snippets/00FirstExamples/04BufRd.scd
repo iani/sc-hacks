@@ -285,7 +285,7 @@ duration = \allwk.b.numFrames / \allwk.b.sampleRate;
 	\pos.slider([0, 3.5])
 )
 
-//: GrainBuf with Duty
+//: GrainBuf: Duty scrolls through buffer
 {
 	var duty;
 	duty = Duty.kr(
@@ -306,40 +306,149 @@ duration = \allwk.b.numFrames / \allwk.b.sampleRate;
 	\period.slider([0.05, 2]),
 	\dur.slider([0.05, 2]),
 	\rate.slider([0.1, 10]),
-	\pos.slider([0, 3.5])
-)
+);
+
+\period <+ 0.1;
+\dur <+ 0.25;
+
+//: GrainBuf: Duty random points in buffer
+{
+	var duty;
+	duty = Duty.kr(
+		\period.kr(1),
+		0,
+		Dseq(Array.rand(32, 0.0, 1.0), inf)
+	);
+	GrainBuf.ar(1,
+		Changed.kr(duty),
+		\dur.kr(1),
+		\allwk.bufnum,
+		\rate.kr(1),
+		duty, // \pos.kr(0)
+	)
+} +> \grainbuf;
+
+\grainbuf.v(
+	\period.slider([0.05, 2]),
+	\dur.slider([0.05, 2]),
+	\rate.slider([0.1, 10]),
+);
+
+\period <+ 0.1;
+\dur <+ 0.25;
+
+//: GrainBuf: Duty random points+rates in buffer
+{
+	var duty;
+	duty = Duty.kr(
+		\period.kr(1),
+		0,
+		[
+			Dseq(Array.rand(32, 0.0, 1.0), inf),
+			Dseq(Array.rand(16, 0.5, 1.5), inf)
+		]
+	);
+	GrainBuf.ar(1,
+		Changed.kr(duty),
+		\dur.kr(1),
+		\allwk.bufnum,
+		duty[1],
+		duty[0], // \pos.kr(0)
+	)
+} +> \grainbuf;
+
+\grainbuf.v(
+	\period.slider([0.05, 2]),
+	\dur.slider([0.05, 2]),
+);
+
+\period <+ 0.1;
+\dur <+ 0.25;
+
+//: GrainBuf: Duty random points+rates+durations
+{
+	var duty;
+	duty = Duty.kr(
+		\period.kr(1),
+		0,
+		[
+			Dseq(Array.rand(32, 0.0, 1.0), inf),
+			Dseq(Array.rand(16, 0.5, 1.5), inf),
+			Dseq(Array.rand(7, 0.15, 0.5), inf)
+		]
+	);
+	GrainBuf.ar(1,
+		Changed.kr(duty),
+		duty[2],
+		\allwk.bufnum,
+		duty[1],
+		duty[0], // \pos.kr(0)
+	)
+} +> \grainbuf;
+
+\grainbuf.v(
+	\period.slider([0.05, 2]),
+);
+
+\period <+ 0.1;
+\dur <+ 0.25;
+
+//: GrainBuf: like above but shorter arrays
+{
+	var duty;
+	duty = Duty.kr(
+		\period.kr(1),
+		0,
+		[   // positions
+			Dseq(Array.rand(7, 0.0, 1.0), inf),
+			// rates
+			Dseq(Array.rand(8, 0.5, 1.5), inf),
+			// durations
+			Dseq(Array.rand(4, 0.15, 0.5), inf)
+		]
+	);
+	GrainBuf.ar(1,
+		Changed.kr(duty),
+		duty[2],       // durations
+		\allwk.bufnum,
+		duty[1],      // rates
+		duty[0],       // positions
+	)
+} +> \grainbuf;
+
+\grainbuf.v(
+	\period.slider([0.05, 2]),
+);
+
+\period <+ 0.05;
 
 
-//: compare to GrainBuf - from help file
-var winenv;
+//: GrainBuf: like above but also random dt's
+{
+	var duty;
+	duty = Duty.kr(
+		Dseq(Array.rand(5, 0.1, 0.5), inf),
+		0,
+		[   // positions
+			Dseq(Array.rand(7, 0.0, 1.0), inf),
+			// rates
+			Dseq(Array.rand(8, 0.5, 1.5), inf),
+			// durations
+			Dseq(Array.rand(4, 0.15, 1.5), inf)
+		]
+	);
+	GrainBuf.ar(1,
+		Changed.kr(duty),
+		duty[2],       // durations
+		\allwk.bufnum,
+		duty[1],      // rates
+		duty[0],       // positions
+	)
+} +> \grainbuf;
 
-b = Buffer.read(s, Platform.resourceDir +/+ "sounds/a11wlk01-44_1.aiff");
-// a custom envelope
-winenv = Env([0, 1, 0], [0.5, 0.5], [8, -8]);
-z = Buffer.sendCollection(s, winenv.discretize, 1);
+\grainbuf.v(
+	\period.slider([0.05, 2]),
+);
 
-//:
+\period <+ 0.05;
 
-SynthDef(\buf_grain_test, { |out, gate = 1, amp = 1, sndbuf, envbuf|
-    var pan, env, freqdev;
-    // use mouse x to control panning
-    pan = MouseX.kr(-1, 1);
-    env = EnvGen.kr(
-        Env([0, 1, 0], [1, 1], \sin, 1),
-        gate,
-        levelScale: amp,
-        doneAction: Done.freeSelf);
-    Out.ar(out,
-        GrainBuf.ar(2, Impulse.kr(10), 0.1, sndbuf, LFNoise1.kr.range(0.5, 2),
-            LFNoise2.kr(0.1).range(0, 1), 2, pan, envbuf) * env)
-}).add;
-//:b play
-b.play;
-// use built-in env
-x = Synth(\buf_grain_test, [\sndbuf, b, \envbuf, -1])
-
-// switch to the custom env
-x.set(\envbuf, z)
-x.set(\envbuf, -1);
-
-x.set(\gate, 0);
