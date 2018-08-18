@@ -4,19 +4,18 @@ select snippet from list of snippets, type return to evaluate snippet.
 */
 
 Snippet {
-	var <name, <>code, <path;
+	var <name, <>code, <pathName, <pathOnly;
 	var <includes, <type;
 
 	*readAll { | path |
 		var snippet, snippets, pathName, pathOnly;
 		pathName = PathName(path);
-		pathOnly = pathName.pathOnly;
-		snippet = this.new(pathName.fileNameWithoutExtension, "", pathOnly);
+		snippet = this.new(pathName.fileNameWithoutExtension, "", pathName);
 		File.readAllString (path).split($
 		) do: { | l |
 			if ("^//:" matchRegexp: l) {
 				snippets = snippets add: snippet;
-				snippet = this.new(l[3..], "", pathOnly);
+				snippet = this.new(l[3..], "", pathName);
 			}{
 				snippet addCode: l;
 			}
@@ -25,11 +24,12 @@ Snippet {
 		^snippets;
 	}
 
-	*new { | name, code, path |
-		^this.newCopyArgs(name, code ? "", path).init;
+	*new { | name, code, pathName |
+		^this.newCopyArgs(name, code ? "", pathName).init;
 	}
 
 	init {
+		pathOnly = pathName.pathOnly;
 		includes = name.split($ );
 		type = includes.first.asSymbol;
 		switch (type,
@@ -42,6 +42,11 @@ Snippet {
 			\preload, {
 				if (includes[1] == "include") {
 					includes = includes[2..]
+					/* // TODO: Use this:
+						includes[2..] collect { | i |
+						    this.makeIncludePath(i)
+						}
+					*/
 				}{ includes = nil }
 			},
 			{
@@ -51,6 +56,19 @@ Snippet {
 		);
 	}
 
+	makeIncludepath { | includename |
+		// incomplete
+		
+		if (includename[0] === $/) {
+			//	^
+			
+		}{
+			
+			
+		}
+		
+	}
+	
 	addCode { | string = "" |
 		code = code ++ if (code.size == 0) { "" }{ "\n" } ++ string;
 	}
@@ -58,7 +76,7 @@ Snippet {
 	run {
 		postf("running snippet: %. includes are: %\n", name, includes);
 		includes do: { | i |
-			(path ++ i ++ ".scd").doIfExists({ | p |
+			(pathOnly ++ i ++ ".scd").doIfExists({ | p |
 				postf("Running include:\n%\n", p);
 				p.load;
 			},{ | p |
@@ -283,7 +301,7 @@ SnippetList {
 						, s: 5
 					],
 					StaticText()
-					//.tabWidth_(30)
+					// .tabWidth_(30)  // cannot set tab width of StaticText!
 					.font_(Font("Courier", 14/*, true */))
 					.background_(Color(0.92, 0.92, 0.92))
 					.stringColor_(Color.red)

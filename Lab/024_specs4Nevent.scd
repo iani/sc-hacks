@@ -12,3 +12,6 @@
 //:
 ControlSpec.specs.keys;
 \unipolar.asSpec;
+//:
+ControlSpec.specs[\freq]
+//:

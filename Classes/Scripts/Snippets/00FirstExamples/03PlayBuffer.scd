@@ -1,6 +1,5 @@
 //Testing PlayBuf, triggering
 //:preload include loadallwk scope meter
-//:preload include loadallwk
 //:playbuf: trigger on startpos change
 { | startpos = 0 |
 	var bufnum;

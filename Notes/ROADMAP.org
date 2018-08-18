@@ -138,22 +138,6 @@ In addition to the 4 operators above, /sc-hacks/ uses =@= to configure busses bo
    :END:
    - State "DONE"       from "TODO"       [2018-07-31 Tue 12:18] \\
      done
-** TODO Execute any file in Snippet folder as Startup with shift-return.
-   :PROPERTIES:
-   :DATE:     <2018-07-30 Mon 08:25>
-   :END:
-
-Will use a different scheme for includes and server includes for this one: 
-
-//:include file1 file2 folder1/file3
-
-//:server file optional file names here
-// optional extra server code permissible in snippet ...
-
-//:other snippets possible inline.
-
-// includes and other snippets are loaded in the order that they appear.
-
 ** DONE For next item: Check that preloads do not run again when running twice the same snippet without quitting server
    CLOSED: [2018-07-31 Tue 12:44]
 ** TODO On server boot: run preloads of curently selected file and remove them from the preload list.
@@ -251,45 +235,3 @@ Of the above, only name is required, for printing.  =players=, =busses=, =writer
 - =osc= OSCFuncs attached to a =Nevent= instance.
 
 At a later revision of the library, the 4 instance variables of =Nevent=: =players=, =busses=, =writers=, =routines= may be gradually migrated to methods using =Registry=.
-* Extensions, Projects
-** StartupFiles : Select a startup file from a list of files stored in "Startups"
-   :PROPERTIES:
-   :DATE:     <2018-07-11 Wed 18:22>
-   :END:
-*** Purpose: easily customize startup behavior
-
-Permit a user to customize the behavior of SuperCollider on startup by composing the startup file from a list of files contained in a folder.
-
-Note: This emulates a kind of "include" behavior: The startup can include a number of other files.
-
-*** GUI
-
-A window with a list showing all scd files contained in the =Startups= folder, and following buttons / text fields, stacked vertically, from top to bottom as follows:
-
-|---+-------------+-------------------------------------------------------------------------|
-| ! | widget type | contents                                                                |
-|---+-------------+-------------------------------------------------------------------------|
-|   | list        | all scd files contained in =Startups= folder                            |
-|   | static text | "currently installed: =x=". Where =x= is the currently installed script |
-|   | button      | "install script: =x="" where =x= is the currently selected item in list |
-|   | button      | "refresh file list contents"                                            |
-|---+-------------+-------------------------------------------------------------------------|
-
-*** Implementation
-
-The files used for StartupFiles are included in the folder =StartupFiles= inside the root 
-
-The startup files are stored in folder <sc-hacks-home>/Startups.  
-On startup, class =StartupFiles= opens a GUI showing a list of the scd files in the =Startups= folder. The list also shows the currently selected file as selected item in the list. 
-
-When the user selects a different file the following things happen: 
-
-1. The Name of the file selected by the user is stored in User Application Support Directory of SuperCollider under file =UserStartupFile.sctxar=.  This is used in order to show the last selection at the next time that the library is compiled. 
-2. The selected file is loaded.  This specifies how to create the code .... for ...
-
- copied to =Platform.userAppSupportDir ++ "/startup1.sc1"=.  This file is run by StartupFiles class at startup.
-
-** Include: I
-
-
-

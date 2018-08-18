@@ -40,13 +40,13 @@ It shows the default parameters that were provided by the Event Class.
 (ctranspose: -6, dur: 20, degree: [4, 6, 8, 10]).play;
 //:It is useful to add to a chord using +
 (ctranspose: -6, dur: 20, degree: [0, 2, 4, 6] + 4).play;
-//:With sc-hacks you can play evenets as (melodic) patterns
+//:With sc-hacks you can play events as (melodic) patterns
 (degree: Prand([0, 1, [-1, 3], 4], inf), dur: 0.2) +> \melody;
-//:With sc-hacks you can play evenets as (melodic) patterns
+//:With sc-hacks you can play events as (melodic) patterns
 (degree: Prand([0, 1, [-1, 3], 4], inf), dur: 0.1,
 mtranspose: Pstutter(12, Prand([0, -3, 3], inf))
 ) +> \melody;
-//:With sc-hacks you can play evenets as (melodic) patterns
+//:With sc-hacks you can play events as (melodic) patterns
 (degree: Prand([0, 1, [-1, 3], 4], inf), dur: Prand([0.1, 0.2], inf),
 mtranspose: Pstutter(12, Prand([0, -3, 3], inf))
 ) +> \melody;

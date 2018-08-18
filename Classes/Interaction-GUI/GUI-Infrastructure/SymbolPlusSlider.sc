@@ -46,7 +46,7 @@ Additional utilities and shortcuts: v, h, watch, close.
 				envir.put(this, controlspec.map(me.value ? 0));
 			})
 			.addNotifier(envir, this, { | value, notification |
-				notification.listener.value = controlspec.unmap(value ? 0)
+				{ notification.listener.value = controlspec.unmap(value ? 0) }.defer;
 			}),
 			NumberBox()
 			.maxWidth_(80)
@@ -57,7 +57,7 @@ Additional utilities and shortcuts: v, h, watch, close.
 				envir.put(this, controlspec constrain: (me.value));
 			})
 			.addNotifier(envir, this, { | value, notification |
-				notification.listener.value = value ? 0;
+				{ notification.listener.value = value ? 0; }.defer;
 			})
 		)
 	}
