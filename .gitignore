@@ -1,5 +1,5 @@
-/Classes/Scipts/Snippets/UserFiles/*.scd
-!/Classes/Scipts/Snippets/UserFiles/UserFilesREADME.scd
-/Classes/Scipts/Snippets/UserIncludes/*.scd
-!/Classes/Scipts/Snippets/UserIncludes/UserIncludesREADME.scd
+/Classes/Scripts/Snippets/UserFiles/*.scd
+!/Classes/Scripts/Snippets/UserFiles/UserFilesREADME.scd
+/Classes/Scripts/Snippets/UserIncludes/*.scd
+!/Classes/Scripts/Snippets/UserIncludes/UserIncludesREADME.scd
 
