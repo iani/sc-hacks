@@ -13,8 +13,8 @@
 	}
 }.fork
 //:connect input to parameters
-\period <+.grainbuf '/gyroscope'.osc(1, [-40, 40], [0.05, 2.0]);
-\dur <+.grainbuf '/gyroscope'.osc(1, [-40, 40], [0.1, 2.5]);
+\period <+.grainbuf '/gyroscope'.osc(0, [-40, 40], [0.05, 2.0]);
+\dur <+.grainbuf '/gyroscope'.osc(1, [-40, 40], [0.1, 2.0]);
 \rate <+.grainbuf '/gyroscope'.osc(2, [-40, 40], [0.1, 10]);
 \pos <+.grainbuf '/acceleration'.osc(0, [-10, 10], [0, 3.5]);
 //:open parameter gui

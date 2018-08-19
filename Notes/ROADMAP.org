@@ -125,12 +125,14 @@ In addition to the 4 operators above, /sc-hacks/ uses =@= to configure busses bo
   :PROPERTIES:
   :DATE:     <2017-09-06 Wed 14:20>
   :END:
-** TODO Prevent "Waiting for created synth to start" message when rebooting server
+** DONE Prevent "Waiting for created synth to start" message when rebooting server
+   CLOSED: [2018-08-19 Sun 11:26]
    :PROPERTIES:
    :DATE:     <2018-08-08 Wed 22:19>
    :END:
 
-
+   - State "DONE"       from "TODO"       [2018-08-19 Sun 11:26] \\
+     tested 19 Aug 2018 11:26 - no problem could be found.
 ** DONE Move Startup files and Includes to Snippet folder
    CLOSED: [2018-07-31 Tue 12:18]
    :PROPERTIES:
@@ -140,10 +142,13 @@ In addition to the 4 operators above, /sc-hacks/ uses =@= to configure busses bo
      done
 ** DONE For next item: Check that preloads do not run again when running twice the same snippet without quitting server
    CLOSED: [2018-07-31 Tue 12:44]
-** TODO On server boot: run preloads of curently selected file and remove them from the preload list.
+** DONE On server boot: run preloads of curently selected file and remove them from the preload list.
+   CLOSED: [2018-08-19 Sun 11:27]
    :PROPERTIES:
    :DATE:     <2018-07-30 Mon 08:25>
    :END:
+   - State "DONE"       from "TODO"       [2018-08-19 Sun 11:27] \\
+     done
 ** DONE Move synth of linked player to appropriate group when linked
    CLOSED: [2018-07-27 Fri 10:35]
    :PROPERTIES:
@@ -209,6 +214,74 @@ t.nextTimeOnGrid(t.beatsPerBar) == t.nextBar // => true
 :PROPERTIES:
 :DATE:     <2017-10-06 Fri 13:50>
 :END:
+
+* File browser, Snippet GUI and Includes
+
+** Introduction
+
+On startap, sc-hacks opens a gui for browsing all =.scd= files contained in the folder =/Classes/Scripts/Snippets= inside the sc-hacks library folder.  The purpose of this tool is to make it easier to review user code 
+ 
+** How includes work
+
+Includes are a way to load additional files before running a snippet. There are three kinds of includes: 
+
+1. "before boot", files that run before the server is booted.  Common uses are to set server options (number of input our output channels, server memory etc.)
+2. "after boot", files that are run immediately after booting the server but before running the current snippet.  Common uses are to create buffers, load audio files into buffers, define synthdefs, to start gui items such as scope, server meter, etc.
+3. "before snippet".  These are run immediately before running the snippet that is executed by the user. 
+
+** Syntax for includes
+
+*** include file name and path
+
+The name of include files are writtn in the comment line of the snippet that needs them. Include files are indicated by their filename without extension.  The path for finding the file is the same as the path of the file that contains the snippet that is run. Thus, if the snippet is in file 
+
+ : /sc-hacks-path/snippet-folder-path/folder1/file1.scd
+
+ and the include to use is named 'include1', then the file loaded will be: 
+
+ : /sc-hacks-path/snippet-folder-path/folder1/include1.scd
+
+Additionally, there are two ways to indicate the 
+
+one can include the 
+
+** Alternative syntax for includes (Not implemented)
+
+*** Include types and prefixes
+ To indicate include names in the comment line, one uses one of the following prefixes: 
+
+
+ 1. ^{optional: pathname}: run before server boot
+ 2. %{optional: pathame}: run after server boot and before regular snippets
+ 3. /{optional: pathname}: run before current snippet
+
+ For example, this comment line: 
+
+: //:include file example 1 / include1 include2 include3
+
+indicates to load files =include1.scd=, =include2.scd=, =include3.scd= immediately before running the snippet starting at the comment line.
+
+Similarly: 
+
+: //:server config example ^ serveroptions1
+
+loads the file =serveroptions1.scd= before loading the server.
+
+Also:
+
+: //:server boot example $ buffers1 synthdefs1
+
+always loads the files =buffers1.scd= and =synthdefs1.scd= immediately after server boot and before running any snippets in the current file.
+
+*** Combine includes of different types in one snippet headline
+
+One can combine any of the three types of includes in one headline.  For example the headline:
+
+: //:combine includes / include1 ^ serveroptions $ buffers meter scope
+
+loads =include1.scd= before the snippet, =serveroptions.sc= before booting the server and =buffers=, =meter=, =scope= immediately after the server is booted.
+
+
 * Implementation notes
   :PROPERTIES:
   :DATE:     <2017-10-05 Thu 17:31>

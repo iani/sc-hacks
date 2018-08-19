@@ -42,11 +42,6 @@ Snippet {
 			\preload, {
 				if (includes[1] == "include") {
 					includes = includes[2..]
-					/* // TODO: Use this:
-						includes[2..] collect { | i |
-						    this.makeIncludePath(i)
-						}
-					*/
 				}{ includes = nil }
 			},
 			{
@@ -76,6 +71,11 @@ Snippet {
 	run {
 		postf("running snippet: %. includes are: %\n", name, includes);
 		includes do: { | i |
+			/* // TODO: Build relative path + resolve wildcartds
+				if (i[0] === $/) {
+				
+				}
+			*/
 			(pathOnly ++ i ++ ".scd").doIfExists({ | p |
 				postf("Running include:\n%\n", p);
 				p.load;

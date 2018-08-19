@@ -1,1 +1,5 @@
-hexo
+/Classes/Scipts/Snippets/UserFiles/*.scd
+!/Classes/Scipts/Snippets/UserFiles/UserFilesREADME.scd
+/Classes/Scipts/Snippets/UserIncludes/*.scd
+!/Classes/Scipts/Snippets/UserIncludes/UserIncludesREADME.scd
+
