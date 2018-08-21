@@ -219,9 +219,19 @@ t.nextTimeOnGrid(t.beatsPerBar) == t.nextBar // => true
 
 ** Introduction
 
-On startap, sc-hacks opens a gui for browsing all =.scd= files contained in the folder =/Classes/Scripts/Snippets= inside the sc-hacks library folder.  The purpose of this tool is to make it easier to review user code 
+On startap, sc-hacks opens a gui for browsing all =.scd= files contained in the folder =/Classes/Scripts/Snippets= inside the sc-hacks library folder.  This browser provides quick access to user code as well as a number of helpful features:
+
+- Evaluate an entire file by pressing the enter key on the item showing the name of the file
+- Evaluate a section of a file ("snippet") by pressing the enter key on the item showing the title of the section
+- Specify code which should be executed before booting the server
+- Specify code which should be executed after booting the server but before running any other code.
+- Use =include= statement to specify files to evaluate before a snippet.
  
-** How includes work
+** Location of snippet files.
+
+The Snippet GUI looks for snippet files inside this subfolder of sc-hacks: 
+
+=/Classes/Scripts/Snippets=
 
 Includes are a way to load additional files before running a snippet. There are three kinds of includes: 
 

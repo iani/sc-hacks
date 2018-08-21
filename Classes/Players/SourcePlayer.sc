@@ -31,6 +31,12 @@ PatternPlayer : SourcePlayer {
 				source.put(key, value.index);
 			});
 			process = source.play(envir[\clock] ?? { TempoClock.default }); // source.play(clock);
+			process addDependant: { | whochanged, whathappened |
+				switch (whathappened,
+					\playing, { Player.changed(\status, player); },
+					\stopped, { Player.changed(\status, player); }
+				)
+			};
 		}{
 			stream = process.originalStream;
 			event = stream.event;
@@ -280,7 +286,7 @@ SynthPlayer : SourcePlayer {
 		process.onStart (this, {
 			startActions do: _.(this);
 			startActions = nil;
-			player.changed(\started);
+			Player.changed(\status, player); // player.changed(\started);
 			// catch any link busses that were set before you started.
 			envir.busses keysValuesDo: { | key, bus |
 				process.set(key, bus.index);
@@ -305,7 +311,7 @@ SynthPlayer : SourcePlayer {
 			};
 			process.onEnd (this, { | notification |
 				if (process === notification.notifier) {
-					player.changed(\stopped);
+					Player.changed(\status, player); // player.changed(\stopped);
 					process = nil;
 				};
 			});

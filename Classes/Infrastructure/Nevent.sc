@@ -11,7 +11,11 @@ Nevent : EnvironmentRedirect {
 
 	*all {
 		// return array with all environments (Nevent instances).
-		^Registry.at(libRoot).values;
+		^Registry.at(libRoot).values.asArray;
+	}
+
+	*allPlayers {
+		^this.all.collect({ | e | e.players.asArray }).flat;
 	}
 	
 	*initClass {
@@ -52,6 +56,7 @@ Nevent : EnvironmentRedirect {
 	init {
 		this[\target] = OrderedGroup.last;
  		writers = Set();
+		this.class.changed(\new, this);
 	}
 
 	maybePush { | doPush = false |
@@ -71,15 +76,21 @@ Nevent : EnvironmentRedirect {
 	player { | playerName |
 		// return player corresponding to playerName
 		var player;
+		// "Nevent:player was called".postln;
 		^players.atFail(playerName, {
 			player = Player(this, playerName);
 			players[playerName] = player;
+			Player.getAll;
+			//	"playsers after get all are: ".post;
+			// Player.all.postln;
+			Player.changed(\new, player);
 			player;
 		});
 	}
 
 	audioBusChans { | param |
-		// return the number of channels of the bus stored at param, or nil if no such bus is found.
+		// return the number of channels of the bus stored at param,
+		// or nil if no such bus is found.
 		var bus;
 		bus = this.busses[param];
 		if (bus.isNil) { ^nil } { ^bus.numChannels };

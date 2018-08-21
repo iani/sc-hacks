@@ -83,6 +83,7 @@ Decision table for playSource method according to types of receiver and argument
 */
 
 Player {
+	classvar all;
 	var <envir, <name, <sourcePlayer;
 
 	*initClass {
@@ -97,8 +98,6 @@ Player {
 			~amp = ~amp.value;
 			~sustain = ~sustain.value;
 			envir = ~envir;
-			//	postf("DEBUGGING. envir is: %\ncurrentEnvironment is: %\n", envir, currentEnvironment);
-			// 
 			// TODO: Review this.  If freq is set as pattern, then
 			// setting degree in next event will not set freq to nil.
 			// see notes TODO below in method playEnvEvent!
@@ -114,11 +113,16 @@ Player {
 	}
 	
 	*all { // return all Player instances
-		^Nevent.all.collect({|e| e.players.values.asArray}).flat;
+		^all ?? { this.getAll }
+	}
+
+	*getAll {
+		all = Nevent.all.collect({|e| e.players.values.asArray}).flat;
+		^all;
 	}
 
 	*new { | envir, name = \default |
-		^this.newCopyArgs (envir, name);
+		^this.newCopyArgs (envir, name)
 	}
 
 	persist {
@@ -129,8 +133,7 @@ Player {
 	auto {
 		// make this player restart when user calls Main:run
 		// In emacs bindings this is with keyboard command C-c C-r
-		this.addNotifier(Player, \run, { this.play });
-		
+		this.addNotifier(Player, \run, { this.play });	
 	}
 
 	setSource { | source |
@@ -154,8 +157,7 @@ Player {
 				})
 			};
 			clock.play;
-		}
-		
+		}	
 	}
 
 	playEnvEvent { | event |
@@ -219,7 +221,7 @@ Player {
 	}
 
 	toggle { | source |
-		if (this.isPlaying) { this.stop } { this.push.play(source) };
+		if (this.isPlaying) { this.stop } { this /* .push */ .play(source) };
 	}
 
 	put { | key, value |
