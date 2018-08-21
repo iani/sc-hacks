@@ -1,0 +1,5 @@
+/*
+This folder is for testing a new scheme for sending the results of evaluating each snippet to the player of the same name.
+
+This is INCOMPLETE.
+*/

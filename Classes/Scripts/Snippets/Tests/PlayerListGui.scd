@@ -1,4 +1,6 @@
 // Building a gui for the list of players
+//:test PlayerGui class
+PlayerGui();
 //:version 1: do not restore selection after update
 \players.v(
 	StaticText().string_("Environments"),
@@ -51,7 +53,7 @@
 			var players;
 			index = me.value ? 0;
 			players = Player.all;
-			["playsers are: ", players].postln;
+			["players are: ", players].postln;
 			me.items_(players collect: _.name);
 			if (players.size > 0) {
 				me.selection = (0..players.size-1) select: { | p |
@@ -68,5 +70,3 @@ Player.changed(\status, Player.all[0]);
 () +> \newEvent0;
 //:create new player 2
 (dur: 0.1, degree: 1) +> \newEvent1;
-//:
-Player.all;

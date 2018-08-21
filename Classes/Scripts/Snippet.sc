@@ -57,6 +57,9 @@ Snippet {
 
 	run {
 		var rootDir, currentDir;
+		// experimental: keep history of snippets ////////////////
+		SnippetHistory(name, code);
+		////////////////////////////////////////////////////////////////
 		rootDir = SnippetList.rootDir;
 		currentDir = pathOnly;
 		postf("running snippet: %. includes are: %\n", name, includes);
