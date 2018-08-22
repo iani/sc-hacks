@@ -1,6 +1,8 @@
 //:whitenoise
 { WhiteNoise.ar(0.1) }
-//:c 1 sec
+//:C 1 SEC
 ()
 //:default
 \default
+//:C 1 SEC
+()

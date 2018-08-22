@@ -1,5 +1,5 @@
 SnippetList {
-	classvar <folders, <folderIndex, <fileIndex, <snippetIndex = 0, <snippets;
+	classvar /* <folders, */ <folderIndex, <fileIndex, <snippetIndex = 0, <snippets;
 	classvar <rootDir; // root folder containing all snippet files
 	classvar <snippetOnServer; /* Snippet last loaded on server boot.
 		If different from that beeing run, then load its head snippets. */
@@ -13,6 +13,14 @@ SnippetList {
 		and of 1.5 seconds between head and tail snippets, to allow buffer info
 		when reading buffers and before playing them.	*/
 	<tail;     // snippets to run after the head snippets
+
+	*folders {
+		^Registry(this, \folders, { [] });
+	}
+
+	*folders_ { | argFolders |
+		Registry.put(this, \folders, argFolders);
+	}
 
 	*initClass {
 		StartUp add: {
@@ -91,7 +99,7 @@ SnippetList {
 				ListView() // Select folder =============================
 				.addNotifier(this, \folders, { | notification |
 					this.readFolders;
-					notification.listener.items = folders collect: { | f |
+					notification.listener.items = this.folders collect: { | f |
 						PathName(f[0]).folderName;
 					};
 					notification.listener.doAction;
@@ -105,7 +113,7 @@ SnippetList {
 				.keyDownAction_({ | me, char, modifier ... args |
 					if (char === $\r) {
 						switch (modifier,
-							131072, { Document.open(folders[folderIndex][1][fileIndex]); },
+							131072, { Document.open(this.folders[folderIndex][1][fileIndex]); },
 							0, { snippets.runSnippet(snippets.tail); }
 						);
 						me.defaultKeyDownAction(char, modifier, *args);
@@ -115,7 +123,7 @@ SnippetList {
 				.selectedStringColor_( Color.white )
 				.focusColor_(Color.red)
 				.addNotifier(this, \folder, { | n |
-					n.listener.items = folders[folderIndex][1] collect: { | p |
+					n.listener.items = this.folders[folderIndex][1] collect: { | p |
 						PathName(p).fileNameWithoutExtension;
 					};
 					n.listener.doAction;
@@ -130,7 +138,7 @@ SnippetList {
 				.hiliteColor_(Color.red)
 				.focusColor_(Color.red)
 				.addNotifier(this, \file, { | n |
-					if (folders[folderIndex][1].size > 0) {
+					if (this.folders[folderIndex][1].size > 0) {
 						// postf("RELOADING FILE: %\n", folders[folderIndex][1][fileIndex]);
 						
 						// postf("% received file update.\n", n.listener);
@@ -139,7 +147,7 @@ SnippetList {
 					// keep previously selected snippet if possible:
 						n.listener.valueAction_(snippetIndex min: (n.listener.items.size - 1));
 					}{
-						postf("folder is empty: %\n", folders[folderIndex]);
+						postf("folder is empty: %\n", this.folders[folderIndex]);
 					}
 				})
 				.addNotifier(this, \snippets, { | n |
@@ -186,7 +194,7 @@ SnippetList {
 					.action_({ CmdPeriod.run })
 					.focusColor_(Color.red),
 					Button().states_([["Read Folders"]])
-					.action_({ this.changed(\folders) })
+					.action_({ this.changed(\this.folders) })
 					.focusColor_(Color.red),
 					Button().states_([["Recompile"]])
 					.action_({ thisProcess.platform.recompile; })
@@ -230,7 +238,7 @@ SnippetList {
 		// Only make snippets instance if currnt instance source has changed on file.
 		var newPath, newSource;
 		//	"running loadSnippets".postln;
-		newPath = folders[folderIndex][1][fileIndex];
+		newPath = this.folders[folderIndex][1][fileIndex];
 		if (snippets.isNil) {
 			snippets = this.new(newPath);
 		}{
@@ -290,14 +298,14 @@ SnippetList {
 	}
 
 	*readFolders {
-		folders = this.snippetFolders collect: { | p |
+		this.folders = this.snippetFolders collect: { | p |
 			[p, (p +/+ "*.scd").pathMatch]
 		};	
 	}
 
 	*loadStartup {
 		"loading startup:".postln;
-		folders[folderIndex][1][fileIndex].postln;
+		this.folders[folderIndex][1][fileIndex].postln;
 		CmdPeriod.run; // stop synths + routines + patterns
 		Server.default.quit;   // this also removes buffers from Library.
 		Nevent.reset; // close and remove all Nevents.
