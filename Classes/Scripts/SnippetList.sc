@@ -1,8 +1,8 @@
 SnippetList {
-	classvar /* <folders, */ <folderIndex, <fileIndex, <snippetIndex = 0, <snippets;
-	classvar <rootDir; // root folder containing all snippet files
-	classvar <snippetOnServer; /* Snippet last loaded on server boot.
-		If different from that beeing run, then load its head snippets. */
+	// /* classvar <folders,  <folderIndex, <fileIndex, <snippetIndex = 0 <snippets; */
+ 	// classvar <rootDir; // root folder containing all snippet files
+	// classvar <snippetOnServer; /* Snippet last loaded on server boot.
+	//	If different from that beeing run, then load its head snippets. */
 	var <path, // path of file containing snippets
 	<all,      // array of snippets created from code in file
 	<>source,   // full source code from which snippets were made
@@ -14,12 +14,64 @@ SnippetList {
 		when reading buffers and before playing them.	*/
 	<tail;     // snippets to run after the head snippets
 
+	snippetOnServer { ^this.class.snippetOnServer }
+
+	snippetOnServer_ { | argSnippet |
+		^this.class.snippetOnServer_(argSnippet)
+	}
+	
+	*snippetOnServer {
+		^Registry(this, \snippetOnServer, { 0 });
+	}
+	*snippetOnServer_ { | argSnippet |
+		Registry.put(this, \snippetOnServer, argSnippet);
+	}
+	rootDir { ^this.class.rootDir }
+	
+	*rootDir {
+		^Registry(this, \rootDir, { this.folderPath });
+	}
+	
 	*folders {
 		^Registry(this, \folders, { [] });
 	}
 
 	*folders_ { | argFolders |
 		Registry.put(this, \folders, argFolders);
+	}
+
+	*folderIndex {
+		^Registry(this, \folderIndex, { 0 });
+	}
+
+	*folderIndex_ { | argFolderIndex |
+		Registry.put(this, \folderIndex, argFolderIndex);
+	}
+
+	*fileIndex {
+		^Registry(this, \fileIndex, { 0 });
+	}
+
+	*fileIndex_ { | argFolderIndex |
+		Registry.put(this, \fileIndex, argFolderIndex);
+	}
+
+	*snippetIndex {
+		^Registry(this, \snippetIndex, { 0 });
+	}
+
+	*snippetIndex_ { | argFolderIndex |
+		Registry.put(this, \snippetIndex, argFolderIndex);
+	}
+
+	*snippets { // do not provide default. See 
+		^Registry(this, \snippets, {
+			this.new(this.folders[this.folderIndex][1][this.fileIndex]);
+		});
+	}
+
+	*snippets_ { | argSnippets |
+		Registry.put(this, \snippets, argSnippets);
 	}
 
 	*initClass {
@@ -32,9 +84,9 @@ SnippetList {
 			};
 			ServerQuit add: {
 				// prepare to load before and/or head snippets at next run
-				snippetOnServer = nil;
+				this.snippetOnServer = 0;
 			};
-			rootDir = this.folderPath;
+			// rootDir = this.folderPath;
 		}
 	}
 	
@@ -48,7 +100,6 @@ SnippetList {
 		^PathName(this.filenameSymbol.asString).pathOnly ++ "Snippets/"
 	}
 
-
 	*new { | path |
 		^this.newCopyArgs(path, []).init;
 	}
@@ -59,13 +110,13 @@ SnippetList {
 			source = File.readAllString (path);
 			this.getSnippetsFromSource;
 		},{
-			^postln ("Could not open file: " ++ path);
+			postln ("Could not open file: " ++ path);
 		})
 	}
 
 	getSnippetsFromSource {
 		// TODO: get snippets from source var. Do not reread from file.
-		all = Snippet.readAll(path);
+		all = this.readAll;
 		all do: { | s |
 			switch (s.type,
 				\server, { before = before add: s },
@@ -73,6 +124,10 @@ SnippetList {
 				{ tail = tail add: s }
 			);
 		}
+	}
+
+	readAll {
+		^Snippet.readAll(path);
 	}
 
 	save { | newSource |
@@ -96,6 +151,7 @@ SnippetList {
 		});
 		window.layout = HLayout(
 			VLayout(
+				this.popupMenu,
 				ListView() // Select folder =============================
 				.addNotifier(this, \folders, { | notification |
 					this.readFolders;
@@ -106,15 +162,16 @@ SnippetList {
 				})
 				.maxHeight_(200)
 				.action_({ | me |
-					folderIndex = me.value;
+					this.folderIndex = me.value;
 					this.changed(\folder)
 				}),
 				ListView() // List 1: Select file ================================
 				.keyDownAction_({ | me, char, modifier ... args |
 					if (char === $\r) {
 						switch (modifier,
-							131072, { Document.open(this.folders[folderIndex][1][fileIndex]); },
-							0, { snippets.runSnippet(snippets.tail); }
+							131072, { Document.open(
+								this.folders[this.folderIndex][1][this.fileIndex]); },
+							0, { this.snippets.runSnippet(this.snippets.tail); }
 						);
 						me.defaultKeyDownAction(char, modifier, *args);
 					};
@@ -123,14 +180,14 @@ SnippetList {
 				.selectedStringColor_( Color.white )
 				.focusColor_(Color.red)
 				.addNotifier(this, \folder, { | n |
-					n.listener.items = this.folders[folderIndex][1] collect: { | p |
+					n.listener.items = this.folders[this.folderIndex][1] collect: { | p |
 						PathName(p).fileNameWithoutExtension;
 					};
 					n.listener.doAction;
 				})
 				.action_({ | me |
 					me.value !? {
-						fileIndex = me.value;// ? 0;
+						this.fileIndex = me.value;// ? 0;
 						this.changed(\file);
 					}
 				}),
@@ -138,16 +195,17 @@ SnippetList {
 				.hiliteColor_(Color.red)
 				.focusColor_(Color.red)
 				.addNotifier(this, \file, { | n |
-					if (this.folders[folderIndex][1].size > 0) {
-						// postf("RELOADING FILE: %\n", folders[folderIndex][1][fileIndex]);
+					if (this.folders[this.folderIndex][1].size > 0) {
+						// postf("RELOADING FILE: %\n", folders[folderIndex][1][this.fileIndex]);
 						
 						// postf("% received file update.\n", n.listener);
 						this.loadSnippets;
-						n.listener.items = snippets.all collect: _.name;
+						n.listener.items = this.snippets.all collect: _.name;
 					// keep previously selected snippet if possible:
-						n.listener.valueAction_(snippetIndex min: (n.listener.items.size - 1));
+						n.listener.valueAction_(
+							this.snippetIndex min: (n.listener.items.size - 1));
 					}{
-						postf("folder is empty: %\n", this.folders[folderIndex]);
+						postf("folder is empty: %\n", this.folders[this.folderIndex]);
 					}
 				})
 				.addNotifier(this, \snippets, { | n |
@@ -155,25 +213,27 @@ SnippetList {
 						snippet file is read. Issued by this.loadSnippets
 					*/
 					postf("% received snippets update.\n", n.listener);
-						n.listener.items = snippets.all collect: _.name;
+						n.listener.items = this.snippets.all collect: _.name;
 					// keep previously selected snippet if possible:
-						n.listener.valueAction_(snippetIndex min: (n.listener.items.size - 1));
+					n.listener.valueAction_(
+						this.snippetIndex min: (n.listener.items.size - 1));
 				})
 				.addNotifier(this, \userEdited, { | n |
-					n.listener.items = snippets.all collect: _.name;
-					n.listener.valueAction_(snippetIndex min: (n.listener.items.size - 1));
+					n.listener.items = this.snippets.all collect: _.name;
+					n.listener.valueAction_(
+						this.snippetIndex min: (n.listener.items.size - 1));
 				})
 				.action_({ | me |
-					snippetIndex = me.value;
+					this.snippetIndex = me.value;
 					this.changed(\snippet)
 				})
 				// On keyboard return: run selected snippet
 				.enterKeyAction_({
 					// If on first snippet, then run all snippets
-					if (snippetIndex == 0) {
-						snippets.runSnippet(snippets.tail)
+					if (this.snippetIndex == 0) {
+						this.snippets.runSnippet(this.snippets.tail)
 					}{
-						snippets.runSnippet([snippets.all[snippetIndex]]);
+						this.snippets.runSnippet([this.snippets.all[this.snippetIndex]]);
 					}
 				}),
 				HLayout(
@@ -195,10 +255,11 @@ SnippetList {
 					.focusColor_(Color.red),
 					Button().states_([["Read Folders"]])
 					.action_({ this.changed(\this.folders) })
-					.focusColor_(Color.red),
-					Button().states_([["Recompile"]])
-					.action_({ thisProcess.platform.recompile; })
 					.focusColor_(Color.red)
+					//,
+					// Button().states_([["Recompile"]])
+					// .action_({ thisProcess.platform.recompile; })
+					// .focusColor_(Color.red)
 				)
 			),
 			[
@@ -208,13 +269,13 @@ SnippetList {
 						.tabWidth_(30)
 						.font_(Font("Courier", 11))
 						.addNotifier(this, \snippet, { | n |
-							n.listener.string = snippets.source;
+							n.listener.string = this.snippets.source;
 						})
 						.focusColor_(Color.red)
 						// on mouse leave, save changes
 						.mouseLeaveAction_({ | me |
-							if (snippets.source != me.string) {
-								snippets.save(me.string);
+							if (this.snippets.source != me.string) {
+								this.snippets.save(me.string);
 								this.changed(\file);
 							}
 						})
@@ -226,7 +287,7 @@ SnippetList {
 					.background_(Color(0.92, 0.92, 0.92))
 					.stringColor_(Color.red)
 					.addNotifier(this, \snippet, { | n |
-						n.listener.string = snippets.all[snippetIndex].code;
+						n.listener.string = this.snippets.all[this.snippetIndex].code;
 					})
 				) , s: 2]
 		);
@@ -234,20 +295,53 @@ SnippetList {
 		^window;
 	}
 
+	*popupMenu {
+		^PopUpMenu()
+		.items_([
+			"--- UTILITIES MENU ---",
+			"Browse Classes and Methods",
+			"Recompile",
+			"Player Snippet Gui",
+			"Meter",
+			"Scope",
+			"Frequency Scope"
+		])
+		.action_({ | me |
+			[
+				{},
+				{ Class.extensionsGui },
+				{ thisProcess.platform.recompile; },
+				{ PlayerSnippetList.gui() },
+				{ ServerMeter(Server.default) },
+				{ Server.default.scope },
+				{ Server.default.freqscope }
+			][me.value].value;
+		})
+	}
+
 	*loadSnippets {
-		// Only make snippets instance if currnt instance source has changed on file.
+		// Only make snippets instance if current instance source has changed on file.
 		var newPath, newSource;
-		//	"running loadSnippets".postln;
-		newPath = this.folders[folderIndex][1][fileIndex];
-		if (snippets.isNil) {
-			snippets = this.new(newPath);
+		//	new instance is now provided by snippets class method.
+		/*
+		newPath = this.folders[this.folderIndex][1][this.fileIndex];
+		if (this.snippets.isNil) {
+			this.snippets = this.new(newPath);
 		}{
 			newSource = File.readAllString(newPath);
-			if ( snippets.source == newSource ) {
+			if ( this.snippets.source == newSource ) {
 				// do not reload file if it has not changed. 
 			}{
-				snippets = this.new(newPath); 
+				this.snippets = this.new(newPath); 
 			}
+		}
+		*/
+		newPath = this.folders[this.folderIndex][1][this.fileIndex];
+		newSource = File.readAllString(newPath);
+		if ( this.snippets.source == newSource ) {
+			// do not reload file if it has not changed. 
+		}{
+			this.snippets = this.new(newPath); 
 		}
 	}
 
@@ -259,11 +353,15 @@ SnippetList {
 			Restore current environment, because forking executes the routine in 
 			own pushed one. 
 		*/
-		var newEnvir;
-		if (snippetOnServer === this or: { head.size + before.size == 0 }) {
+		if (this.snippetOnServer === this or: { head.size + before.size == 0 }) {
 			^argSnippets do: _.run;
 		};
-		snippetOnServer = this;
+		this.snippetOnServer = this;
+		this.runAfterBooting(argSnippets)
+	}
+
+	runAfterBooting { | argSnippets |
+		var newEnvir;
 		before do: _.run;
 		this.doAfterBooting(
 			{
@@ -272,18 +370,17 @@ SnippetList {
 						snippet.run;
 						1.5.wait; // make sure info has reached all buffers
 					};
-					//if (argSnippet > 0) {
 					argSnippets do: { | snippet |
 						snippet.run;
 						newEnvir = currentEnvironment;					
 					};
 					{ newEnvir.push }.defer(0.001);
 				}.fork(AppClock)
-				
 			}
-		);	
+		);			
+		
 	}
-
+	
 	runSnippetAsStartup {
 		before = nil; head = nil; tail = nil;
 		all do: { | s |
@@ -294,7 +391,6 @@ SnippetList {
 				{ tail = tail add: s }		
 			);
 		};
-		
 	}
 
 	*readFolders {
@@ -305,7 +401,7 @@ SnippetList {
 
 	*loadStartup {
 		"loading startup:".postln;
-		this.folders[folderIndex][1][fileIndex].postln;
+		this.folders[this.folderIndex][1][this.fileIndex].postln;
 		CmdPeriod.run; // stop synths + routines + patterns
 		Server.default.quit;   // this also removes buffers from Library.
 		Nevent.reset; // close and remove all Nevents.
