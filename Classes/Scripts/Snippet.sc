@@ -29,26 +29,16 @@ Snippet {
 	}
 
 	init {
+		var hasIncludes = false;
+		var titleParts;
 		pathOnly = pathName.pathOnly;
-		includes = name.split($ );
-		type = includes.first.asSymbol;
-		switch (type,
-			\include, { includes = includes[1..]; },
-			\server, {
-				if (includes[1] == "include") {
-					includes = includes[2..]
-				}{ includes = nil }
-			},
-			\preload, {
-				if (includes[1] == "include") {
-					includes = includes[2..]
-				}{ includes = nil }
-			},
-			{
-				includes = nil;
-				type = '-';
-			}
-		);
+		titleParts = name.split($ );
+		// name.postln;
+		type = titleParts.first.asSymbol;
+		titleParts do: { | p |
+			if (hasIncludes) { includes = includes add: p };
+			if (p == "include") { hasIncludes = true };
+		};
 	}
 
 	addCode { | string = "" |
@@ -67,7 +57,7 @@ Snippet {
 			if (i[0] === $/) {
 				currentDir = rootDir ++ i[1..]
 			}{
-				(currentDir ++ i ++ ".scd").doIfExists({ | p |
+				(currentDir +/+ i ++ ".scd").doIfExists({ | p |
 					postf("Running include:\n%\n", p);
 					p.load;
 				},{ | p |

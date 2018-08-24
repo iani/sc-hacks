@@ -1,7 +1,7 @@
 // test 12 Aug 2018 13:40
 //:server
 // server boot is needed
-//:preload include synthdefs01
+//:preload include /SynthDefs/ mysterymetals boombah gardellino
 //:test synthdef preload
 Synth(\mysterymetals);
 //:default +> d

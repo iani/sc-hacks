@@ -254,7 +254,7 @@ SnippetList {
 					.action_({ CmdPeriod.run })
 					.focusColor_(Color.red),
 					Button().states_([["Read Folders"]])
-					.action_({ this.changed(\this.folders) })
+					.action_({ this.changed(this.folders) })
 					.focusColor_(Color.red)
 					//,
 					// Button().states_([["Recompile"]])
@@ -296,27 +296,15 @@ SnippetList {
 	}
 
 	*popupMenu {
-		^PopUpMenu()
-		.items_([
+		^ActionMenu(
 			"--- UTILITIES MENU ---",
-			"Browse Classes and Methods",
-			"Recompile",
-			"Player Snippet Gui",
-			"Meter",
-			"Scope",
-			"Frequency Scope"
-		])
-		.action_({ | me |
-			[
-				{},
-				{ Class.extensionsGui },
-				{ thisProcess.platform.recompile; },
-				{ PlayerSnippetList.gui() },
-				{ ServerMeter(Server.default) },
-				{ Server.default.scope },
-				{ Server.default.freqscope }
-			][me.value].value;
-		})
+			"Browse Classes and Methods", { Class.extensionsGui },
+			"Recompile", { thisProcess.platform.recompile; },
+			"Player Snippet Gui", { PlayerSnippetList.gui() },
+			"Meter", { ServerMeter(Server.default) },
+			"Scope", { Server.default.scope },
+			"Frequency Scope", { Server.default.freqscope }
+		)
 	}
 
 	*loadSnippets {

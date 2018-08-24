@@ -1,6 +1,6 @@
-//:whitenoise
+//:whitenoise include /includetests *
 { WhiteNoise.ar(0.1) }
-//:c 1 sec
-()
 //:default
 \default
+//:c 1 sec
+()

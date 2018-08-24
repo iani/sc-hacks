@@ -15,27 +15,15 @@ PlayerSnippetList : SnippetList {
 	}
 
 	*popupMenu {
-		^PopUpMenu()
-		.items_([
+		^ActionMenu(
 			"--- UTILITIES MENU ---",
-			"Browse Classes and Methods",
-			"Recompile",
-			"Snippet Gui",
-			"Meter",
-			"Scope",
-			"Frequency Scope"
-		])
-		.action_({ | me |
-			[
-				{},
-				{ Class.extensionsGui },
-				{ thisProcess.platform.recompile; },
-				{ SnippetList.gui },
-				{ ServerMeter(Server.default) },
-				{ Server.default.scope },
-				{ Server.default.freqscope }
-			][me.value].value;
-		})
+			"Browse Classes and Methods", { Class.extensionsGui },
+			"Recompile", { thisProcess.platform.recompile; },
+			"Snippet Gui", { SnippetList.gui() },
+			"Meter", { ServerMeter(Server.default) },
+			"Scope", { Server.default.scope },
+			"Frequency Scope", { Server.default.freqscope }
+		)
 	}
 	
 	readAll {
@@ -50,42 +38,3 @@ PlayerSnippetList : SnippetList {
 	}
 }
 
-// 21 Aug 2018 17:27
-/*
-	Experimental : send result of running a snippet to the selected player.
-
-	INCOMPLETE
-*/
-
-PlayerSnippet : Snippet {
-	var <playerName;
-	run {
-		var rootDir, currentDir;
-		// experimental: keep history of snippets ////////////////
-		SnippetHistory(name, code);
-		////////////////////////////////////////////////////////////////
-		rootDir = SnippetList.rootDir;
-		currentDir = pathOnly;
-		postf("running snippet: %. includes are: %\n", name, includes);
-		includes do: { | i |
-			if (i[0] === $/) {
-				currentDir = rootDir ++ i[1..]
-			}{
-				(currentDir ++ i ++ ".scd").doIfExists({ | p |
-					postf("Running include:\n%\n", p);
-					p.load;
-				},{ | p |
-					postf("Did not find include:\n%\n", p);
-				})
-			}
-		};
-		// TODO: send the result of intrpreting the snippet to the selected player
-		code.postln.interpret +> playerName;
-	}
-
-	init {
-		super.init;
-		playerName = pathName.fileNameWithoutExtension.asSymbol;
-	}
-	
-}
