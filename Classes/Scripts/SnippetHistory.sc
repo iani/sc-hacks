@@ -3,16 +3,10 @@
 // Only add new code if it is different from the last stored one.
 
 SnippetHistory {
-	var <name, <history;
+	var <name, <code, <time;
 
-	*new { | name, code |
-		^Registry(this, name.asSymbol, {
-			this.newCopyArgs(name, []);
-		}).addIfNew(code);
-	}
-
-	addIfNew { | argCode |
-		if (argCode != history.last) { history = history add: argCode }
+	*new { | type, name, code |
+		^Registry.add(type, name.asSymbol, this.newCopyArgs(name, code, Date.localtime));
 	}
 
 	*save {

@@ -48,7 +48,7 @@ Snippet {
 	run {
 		var rootDir, currentDir;
 		// experimental: keep history of snippets ////////////////
-		SnippetHistory(name, code);
+		SnippetHistory(\CodeSnippets, name, code);
 		////////////////////////////////////////////////////////////////
 		rootDir = SnippetList.rootDir;
 		currentDir = pathOnly;
