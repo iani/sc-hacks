@@ -16,6 +16,21 @@ PatternPlayer : SourcePlayer {
 		
 	}
 
+	playSource { | argPlayer, argSource |
+		switch (argSource.class,
+			Event, {
+				this.play(argSource)
+			},
+			Nil, {
+				//				process.play;
+				this.play(source.event);
+			},{
+				this.release;
+				^SynthPlayer(argPlayer).play(argSource);
+			}
+		)
+	}
+
 	play { | argSource | // argSource should be a kind of Event.
 		var stream, event;
 		// postf("playing PatternPlayer. player is: %, envir is: %\n", player, envir);
@@ -30,14 +45,18 @@ PatternPlayer : SourcePlayer {
 			envir.busses.keysValuesDo({ | key, value |
 				source.put(key, value.index);
 			});
-			process = source.play(envir[\clock] ?? { TempoClock.default }); // source.play(clock);
+			process = source.play(envir[\clock] ?? { TempoClock.default });
 			process addDependant: { | whochanged, whathappened |
 				switch (whathappened,
 					\playing, { Player.changed(\status, player); },
-					\stopped, { Player.changed(\status, player); }
+					\stopped, {
+						process = nil;
+						Player.changed(\status, player);
+					}
 				)
 			};
 		}{
+			"PROCESS IS NOT NIL".postln;
 			stream = process.originalStream;
 			event = stream.event;
 			stream.addEvent(argSource);

@@ -136,9 +136,11 @@ SnippetList {
 
 	*gui {
 		this.window({ | window |
-			this.makeWindow(window)}, \gui, Rect(250, 50, 1000, 700)
+			this.makeWindow(window)}, \gui, this.windowBounds;
 		);
 	}
+
+	*windowBounds { ^Rect(250, 50, 1000, 700) }
 
 	*makeWindow { | window |
 		// Reread current file when entering window:
@@ -301,6 +303,7 @@ SnippetList {
 			"Browse Classes and Methods", { Class.extensionsGui },
 			"Recompile", { thisProcess.platform.recompile; },
 			"Player Snippet Gui", { PlayerSnippetList.gui() },
+			"Player Gui", { PlayerGui() },
 			"Meter", { ServerMeter(Server.default) },
 			"Scope", { Server.default.scope },
 			"Frequency Scope", { Server.default.freqscope }

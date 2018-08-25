@@ -10,20 +10,27 @@ But they are run differently - as outlined above.
 
 
 PlayerGui {
-
+	*initClass {
+		StartUp add: {
+			this.new;
+		}
+		
+	}
 	*new {
 		this.window({ | w |
-			w.bounds = Rect(0, 0, 300, 500);
+			w.bounds = Rect(0, 0, 300, 300);
 			w.view.layout = VLayout(
-				StaticText().string_("Environments"),
+				// StaticText().string_("Environments"),
+				/*
 				ListView()
 				.items_(Nevent.all collect: _.name)
 				.addNotifier(Nevent, \new, { | new, n |
 					{ n.listener.items_(Nevent.all collect: _.name); }.defer(0.01);
 				}),
-				StaticText().string_("Player Details"),
-				ListView(),
-				StaticText().string_("Player Status"),
+				*/
+				// StaticText().string_("Player Details"),
+				// ListView(),
+				StaticText().string_("Players (click to toggle play status)"),
 				ListView()
 				.items_(Player.all collect: _.asString)
 				.selectionMode_(\multi)

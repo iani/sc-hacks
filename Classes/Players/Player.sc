@@ -169,7 +169,8 @@ Player {
 		// provide freq if it is deduced from other keys via default event playing functions:
 		
 		// if (keys includes: \degree or: { keys includes: \note}) { keys add: \freq };
-		// also erase freq or note if degree or note are provided - to reset freq to original default func.
+		// also erase freq or note if degree or note are provided -
+		// to reset freq to original default func.
 
 		// TODO: freq and note should be set to nil also in
 		// the eventstreamplayer's event, if one is already playing in the player
@@ -275,6 +276,7 @@ Player {
 }
 
 + PatternPlayer {
+	/* // moved to class code
 	playSource { | argPlayer, argSource |
 		switch (argSource.class,
 			Event, {
@@ -288,4 +290,5 @@ Player {
 			}
 		)
 	}
+	*/
 }

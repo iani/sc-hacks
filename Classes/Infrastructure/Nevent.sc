@@ -11,7 +11,8 @@ Nevent : EnvironmentRedirect {
 
 	*all {
 		// return array with all environments (Nevent instances).
-		^Registry.at(libRoot).values.asArray;
+		//	^Registry(libRoot, { \default.e }).values.asArray;
+		^(Registry.at(libRoot) ?? { IdentityDictionary() }).values.asArray
 	}
 
 	*allPlayers {
@@ -80,7 +81,7 @@ Nevent : EnvironmentRedirect {
 		^players.atFail(playerName, {
 			player = Player(this, playerName);
 			players[playerName] = player;
-			Player.getAll;
+			Player.getAll; // update cache of existing players
 			//	"playsers after get all are: ".post;
 			// Player.all.postln;
 			Player.changed(\new, player);

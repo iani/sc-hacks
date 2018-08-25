@@ -125,6 +125,13 @@ In addition to the 4 operators above, /sc-hacks/ uses =@= to configure busses bo
   :PROPERTIES:
   :DATE:     <2017-09-06 Wed 14:20>
   :END:
+** DONE Fix Pattern as Player source: Should restart when restarting a player whose pattern ended
+   CLOSED: [2018-08-25 Sat 15:04]
+   :PROPERTIES:
+   :DATE:     <2018-08-25 Sat 14:32>
+   :END:
+   - State "DONE"       from "TODO"       [2018-08-25 Sat 15:04] \\
+     done
 ** DONE Prevent "Waiting for created synth to start" message when rebooting server
    CLOSED: [2018-08-19 Sun 11:26]
    :PROPERTIES:
@@ -214,7 +221,10 @@ t.nextTimeOnGrid(t.beatsPerBar) == t.nextBar // => true
 :PROPERTIES:
 :DATE:     <2017-10-06 Fri 13:50>
 :END:
-
+*** DONE simple player gui - click on player toggles player status
+    CLOSED: [2018-08-25 Sat 14:31]
+    - State "DONE"       from "TODO"       [2018-08-25 Sat 14:31] \\
+      done
 * File browser, Snippet GUI and Includes
 
 ** Introduction
