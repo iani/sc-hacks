@@ -125,6 +125,10 @@ Player {
 		^this.newCopyArgs (envir, name)
 	}
 
+	getHistory {
+		^Registry.at(\PlayerSnippets, name);
+	}
+	
 	persist {
 		// make this player restart whenever groups are re-created.
 		this.addNotifier(OrderedGroup, \groups, { this.play });

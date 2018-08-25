@@ -6,7 +6,7 @@ If no object exists under that path, then create it using a function passed as a
 Registry {
 
 	*add { | ... pathAndObject |
-		this.new(*(pathAndObject[0..pathAndObject.size-2]
+		^this.new(*(pathAndObject[0..pathAndObject.size-2]
 			add: { List() })) add: pathAndObject.last;
 	}
 	

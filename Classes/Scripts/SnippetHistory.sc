@@ -3,7 +3,7 @@
 // Only add new code if it is different from the last stored one.
 
 SnippetHistory {
-	var <name, <code, <time;
+	var <name, <code, <snippet, <time;
 
 	*initClass {
 		ShutDown add: {
@@ -12,8 +12,11 @@ SnippetHistory {
 		
 	}
 	
-	*new { | type, name, code |
-		^Registry.add(type, name.asSymbol, this.newCopyArgs(name, code, Date.localtime));
+	*new { | type, name, code, snippet |
+		Player.changed(\history,
+			Registry.add(
+				type, name.asSymbol, this.newCopyArgs(name, code, snippet, Date.localtime))
+		);
 	}
 
 	*save {

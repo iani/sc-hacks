@@ -10,7 +10,7 @@ PlayerSnippet : Snippet {
 	run {
 		var rootDir, currentDir;
 		// experimental: keep history of snippets ////////////////
-		SnippetHistory(\PlayerSnippets, playerName, code);
+		SnippetHistory(\PlayerSnippets, playerName, code, this);
 		////////////////////////////////////////////////////////////////
 		rootDir = PlayerSnippetList.rootDir;
 		currentDir = pathOnly;
