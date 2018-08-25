@@ -5,13 +5,23 @@
 SnippetHistory {
 	var <name, <code, <time;
 
+	*initClass {
+		ShutDown add: {
+			this.save;
+		}
+		
+	}
+	
 	*new { | type, name, code |
 		^Registry.add(type, name.asSymbol, this.newCopyArgs(name, code, Date.localtime));
 	}
 
 	*save {
-		Registry.at(this).writeArchive(
-			Platform.userAppSupportDir +/+ "History_" ++ Date.localtime.stamp ++ ".sctxar"
-		)		
+		Registry.at(\CodeSnippets).writeArchive(
+			Platform.userAppSupportDir +/+ "SnippetHistory_" ++ Date.localtime.stamp ++ ".sctxar"
+		);
+		Registry.at(\PlayerSnippets).writeArchive(
+			Platform.userAppSupportDir +/+ "PlayerHistory_" ++ Date.localtime.stamp ++ ".sctxar"
+		)
 	}
 }
