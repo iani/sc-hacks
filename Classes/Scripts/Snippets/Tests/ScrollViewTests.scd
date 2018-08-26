@@ -187,3 +187,14 @@ w=Window().layout_( GridLayout.rows(
     [Slider2D(), Slider2D()],
     [[Slider().orientation_(\horizontal), columns:2]]
 )).front;
+//:stacklayout test
+// from: http://doc.sccode.org/Classes/StackLayout.html
+var stack;
+w = Window().layout_( VLayout(
+    Button().states_([["One"],["Two"],["Three"]]).action_({ |b| stack.index = b.value }),
+    stack = StackLayout(
+        TextView().string_("This is a chunk of text..."),
+        TextView().string_("...and this is another..."),
+        TextView().string_("...and another.")
+    );
+)).front;

@@ -153,7 +153,7 @@ SnippetList {
 		});
 		window.layout = HLayout(
 			VLayout(
-				this.popupMenu,
+				this.utilitiesMenu,
 				ListView() // Select folder =============================
 				.addNotifier(this, \folders, { | notification |
 					this.readFolders;
@@ -297,7 +297,7 @@ SnippetList {
 		^window;
 	}
 
-	*popupMenu {
+	*utilitiesMenu {
 		^ActionMenu(
 			"--- UTILITIES MENU ---",
 			"Browse Classes and Methods", { Class.extensionsGui },

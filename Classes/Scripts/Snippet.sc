@@ -6,6 +6,7 @@ select snippet from list of snippets, type return to evaluate snippet.
 Snippet {
 	var <name, <>code, <pathName, <pathOnly;
 	var <includes, <type;
+	var <color; // textfield background indicates snippet identity
 
 	*readAll { | path |
 		var snippet, snippets, pathName, pathOnly;
@@ -39,6 +40,7 @@ Snippet {
 			if (hasIncludes) { includes = includes add: p };
 			if (p == "include") { hasIncludes = true };
 		};
+		color = Color.rand;
 	}
 
 	addCode { | string = "" |
@@ -48,7 +50,7 @@ Snippet {
 	run {
 		var rootDir, currentDir;
 		// experimental: keep history of snippets ////////////////
-		SnippetHistory(\CodeSnippets, name, code);
+		SnippetHistory(name, this).add(\CodeSnippets);
 		////////////////////////////////////////////////////////////////
 		rootDir = SnippetList.rootDir;
 		currentDir = pathOnly;

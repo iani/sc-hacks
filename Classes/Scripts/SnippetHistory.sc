@@ -3,7 +3,9 @@
 // Only add new code if it is different from the last stored one.
 
 SnippetHistory {
-	var <name, <code, <snippet, <time;
+	var <name, <snippet, <time;
+
+	code { ^snippet.code }
 
 	*initClass {
 		ShutDown add: {
@@ -12,13 +14,16 @@ SnippetHistory {
 		
 	}
 	
-	*new { | type, name, code, snippet |
-		Player.changed(\history,
-			Registry.add(
-				type, name.asSymbol, this.newCopyArgs(name, code, snippet, Date.localtime))
-		);
+	*new { | name, snippet |
+		"DEBUGGING SnippetHistory".postln;
+		["snippet is: ", snippet].postln;
+		^this.newCopyArgs(name, snippet, Date.localtime);
 	}
 
+	add { | type |
+		Player.changed(\history, Registry.add(type, name.asSymbol, this))
+	}
+	
 	*save {
 		Registry.at(\CodeSnippets).writeArchive(
 			Platform.userAppSupportDir +/+ "SnippetHistory_" ++ Date.localtime.stamp ++ ".sctxar"
@@ -27,4 +32,24 @@ SnippetHistory {
 			Platform.userAppSupportDir +/+ "PlayerHistory_" ++ Date.localtime.stamp ++ ".sctxar"
 		)
 	}
+
+	guiWidget {
+		^HLayout(
+			// StaticText().string_(snippet.code).background_(Color.rand),
+			TextView()
+			.string_(snippet.code)
+			.background_(snippet.color)
+			//.mouseLeaveAction_({ | me |
+			//	me.string.postln;
+			// 	snippet.code = me.string;
+			//})
+			,
+			Button()
+			.maxWidth_(50)
+			.states_([["RUN"]])
+			.action_({ snippet.run; })
+		)
+		
+	}
+	
 }

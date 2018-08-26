@@ -117,7 +117,7 @@ Player {
 	}
 
 	*getAll {
-		all = Nevent.all.collect({|e| e.players.values.asArray}).flat;
+		all = Nevent.all.collect({|e| e.players.values.asArray }).flat;
 		^all;
 	}
 
@@ -125,8 +125,14 @@ Player {
 		^this.newCopyArgs (envir, name)
 	}
 
-	getHistory {
-		^Registry.at(\PlayerSnippets, name);
+	*getHistory {
+		^Registry(\PlayerSnippets, name, {
+			[
+				PlayerSnippet(name, "\\default",
+					PlayerSnippetList.rootDir +/+ "Auto" +/+ name ++ ".scd"
+				)
+			]
+		});
 	}
 	
 	persist {

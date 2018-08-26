@@ -84,25 +84,29 @@ PlayerGui {
 					StaticText().string_("Run a player snippet to add it here.")
 				))
 				.addNotifier(Player, \history, { | history, n |
-					// TESTING!
-					// "destroying canvas".postln;
+					// [n.listener, history].postln;
+					/* history.collect({ | h |
+						h.postln; h.class.postln; h.snippet.postln;
+						//	h.snippet.inspect;
+						//						h.code.postln;
+						h.guiWidget;
+					}).postln;
+					*/
+					
 					n.listener.canvas.destroy;
 					n.listener.canvas = View().layout = VLayout(
-						*(
-							history.array.collect({ | h |
-								HLayout(
-									StaticText().string_(h.code).background_(Color.rand),
-									Button()
-									.maxWidth_(50)
-									.states_([["RUN"]])
-									.action_({ h.snippet.run; })
-								)
-							})
-						)
+						*(history.collect({ | h |
+							// h.postln; h.class.postln; h.snippet.postln;
+							//	h.snippet.inspect;
+							// h.code.postln;
+							h.guiWidget;
+						}))
 					);
 				})
 			);
 			w.addNotifier(Player, \history, { | history, n |
+				// [this, history].postln;
+				// history.first.name.postln;
 				{ n.listener.name = format("Players : %", history.first.name); }.defer;
 			})
 		});

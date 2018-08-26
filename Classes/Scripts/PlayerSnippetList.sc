@@ -16,7 +16,7 @@ PlayerSnippetList : SnippetList {
 		^PathName(this.filenameSymbol.asString).pathOnly ++ "Players/"
 	}
 
-	*popupMenu {
+	*utilitiesMenu {
 		^ActionMenu(
 			"--- UTILITIES MENU ---",
 			"Browse Classes and Methods", { Class.extensionsGui },

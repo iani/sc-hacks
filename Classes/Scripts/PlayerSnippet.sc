@@ -10,7 +10,7 @@ PlayerSnippet : Snippet {
 	run {
 		var rootDir, currentDir;
 		// experimental: keep history of snippets ////////////////
-		SnippetHistory(\PlayerSnippets, playerName, code, this);
+		SnippetHistory(playerName, this).add(\PlayerSnippets);
 		////////////////////////////////////////////////////////////////
 		rootDir = PlayerSnippetList.rootDir;
 		currentDir = pathOnly;
@@ -27,7 +27,6 @@ PlayerSnippet : Snippet {
 			}
 		};
 		code.postln.interpret +> playerName;
-		// TODO: add code to player history
 	}
 
 	init {
