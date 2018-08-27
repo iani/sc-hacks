@@ -32,7 +32,10 @@ PlayerGui {
 					.action_({ | me |
 						Snippet.newWithPlayer(
 							me.string.replace(" ", "_").asSymbol;,
-							"// please add something to play here, and then run."
+"// Edit code, then press run to play it in player.
+// Events or UGen functions are valid objets to play. Example:
+(dur: 0.1, degree: [-5, 5].pwhite) // or: { WhiteNoise.ar(0.1) }
+"
 						);
 						/*
 						var playerName;
@@ -148,7 +151,10 @@ PlayerGui {
 				),
 				// ListView().items_([\1, \2, \alpha])
 				ScrollView(w, Rect(0, 0, 600, w.bounds.height)).canvas_(View().layout = VLayout(
-					StaticText().string_("Run a player snippet to add it here.")
+					StaticText().string_(
+"To create a new player, type its name in the text field 
+at the top left, and then press enter.
+")
 				))
 				.addNotifier(Player, \history, { | history, n |
 					n.listener.canvas.destroy;
