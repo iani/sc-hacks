@@ -1,8 +1,6 @@
 // 21 Aug 2018 17:27
 /*
-	Experimental : send result of running a snippet to the selected player.
-
-	INCOMPLETE
+Experimental : send result of running a snippet to the selected player.
 */
 
 PlayerSnippet : Snippet {
@@ -10,7 +8,8 @@ PlayerSnippet : Snippet {
 	run {
 		var rootDir, currentDir;
 		// experimental: keep history of snippets ////////////////
-		SnippetHistory(playerName, this).add(\PlayerSnippets);
+		// SnippetHistory(playerName, this).add(\PlayerSnippets);
+		this.add2History;
 		////////////////////////////////////////////////////////////////
 		rootDir = PlayerSnippetList.rootDir;
 		currentDir = pathOnly;
@@ -32,5 +31,9 @@ PlayerSnippet : Snippet {
 	init {
 		super.init;
 		playerName = pathName.fileNameWithoutExtension.asSymbol;
+	}
+
+		add2History {
+		SnippetHistory(name, this).add(\PlayerSnippets);		
 	}
 }

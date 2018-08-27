@@ -171,9 +171,11 @@ SnippetList {
 				.keyDownAction_({ | me, char, modifier ... args |
 					if (char === $\r) {
 						switch (modifier,
-							131072, { Document.open(
-								this.folders[this.folderIndex][1][this.fileIndex]); },
-							0, { this.snippets.runSnippet(this.snippets.tail); }
+							131072, {
+								Document.open(
+									this.folders[this.folderIndex][1][this.fileIndex]);
+							},
+							0, { this.runTailSnippets; }
 						);
 						me.defaultKeyDownAction(char, modifier, *args);
 					};
@@ -232,14 +234,11 @@ SnippetList {
 				// On keyboard return: run selected snippet
 				.enterKeyAction_({
 					// If on first snippet, then run all snippets
-					if (this.snippetIndex == 0) {
-						this.snippets.runSnippet(this.snippets.tail)
-					}{
-						this.snippets.runSnippet([this.snippets.all[this.snippetIndex]]);
-					}
+					this.runSnippetSelection;
 				}),
 				HLayout(
-					Button().states_([["Boot Server"], ["Quit Server"]])
+					Button().states_([["Boot Server", nil, Color.red],
+						["Quit Server", nil, Color.green]])
 					.action_({| me |
 						[{ Server.default.boot }, { Server.default.quit} ][
 							1 - me.value
@@ -334,6 +333,22 @@ SnippetList {
 		}{
 			this.snippets = this.new(newPath); 
 		}
+	}
+
+	*runTailSnippets {
+		// Subclass PlayerSnippetList overwrites this to disable it.
+		 this.snippets.runSnippet(this.snippets.tail)		
+	}
+
+	*runSnippetSelection {
+		// if on first snippet, run all snippets
+		// subclass PlayerSnippetList only runs snippets with index > 0
+		if (this.snippetIndex == 0) {
+			this.snippets.runSnippet(this.snippets.tail)
+		}{
+			this.snippets.runSnippet([this.snippets.all[this.snippetIndex]]);
+		}
+		
 	}
 
 	runSnippet { | argSnippets |

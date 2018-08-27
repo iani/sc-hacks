@@ -15,8 +15,6 @@ SnippetHistory {
 	}
 	
 	*new { | name, snippet |
-		"DEBUGGING SnippetHistory".postln;
-		["snippet is: ", snippet].postln;
 		^this.newCopyArgs(name, snippet, Date.localtime);
 	}
 
@@ -39,15 +37,22 @@ SnippetHistory {
 			TextView()
 			.string_(snippet.code)
 			.background_(snippet.color)
-			//.mouseLeaveAction_({ | me |
-			//	me.string.postln;
-			// 	snippet.code = me.string;
-			//})
+			.addNotifier(this, \runButton, { | n |
+				if (n.listener.string == snippet.code) {
+					snippet.run;			
+				}{
+					PlayerSnippet(name.asString, n.listener.string,
+						PathName(Player.autoPath(name.asString))).run;
+				}
+			})
 			,
 			Button()
 			.maxWidth_(50)
 			.states_([["RUN"]])
-			.action_({ snippet.run; })
+			.action_({ | me |
+				Server.default waitForBoot: { this.changed(\runButton); }
+				// snippet.run;
+			})
 		)
 		
 	}

@@ -56,7 +56,7 @@ PatternPlayer : SourcePlayer {
 				)
 			};
 		}{
-			"PROCESS IS NOT NIL".postln;
+			// "PROCESS IS NOT NIL".postln;
 			stream = process.originalStream;
 			event = stream.event;
 			stream.addEvent(argSource);

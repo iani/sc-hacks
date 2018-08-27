@@ -32,8 +32,13 @@ Snippet {
 	init {
 		var hasIncludes = false;
 		var titleParts;
+		pathName ?? {
+			pathName = PathName(
+				PlayerSnippetList.rootDir +/+ "Auto" +/+ name ++ ".scd"
+			);
+		};
 		pathOnly = pathName.pathOnly;
-		titleParts = name.split($ );
+		titleParts = name.asString.split($ );
 		// name.postln;
 		type = titleParts.first.asSymbol;
 		titleParts do: { | p |
@@ -50,7 +55,7 @@ Snippet {
 	run {
 		var rootDir, currentDir;
 		// experimental: keep history of snippets ////////////////
-		SnippetHistory(name, this).add(\CodeSnippets);
+		this.add2History;
 		////////////////////////////////////////////////////////////////
 		rootDir = SnippetList.rootDir;
 		currentDir = pathOnly;
@@ -68,5 +73,9 @@ Snippet {
 			}
 		};
 		code.postln.interpret;
+	}
+
+	add2History {
+		SnippetHistory(name, this).add(\CodeSnippets);		
 	}
 }

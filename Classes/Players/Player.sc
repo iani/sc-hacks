@@ -125,16 +125,25 @@ Player {
 		^this.newCopyArgs (envir, name)
 	}
 
-	*getHistory {
+	getHistory {
 		^Registry(\PlayerSnippets, name, {
 			[
-				PlayerSnippet(name, "\\default",
-					PlayerSnippetList.rootDir +/+ "Auto" +/+ name ++ ".scd"
+				SnippetHistory(
+					name,
+					PlayerSnippet(name, "\\default", PathName(this.autoPath(name)))
 				)
 			]
 		});
 	}
+
+	autoPath { | argName |
+		^this.class.autoPath(argName)
+	}
 	
+	*autoPath { | argName |
+		^PlayerSnippetList.rootDir +/+ "Auto" +/+ argName ++ ".scd"
+		
+	}
 	persist {
 		// make this player restart whenever groups are re-created.
 		this.addNotifier(OrderedGroup, \groups, { this.play });

@@ -20,17 +20,42 @@ PlayerGui {
 			w.bounds = Rect(0, 0, 1000, 300);
 			w.view.layout = HLayout(
 				VLayout(
-					// StaticText().string_("Environments"),
-					/*
-						ListView()
-						.items_(Nevent.all collect: _.name)
-						.addNotifier(Nevent, \new, { | new, n |
-						{ n.listener.items_(Nevent.all collect: _.name); }.defer(0.01);
-						}),
+					/* HLayout(
+						StaticText().string_("Players (click to toggle play status)"),
+						Button().states_([["*"]])
+						.maxWidth_(20)
+						.action_({ this.changed(\listFocus)})
+					),
 					*/
-					// StaticText().string_("Player Details"),
-					// ListView(),
-					StaticText().string_("Players (click to toggle play status)"),
+					TextField()
+					.maxWidth_(250)
+					.action_({ | me |
+						// [me, "waspushed, contents are:", me.string].postln;
+						PlayerSnippet(
+							me.string.replace(" ", "_").asSymbol,
+							"// please add something to play here, and then run."
+						).add2History;
+					}),
+					ListView()
+					.maxWidth_(250)
+					.addNotifier(Player, \status, { | new, n |
+						var me, index;
+						me = n.listener;
+						{
+							var players;
+							index = me.value ? 0;
+							players = Player.all;
+							me.items_(players collect: _.asString);
+							me.value = index;
+						}.defer(/*0.01 */);
+					})
+					.enterKeyAction_({ | me |
+						Player.changed(\history, Player.all[me.value].getHistory);
+					})
+					.action_({ | me |
+						postf("this list view's action was called. value is: %\n", me.value);
+						Player.changed(\history, Player.all[me.value].getHistory);
+					}),
 					ListView()
 					.maxWidth_(250)
 					.items_(Player.all collect: _.asString)
@@ -43,11 +68,8 @@ PlayerGui {
 							if (all[index].isPlaying !== status) { all[index].toggle }
 						};
 					})
-					/* We use enter key for the case that there is only one player in the list
-						We can add the same function as action in order to enable 
-						automatic update of a players list when a player is selected with
-						the cursor keys.
-					*/
+					// enterkey and action functionality delegated to listview abov
+					/*
 					.enterKeyAction_({ | me |
 						// TODO: show snippets of this player in another pane.
 						// 25 Aug 2018 16:33: preparing.
@@ -56,8 +78,9 @@ PlayerGui {
 						Player.changed(\history, Player.all[me.value].getHistory);
 					})
 					.action_({ | me |
-						Player.changed(\history, Player.all[me.value].getHistory);
+						// Player.changed(\history, Player.all[me.value].getHistory);
 					})
+					*/
 					.addNotifier(Player, \status, { | new, n |
 						var me, index;
 						me = n.listener;
@@ -71,31 +94,57 @@ PlayerGui {
 									players[p].isPlaying;
 								};
 							};
+							// me.value = index;
+						}.defer(/*0.01 */);
+					})
+					.addNotifier(Player, \history, { | history, n |
+						var me, index;
+						me = n.listener;
+						//	{[me, Player.all].postln; } ! 10;
+						/*						{
+							var players;
+							index = me.value ? 0;
+							players = Player.all;
+							me.items_(players collect: _.asString);
+							// { [me, me.items, players].postln; } ! 10;
+							if (players.size > 0) {
+								me.selection = (0..players.size-1) select: { | p |
+									players[p].isPlaying;
+								};
+							};
+							//	me.value = index;
+							//
 						}.defer(0.01);
+						*/
 					}),
-					/* TODO:
-						Add a pane to the right of this, showing the Player History of 
-						the selected player when typing the enter on the player list.
-
-					*/
+					HLayout(
+						Button().states_([["Boot Server", nil, Color.red],
+							["Quit Server", nil, Color.green]])
+						.action_({| me |
+							[{ Server.default.boot }, { Server.default.quit} ][
+								1 - me.value
+							].value
+						})
+						.focusColor_(Color.red)
+						.addNotifier(Server.default, \counts, { | n |
+							n.listener.value = 1;
+						})
+						.addNotifier(Server.default, \didQuit, { | n |
+							n.listener.value = 0;
+						}),
+						Button().states_([["Stop all"]])
+						.action_({ CmdPeriod.run })
+						.focusColor_(Color.red),
+					)
 				),
 				// ListView().items_([\1, \2, \alpha])
 				ScrollView(w, Rect(0, 0, 600, w.bounds.height)).canvas_(View().layout = VLayout(
 					StaticText().string_("Run a player snippet to add it here.")
 				))
 				.addNotifier(Player, \history, { | history, n |
-					// [n.listener, history].postln;
-					/* history.collect({ | h |
-						h.postln; h.class.postln; h.snippet.postln;
-						//	h.snippet.inspect;
-						//						h.code.postln;
-						h.guiWidget;
-					}).postln;
-					*/
-					
 					n.listener.canvas.destroy;
 					n.listener.canvas = View().layout = VLayout(
-						*(history.collect({ | h |
+						*(history.reverse.collect({ | h |
 							// h.postln; h.class.postln; h.snippet.postln;
 							//	h.snippet.inspect;
 							// h.code.postln;
