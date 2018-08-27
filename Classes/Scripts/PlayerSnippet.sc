@@ -6,7 +6,7 @@ Experimental : send result of running a snippet to the selected player.
 PlayerSnippet : Snippet {
 	var <playerName;
 	run {
-		var rootDir, currentDir;
+		var rootDir, currentDir, interpretedSource;
 		// experimental: keep history of snippets ////////////////
 		// SnippetHistory(playerName, this).add(\PlayerSnippets);
 		this.add2History;
@@ -25,7 +25,14 @@ PlayerSnippet : Snippet {
 				};
 			}
 		};
-		code.postln.interpret +> playerName;
+		try {
+			interpretedSource = code.postln.interpret;			
+		};
+		if (interpretedSource.isNil) {
+			postf("Could not interpret source code for player %\n", playerName);
+		}{
+			interpretedSource +> playerName;
+		}
 	}
 
 	init {
