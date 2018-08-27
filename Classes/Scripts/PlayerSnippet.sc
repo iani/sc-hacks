@@ -34,6 +34,6 @@ PlayerSnippet : Snippet {
 	}
 
 		add2History {
-		SnippetHistory(name, this).add(\PlayerSnippets);		
+		SnippetHistory(playerName, this).add(\PlayerSnippets);		
 	}
 }

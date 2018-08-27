@@ -30,11 +30,16 @@ PlayerGui {
 					TextField()
 					.maxWidth_(250)
 					.action_({ | me |
-						Snippet.newWithPlayer(
+						PlayerSnippet.newWithPlayer(
 							me.string.replace(" ", "_").asSymbol;,
-"// Edit code, then press run to play it in player.
-// Events or UGen functions are valid objets to play. Example:
-(dur: 0.1, degree: [-5, 5].pwhite) // or: { WhiteNoise.ar(0.1) }
+"// Edit code in this text view, then press the \"RUN\" button to play it in player.
+// Uae an event, a UGen function, or a symbol naming an existing SynthDef
+// Example 1: Event
+(dur: 0.1, degree: [-5, 5, 32].pwhite) 
+// Example 2, UGen Function:
+// { WhiteNoise.ar(0.1) }
+// Example 3: name of SynthDef
+// \\default
 "
 						);
 						/*
@@ -152,7 +157,7 @@ PlayerGui {
 				// ListView().items_([\1, \2, \alpha])
 				ScrollView(w, Rect(0, 0, 600, w.bounds.height)).canvas_(View().layout = VLayout(
 					StaticText().string_(
-"To create a new player, type its name in the text field 
+"To create a new player, type any name in the text field 
 at the top left, and then press enter.
 ")
 				))

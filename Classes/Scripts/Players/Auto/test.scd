@@ -1,3 +1,3 @@
 // testing a second player
-//: just a test
+//:just a test
 ()
