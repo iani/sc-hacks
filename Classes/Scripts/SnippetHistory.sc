@@ -36,6 +36,7 @@ SnippetHistory {
 			// StaticText().string_(snippet.code).background_(Color.rand),
 			TextView()
 			.string_(snippet.code)
+			.font_(Font("Courier"))
 			.background_(snippet.color)
 			.addNotifier(this, \runButton, { | n |
 				if (n.listener.string == snippet.code) {

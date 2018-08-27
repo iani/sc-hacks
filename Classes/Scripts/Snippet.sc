@@ -25,6 +25,14 @@ Snippet {
 		^snippets;
 	}
 
+	*newWithPlayer { | playerName, code |
+		var new;
+		new = this.new(playerName.asString, code ? "");
+		new.add2History;
+		Player.changed(\status, playerName.asSymbol.p);
+		^new;
+	}
+
 	*new { | name, code, pathName |
 		^this.newCopyArgs(name, code ? "", pathName).init;
 	}

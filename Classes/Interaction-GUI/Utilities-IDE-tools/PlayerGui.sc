@@ -30,6 +30,11 @@ PlayerGui {
 					TextField()
 					.maxWidth_(250)
 					.action_({ | me |
+						Snippet.newWithPlayer(
+							me.string.replace(" ", "_").asSymbol;,
+							"// please add something to play here, and then run."
+						);
+						/*
 						var playerName;
 						playerName = me.string.replace(" ", "_").asSymbol;
 						PlayerSnippet(
@@ -38,6 +43,7 @@ PlayerGui {
 						).add2History;
 						{ me.value.postln; } ! 10;
 						Player.changed(\status, playerName.p);
+						*/
 					}),
 					ListView()
 					.maxWidth_(250)
