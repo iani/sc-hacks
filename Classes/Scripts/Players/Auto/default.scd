@@ -4,11 +4,10 @@
 
 ================ NOTE: =================
 
-You should not run the first snippet in a Player file, 
-because it will run all snippets in the 
-file and send them to the same player.
+This item is a header item.
+PlayerSnippetGui will not run it.
 
 */
 
-//:default - just a test
+//:default - This is the first item that can run
 \default;

@@ -30,11 +30,14 @@ PlayerGui {
 					TextField()
 					.maxWidth_(250)
 					.action_({ | me |
-						// [me, "waspushed, contents are:", me.string].postln;
+						var playerName;
+						playerName = me.string.replace(" ", "_").asSymbol;
 						PlayerSnippet(
-							me.string.replace(" ", "_").asSymbol,
+							playerName,
 							"// please add something to play here, and then run."
 						).add2History;
+						{ me.value.postln; } ! 10;
+						Player.changed(\status, playerName.p);
 					}),
 					ListView()
 					.maxWidth_(250)
