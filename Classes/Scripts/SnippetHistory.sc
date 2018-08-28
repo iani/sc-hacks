@@ -51,8 +51,9 @@ SnippetHistory {
 			.maxWidth_(50)
 			.states_([["RUN"]])
 			.action_({ | me |
-				Server.default waitForBoot: { this.changed(\runButton); }
-				// snippet.run;
+				this.doAfterBooting({
+					{ this.changed(\runButton); }.defer;
+				});
 			})
 		)
 		

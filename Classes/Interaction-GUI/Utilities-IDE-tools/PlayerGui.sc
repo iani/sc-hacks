@@ -30,18 +30,15 @@ PlayerGui {
 					TextField()
 					.maxWidth_(250)
 					.action_({ | me |
-						PlayerSnippet.newWithPlayer(
-							me.string.replace(" ", "_").asSymbol;,
-"// Edit code in this text view, then press the \"RUN\" button to play it in player.
-// Uae an event, a UGen function, or a symbol naming an existing SynthDef
-// Example 1: Event
-(dur: 0.1, degree: [-5, 5, 32].pwhite) 
-// Example 2, UGen Function:
-// { WhiteNoise.ar(0.1) }
-// Example 3: name of SynthDef
-// \\default
-"
-						);
+						var name;
+						name = me.string.replace(" ", "_").asSymbol;
+						Registry.at(\PlayerSnippets, name) ?? {
+							PlayerSnippet.newWithPlayer(
+								name,
+								"// Edit code in this text view, then press the \"RUN\" button to play it in player.\n// Use an event, a UGen function, or a symbol naming an existing SynthDef\n// Example 1: Event\n(dur: 0.1, degree: [-5, 5, 32].pwhite)\n// Example 2, UGen Function:\n //{ WhiteNoise.ar(0.1) }\n// Example 3: name of SynthDef\n //\\default\n"
+							);
+						};
+                        Player.changed(\selectPlayer, name);
 						/*
 						var playerName;
 						playerName = me.string.replace(" ", "_").asSymbol;
@@ -54,7 +51,13 @@ PlayerGui {
 						*/
 					}),
 					ListView()
-					.maxWidth_(250)
+                    .maxWidth_(250)
+					.addNotifier(Player, \selectPlayer, { | name, n |
+						var player;
+						player = Player.all.detect({ | p | p.name === name; });
+						n.listener.value = Player.all indexOf: player;
+						Player.changed(\history, player.getHistory);
+					})
 					.addNotifier(Player, \status, { | new, n |
 						var me, index;
 						me = n.listener;
@@ -70,7 +73,6 @@ PlayerGui {
 						Player.changed(\history, Player.all[me.value].getHistory);
 					})
 					.action_({ | me |
-						postf("this list view's action was called. value is: %\n", me.value);
 						Player.changed(\history, Player.all[me.value].getHistory);
 					}),
 					ListView()
