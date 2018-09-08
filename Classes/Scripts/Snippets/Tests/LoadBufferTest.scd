@@ -2,7 +2,7 @@
 
 */
 //:preload buffers
-(Sch.homedir ++ "Sounds/lindrum/").loadBuffers;
+(Hacks.homedir ++ "Sounds/lindrum/").loadBuffers;
 //:list loaded buffers
 (Library.at(\buffers) ? ()).keys.postln;
 //:look at one buffer

@@ -40,7 +40,7 @@ PlayerSnippet : Snippet {
 		playerName = pathName.fileNameWithoutExtension.asSymbol;
 	}
 
-		add2History {
+	add2History {
 		SnippetHistory(playerName, this).add(\PlayerSnippets);		
 	}
 }

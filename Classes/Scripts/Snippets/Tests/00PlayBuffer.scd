@@ -3,7 +3,7 @@
 before running a snippet from this file for the first time. 
 */
 \allwk.loadBuffer(Platform.resourceDir +/+ "sounds/a11wlk01.wav");
-(Sch.homedir ++ "Sounds/lindrum/").loadBuffers;
+(Hacks.homedir ++ "Sounds/lindrum/").loadBuffers;
 
 //:play with default method
 \allwk.b.play;

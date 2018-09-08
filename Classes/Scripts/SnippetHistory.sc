@@ -45,18 +45,16 @@ SnippetHistory {
 					PlayerSnippet(name.asString, n.listener.string,
 						PathName(Player.autoPath(name.asString))).run;
 				}
-			})
-			,
+			}),
 			Button()
 			.maxWidth_(50)
 			.states_([["RUN"]])
 			.action_({ | me |
 				this.doAfterBooting({
-					{ this.changed(\runButton); }.defer;
+					this.changed(\runButton);
 				});
 			})
 		)
 		
 	}
-	
 }

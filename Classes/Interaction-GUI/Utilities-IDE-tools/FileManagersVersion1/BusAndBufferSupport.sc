@@ -156,7 +156,10 @@
 		path = path.standardizePath;
 		^Registry(\buffers, this, {
 			path.doIfExists({
-				Buffer.read(Server.default, path);
+				Buffer.read(Server.default, path, action: {
+					// Defer to enable updates of gui items
+					{ Buffer.changed(\loaded, Registry.at(\buffers)) }.defer;
+				});
 			},{
 				postf("could not find file:\n%\n", path);
 				"Allocating empty buffer of 1 second".postln;

@@ -300,6 +300,7 @@ SnippetList {
 		^ActionMenu(
 			"--- UTILITIES MENU ---",
 			"Browse Classes and Methods", { Class.extensionsGui },
+			"Open Buffer GUI", { BufferGUI() },
 			"Recompile", { thisProcess.platform.recompile; },
 			"Player Snippet Gui", { PlayerSnippetList.gui() },
 			"Player Gui", { PlayerGui() },
@@ -369,6 +370,16 @@ SnippetList {
 	runAfterBooting { | argSnippets |
 		var newEnvir;
 		before do: _.run;
+
+		// DEBUGGING DOUBLE PLAY ON PRELOAD
+		"DEBUG MESSAGES STAET HERE ================".postln;
+		"head is".postln;
+		head.postln;
+
+		"argSnippets is".postln;
+		argSnippets.postln;
+		
+		"DEBUG MESSAGES END HERE ===============".postln;
 		this.doAfterBooting(
 			{
 				{

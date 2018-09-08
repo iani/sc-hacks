@@ -11,7 +11,7 @@ But they are run differently - as outlined above.
 PlayerGui {
 	*initClass {
 		StartUp add: {
-			this.new;
+			{ this.new; }.defer(0.5); // open after other guis, to appear the top
 		}
 	}
 	*new {
@@ -30,25 +30,17 @@ PlayerGui {
 					TextField()
 					.maxWidth_(250)
 					.action_({ | me |
-						var name;
+						var name, path;
 						name = me.string.replace(" ", "_").asSymbol;
+						path = (PathName(this.filenameSymbol.asString).pathOnly
+							+/+ "DefaultPlayerSnippet.scd").postln;
 						Registry.at(\PlayerSnippets, name) ?? {
 							PlayerSnippet.newWithPlayer(
 								name,
-								"// Edit code in this text view, then press the \"RUN\" button to play it in player.\n// Use an event, a UGen function, or a symbol naming an existing SynthDef\n// Example 1: Event\n(dur: 0.1, degree: [-5, 5, 32].pwhite)\n// Example 2, UGen Function:\n //{ WhiteNoise.ar(0.1) }\n// Example 3: name of SynthDef\n //\\default\n"
+								File.readAllString(path)
 							);
 						};
                         Player.changed(\selectPlayer, name);
-						/*
-						var playerName;
-						playerName = me.string.replace(" ", "_").asSymbol;
-						PlayerSnippet(
-							playerName,
-							"// please add something to play here, and then run."
-						).add2History;
-						{ me.value.postln; } ! 10;
-						Player.changed(\status, playerName.p);
-						*/
 					}),
 					ListView()
                     .maxWidth_(250)
@@ -70,7 +62,12 @@ PlayerGui {
 						}.defer(/*0.01 */);
 					})
 					.enterKeyAction_({ | me |
-						Player.changed(\history, Player.all[me.value].getHistory);
+						//	Player.changed(\history, Player.all[me.value].getHistory);
+						me.value !? {
+							this.doAfterBooting({
+								Player.all[me.value].getHistory.last.changed(\runButton);
+							})
+						}
 					})
 					.action_({ | me |
 						Player.changed(\history, Player.all[me.value].getHistory);
@@ -115,12 +112,13 @@ PlayerGui {
 							};
 							// me.value = index;
 						}.defer(/*0.01 */);
-					})
+					}),
+						/*						{
 					.addNotifier(Player, \history, { | history, n |
 						var me, index;
 						me = n.listener;
-						//	{[me, Player.all].postln; } ! 10;
-						/*						{
+ 						//	{[me, Player.all].postln; } ! 10;
+					
 							var players;
 							index = me.value ? 0;
 							players = Player.all;
@@ -134,8 +132,8 @@ PlayerGui {
 							//	me.value = index;
 							//
 						}.defer(0.01);
-						*/
-					}),
+						
+					}),*/
 					HLayout(
 						Button().states_([["Boot Server", nil, Color.red],
 							["Quit Server", nil, Color.green]])

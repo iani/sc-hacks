@@ -20,6 +20,7 @@ PlayerSnippetList : SnippetList {
 		^ActionMenu(
 			"--- UTILITIES MENU ---",
 			"Browse Classes and Methods", { Class.extensionsGui },
+			"Open Buffer GUI", { BufferGUI() },
 			"Recompile", { thisProcess.platform.recompile; },
 			"Snippet Gui", { SnippetList.gui() },
 			"Player Gui", { PlayerGui() },
