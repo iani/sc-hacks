@@ -9,4 +9,18 @@
 			server.boot;
 		}
 	}
+
+	*readFromClassPath { | filename |
+		// this.filenameSymbol.postln;
+		var string = "";
+		(PathName(this.filenameSymbol.asString).pathOnly +/+ filename).doIfExists(
+			{ | path |
+				string = File.readAllString(path);
+			},
+			{ | path |
+				postf("Could not find file: %\n%\n", path);
+			}
+		);
+		^string;
+	}
 }

@@ -79,5 +79,47 @@ nil; // this line prevents the results of the snippet from being sent to the pla
 		startPos: \startpos.kr(0) * BufFrames.kr(buf),
 		loop: 0).stereo
 };
-//:
-'a11wlk01-44_1'.b
+//:Advance starting point
+{
+	var buf, numFrames, trig, startpos;
+	buf = 'a11wlk01'.b.bufnum;
+	numFrames = 'a11wlk01'.b.numFrames;
+	trig = Impulse.kr(\period.kr(0.1).reciprocal);
+	startpos = Demand.kr(trig, 0,
+		Dser((0..(numFrames / 441).asInteger) / 100, inf));
+	PlayBuf.ar(1, buf,
+		rate: \rate.kr(1),
+		trigger: trig,
+		startPos: startpos * BufSampleRate.kr(buf),
+		loop: 0).stereo
+}
+//:Grain
+{
+	GrainBuf.ar(2,          // num channels
+		Impulse.kr(1),      // trigger
+		0.5,                // grain duration
+		\a11wlk01.b.bufnum, // buffer
+		1,                  // rate
+		0                   // position
+	)	
+}
+//:Scrolling Grain
+\buffer.v(
+	\period.slider([0.05, 1])
+);
+
+{
+	var buf, bufdur, trig, step = 0.01, startpos;
+	buf = \a11wlk01.b;
+	bufdur = buf.numFrames / buf.sampleRate;
+	trig = Impulse.kr(\period.kr(0.5).reciprocal);
+	startpos = Demand.kr(trig, 0,
+		Dser((0, step / bufdur ..1), inf));
+	GrainBuf.ar(2,              // num channels
+		trig, // Impulse.kr(10),                   // trigger
+		\dur.kr(0.5),           // grain duration
+		buf.bufnum,             // buffer
+		1,                      // rate
+		startpos                // position
+	)	
+}

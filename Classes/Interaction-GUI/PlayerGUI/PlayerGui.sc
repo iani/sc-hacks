@@ -157,9 +157,8 @@ PlayerGui {
 				// ListView().items_([\1, \2, \alpha])
 				ScrollView(w, Rect(0, 0, 600, w.bounds.height)).canvas_(View().layout = VLayout(
 					StaticText().string_(
-"To create a new player, type any name in the text field 
-at the top left, and then press enter.
-")
+						this.readFromClassPath("InitialMessage.scd")
+					)
 				))
 				.addNotifier(Player, \history, { | history, n |
 					n.listener.canvas.destroy;
