@@ -1,7 +1,7 @@
 + ServerStatusWatcher {
 	sendNotifyRequest { |flag = true|
 		var doneOSCFunc, failOSCFunc;
-		if(serverRunning.not) { ^this };
+		if(server.serverRunning.not) { ^this };
 		notified = flag;
 		if(server.userSpecifiedClientID.not) {
 			doneOSCFunc = OSCFunc({|msg|

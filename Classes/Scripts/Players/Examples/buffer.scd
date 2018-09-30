@@ -11,7 +11,7 @@ nil; // this line prevents the results of the snippet from being sent to the pla
 //:Play a buffer, looping
 { PlayBuf.ar(1, \tomll.b, loop: 1).stereo }
 //:Play a buffer, triggering at random intervals
-{ PlayBuf.ar(1, \kick.b, trigger: Dust.kr([0.3, 0.3]), loop: 0) }
+{ PlayBuf.ar(1, \kick.b, trigger: Dust.kr([3, 3]), loop: 0) }
 //:Play a buffer, triggering at regular intervals
 { PlayBuf.ar(1, \kick.b, trigger: Impulse.kr([3, 4]), loop: 0) }
 //:Trigger at regular intervals, change start point each time

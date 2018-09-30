@@ -255,7 +255,7 @@ SnippetList {
 					.action_({ CmdPeriod.run })
 					.focusColor_(Color.red),
 					Button().states_([["Read Folders"]])
-					.action_({ this.changed(this.folders) })
+					.action_({ this.changed(\folders) })
 					.focusColor_(Color.red)
 					//,
 					// Button().states_([["Recompile"]])

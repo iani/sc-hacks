@@ -74,3 +74,11 @@ NullSpec {
 	}
 	
 }
+
++ Function {
+	// asSpec, map: permit arbitrary function as inspec in OSCDependant
+	asSpec { ^this }
+	map { | number |
+		^this.value(number)
+	}
+}
