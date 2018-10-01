@@ -1,8 +1,10 @@
 
 BufferGUI {
+	/*
 	*initClass{
 		StartUp add: { this.new }
 	}
+	*/
 
 	*new {
 		this.window({ | w |
