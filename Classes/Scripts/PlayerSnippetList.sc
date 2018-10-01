@@ -1,7 +1,7 @@
 // Testing subclass
 
 PlayerSnippetList : SnippetList {
-	*windowBounds { ^Rect(350, 150, 1000, 700) }
+	*windowBounds { ^Rect(150, 50, 1000, 700) }
 	
 	*initClass {
 		StartUp add: {

@@ -142,7 +142,7 @@ SnippetList {
 		);
 	}
 
-	*windowBounds { ^Rect(250, 50, 1000, 700) }
+	*windowBounds { ^Rect(50, 50, 1000, 700) }
 
 	*makeWindow { | window |
 		// Reread current file when entering window:

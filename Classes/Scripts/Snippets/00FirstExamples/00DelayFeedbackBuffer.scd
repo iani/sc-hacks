@@ -12,7 +12,7 @@ Provide a gui to control the following parameters:
 Server.default.meter;
 //:preload create 30 second buffer and open scope
 \delay30.b(30);
-Server.default.scope.window.bounds = Rect(0, 520, 300, 300);
+Server.default.scope.window.bounds = Rect(0, 120, 300, 300);
 //:start synth + open gui
 {
 	var trigger; // triggers both record and playback looping to limit duration of delay
