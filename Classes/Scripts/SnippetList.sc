@@ -92,7 +92,7 @@ SnippetList {
 	
 	*snippetFolders {
 		^(this.folderPath ++ "*").pathMatch select: { | p |
-			p.last == if (thisProcess.platformClass === WindowsPlatform)
+			p.last == if (thisProcess.platformClass.name === \WindowsPlatform)
 			{ $\\ }
 			{ $/ }
 		};
@@ -142,7 +142,7 @@ SnippetList {
 		);
 	}
 
-	*windowBounds { ^Rect(50, 50, 1000, 700) }
+	*windowBounds { ^Rect(50, 10, 1000, 700) }
 
 	*makeWindow { | window |
 		// Reread current file when entering window:

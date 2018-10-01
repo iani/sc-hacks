@@ -32,7 +32,7 @@ array.sprandi becomes: Pub(Prand(array, inf)) etc.
     prandn { | repeats = 1 | ^this.prand(repeats); }
     prand1 { | repeats = 1 | ^this.prand(repeats); }
 	pwhite { | repeats = inf | ^Pwhite(*(this add: repeats)) }
-	pbrown { | repeats = inf | ^Pbrown(*(this add: repeats)) }
+	pbrown { | repeats = inf | ^Pbrown(*(this ++ [-1, 1, 1][this.size..] add: repeats)) }
 }
 
 + Function {

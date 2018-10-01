@@ -1,11 +1,10 @@
 
 BufferGUI {
-	/*
+	
 	*initClass{
 		StartUp add: { this.new }
 	}
-	*/
-
+	
 	*new {
 		this.window({ | w |
 			w.setTopLeftBounds(Rect(0, 0, 200, 500));
