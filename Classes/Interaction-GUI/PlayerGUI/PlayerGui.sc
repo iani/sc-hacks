@@ -9,13 +9,13 @@ But they are run differently - as outlined above.
 */
 
 PlayerGui {
-	/*
+
 	*initClass {
 		StartUp add: {
 			{ this.new; }.defer(0.5); // open after other guis, to appear the top
 		}
 	}
-	*/
+
 	*new {
 		this.window({ | w |
 			w.name = "Players: -";
