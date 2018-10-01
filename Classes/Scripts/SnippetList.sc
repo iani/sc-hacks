@@ -73,7 +73,7 @@ SnippetList {
 	*snippets_ { | argSnippets |
 		Registry.put(this, \snippets, argSnippets);
 	}
-	/*
+	
 	*initClass {
 		StartUp add: {
 			/* open gui only if qt is available.  Avoid opening gui
@@ -89,11 +89,12 @@ SnippetList {
 			// rootDir = this.folderPath;
 		}
 	}
-	*/
 	
 	*snippetFolders {
 		^(this.folderPath ++ "*").pathMatch select: { | p |
-			p.last == $/
+			p.last == if (thisProcess.platformClass === WindowsPlatform)
+			{ $\\ }
+			{ $/ }
 		};
 	}
 	

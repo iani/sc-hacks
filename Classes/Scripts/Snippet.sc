@@ -12,8 +12,7 @@ Snippet {
 		var snippet, snippets, pathName, pathOnly;
 		pathName = PathName(path);
 		snippet = this.new(pathName.fileNameWithoutExtension, "", pathName);
-		File.readAllString (path).split($
-		) do: { | l |
+		File.readAllString (path).split(Char.nl) do: { | l |
 			if ("^//:" matchRegexp: l) {
 				snippets = snippets add: snippet;
 				snippet = this.new(l[3..], "", pathName);
