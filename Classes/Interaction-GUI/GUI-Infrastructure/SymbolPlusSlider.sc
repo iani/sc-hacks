@@ -61,7 +61,6 @@ Additional utilities and shortcuts: v, h, watch, close.
 			})
 		)
 	}
-	
 
 	// Shortcuts for VLayout and Hlayout
 	v { | ... items |

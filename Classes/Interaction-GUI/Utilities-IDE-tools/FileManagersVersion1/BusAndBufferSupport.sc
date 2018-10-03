@@ -152,6 +152,14 @@
 		});
 	}
 
+	free {
+		// free buffer and remove from registry
+		var buffer;
+		buffer = this.b;
+		buffer.free;
+		buffer.objectClosed;
+	}
+
 	loadBuffer { | path |
 		path = path.standardizePath;
 		^Registry(\buffers, this, {

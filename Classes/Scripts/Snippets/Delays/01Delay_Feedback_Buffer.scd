@@ -143,3 +143,23 @@ This allows delay time as long as buffer size.
 	\dt.slider([0.1, 29.9, \exp]),
 	\sp.slider([0, 29.9])
 )
+//:Showing the trigger
+// define the duration which we want, arbitrarily;
+var bufferDuration = 10; // 10 seconds. Arbitrary
+// get a buffer with this duration;
+// Note: This is like cutting a tape of arbitrary, fixed length.
+// \trigger.b(bufferDuration);
+// get the duration from the buffer
+// note: do not rely on variable.
+// \trigger.b.numFrames / \trigger.b.sampleRate;
+\trigger.v(
+	// max slider value = actual buffer duration
+	\dt.slider(0.01,
+		\trigger.b.numFrames / \trigger.b.sampleRate
+	);
+);
+{
+	
+	
+	
+}

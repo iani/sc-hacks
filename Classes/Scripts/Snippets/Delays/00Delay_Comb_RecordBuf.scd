@@ -56,7 +56,6 @@
 
 //:Record/PlayBuf 3: variable startPos offset
 {
-	RecordBuf.ar(In.ar(2), \rb.b(3), loop: 1);
 	PlayBuf.ar(1, \rb.b,
 		trigger: Changed.kr(\trig.kr(0)),
 		startPos: \sp.kr(1) * BufSampleRate.kr(\rb.b),
