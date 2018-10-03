@@ -85,4 +85,29 @@ Snippet {
 	add2History {
 		SnippetHistory(name, this).add(\CodeSnippets);		
 	}
+
+	sched {
+		var startParen, endParen;
+		/*		postf("trying to run snippet named:\n%\n", name);
+		startParen = name.find("[");
+		startParen !? {
+			endParen = name.find("]", offset: startParen);
+		};
+		[startParen, endParen].postln;
+		if (startParen.notNil and: { endParen.notNil }) {
+			postf("found: %\n", name[startParen..endParen]);
+			postf("value is: %\n", name[startParen..endParen].interpret[0]);
+		};
+		*/
+		startParen = name.find("[");
+		startParen !? {
+			endParen = name.find("]", offset: startParen);
+		};
+		if (startParen.notNil and: { endParen.notNil }) {
+			SystemClock.sched(
+				name[startParen..endParen].interpret[0];
+				{ this.run };
+			);
+		};
+	}
 }

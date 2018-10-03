@@ -258,7 +258,9 @@ SnippetList {
 					.focusColor_(Color.red),
 					Button().states_([["Read Folders"]])
 					.action_({ this.changed(\folders) })
-					.focusColor_(Color.red)
+					.focusColor_(Color.red),
+					Button().states_([["Play Score"]])
+					.action_({ this.snippets.playScore })
 					//,
 					// Button().states_([["Recompile"]])
 					// .action_({ thisProcess.platform.recompile; })
@@ -409,6 +411,18 @@ SnippetList {
 				\server, { before = before add: s },
 				{ tail = tail add: s }		
 			);
+		};
+	}
+
+	playScore {
+		/* play snippets timed according to time stamps 
+			Time stamp is given anywhere in the snippet title through this format:
+			[sec] where sec is a number indicating the delay in seconds from beginning of 
+			performance.
+			sec can also be an expression to evaluate. The result must be a number. 
+		*/
+		all do: { | s |
+			s.sched;
 		};
 	}
 

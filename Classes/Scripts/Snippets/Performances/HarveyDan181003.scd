@@ -24,3 +24,14 @@ Second part (from readme of maxpat downloaded from Faber site):
 
 "with the same durations " I cannot understand - will try several interpretations.
 */
+//:preload buffer for harvey
+\harvey.b(600); // 10 minute duration buffer
+//:start recording
+{
+	RecordBuf.ar(In.ar(2), \harvey.b.bufnum, doneAction: 2);
+	Silent.ar();
+} +> \harveyrecording;
+//:start playback speaker 1;
+{
+	PlayBuf.ar(1, \harvey.b.bufnum, \rate1.kr(1), doneAction: 2);
+} +> \harveyspkr1;
