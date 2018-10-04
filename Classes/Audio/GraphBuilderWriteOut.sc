@@ -1,9 +1,14 @@
 + Function {
 	
 	asPlayerSynthDef { arg rates, prependArgs, outClass=\Out, fadeTime, name;
-		^GraphBuilder.wrapPlayerOut(name ?? { this.identityHash.abs.asSymbol },
-			this, rates, prependArgs, outClass, fadeTime
-		);
+		// only provide out argument if not already present
+		if (def.argNames ? [] includes: \out) {
+			^SynthDef(name, this, rates, prependArgs);
+		}{
+			^GraphBuilder.wrapPlayerOut(name ?? { this.identityHash.abs.asSymbol },
+				this, rates, prependArgs, outClass, fadeTime
+			);
+		}
 	}
 }
 

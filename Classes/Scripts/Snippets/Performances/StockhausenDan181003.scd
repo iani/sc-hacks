@@ -5,12 +5,12 @@ var func;
 \buffer2.b(25.3);
 
 \stockhausen.v(
-	\input.slider([0, 1.0], \stock1, "input 1"),
-	\feedback.slider([0, 1.0], \stock1, "feedback 1"),
-	\playback.slider([0, 1.0], \stock1, "playback 1"),
-		\input.slider([0, 1.0], \stock2, "input 2"),
-	\feedback.slider([0, 1.0], \stock2, "feedback 2"),
-	\playback.slider([0, 1.0], \stock2, "playback 2"),
+	\input.slider([0, 1.0], \stock1, "add 1"),
+	\feedback.slider([0, 1.0], \stock1, "keep 1"),
+	\playback.slider([0, 1.0], \stock1, "play 1"),
+		\input.slider([0, 1.0], \stock2, "add 2"),
+	\feedback.slider([0, 1.0], \stock2, "keep 2"),
+	\playback.slider([0, 1.0], \stock2, "play 2"),
 );
 
 func = { | out = 0, buffer = 0 |
@@ -40,18 +40,21 @@ func = { | out = 0, buffer = 0 |
 func +> \stock1;
 func +> \stock2;
 //:preparing GUI for FORMSCHEMATA
+var makeCycle;
+
+makeCycle = { | numPeriods = 10, dur = 6 |
+	VLayout(
+		*( {HLayout(
+			*({
+				CheckBox()		
+			} ! numPeriods
+			)
+		)} ! 6
+		))
+};
+
 'STOCKHAUSEN SOLO'.window({ | w |
 	w.bounds = Window.availableBounds;
-	w.view.layout = VLayout(
-		*({
-			HLayout(
-				*({
-					CheckBox()		
-					
-				} ! 20
-					
-				)
-			)} ! 6)
-	)
+	w.view.layout = makeCycle.(10)
 })
 //:
