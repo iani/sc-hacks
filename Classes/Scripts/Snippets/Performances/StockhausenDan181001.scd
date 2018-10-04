@@ -1,5 +1,10 @@
-/* README: Implementation plan. 
- 2 Oct 2018 15:55: Building the stockhausen solo piece code from scratch.
+/* This is a first draft.
+See next file for next implementation steps.
+
+2 Oct 2018 15:55: Building the stockhausen solo piece code from scratch.
+
+Implementation plan. 
+
 
 We need to implement following functions: 
 
@@ -11,7 +16,7 @@ We need to implement following functions:
 //:preload create necessary buffer for piece
 // This buffer is created by the system before running any snippets.
 // duration is 25.3 seconds as required in cycle D of formschema version 1.
-\buffer.b(25.3)
+\buffer.b(25.3);
 //:Test with synthetic source
 /* Proof that the playback is done _BEFORE_ the source being recorded:
 The sound will start 5 seconds after starting this patch.
@@ -41,7 +46,35 @@ However, when doing \buffer.b.play; the sound will start immediately.
 \buffer.b(25.3);
 //:Test free buffer
 \buffer.b.play;
-//:Correct patch with faders. stock1 = left channel
+//:interface standalone
+
+\stock1.v(
+	\input.slider([0, 1.0]),
+	\feedback.slider([0, 1.0]),
+	\playback.slider([0, 1.0]),
+);
+//:patch standalone
+{
+	var dt, trigger, playback;
+	dt = \dt.kr(6); // Formschema 1 A
+	trigger = Impulse.kr(dt.reciprocal) + Changed.kr(dt);
+	// playback _BEFORE_ recording
+	playback = \playback.kr(1) * // default to on
+	PlayBuf.ar(1, \buffer.b(25.3).bufnum, trigger: trigger, startPos: 0);
+	RecordBuf.ar( // record + feedback
+		(
+			\input.kr(1) * In.ar(2) // default to on
+		) +
+		(
+			\feedback.kr(0) *
+			PlayBuf.ar(1, \buffer.b.bufnum, trigger: trigger, startPos: 0)
+		),
+		\buffer.b.bufnum, offset: 0, loop: 1, trigger: trigger);
+	playback; // playback before recording
+} +> \stock1;
+//:
+{
+//:Correct patch with faders. stock1 = left channel *WORKS*  3 Oct 2018 16:17
 \stock1.v(
 	\input.slider([0, 1.0]),
 	\feedback.slider([0, 1.0]),
@@ -52,11 +85,11 @@ However, when doing \buffer.b.play; the sound will start immediately.
 	dt = \dt.kr(6); // Formschema 1 A
 	trigger = Impulse.kr(dt.reciprocal) + Changed.kr(dt);
 	// playback _BEFORE_ recording
-	playback = \playback.kr(0) *
-	PlayBuf.ar(1, \buffer.b.bufnum, trigger: trigger, startPos: 0);
+	playback = \playback.kr(1) * // default to on
+	PlayBuf.ar(1, \buffer.b(25.3).bufnum, trigger: trigger, startPos: 0);
 	RecordBuf.ar( // record + feedback
 		(
-			\input.kr(0 ) * In.ar(2)
+			\input.kr(1) * In.ar(2) // default to on
 		) +
 		(
 			\feedback.kr(0) *
@@ -65,6 +98,22 @@ However, when doing \buffer.b.play; the sound will start immediately.
 		\buffer.b.bufnum, offset: 0, loop: 1, trigger: trigger);
 	playback; // playback before recording
 } +> \stock1;
+//:input 1 on
+\input <+.stock1 1;
+//:input 1 off
+\input <+.stock1 0;
+//:feedback 1 on
+\feedback <+.stock1 1;
+//:feedback 1 off
+\feedback <+.stock1 0;
+//:playback 1 on
+\playback <+.stock1 1;
+//:playback 1 off
+\playback <+.stock1 0;
+//:playback + input on
+\stock1.start;
+\input <+.stock1 1;
+\playback <+.stock1 1;
 
 //: EARLIER EXAMPLES
 //:Recording simple example

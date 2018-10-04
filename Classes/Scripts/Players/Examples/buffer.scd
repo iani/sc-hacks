@@ -1,3 +1,4 @@
+					.maxWidth_(70)
 // Examples for playing buffers
 //:preload include /buffers default lindrum
 /* This snippet loads buffers when the server boots.

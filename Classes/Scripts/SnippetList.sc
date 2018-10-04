@@ -241,6 +241,7 @@ SnippetList {
 				HLayout(
 					Button().states_([["Boot Server", nil, Color.red],
 						["Quit Server", nil, Color.green]])
+					.font_(Font("Arial", 10))
 					.action_({| me |
 						[{ Server.default.boot }, { Server.default.quit} ][
 							1 - me.value
@@ -254,12 +255,18 @@ SnippetList {
 						n.listener.value = 0;
 					}),
 					Button().states_([["Stop all"]])
+					.font_(Font("Arial", 10))
+					.maxWidth_(70)
 					.action_({ CmdPeriod.run })
 					.focusColor_(Color.red),
 					Button().states_([["Read Folders"]])
+					.font_(Font("Arial", 10))
+					.maxWidth_(70)
 					.action_({ this.changed(\folders) })
 					.focusColor_(Color.red),
 					Button().states_([["Play Score"]])
+					.font_(Font("Arial", 10))
+					.maxWidth_(70)
 					.action_({ this.snippets.playScore })
 					//,
 					// Button().states_([["Recompile"]])

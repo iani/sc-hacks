@@ -1,0 +1,72 @@
+
+ 4 Oct 2018 02:14
+Using org tables to emulate the FORMSCHEMA(ta) scores for Stockhausen piece for Solo instrument and electronics.
+* test table 1
+  :PROPERTIES:
+  :DATE:     <2018-10-04 Thu 06:18>
+  :END:
+
+#+BEGIN_SRC emacs-lisp
+(org-element-at-point)
+#+END_SRC
+
+#+RESULTS:
+| src-block | (:language emacs-lisp :switches nil :parameters nil :begin 149 :end 204 :number-lines nil :preserve-indent nil :retain-labels t :use-labels t :label-fmt nil :value (org-element-at-point) |
+
+|   a |   b |   c |
+|   1 |   2 |   3 |
+| 4.1 | 5.1 | 6.1 |
+|     |     |     |
+
+#+BEGIN_SRC emacs-lisp
+  (org-element-map (org-element-parse-buffer) 'table
+    (lambda (table)
+      (message "%s" (plist-get (cadr table) :begin))
+      (plist-get (cadr table) :begin)
+      ))
+#+END_SRC
+
+#+RESULTS:
+| 206 | 421 | 709 |
+
+#+BEGIN_SRC emacs-lisp
+  (org-element-map (org-element-parse-buffer) 'table
+    (lambda (table)
+      (message "A NEW TABLE\n %s \n" (cadr table))
+      ))
+#+END_SRC
+
+#+RESULTS:
+| A NEW TABLE |
+
+#+BEGIN_SRC emacs-lisp
+  (org-map-entries
+   (lambda ()
+     (let* ((element (cadr (org-element-at-point)))
+            (end (plist-get element :end)))
+       (message "ELEMENT: \n\n%s\n\n" element)
+       (message "DURATION PROPERTY: %s\n\n" (plist-get element :DURATION))
+       (search-forward "|" end t)
+       (beginning-of-line)
+
+       (message "NEW TABLE \n\n%s\n\n" (org-element-at-point)))
+  ))
+#+END_SRC
+
+#+RESULTS:
+| NEW TABLE |
+
+
+
+
+
+* A section without a table
+
+blabla
+
+* A section with a table
+
+| 4.1 | 5.1 | 6.1 |   |   |   |   |   |
+|   x |     |   x | x | x |   |   | x |
+|     |     |     |   |   |   |   |   |
+

@@ -22,7 +22,7 @@ Additional utilities and shortcuts: v, h, watch, close.
 		this.e.addNotifier(this.e, key, action);
 	}
 	
-	slider { | controlspec, envir |
+	slider { | controlspec, envir, name |
 		// var mappedValue;
 		controlspec = (controlspec ? this).asSpec;
 		if (envir.isNil) {
@@ -39,7 +39,7 @@ Additional utilities and shortcuts: v, h, watch, close.
 		}.defer(0.1);
 		// Used as component in VLayout: 
 		^HLayout(
-			StaticText().string_(this.asString),
+			StaticText().string_(name ?? { this.asString }),
 			Slider()
 			.orientation_(\horizontal)
 			.action_({ | me |
