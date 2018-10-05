@@ -2,7 +2,7 @@
 BufferGUI {
 	
 	*initClass{
-		StartUp add: { this.new }
+		// StartUp add: { this.new }
 	}
 	
 	*new {

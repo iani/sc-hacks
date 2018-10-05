@@ -5,7 +5,7 @@ PlayerSnippetList : SnippetList {
 	
 	*initClass {
 		StartUp add: {
-			this.gui;
+			//	this.gui;
 			ServerQuit add: {
 				// prepare to load before and/or head snippets at next run
 				this.snippetOnServer = 0;

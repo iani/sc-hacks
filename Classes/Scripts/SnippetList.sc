@@ -80,7 +80,7 @@ SnippetList {
 				on platforms with no XWindows or qt support, to prevent errors.
 			*/
 			if (thisProcess.platform.defaultGUIScheme === \qt) {
-				this.gui;
+				//		this.gui;
 			};
 			ServerQuit add: {
 				// prepare to load before and/or head snippets at next run

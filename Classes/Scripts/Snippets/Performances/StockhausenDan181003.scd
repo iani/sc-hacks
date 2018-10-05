@@ -29,7 +29,7 @@ func = { | out = 0, buffer = 0 |
 			PlayBuf.ar(1, buffer, trigger: trigger, startPos: 0)
 		),
 		buffer, offset: 0, loop: 1, trigger: trigger);
-	playback; // playback before recording
+	Out.ar (out, playback); // playback before recording
 };
 
 \out <+.stock1 0;
@@ -42,11 +42,15 @@ func +> \stock2;
 //:preparing GUI for FORMSCHEMATA
 var makeCycle;
 
-makeCycle = { | numPeriods = 10, dur = 6 |
+makeCycle = { | numPeriods = 10, dur = 6, name = "A" |
 	VLayout(
+		StaticText()
+		.background_(Color.rand(0.7, 1.0))
+		.string_(name),
 		*( {HLayout(
 			*({
-				CheckBox()		
+				CheckBox()
+				.background_(Color.red)
 			} ! numPeriods
 			)
 		)} ! 6
@@ -54,7 +58,12 @@ makeCycle = { | numPeriods = 10, dur = 6 |
 };
 
 'STOCKHAUSEN SOLO'.window({ | w |
-	w.bounds = Window.availableBounds;
-	w.view.layout = makeCycle.(10)
+	w.bounds = Window.availableBounds.width_(100).height_(100);
+	w.view.layout = HLayout(
+		*(((0..5) + 65)
+			.collect({ | i | i.asAscii.asString })
+			.collect({ | n | makeCycle.(10, 6, n)})
+		)
+		)
 })
 //:
