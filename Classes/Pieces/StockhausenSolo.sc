@@ -6,6 +6,8 @@ Gui and functionality for playing Stockhausen Solo Nr. 19 for instrumentalist an
 StockhausenSolo {
 	var <cycles;
 	var runTask, stream;
+	var <cycleOnsets;
+	var <>speed = 10; // play speed;
 	*initClass {
 		StartUp add: {
 			Server.default.boot;
@@ -38,7 +40,9 @@ StockhausenSolo {
 	}
 
 	init { | cycleSpecs |
-		cycles = cycleSpecs collect: { | cs, i | StockhausenSoloCycle(*(cs add: (i + 1) add: this)) };
+		cycleOnsets = [0] ++ cycleSpecs.collect(_.product).integrate;
+		cycles = cycleSpecs collect: { | cs, i |
+			StockhausenSoloCycle(*(cs add: (i + 1) add: this)) };
 	}
 	
 	gui {
@@ -82,14 +86,23 @@ StockhausenSolo {
 				"F", {},
 			),
 			StaticText().string_("Status:"),
-			Button().states_([["stopped"], ["running"]]),
-			StaticText().string_("Cycle Num:"),
+			Button().states_([["stopped"], ["running"]])
+			.addNotifier(this, \play, { | n |
+				n.listener.value = 1;
+			})
+			.addNotifier(this, \stop, { | n |
+				n.listener.value = 0;
+			}),
+			StaticText().string_("Cycle:"),
 			NumberBox().maxWidth_(30),
-			StaticText().string_("Period Num:"),
+			StaticText().string_("Period:"),
 			NumberBox().maxWidth_(30),
-			StaticText().string_("Time Now:"),
-			NumberBox().maxWidth_(50),
-			StaticText().string_("Total Duration:"),
+			StaticText().string_("Time:") ,
+			NumberBox().maxWidth_(50)
+			.addNotifier(this, \time, { | time, n |
+				{ n.listener.value = time / 60 }.defer;
+			}),
+			StaticText().string_("Total Dur.:"),
 			NumberBox().maxWidth_(30)
 			.addNotifier(this, \duration, { | dur, n |
 				n.listener.value = (dur / 60).floor.asInteger;
@@ -122,12 +135,12 @@ StockhausenSolo {
 		^cycles.collect(_.numPeriods).sum;
 	}
 
-	play { | speed = 10 |
+	play {
 		if (this.isPlaying) {
 			postf("% is already playing\n", this);
 		}{
 			this.startAudio;
-			this.runTask(speed).play;
+			this.runTask.play;
 			this.changed(\play);
 		};
 	}
@@ -155,7 +168,7 @@ StockhausenSolo {
 			dt = \dt.kr(6); // Formschema 1 A
 			trigger = Impulse.kr(dt.reciprocal) + Changed.kr(dt);
 			// playback _BEFORE_ recording
-			playback = \playback.kr(1) * // default on
+			playback = \playback.kr(0) * // default on
 			PlayBuf.ar(1, buffer, trigger: trigger, startPos: 0);
 			RecordBuf.ar( // record + feedback
 				(
@@ -170,7 +183,7 @@ StockhausenSolo {
 		};
 
 		\out <+.stock1 0;
-		\out <+.stock2 1;
+		\out <+.stock2 0;
 		\buffer <+.stock1 \buffer1.b.bufnum;
 		\buffer <+.stock2 \buffer2.b.bufnum;
 
@@ -179,7 +192,7 @@ StockhausenSolo {
 		
 	}
 	
-	runTask { | speed = 10 |
+	runTask {
 		^runTask ?? {
 			runTask = Task({
 				var period;
@@ -187,7 +200,7 @@ StockhausenSolo {
 				while {
 					(period = stream.next).notNil;
 				}{
-					this.changed(\period, period.absNum);
+					period.play(this);
 					(period.duration / speed).wait;
 				}
 			})
@@ -203,6 +216,7 @@ StockhausenSolo {
 		this.stop;
 		stream = this.asStream;
 		this.changed(\period, 0);
+		this.changed(\time, 0);
 	}
 }
 
@@ -210,6 +224,7 @@ StockhausenSoloCycle {
 	var <numPeriods = 10, <periodDuration = 6, <num, <solo;
 	var <periods;
 	var <name;
+	var <onset;  // onset dt from start of performance
 
 	*new { | numPeriods = 10, periodDuration = 6, num = 0, solo |
 		^this.newCopyArgs(numPeriods, periodDuration, num, solo).init;
@@ -217,9 +232,10 @@ StockhausenSoloCycle {
 
 	init {
 		name = (64 + num).asAscii.asString;
+		onset = solo.cycleOnsets[num - 1];
 		periods = { | i |
 			StockhausenSoloPeriod(periodDuration, i + 1, this)
-		} ! numPeriods
+		} ! numPeriods;
 	}
 
 	gui {
@@ -227,20 +243,21 @@ StockhausenSoloCycle {
 			StaticText()
 			.background_(Color.rand(0.7, 1.0))
 			.string_(name),
-			*( {HLayout(
+			*periods.collect(_.widgets).flop.collect(HLayout(*_));
+			/*
+				{HLayout(
 				*({
-					CheckBox()
+				CheckBox()
 				} ! numPeriods
 				)
-			)} ! 6
-			)
+				)} ! 6
+			*/
 		)
 	}
 	duration { ^(periodDuration * numPeriods) }
 
 	asStream {
 		^Pseq(periods).asStream;
-		
 	}
 
 	periodsBefore {
@@ -254,11 +271,12 @@ StockhausenSoloCycle {
 		};
 		^result;
 	}
-	
 }
 
 StockhausenSoloPeriod {
 	var <duration = 6, <num = 0, <cycle;
+	var <onset;  // onset dt from start of performance;
+	var <actions;
 
 	*new { | duration = 6, num = 0, cycle |
 		^this.newCopyArgs(duration, num, cycle).init;
@@ -269,7 +287,63 @@ StockhausenSoloPeriod {
 	}
 	
 	init {
-		// ???
+		onset = num - 1 * duration + cycle.onset;
+		actions = this.class.actions;
+	}
+
+	*actions {
+		^[
+			[\stock1, \input],
+			[\stock2, \input],
+			[\stock1, \feedback],
+			[\stock2, \feedback],
+			[\stock1, \playback],
+			[\stock2, \playback],
+		] collect: StockhausenSoloAction(*_)		
+	}
+
+	widgets {
+		^actions collect: _.widget;
 		
 	}
+
+	play { | solo |
+		actions do: _.play;
+		solo.changed(\period, this.absNum);
+		cycle.solo.changed(\time, onset);
+	}
+
+	*resetAudioParameters {
+		// reset all audio parameters to 0
+		this.actions do: _.play;
+		
+	}
+}
+
+StockhausenSoloAction {
+	/* perform a single action according to your state and kind,
+		i.e. set a parameter in an environment of the performance */
+	var <envirName = \stock1;
+	var <param = \input;
+	var <state = 0;
+	var <envir;
+
+	*new { | envirName, param |
+		^this.newCopyArgs(envirName, param).init;
+	}
+	
+	init {
+		envir = envirName.e;
+	}
+	
+	widget {
+		^CheckBox()
+		// .backColor_(Color.red) // no effect on CheckBox;
+		.action_({ | me | state = me.value.binaryValue });
+	}
+
+	play {
+		envir.put(param, state);
+	}
+	
 }
