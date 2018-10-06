@@ -3,21 +3,21 @@ Gui and functionality for playing Stockhausen Solo Nr. 19 for instrumentalist an
  4 Oct 2018 15:19
 */
 
-StockhausenSolo {
+StockhausenSoloFormschema {
 	var <cycles;
 	var runTask, stream;
 	var <cycleOnsets;
-	var <>speed = 10; // play speed;
+	var <>speed = 1 ; // play speed;
 	*initClass {
 		StartUp add: {
+			Server.default.options.numOutputBusChannels_(4);
 			Server.default.boot;
+			Server.default.meter;
 			 { this.gui }.defer(1)
 		}
 	}
 
-	*gui {
-		this.default.gui;
-	}
+	*gui { this.default.gui; }
 
 	*default {
 		^Registry(this, \default, { this.new });
@@ -42,7 +42,32 @@ StockhausenSolo {
 	init { | cycleSpecs |
 		cycleOnsets = [0] ++ cycleSpecs.collect(_.product).integrate;
 		cycles = cycleSpecs collect: { | cs, i |
-			StockhausenSoloCycle(*(cs add: (i + 1) add: this)) };
+			StockhausenSoloCycle(*(cs add: (i + 1) add: this))
+		};
+	}
+
+	loadPeriodStates { | specString |
+		var convertedData;
+		convertedData = specString.split(Char.nl)
+		.select({ | s | s.size > 0})
+		.collect({ | s | s.split($|)})
+		.flop
+		.collect({ | s |
+			s.collect (_.ascii).flop
+			.collect({ | a | a.collect({ | b | (b == 88).binaryValue })});
+		});
+		/*
+		"Just parsed the data successfully".postln;
+		"Here is a preliminary check. Here come the data".postln;
+
+		convertedData.do( { | cycle, index |
+			postf("We are now loading cycle number: %\n", index + 1);
+			cycle do: _.postln;});
+		*/
+		convertedData do: { | cycle, index |
+			cycles[index].loadPeriodStates(cycle); 
+		}
+		
 	}
 	
 	gui {
@@ -168,14 +193,14 @@ StockhausenSolo {
 			dt = \dt.kr(6); // Formschema 1 A
 			trigger = Impulse.kr(dt.reciprocal) + Changed.kr(dt);
 			// playback _BEFORE_ recording
-			playback = \playback.kr(0) * // default on
+			playback = Lag.kr(\playback.kr(0), 0.2) * // default on
 			PlayBuf.ar(1, buffer, trigger: trigger, startPos: 0);
 			RecordBuf.ar( // record + feedback
 				(
-					\input.kr(1) * In.ar(2) // default on
+					Lag.kr(\input.kr(1), 0.2) * In.ar(4) // default on
 				) +
 				(
-					\feedback.kr(0) * // default off
+					Lag.kr(\feedback.kr(0), 0.2) * // default off
 					PlayBuf.ar(1, buffer, trigger: trigger, startPos: 0)
 				),
 				buffer, offset: 0, loop: 1, trigger: trigger);
@@ -183,7 +208,7 @@ StockhausenSolo {
 		};
 
 		\out <+.stock1 0;
-		\out <+.stock2 0;
+		\out <+.stock2 1;
 		\buffer <+.stock1 \buffer1.b.bufnum;
 		\buffer <+.stock2 \buffer2.b.bufnum;
 
@@ -195,11 +220,16 @@ StockhausenSolo {
 	runTask {
 		^runTask ?? {
 			runTask = Task({
-				var period;
+				var period, duration = 0;
 				stream = this.asStream;
 				while {
 					(period = stream.next).notNil;
 				}{
+					if (period.duration != duration) {
+						duration = period.duration;
+						\dt <+.stock1 duration;
+						\dt <+.stock2 duration;
+					};
 					period.play(this);
 					(period.duration / speed).wait;
 				}
@@ -217,8 +247,23 @@ StockhausenSolo {
 		stream = this.asStream;
 		this.changed(\period, 0);
 		this.changed(\time, 0);
+		StockhausenSoloPeriod.resetAudioParameters;
+	}
+
+	save {
+		cycles.collect(_.periods);
+		
+	}
+
+	load {
+		Dialog.openPanel({ | p |
+			p.postln;
+			
+		})
+		
 	}
 }
+
 
 StockhausenSoloCycle {
 	var <numPeriods = 10, <periodDuration = 6, <num, <solo;
@@ -271,6 +316,12 @@ StockhausenSoloCycle {
 		};
 		^result;
 	}
+
+	loadPeriodStates { | argPeriods |
+		argPeriods do: { | periodStates, i |
+			periods[i] loadPeriodStates: periodStates;
+		}
+	}
 }
 
 StockhausenSoloPeriod {
@@ -313,10 +364,19 @@ StockhausenSoloPeriod {
 		cycle.solo.changed(\time, onset);
 	}
 
+	actions_ { | states |
+		states do: { | a, i | actions[i].state = a; }
+	}
+
 	*resetAudioParameters {
 		// reset all audio parameters to 0
 		this.actions do: _.play;
-		
+	}
+
+	loadPeriodStates { | argActionStates |
+		argActionStates do: { | state, i |
+			actions[i].state = state;
+		}
 	}
 }
 
@@ -338,12 +398,26 @@ StockhausenSoloAction {
 	
 	widget {
 		^CheckBox()
-		// .backColor_(Color.red) // no effect on CheckBox;
+		.value_(state)
+		.addNotifier(this, \state, { | state, n |
+			n.listener.value = state;
+		})
 		.action_({ | me | state = me.value.binaryValue });
 	}
 
+	state_ { | argState |
+		state = argState;
+		this.changed(\state, state);
+	}
+	
 	play {
 		envir.put(param, state);
 	}
 	
 }
+/*
+StockhausenSolo.default.writeArchive("/Users/iani/test.sctxar");
+
+Object.readArchive("./test.sctxar").gui;
+
+*/

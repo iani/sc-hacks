@@ -34,13 +34,19 @@
 	setParameter { | paramName, adverb |
 		var envir, bus, synth, numChannels = 1;
 		// (if(envir.isNil) { envir = currentEnvironment } { envir = envir.e });
+		/*
 		if (adverb isKindOf: Integer) {
 			envir = nil.e;
 			numChannels = adverb;
 		}{
 			envir = adverb.e;
 		};
-		// envir = envir.e; // see Nil:e, Symbol:e
+		*/
+		switch (adverb.class,
+			Integer, { numChannels = adverb; },
+			Symbol, { envir = adverb.e; }
+		);
+		envir = envir.e; // see Nil:e, Symbol:e
 		bus = envir.at(paramName);
 		if (bus isKindOf: Bus) {
 			// this releases previous synths.

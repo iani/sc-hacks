@@ -105,7 +105,7 @@ Snippet {
 		};
 		if (startParen.notNil and: { endParen.notNil }) {
 			SystemClock.sched(
-				name[startParen..endParen].interpret[0];
+				name[startParen..endParen].interpret[0],
 				{ this.run };
 			);
 		};

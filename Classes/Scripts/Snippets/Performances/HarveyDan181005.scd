@@ -30,13 +30,46 @@ Second part (from readme of maxpat downloaded from Faber site):
 \harvey.b(600); // 10 minute duration buffer
 //:start recording
 {
-	RecordBuf.ar(In.ar(2), \harvey.b.bufnum, doneAction: 2);
+{
+	RecordBuf.ar(In.ar(4), \harvey.b.bufnum, doneAction: 2);
 	Silent.ar();
 } +> \harveyrecording;
-//:start playback speaker 1;
+3.wait;
+// start playback speaker 1;
 {
-	PlayBuf.ar(1, \harvey.b.bufnum, \rate1.kr(1), doneAction: 2);
+	Out.ar(0, 
+		PlayBuf.ar(1, \harvey.b.bufnum, \rate1.kr(1), doneAction: 2)
+	);
 } +> \harveyspkr1;
+3.wait;
+// start playback speaker 2;
+{
+	Out.ar(1, 
+		PlayBuf.ar(1, \harvey.b.bufnum, \rate1.kr(1), doneAction: 2)
+	);
+} +> \harveyspkr2;
+3.wait;
+// start playback speaker 3;
+{
+	Out.ar(2, 
+		PlayBuf.ar(1, \harvey.b.bufnum, \rate1.kr(1), doneAction: 2)
+	);
+} +> \harveyspkr3;
+3.wait;
+// start playback speaker 4;
+{
+	Out.ar(3, 
+		PlayBuf.ar(1, \harvey.b.bufnum, \rate1.kr(1), doneAction: 2)
+	);
+} +> \harveyspkr4;
+}.fork;	
+
+//:
+
+
+//:
+
+
 //:try timing que [1] start default test
 \default +> \test;
 
@@ -44,24 +77,24 @@ Second part (from readme of maxpat downloaded from Faber site):
 \test.stop
 //:try fader actions with parameter mapping.
 {
-	\default +> \test;
+	\default +> \test2;
 	1.wait;
-	\freq <+ { Line.kr(400, 800, 10) };
-	10.wait;
-	\freq <+.test { LFNoise0.kr(5).range(100, 1000) };
+	\amp <+ { Line.kr(0.5, 0.0, 12) };
+	13.wait;
+	\amp <+.test2 { LFNoise0.kr(5).range(0.01, 0.3) };
 	5.wait;
-	\freq <+.test { LFNoise2.kr(2.reciprocal).range(100, 1000) };
+	\amp <+.test2 { LFNoise2.kr(2.reciprocal).range(0.01, 0.3) };
 }.fork;
 //:
-\freq <+.test { LFNoise2.kr(5).range(100, 1000) };
+\amp <+.test { LFNoise2.kr(5).range(0.1, 0.5) };
 //:start test again [3];
 \default +> \test;
 //:map something in test [4];
-\freq <+ { Line.kr(400, 800, 10) };
+\amp <+ { Line.kr(0.3, 0.003, 10) };
 //:map something else in test [14];
-\freq <+ { LFNoise2.kr(2).range(400, 800) };
+\amp <+ { LFNoise2.kr(2).range(0.2, 0.4) };
 //:map something else in test [18];
-\freq <+ { LFNoise0.kr(2).range(400, 800) };
+\amp <+ { LFNoise0.kr(2).range(0.2, 0.4) };
 //:map something else in test [24];
-\freq <+ { LFNoise0.kr(12).range(40, 1800) };
+\amp <+ { LFNoise2.kr(1.5).range(0.002, 0.4) };
 //:

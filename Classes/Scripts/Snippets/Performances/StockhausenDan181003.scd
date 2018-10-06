@@ -66,4 +66,34 @@ makeCycle = { | numPeriods = 10, dur = 6, name = "A" |
 		)
 		)
 })
-//:
+//:preparing load
+//  6 Oct 2018 06:09
+//:Form schema - from string to array of action states
+// correct conversion formula:
+"
+X__X__XXX__|XXXXXXX_|X__X___|X__X__|_X_X_X___|X_X__X_X__
+_XX_XX__XXX|XXXXXXX_|XXX_XXX|_XX___|XXXXX_XX_|_X__X_X_X_
+_XXXX__XXXX|_XXXXXXX|_X__XXX|_X__XX|__XX__XX_|_XXXXX__X_
+__X__XX__XX|_XXXXXX_|_XX__XX|__X___|_XXXXXXXX|__X____XX_
+_XX_XX__XX_|_XXX_XXX|XXX_XX_|_XX_XX|X_XXX_XXX|_X_XX_X_XX
+__XX__XX__X|_X_XXX_X|___X_XX|__XX__|_X___X__X|X_XX_X_XXX
+".split(Char.nl)
+.select({ | s | s.size > 0})
+.collect({ | s | s.split($|)})
+.flop
+.collect({ | s |
+	s.collect (_.ascii).flop
+	.collect({ | a | a.collect({ | b | (b == 88).binaryValue })});
+}).do( { | cycle, index |
+	postf("We are now loading cycle number: %\n", index + 1);
+	cycle do: _.postln;})
+//:Form schema - from string to array of action states
+// correct conversion formula:
+StockhausenSoloFormschema.default loadPeriodStates: "
+X__X__XXX__|XXXXXXX_|X__X___|X__X__|_X_X_X___|X_X__X_X__
+_XX_XX__XXX|XXXXXXX_|XXX_XXX|_XX___|XXXXX_XX_|_X__X_X_X_
+_XXXX__XXXX|_XXXXXXX|_X__XXX|_X__XX|__XX__XX_|_XXXXX__X_
+__X__XX__XX|_XXXXXX_|_XX__XX|__X___|_XXXXXXXX|__X____XX_
+_XX_XX__XX_|_XXX_XXX|XXX_XX_|_XX_XX|X_XXX_XXX|_X_XX_X_XX
+__XX__XX__X|_X_XXX_X|___X_XX|__XX__|_X___X__X|X_XX_X_XXX
+"
