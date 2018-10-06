@@ -3,17 +3,176 @@ Gui and functionality for playing Stockhausen Solo Nr. 19 for instrumentalist an
  4 Oct 2018 15:19
 */
 
+StockhausenSolo {
+	*initClass {
+		StartUp add: {
+			LPMini.gui;
+			LPD8.gui;
+			Server.default.options.numOutputBusChannels_(4);
+			Server.default.boot;
+			Server.default.meter;
+		};
+	}
+
+	*formschemaI {
+		^StockhausenSoloFormschema(
+			[  // numperiods, duration per period
+				[11, 6],
+				[8, 14.2],
+				[7, 19],
+				[6, 25.3],
+				[9, 10.6],
+				[10, 8]
+			], thisMethod.name.asString
+		)
+		.loadPeriodStates(
+"
+X__X__XXX__|XXXXXXX_|X__X___|X__X__|_X_X_X___|X_X__X_X__
+_XX_XX__XXX|XXXXXXX_|XXX_XXX|_XX___|XXXXX_XX_|_X__X_X_X_
+_XXXX__XXXX|_XXXXXXX|_X__XXX|_X__XX|__XX__XX_|_XXXXX__X_
+__X__XX__XX|_XXXXXX_|_XX__XX|__X___|_XXXXXXXX|__X____XX_
+_XX_XX__XX_|_XXX_XXX|XXX_XX_|_XX_XX|X_XXX_XXX|_X_XX_X_XX
+__XX__XX__X|_X_XXX_X|___X_XX|__XX__|_X___X__X|X_XX_X_XXX
+"	
+		);
+	}
+
+		*formschemaII {
+		^StockhausenSoloFormschema(
+			[  // numperiods, duration per period
+				[9, 12],
+				[7, 24],
+				[11, 6],
+				[10, 8.5],
+				[6, 30.4],
+				[8, 17.1]
+			], thisMethod.name.asString
+		)
+			.loadPeriodStates(
+"
+_XX_XX_X_|XXXXX_X|X_X_XX_X_X_|_XX_XX_XX_|X____X|__X___X_
+X__X__X_X|XXXXXX_|_X_X__X_X_X|X__X_____X|_XXXX_|X___X___
+__X__X__X|_XXXXXX|_XXXXX__XXX|__XXXX__XX|_XXXXX|XX_X____
+_X__X__XX|_XXXXXX|__XXXXX__XX|_XXXXXXXXX|__XXXX|_X___X__
+__XX_XX_X|_XXXXXX|XXXXXXX_XXX|X_XX_XX_XX|XXXXXX|___XX__X
+_XX_XX_XX|_XXXXXX|X_XXXX_X_XX|XXX_X_XX_X|X_X__X|XXX__XX_
+"
+				/*
+"
+X__X__XXX__|XXXXXXX_|X__X___|X__X__|_X_X_X___|X_X__X_X__
+_XX_XX__XXX|XXXXXXX_|XXX_XXX|_XX___|XXXXX_XX_|_X__X_X_X_
+_XXXX__XXXX|_XXXXXXX|_X__XXX|_X__XX|__XX__XX_|_XXXXX__X_
+__X__XX__XX|_XXXXXX_|_XX__XX|__X___|_XXXXXXXX|__X____XX_
+_XX_XX__XX_|_XXX_XXX|XXX_XX_|_XX_XX|X_XXX_XXX|_X_XX_X_XX
+__XX__XX__X|_X_XXX_X|___X_XX|__XX__|_X___X__X|X_XX_X_XXX
+"	
+				*/
+		);
+		}
+
+		*formschemaIII {
+		^StockhausenSoloFormschema(
+			[  // numperiods, duration per period
+				[7, 30.4],
+				[10, 9],
+				[8, 20.25],
+				[9, 13.5],
+				[11, 6],
+				[6, 45.6]
+			], thisMethod.name.asString
+		)
+		.loadPeriodStates(
+"
+X______|XXX___XX__|X__X_XXX|X__XXXXXX|_XXXXXXXXXX|_XXXXX
+_XXXXXX|XXXXXXXXXX|_X___X__|X____X___|X______XXXX|_XXXXX
+_XXXXXX|_XXXXX_X__|_X__X_XX|XX___XXXX|X_XXXXXXXXX|_XXXXX
+__XXXXX|__XXXXXXXX|__XX__XX|_XX___X__|_XXXXXXXXXX|_XXXXX
+_XXXXXX|XXXX_XXXX_|__X_XXX_|XXX_XXX_X|_XXX__X____|X_X_X_
+__X____|X____X____|X_XXXXXX|XXXX__XX_|_XX_XXXXXXX|X____X
+"	
+		);
+		}
+
+		*formschemaIV {
+		^StockhausenSoloFormschema(
+			[  // numperiods, duration per period
+				[6, 45.6],
+				[11, 6],
+				[9, 13.5],
+				[8, 20.25],
+				[10, 9],
+				[7, 30.4]
+			], thisMethod.name.asString
+		)
+		.loadPeriodStates(
+"
+_X_XXX|X_X_X__X_XX|_XXXXXXX_|X_XXXXX_|X__X__X_X_|X__X_X_
+XXXXXX|_X___XX_X__|X___X_X_X|_X______|_X__X__X_X|_XX_X__
+____XX|_XX__X____X|__XXXXXXX|_XXXXXXX|_X__X__X_X|_XXX___
+_XXXXX|__XXXXXXX__|_XXXXXXXX|__XXXXXX|__X__X__XX|__X__X_
+__X_XX|XXXX_XX_X_X|__X_X_X_X|_X__X__X|XXX_XX_XX_|XXXXX__
+_X_X__|X__XXXXX_X_|_XXXXXXXX|__XXXXXX|X__X__X__X|X_XX_X_
+"	
+		);
+	}
+
+		*formschemaV {
+		^StockhausenSoloFormschema(
+			[  // numperiods, duration per period
+				[8, 22.8],
+				[6, 45.6],
+				[10, 11.4],
+				[11, 8],
+				[7, 32],
+				[9, 16]
+			], thisMethod.name.asString
+		)
+		.loadPeriodStates(
+"
+_X__XXXX|X_X_X_|__X____X__|XXXXXXXXXX_|X_XX_XX|X_X_X_X__
+X_XX_XXX|_X_X__|XX_XXXXXX_|X_X_X_X_X_X|_X__X__|_X_X_____
+__XXXXXX|_____X|___XXXXXXX|_XXXXXXXXXX|_XXX__X|_XXXX__X_
+_XXX__XX|____XX|_XXXXXXXXX|_XXXXXXXXXX|__XXXXX|__XXXXXX_
+__XX_X__|XX_X_X|___XXXXXXX|X_X_X_X_X_X|_XX_X_X|XX_X_X_XX
+_XXXX_X_|X_X_X_|_XX_XX___X|XX_X_X_X_X_|__XX_X_|X_X_XXX_X
+"	
+		);
+		}
+
+		*formschemaVI {
+		^StockhausenSoloFormschema(
+			[  // numperiods, duration per period
+				[10, 14.2],
+				[9, 19],
+				[6, 45.6],
+				[7, 34.2],
+				[8, 25.3],
+				[11, 10.6]
+			], thisMethod.name.asString
+		)
+		.loadPeriodStates(
+"
+XXXXXXXXX_|_X_X___XX|_X___X|X____XX|X__X__X_|_X_X__X_XX_
+XX________|X_X_X_XXX|X___XX|_X____X|_XX____X|XXX_XX_X___
+_XXXXXXXXX|__XXXXXXX|__XXXX|_XXXXXX|_XXXXXXX|____XXXXXX_
+_XXXXXXXXX|_XXXX__XX|_XXXXX|__XXXXX|__XXXXXX|_XXXXXXXXX_
+_X_XXXXXXX|__XXX_X__|X_XXXX|_X_X_X_|XXX_XX_X|X_X_XXXXXXX
+__X_X_X_X_|_XXXXX_X_|XXX_X_|__X_X_X|X_XXX_X_|XX___XX__XX
+"	
+		);
+	}
+}
+
+
 StockhausenSoloFormschema {
 	var <cycles;
+	var <name;
 	var runTask, stream;
 	var <cycleOnsets;
 	var <>speed = 1 ; // play speed;
 	*initClass {
 		StartUp add: {
-			Server.default.options.numOutputBusChannels_(4);
-			Server.default.boot;
-			Server.default.meter;
-			 { this.gui }.defer(1)
+			//			 { this.gui }.defer(1)
 		}
 	}
 
@@ -23,8 +182,8 @@ StockhausenSoloFormschema {
 		^Registry(this, \default, { this.new });
 	}
 
-	*new { | cycleSpecs |
-		^super.new.init(cycleSpecs ?? { this.defaultSpecs })
+	*new { | cycleSpecs, name |
+		^super.new.init(cycleSpecs ?? { this.defaultSpecs }, name)
 	}
 
 	*defaultSpecs {
@@ -39,11 +198,12 @@ StockhausenSoloFormschema {
 		]
 	}
 
-	init { | cycleSpecs |
+	init { | cycleSpecs, argName |
 		cycleOnsets = [0] ++ cycleSpecs.collect(_.product).integrate;
 		cycles = cycleSpecs collect: { | cs, i |
 			StockhausenSoloCycle(*(cs add: (i + 1) add: this))
 		};
+		name = argName;
 	}
 
 	loadPeriodStates { | specString |
@@ -71,7 +231,7 @@ StockhausenSoloFormschema {
 	}
 	
 	gui {
-		this.window({ | w |
+		name.asSymbol.window({ | w |
 			w.bounds = Window.availableBounds.width_(100).height_(100);
 			w.view.layout = VLayout(
 				this.headerGui,
