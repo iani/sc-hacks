@@ -318,8 +318,9 @@ StockhausenSoloFormschema {
 
 	headerGui {
 		^HLayout(
-			Button().states_([["save"]]).action_({ this.save }),
-			Button().states_([["load"]]).action_({ this.load }),
+			Button().states_([["free buffers"]])
+			.action_({ this.freeBuffers }),
+			//	Button().states_([["load"]]).action_({ this.load }),
 			Button().states_([["start"], ["stop"]])
 			.action_({ | me |
 				[{
@@ -415,12 +416,9 @@ StockhausenSoloFormschema {
 		"Starting audio".postln;
 		"initing trigger stream".postln;
 		StockhausenSoloPeriod.initTriggerStream;
-		\buffer1.free;
-		\buffer2.free;
 		\buffer1.b(50.0);
 		\buffer2.b(50.0);
 		
-
 		\stockhausen.v(
 			\input.slider([0, 1.0], \stock1, "add 1"),
 			\input.slider([0, 1.0], \stock2, "add 2"),
@@ -446,7 +444,8 @@ StockhausenSoloFormschema {
 				) +
 				(
 					Lag.kr(\feedback.kr(0), 0.2) * // default off
-					PlayBuf.ar(1, buffer, trigger: trigger, startPos: 0)
+					PlayBuf.ar(1, buffer, trigger: trigger,
+						startPos: 0)
 				),
 				buffer, offset: 0, loop: 1, trigger: trigger);
 			Out.ar (out,
@@ -463,6 +462,11 @@ StockhausenSoloFormschema {
 		func +> \stock1;
 		func +> \stock2;
 		
+	}
+
+	freeBuffers {
+		\buffer1.free;
+		\buffer2.free;
 	}
 	
 	runTask {
