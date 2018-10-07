@@ -75,8 +75,10 @@ Top knobs from left to right: cc chan 0 nums 1, 2, 3, 4
 Bottom knobs from left to right: cc chan 0 nums 5, 6, 7, 8
 */
 LPD8 : MIDIController {
+	classvar <envir;
 	*gui {
 		// TOGGLE MODE!
+		envir = \lpd8.e;
 		this.window({ | w |
 			this.init;
 			w.bounds =  Rect(0, 820, 300, 20); //  Rect(300, 300, 300, 20);
@@ -86,7 +88,7 @@ LPD8 : MIDIController {
 						*({ | i |
 							var c, keys, toggle = 0;
 							c = CheckBox();
-							i = i + 4;
+							// i = i + 4;
 							keys = ["pada%off", "pada%on"] collect: { | key |
 								format(key, i + 1).asSymbol;
 							};
@@ -95,14 +97,14 @@ LPD8 : MIDIController {
 									{ c.value = val; }.defer;
 								}, c);
 							};
-							// i = i + 4;
+							i = i + 4;
 							MIDIFunc.program({
-								postf("toggling this: %, %, %\n",
-									keys[toggle],
-									toggle,
-									i
-								);
 								toggle = 1 - toggle;
+								//	postf("toggling this: %, %, %\n",
+								//									keys[toggle],
+								//	toggle,
+								//	i
+								// toggle = 1 - toggle;
 								this.changed(keys[toggle]);
 							}, 0, nil, i);
 							c;
@@ -123,6 +125,11 @@ LPD8 : MIDIController {
 							};
 							MIDIFunc.program({
 								toggle = 1 - toggle;
+								// postf("toggling this: %, %, %\n",
+								//	keys[toggle],
+								//	toggle,
+								//	i
+
 								this.changed(keys[toggle]);
 							}, 0, nil, i);
 							c;
@@ -136,12 +143,13 @@ LPD8 : MIDIController {
 							i = i + 1;
 							key = format("knoba%", i).asSymbol;
 							c = Knob();
-							this.new(key, { | val |
-								{ c.value = val }.defer;
+							this.new(key, { | val |			
+								{ c.value = val; }.defer;
 							}, c);
 							MIDIFunc.cc({ | num, other1, other2 |
 								// ["debugging cc", key, num, other1, other2].postln;
 								this.changed(key, num / 127);
+								envir.put(key, num / 120);
 							}, i, 0);
 							c
 						} ! 4)
@@ -150,14 +158,16 @@ LPD8 : MIDIController {
 						*({ | i |
 							var c, key;
 							// i = i + 1;
-							key = format("knobb%", i).asSymbol;
+							key = format("knobb%", i + 1).asSymbol;
 							c = Knob();
 							this.new(key, { | val |
 								{ c.value = val }.defer;
 							}, c);
 							MIDIFunc.cc({ | num, other1, other2 |
 								// ["debugging cc", key, num, other1, other2].postln;
+								// postf("debugging key %\n", key);
 								this.changed(key, num / 127);
+								envir.put(key, num / 120);
 							}, i + 5, 0);
 							c
 						} ! 4)

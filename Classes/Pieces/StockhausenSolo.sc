@@ -1,19 +1,88 @@
 /*
 Gui and functionality for playing Stockhausen Solo Nr. 19 for instrumentalist and electronics.
  4 Oct 2018 15:19
+
+StockhausenSolo.formschemaIII.gui;
+
 */
 
 StockhausenSolo {
 	*initClass {
 		StartUp add: {
-			LPMini.gui;
+			//			LPMini.gui;
 			LPD8.gui;
 			Server.default.options.numOutputBusChannels_(4);
 			Server.default.boot;
 			Server.default.meter;
+			this.midi;
 		};
 	}
 
+	*midi {
+		LPD8(\knoba1, { | val |
+			\input <+.stock1 val;
+		});
+		LPD8(\knobb1, { | val |
+			\input <+.stock2 val;
+		});
+		LPD8(\knoba2, { | val |
+			\feedback <+.stock1 val;
+		});
+		LPD8(\knobb2, { | val |
+			\feedback <+.stock2 val;
+		});
+		LPD8(\knoba3, { | val |
+			\playback <+.stock1 val;
+		});
+		LPD8(\knobb3, { | val |
+			\playback <+.stock2 val;
+		});
+		LPD8(\knoba4, { | val |
+			\pos <+.stock1 val;
+		});
+		LPD8(\knobb4, { | val |
+			\pos <+.stock2 val;
+		});
+
+		LPD8(\pada1on, {
+			\input <+.stock1 1;
+		});
+		LPD8(\padb1on, {
+			\input <+.stock2 1;
+		});
+		LPD8(\pada2on, {
+			\feedback <+.stock1 1;
+		});
+		LPD8(\padb2on, {
+			\feedback <+.stock2 1;
+		});
+		LPD8(\pada3on, {
+			\playback <+.stock1 1;
+		});
+		LPD8(\padb3on, {
+			\playback <+.stock2 1;
+		});
+		LPD8(\pada1off, {
+			\input <+.stock1 0;
+		});
+		LPD8(\padb1off, {
+			\input <+.stock2 0;
+		});
+		LPD8(\pada2off, {
+			\feedback <+.stock1 0;
+		});
+		LPD8(\padb2off, {
+			\feedback <+.stock2 0;
+		});
+		LPD8(\pada3off, {
+			\playback <+.stock1 0;
+		});
+		LPD8(\padb3off, {
+			\playback <+.stock2 0;
+		});
+
+	}
+	
 	*formschemaI {
 		^StockhausenSoloFormschema(
 			[  // numperiods, duration per period
@@ -88,7 +157,7 @@ _XXXXXX|XXXXXXXXXX|_X___X__|X____X___|X______XXXX|_XXXXX
 _XXXXXX|_XXXXX_X__|_X__X_XX|XX___XXXX|X_XXXXXXXXX|_XXXXX
 __XXXXX|__XXXXXXXX|__XX__XX|_XX___X__|_XXXXXXXXXX|_XXXXX
 _XXXXXX|XXXX_XXXX_|__X_XXX_|XXX_XXX_X|_XXX__X____|X_X_X_
-__X____|X____X____|X_XXXXXX|XXXX__XX_|_XX_XXXXXXX|X____X
+__X____|X_________|X_XXXXXX|XXXX__XX_|_XX_XXXXXXX|X____X
 "	
 		);
 		}
@@ -170,6 +239,11 @@ StockhausenSoloFormschema {
 	var runTask, stream;
 	var <cycleOnsets;
 	var <>speed = 1 ; // play speed;
+	var <>period; /* currently playing period.
+		Next period compares states with previous period
+		in StockhausenSoloPeriod:play;
+	*/
+	var <startIndex = 0;
 	*initClass {
 		StartUp add: {
 			//			 { this.gui }.defer(1)
@@ -263,12 +337,12 @@ StockhausenSoloFormschema {
 			Button().states_([["Reset"]])
 			.action_({ this.reset; }),
 			ActionMenu("Jump to:...",
-				"A", {},
-				"B", {},
-				"C", {},
-				"D", {},
-				"E", {},
-				"F", {},
+				"A", { startIndex = 0 },
+				"B", { startIndex = 1 },
+				"C", { startIndex = 2},
+				"D", { startIndex = 3 },
+				"E", { startIndex = 4 },
+				"F", { startIndex = 5 },
 			),
 			StaticText().string_("Status:"),
 			Button().states_([["stopped"], ["running"]])
@@ -309,11 +383,11 @@ StockhausenSoloFormschema {
 			{ n.listener.value = periodNum - 1 / this.numPeriods; }.defer;
 		});
 	}
-	
+
 	duration { ^cycles.collect(_.duration).sum }
 
 	asStream {
-		^Pseq(cycles collect: _.asStream).asStream;
+		^Pseq(cycles[startIndex..] collect: _.asStream).asStream;
 	}
 
 	numPeriods {
@@ -325,8 +399,11 @@ StockhausenSoloFormschema {
 			postf("% is already playing\n", this);
 		}{
 			this.startAudio;
+			// 0.1.wait;
+			
 			this.runTask.play;
 			this.changed(\play);
+			//			.fork(AppCLock);
 		};
 	}
 
@@ -336,24 +413,32 @@ StockhausenSoloFormschema {
 	startAudio {
 		var func;
 		"Starting audio".postln;
-		\buffer1.b(25.3);
-		\buffer2.b(25.3);
+		"initing trigger stream".postln;
+		StockhausenSoloPeriod.initTriggerStream;
+		\buffer1.free;
+		\buffer2.free;
+		\buffer1.b(50.0);
+		\buffer2.b(50.0);
+		
 
 		\stockhausen.v(
 			\input.slider([0, 1.0], \stock1, "add 1"),
-			\feedback.slider([0, 1.0], \stock1, "keep 1"),
-			\playback.slider([0, 1.0], \stock1, "play 1"),
 			\input.slider([0, 1.0], \stock2, "add 2"),
+			\feedback.slider([0, 1.0], \stock1, "keep 1"),
 			\feedback.slider([0, 1.0], \stock2, "keep 2"),
+			\playback.slider([0, 1.0], \stock1, "play 1"),
 			\playback.slider([0, 1.0], \stock2, "play 2"),
+			\pos.slider([0, 1.0], \stock1, "pos 1"),
+			\pos.slider([0, 1.0], \stock2, "pos 2"),
 		);
 
 		func = { | out = 0, buffer = 0 |
 			var dt, trigger, playback;
 			dt = \dt.kr(6); // Formschema 1 A
-			trigger = Impulse.kr(dt.reciprocal) + Changed.kr(dt);
+			// trigger = Impulse.kr(dt.reciprocal) + Changed.kr(dt);
+			trigger = Changed.kr(dt);
 			// playback _BEFORE_ recording
-			playback = Lag.kr(\playback.kr(0), 0.2) * // default on
+			playback = Lag.kr(\playback.kr(0), 1.2) * // default on
 			PlayBuf.ar(1, buffer, trigger: trigger, startPos: 0);
 			RecordBuf.ar( // record + feedback
 				(
@@ -364,11 +449,14 @@ StockhausenSoloFormschema {
 					PlayBuf.ar(1, buffer, trigger: trigger, startPos: 0)
 				),
 				buffer, offset: 0, loop: 1, trigger: trigger);
-			Out.ar (out, playback); // playback before recording
+			Out.ar (out,
+				PanAz.ar(4, Limiter.ar (playback, 0.7), \pos.kr(0))
+			); // playback before recording
 		};
 
-		\out <+.stock1 0;
-		\out <+.stock2 1;
+		// \out <+.stock1 0;
+		// \out <+.stock2 1;
+		\pos <+.stock2 1;
 		\buffer <+.stock1 \buffer1.b.bufnum;
 		\buffer <+.stock2 \buffer2.b.bufnum;
 
@@ -380,18 +468,31 @@ StockhausenSoloFormschema {
 	runTask {
 		^runTask ?? {
 			runTask = Task({
-				var period, duration = 0;
+				/* NOTE: We need to compare previous period to currently
+					playing period to only set those parameters which are different
+					each time.
+				*/
+				var previousPeriod, thisPeriod;
 				stream = this.asStream;
+				previousPeriod = StockhausenSoloPeriod();
+
+				previousPeriod.actions do: _.setState;
+
+				//				"waiting".postln;
+
+				0.1.wait;
+
+				// "GO".postln;
+				
 				while {
-					(period = stream.next).notNil;
+					(thisPeriod = stream.next).notNil;
 				}{
-					if (period.duration != duration) {
-						duration = period.duration;
-						\dt <+.stock1 duration;
-						\dt <+.stock2 duration;
-					};
-					period.play(this);
-					(period.duration / speed).wait;
+					thisPeriod.play(this,
+						previousPeriod.actions,
+						previousPeriod.duration
+					);
+					previousPeriod = thisPeriod;
+					(thisPeriod.duration / speed).wait;
 				}
 			})
 		}
@@ -399,11 +500,13 @@ StockhausenSoloFormschema {
 
 	stop {
 		this.runTask.stop;
+		StockhausenSoloPeriod().actions do: _.setState;
 		this.changed(\stop);
 	}
 
 	reset {
 		this.stop;
+		runTask = nil;
 		stream = this.asStream;
 		this.changed(\period, 0);
 		this.changed(\time, 0);
@@ -412,7 +515,6 @@ StockhausenSoloFormschema {
 
 	save {
 		cycles.collect(_.periods);
-		
 	}
 
 	load {
@@ -485,11 +587,16 @@ StockhausenSoloCycle {
 }
 
 StockhausenSoloPeriod {
+	classvar <triggerStream;
 	var <duration = 6, <num = 0, <cycle;
 	var <onset;  // onset dt from start of performance;
 	var <actions;
+	
+	*initTriggerStream {
+		triggerStream = Pseq((1..52), inf).asStream;
+	}
 
-	*new { | duration = 6, num = 0, cycle |
+	*new { | duration = 6, num = 1, cycle |
 		^this.newCopyArgs(duration, num, cycle).init;
 	}
 
@@ -498,18 +605,19 @@ StockhausenSoloPeriod {
 	}
 	
 	init {
-		onset = num - 1 * duration + cycle.onset;
+		onset = num - 1 * duration;
+		cycle !? { onset = onset + cycle.onset};
 		actions = this.class.actions;
 	}
 
 	*actions {
 		^[
-			[\stock1, \input],
-			[\stock2, \input],
-			[\stock1, \feedback],
-			[\stock2, \feedback],
-			[\stock1, \playback],
-			[\stock2, \playback],
+			[\stock1, \input, \knoba1],
+			[\stock2, \input, \knobb1],
+			[\stock1, \feedback, \knoba2],
+			[\stock2, \feedback, \knobb2],
+			[\stock1, \playback, \knoba3],
+			[\stock2, \playback, \knobb3],
 		] collect: StockhausenSoloAction(*_)		
 	}
 
@@ -518,8 +626,26 @@ StockhausenSoloPeriod {
 		
 	}
 
-	play { | solo |
-		actions do: _.play;
+	play { | solo, previousPeriodActions, previousDuration |
+		var triggerValue;
+		/*postf("previous duration was: %, this duration is: %\n",
+			previousDuration, duration);
+		*/
+		/*
+		if (previousDuration != duration) {
+			\dt <+.stock1 duration;
+			\dt <+.stock2 duration;
+		};
+		*/
+		triggerValue = triggerStream.next;
+		triggerValue.postln;
+		\dt <+.stock1 triggerValue;
+		\dt <+.stock2 triggerValue;
+
+		actions do: { | action, i |
+			action.play(previousPeriodActions[i])
+		};
+
 		solo.changed(\period, this.absNum);
 		cycle.solo.changed(\time, onset);
 	}
@@ -543,13 +669,19 @@ StockhausenSoloPeriod {
 StockhausenSoloAction {
 	/* perform a single action according to your state and kind,
 		i.e. set a parameter in an environment of the performance */
+
+	// store fader status for next start
+	classvar <playback1 = 0.5, <playback2 = 0.5;
+	
+	
 	var <envirName = \stock1;
 	var <param = \input;
+	var <midictl = \knoba1;
 	var <state = 0;
 	var <envir;
 
-	*new { | envirName, param |
-		^this.newCopyArgs(envirName, param).init;
+	*new { | envirName, param, midictl |
+		^this.newCopyArgs(envirName, param, midictl).init;
 	}
 	
 	init {
@@ -570,8 +702,36 @@ StockhausenSoloAction {
 		this.changed(\state, state);
 	}
 	
-	play {
+	play { | previousAction |
+		var previousState = 0;
+		previousAction !? { previousState = previousAction.state };
+		/*		postf("param: % my state is: %, previousstate is: % \n",
+			param, state , previousState);
+		*/
+		if (state != previousState) {
+			/*		postf("this state: %, previousState: %. changing state!\n",
+				state, previousState
+			);
+			*/
+			// envir.put(param, state /* * 0.5 */ /* *      */);
+			/*
+			[param, state, midictl, \lpd8.e[midictl] ? 1,
+				\lpd8.e[midictl] ? 1 * state
+			].postln;
+			*/
+			envir.put(param, \lpd8.e [midictl] ? 1 * state);
+		} {
+			/*
+			postf("this state: %, previousState: %. NOT CHANGING STATE!\n",
+				state, previousState
+			)
+			*/
+		}
+	}
+	setState {
+		
 		envir.put(param, state);
+
 	}
 	
 }

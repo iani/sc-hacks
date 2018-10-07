@@ -151,3 +151,21 @@ _XXXXXXXXX|_XXXX__XX|_XXXXX|__XXXXX|__XXXXXX|_XXXXXXXXX_
 _X_XXXXXXX|__XXX_X__|X_XXXX|_X_X_X_|XXX_XX_X|X_X_XXXXXXX
 __X_X_X_X_|_XXXXX_X_|XXX_X_|__X_X_X|X_XXX_X_|XX___XX__XX
 "
+//:formschema version II duration calculation
+
+var seconds, minutes;
+seconds = [
+	[9, 12],
+	[7, 24],
+	[11, 6],
+	[10, 8.5],
+	[6, 30.4],
+	[8, 17.1]
+].collect(_.product).postln.sum;
+
+//:refining period transitions
+StockhausenSoloPeriod().actions.first.state;
+//:
+StockhausenSolo.formschemaIII.gui;
+//:
+StockhausenSolo.formschemaI.gui;
