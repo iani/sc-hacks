@@ -152,8 +152,8 @@ __XX__XX__X|_X_XXX_X|___X_XX|__XX__|_X___X__X|X_XX_X_XXX
 		)
 		.loadPeriodStates(
 "
-X______|XXX___XX__|X__X_XXX|X__XXXXXX|_XXXXXXXXXX|_XXXXX
-_XXXXXX|XXXXXXXXXX|_X___X__|X____X___|X______XXXX|_XXXXX
+X______|XXX___XX__|X__X_XXX|X__XXXXXX|_XXXXXXXXXX|XXXXXX
+_XXXXXX|XXXXXXXXXX|_X___X__|X____X___|X______XXXX|XXXXXX
 _XXXXXX|_XXXXX_X__|_X__X_XX|XX___XXXX|X_XXXXXXXXX|_XXXXX
 __XXXXX|__XXXXXXXX|__XX__XX|_XX___X__|_XXXXXXXXXX|_XXXXX
 _XXXXXX|XXXX_XXXX_|__X_XXX_|XXX_XXX_X|_XXX__X____|X_X_X_
@@ -449,13 +449,14 @@ StockhausenSoloFormschema {
 				),
 				buffer, offset: 0, loop: 1, trigger: trigger);
 			Out.ar (out,
-				PanAz.ar(4, Limiter.ar (playback, 0.7), \pos.kr(0))
+				// PanAz.ar(4, Limiter.ar (playback, 0.7), \pos.kr(0))
+				playback.dup;
 			); // playback before recording
 		};
 
-		// \out <+.stock1 0;
-		// \out <+.stock2 1;
-		\pos <+.stock2 1;
+		\out <+.stock1 0;
+		\out <+.stock2 2;
+		// \pos <+.stock2 1;
 		\buffer <+.stock1 \buffer1.b.bufnum;
 		\buffer <+.stock2 \buffer2.b.bufnum;
 

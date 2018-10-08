@@ -71,7 +71,14 @@ Second part (from readme of maxpat downloaded from Faber site):
 
 
 //:try timing que [1] start default test
+\freq <+.test 600;
+\amp <+.test 0.01;
 \default +> \test;
+//:envelope - freq.
+\freq <+.test Env([600, 300, 600, 300, 600], [1, 1, 1], \sine);
+//:envelope - amp
+\amp <+.test Env([0.1, 0.5, 0.1, 0.5, 0.1] / 10, [1, 1, 1, 1], \sine);
+//:
 
 //:try timing que [2] stop test
 \test.stop

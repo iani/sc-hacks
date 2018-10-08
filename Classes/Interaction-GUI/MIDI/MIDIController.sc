@@ -149,7 +149,7 @@ LPD8 : MIDIController {
 							MIDIFunc.cc({ | num, other1, other2 |
 								// ["debugging cc", key, num, other1, other2].postln;
 								this.changed(key, num / 127);
-								envir.put(key, num / 120);
+								envir.put(key, num / 127);
 							}, i, 0);
 							c
 						} ! 4)
