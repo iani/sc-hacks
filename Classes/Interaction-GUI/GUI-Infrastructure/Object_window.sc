@@ -36,6 +36,10 @@
 			window;
 		}).front;	
 	}
+
+	bounds_ { | rect, key = \default |
+		
+	}
 }
 
 

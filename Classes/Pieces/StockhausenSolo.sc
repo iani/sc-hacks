@@ -18,6 +18,15 @@ StockhausenSolo {
 		};
 	}
 
+	*start {
+		LPD8.gui;
+		Server.default.options.numOutputBusChannels_(4);
+		Server.default.boot;
+		Server.default.meter;
+		this.midi;
+		this.formschemaIII.gui;
+	}
+
 	*midi {
 		LPD8(\knoba1, { | val |
 			\input <+.stock1 val;
@@ -290,14 +299,7 @@ StockhausenSoloFormschema {
 			s.collect (_.ascii).flop
 			.collect({ | a | a.collect({ | b | (b == 88).binaryValue })});
 		});
-		/*
-		"Just parsed the data successfully".postln;
-		"Here is a preliminary check. Here come the data".postln;
-
-		convertedData.do( { | cycle, index |
-			postf("We are now loading cycle number: %\n", index + 1);
-			cycle do: _.postln;});
-		*/
+		
 		convertedData do: { | cycle, index |
 			cycles[index].loadPeriodStates(cycle); 
 		}

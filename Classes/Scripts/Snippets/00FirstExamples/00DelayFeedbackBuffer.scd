@@ -47,3 +47,15 @@ Server.default.scope.window.bounds = Rect(0, 120, 300, 300);
 	\period.slider([0.1, 29.9, \exp]),
 	\startPosition.slider([0, 29.9])
 )
+//:play a synthdef - again
+\default +> \nikos;
+//:play a function
+{ WhiteNoise.ar(0.1 )} +> \nikos;
+//:play an event
+() +> \nikos;
+//:set duration
+(dur: 0.2) +> \nikos;
+//:change duration
+(dur: 0.12) +> \nikos;
+//:play a melody
+(degree: Prand((0..8), inf)) +> \nikos;

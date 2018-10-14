@@ -76,12 +76,6 @@ MULTICS {
 			0.1.wait;
 			\ricercare.b(600);
 			0.1.wait;
-
-			{
-				\direct.v(
-					\level.slider([0, 1])
-				);
-			}.defer;
 			{
 				RecordBuf.ar(In.ar(4), \ricercare.b.bufnum, 0,
 					\level.kr(1), loop: 0, doneAction: 2

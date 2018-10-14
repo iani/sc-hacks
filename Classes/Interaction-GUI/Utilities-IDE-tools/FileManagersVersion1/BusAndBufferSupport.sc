@@ -152,6 +152,15 @@
 		});
 	}
 
+	bframes { | numFrames = 44100, numChannels = 1 |
+		^Registry(\buffers, this, {
+			Buffer.alloc(Server.default,
+				numFrames,
+				numChannels,			
+			)
+		})
+	}
+	
 	free {
 		// free buffer and remove from registry
 		var buffer;

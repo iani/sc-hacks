@@ -43,8 +43,8 @@ What happens? :
 */
 HarveyRicercare {
 	classvar <delayRoutine, <channels;
-	
-	*initClass {
+
+	*initClassDisabled {
 		StartUp add: {
 			LPD8.gui;
 			Server.default.options.numOutputBusChannels_(4);
@@ -55,7 +55,15 @@ HarveyRicercare {
 			{ this.gui }.defer(1)
 		}
 	}
-	
+	*start {
+		LPD8.gui;
+		Server.default.options.numOutputBusChannels_(4);
+		Server.default.boot;
+		Server.default.meter;
+		this.midi;
+		{ this.gui }.defer(1)
+	}
+
 	*midi {
 		LPD8(\knoba1, { | val |
 			\level <+.channel1 val;
@@ -103,10 +111,12 @@ HarveyRicercare {
 		{
 			var in;
 			in = In.ar(4);
-			Out.ar(0, in * \level.kr(0.01))
+			Out.ar(0, (in * \level.kr(0.01)).dup(4))
 
 		} +> \direct;
-		\level <+.direct 0.1;
+		/* NOTE: Adjust default level according to venue 
+		*/
+		\level <+.direct 0.09; // edit default level!
 		\direct.v(
 			\level.slider([0, 1])
 		);
@@ -169,8 +179,8 @@ HarveyRicercare {
 	}
 
 	*startTransDelays {
+		this.startRecording;
 		delayRoutine = {
-			this.startRecording;
 			// 6, 18, 42, 90 sec
 			6.wait;
 			"start channel 1 at 1 octave lower".postln;
