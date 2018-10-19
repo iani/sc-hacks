@@ -105,10 +105,10 @@ Registry(\oscfuncs, \gyroscope, {
 	\rate.slider([0.1, 30]),
 	\ringtime.slider([0.05, 2])
 );
-
-\freq <+.default 'gyroscope'.osc(0, [-0.5, 0.5], [100, 2000]);
-
-\freq2 <+.default 'gyroscope'.osc(2, [-0.5, 0.5], [100, 2000]);
+//:
+\freq <+.default '/gyroscope'.osc(0, [-0.5, 0.5], [100, 2000]);
+//:
+\freq2 <+.default '/gyroscope'.osc(2, [-0.5, 0.5], [100, 2000]);
 
 \rate <+.default '/magnetometer'.osc(1, [-0.5, 0.5], [0.5, 10]);
 
@@ -171,10 +171,10 @@ currentEnvironment.postln;
 } +> \grainbuf;
 
 \grainbuf.v(
-	\period.slider([0.05, 2]),
-	\dur.slider([0.05, 2]),
-	\rate.slider([0.1, 10]),
-	\pos.slider([0, 3.5])
+	\period.slider([0.05, 2], \grainbuf),
+	\dur.slider([0.05, 2], \grainbuf),
+	\rate.slider([0.1, 10], \grainbuf),
+	\pos.slider([0, 3.5], \grainbuf)
 );
 
 // \period <+ 0.1;
@@ -185,3 +185,6 @@ currentEnvironment.postln;
 \pos <+.grainbuf '/acceleration'.osc(0, [-10, 10], [0, 3.5]);
 //: allwk .b play
 \allwk.b.play;
+//:
+\rate.value(\grainbuf);
+//:

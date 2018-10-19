@@ -78,7 +78,7 @@ currentEnvironment.postln;
 		\pos.kr(0) // duty, // \pos.kr(0)
 	)
 } +> \grainbuf;
-
+//:
 \grainbuf.v(
 	\period.slider([0.05, 2]),
 	\dur.slider([0.05, 2]),
