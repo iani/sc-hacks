@@ -16,8 +16,16 @@ Hacks {
 	}
 
 	*gui {
-		this.window({ | w |
-
-		});
+		this.br_.v(
+			{ SnippetList.gui }.button("Snippet List"),
+			{ PlayerSnippetList.gui }.button("Player Snippet List"),
+			{ PlayerGui() }.button("Player Gui"),
+			{ OSCRecorder.gui }.button("OSC recorder"),
+			{ ServerConfig.gui }.button("Configure Server"),
+			[
+				["Boot Server", Color.black, Color.green], { Server.default.boot },
+				["Quit Server", Color.white, Color.red], { Server.default.quit}
+			].button.addServerNotifier
+		);
 	}
 }

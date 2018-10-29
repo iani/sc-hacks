@@ -47,10 +47,10 @@ PlayerSnippetList : SnippetList {
 		before = before add: Snippet("server", "", PathName(""));
 	}
 
-		*runSnippetSelection {
+	*runSnippetSelection {
 		//  PlayerSnippetList only runs snippets with index > 0
-			if (this.snippetIndex == 0) {
-				"PlayerSnippetList never runs the part before the first snippet".postln;
+		if (this.snippetIndex == 0) {
+			"PlayerSnippetList never runs the part before the first snippet".postln;
 		}{
 			this.snippets.runSnippet([this.snippets.all[this.snippetIndex]]);
 		}

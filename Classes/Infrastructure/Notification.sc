@@ -181,7 +181,33 @@ Notification {
 
 + View {
 	addNotifier { | notifier, message, action |
-        super.addNotifier(notifier, message, action);
+		super.addNotifier(notifier, message, action);
+		// release view when closed
 		this.onClose = { this.objectClosed };
     }
+
+	addServerNotifier { | server, on = 1, off = 0 |
+		// Shortcut for server monitoring
+		server = server ?? { Server.default };
+		this.addNotifier(server, \counts, { | n |
+			n.listener.value = on;
+		});
+		this.addNotifier(server, \didQuit, { | n |
+			n.listener.value = off;
+		})
+	}
+
+	onServerCounts { | action, server |
+		server = server ?? { Server.default };
+		this.addNotifier(server, \counts, { | n |
+			action.(n.listener, server);
+		})
+	}
+	
+	onServerQuit { | action, server |
+		server = server ?? { Server.default };
+				this.addNotifier(server, \quit, { | n |
+			action.(n.listener, server);
+		})
+	}
 }

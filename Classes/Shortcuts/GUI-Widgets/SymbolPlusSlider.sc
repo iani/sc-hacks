@@ -11,78 +11,10 @@ Additional utilities and shortcuts: v, h, watch, close.
 	// controlspec and envir are optional, defaulting to this.asSpec and
 	// current environment.
 	// Envir must be either nil or a symbol.
-	close { | key = \default |
-		var window;
-		window = Library.at(\windows, this, key);
-		window !? { {window.close}.defer }
-	}
 
 	watch { | key, action |
 		// perform action when key is set in envir named by symbol
 		this.e.addNotifier(this.e, key, action);
-	}
-	
-	slider { | controlspec, envir, name |
-		// var mappedValue;
-		controlspec = (controlspec ? this).asSpec;
-		if (envir.isNil) {
-			envir = currentEnvironment;
-		}{
-			envir = envir.e;
-		};
-		/* The parameter set action is taken from SimpleNumber:setParameter:
-			envir.put(this, controlspec.map(me.value))
-		*/
-		// hack to push currently stored value of parameter to widgets:
-		{
-			envir.changed(this, envir[this]);
-		}.defer(0.1);
-		// Used as component in VLayout: 
-		^HLayout(
-			StaticText().string_(name ?? { this.asString }),
-			Slider()
-			.orientation_(\horizontal)
-			.action_({ | me |
-				envir.put(this, controlspec.map(me.value ? 0));
-			})
-			.addNotifier(envir, this, { | value, notification |
-				{ notification.listener.value = controlspec.unmap(value ? 0) }.defer;
-			}),
-			NumberBox()
-			.maxWidth_(80)
-			.clipLo_(controlspec.minval)
-			.clipHi_(controlspec.maxval)
-			// .decimals_(10)
-			.action_({ | me |
-				envir.put(this, controlspec constrain: (me.value));
-			})
-			.addNotifier(envir, this, { | value, notification |
-				{ notification.listener.value = value ? 0; }.defer;
-			})
-		)
-	}
-
-	// Shortcuts for VLayout and Hlayout
-	v { | ... items |
-		this.prLayout(items, VLayout);
-	}
-
-	h { | ... items |
-		this.prLayout(items, HLayout);
-	}
-
-	prLayout { | items, layoutClass |
-		// helper method for v and h methods
-		{
-			this.close;
-			0.1.wait;
-			this.window({ | w |
-				w.layout = layoutClass.new(
-					*items
-				);
-				w.bounds = w.bounds.height_(items.size * 20);
-			});
-		}.fork(AppClock);	
 	}
 }
 
