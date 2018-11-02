@@ -167,7 +167,8 @@ Player {
 		var clock, beats;
 		clock = envir[\clock];
 		beats = envir[\beats] ?? { [\beat] };
-		if (clock.isNil) {
+		// TODO: review beats mechanism.
+		if ( envir[\beats].isNil ) {
 			sourcePlayer = sourcePlayer.playSource(this, source);	
 		}{
 			beats do: { | beat |

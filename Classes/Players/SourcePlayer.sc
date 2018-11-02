@@ -45,7 +45,11 @@ PatternPlayer : SourcePlayer {
 			envir.busses.keysValuesDo({ | key, value |
 				source.put(key, value.index);
 			});
-			process = source.play(envir[\clock] ?? { TempoClock.default });
+			process = source.play(
+				envir[\clock] ?? { TempoClock.default },
+				nil,
+				envir[\quant]
+			);
 			process addDependant: { | whochanged, whathappened |
 				switch (whathappened,
 					\playing, { Player.changed(\status, player); },
@@ -64,7 +68,11 @@ PatternPlayer : SourcePlayer {
 			envir.busses.keysValuesDo({ | key, value |
 				event.put(key, value.index);
 			});
-			if (process.isPlaying.not) { process.play(envir[\clock] ?? { TempoClock.default }) };
+			if (process.isPlaying.not) { process.play(
+				envir[\clock] ?? { TempoClock.default },
+				nil,
+				envir[\quant])
+			};
 		};
 	}
 

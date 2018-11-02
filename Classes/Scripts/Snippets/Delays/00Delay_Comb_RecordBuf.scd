@@ -1,3 +1,5 @@
+//:server set stereo
+Server.default.options.numOutputBusChannels = 2;
 //:preload load buffer
 \rb.b(3); // store 3 second buffer in \rb
 

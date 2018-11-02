@@ -1,5 +1,20 @@
 ROADMAP  6 Sep 2017 14:19
 
+* TODO list 30 Oct 2018 18:01
+  :PROPERTIES:
+  :DATE:     <2018-10-30 Tue 18:09>
+  :END:
+
+This todo list is after the stockhausen/harvey works performance of October 9, 2018 and after the magnetic dance/nymphs rehearsals on October 27-28 2018.
+
+** Use imporoved synthdef and buffer load scheme for snippets
+
+** Fix oscrecorder
+
+** Make oscrecorder+audiorecorder combo gui
+
+** Make timer guis
+
 * Operator TODOs
   :PROPERTIES:
   :DATE:     <2017-10-05 Thu 18:04>
