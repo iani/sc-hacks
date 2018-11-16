@@ -79,40 +79,38 @@ SynthDef(\test, { Out.ar(0, WhiteNoise.ar(0.1)) }).add(\global);
 */
 //:Load a series of synthdefs sequentially.
 //Generate test synthdefs algorithmically, and put them in a stream;
-{
-	var defs;
-	defs = Pseq(
-		{ | i |
-			SynthDef(format("def%", i), {
-				Out.ar(0, SinOsc.ar((i + 60).midicps, 0, 0.1));
-			});
-		} ! 10 // 10 synthdefs
-	);
-	defs.asStream.addNotifier(SynthDescLib.default, \synthDescAdded, { | desc, notification |
-		var def;
-		def = notification.listener.next;
-		if (def.isNil) {
-			"all defs were added!".postln;
-			{
-				defs.asStream do: { | d |
-					var synth;
-					synth = Synth(d.name);
-					0.1.wait;
-					synth.free;
-					0.1.wait;
-				};
-			}.fork;
-		}{
-			//	0.1.wait;
-			desc.def.postln;
-			desc.def.name.postln;
-			// Synth(n.def.name.asSymbol);
-			"adding one more def now".postln;
-			//	1.wait;
-			def.add;
-		}
-	});
-	defs.asStream.next.add;
-}.fork
+var defs;
+defs = Pseq(
+	{ | i |
+		SynthDef(format("def%", i), {
+			Out.ar(0, SinOsc.ar((i + 60).midicps, 0, 0.1));
+		});
+	} ! 10 // 10 synthdefs
+);
+defs.asStream.addNotifier(SynthDescLib.default, \synthDescAdded, { | desc, notification |
+	var def;
+	def = notification.listener.next;
+	if (def.isNil) {
+		"all defs were added!".postln;
+		{
+			defs.asStream do: { | d |
+				var synth;
+				synth = Synth(d.name);
+				0.1.wait;
+				synth.free;
+				0.1.wait;
+			};
+		}.fork;
+	}{
+		//	0.1.wait;
+		desc.def.postln;
+		desc.def.name.postln;
+		// Synth(n.def.name.asSymbol);
+		"adding one more def now".postln;
+		//	1.wait;
+		def.add;
+	}
+});
+defs.asStream.next.add;
 //:
 Synth("def3");
