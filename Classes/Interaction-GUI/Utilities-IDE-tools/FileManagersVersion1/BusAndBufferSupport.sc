@@ -130,33 +130,38 @@
 	}
 	
 	// 20 Jul 2018 22:31 reimplementing this with registry.
-	b { | seconds = 1, numChannels = 1 |
+	b { | seconds = 1, numChannels = 1, func |
+		// allocate if needed.
+		// use func as completion function.
 		^Registry(\buffers, this, {
 			// mutate to loadBuffer if given string argument
 			if (seconds isKindOf: String) {
 				seconds = seconds.standardizePath;
 				seconds.doIfExists({
-					Buffer.read(Server.default, seconds);
+					Buffer.read(Server.default, seconds, action: func);
 				},{
 					Buffer.alloc(Server.default,
 						1 * Server.default.sampleRate,
-						numChannels,			
+						numChannels,
+						completionMessage: func
 					).path_(this.asString)
 				})
 			}{
 				Buffer.alloc(Server.default,
 					seconds * Server.default.sampleRate,
-					numChannels,			
+					numChannels,
+					completionMessage: func
 				).path_(this.asString)
 			}
 		});
 	}
 
-	bframes { | numFrames = 44100, numChannels = 1 |
+	bframes { | numFrames = 44100, numChannels = 1, func |
 		^Registry(\buffers, this, {
 			Buffer.alloc(Server.default,
 				numFrames,
-				numChannels,			
+				numChannels,
+				completionMessage: func
 			)
 		})
 	}

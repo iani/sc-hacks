@@ -7,7 +7,7 @@ StockhausenSolo.formschemaIII.gui;
 */
 
 StockhausenSolo {
-	*initClass {
+	*initClassDisabled {
 		StartUp add: {
 			//			LPMini.gui;
 			LPD8.gui;

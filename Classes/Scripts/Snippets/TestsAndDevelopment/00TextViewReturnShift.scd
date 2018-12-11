@@ -15,7 +15,6 @@
 			(modifier === 131072).postln;
 		}{
 			char
-			
 		};
 		me.defaultKeyUpAction(char, modifier, *args);
 	})
