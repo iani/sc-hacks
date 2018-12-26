@@ -32,6 +32,88 @@ PatternPlayer : SourcePlayer {
 	}
 
 	play { | argSource | // argSource should be a kind of Event.
+		var stream, event, clock, quant;
+		// postf("playing PatternPlayer. player is: %, envir is: %\n", player, envir);
+		
+		if (source.isNil) {
+			source = EventPattern(argSource);			
+		}{
+			source.addEvent(argSource);			
+		};
+		if (process.isNil) {
+			source.put (\group, envir[\target].asTarget);
+			envir.busses.keysValuesDo({ | key, value |
+				source.put(key, value.index);
+			});
+			process = source.play(
+				envir[\clock] ?? { TempoClock.default },
+				nil,
+				envir[\quant]
+			);
+			process addDependant: { | whochanged, whathappened |
+				switch (whathappened,
+					\playing, { Player.changed(\status, player); },
+					\stopped, {
+						process = nil;
+						Player.changed(\status, player);
+					}
+				)
+			};
+		}{
+			// "PROCESS IS NOT NIL".postln;
+			stream = process.originalStream;
+			event = stream.event;
+			quant = envir[\quant];
+			if (quant.isNil) {
+				"WILL NOTTTTTT SCHEDULE".postln;
+				stream.addEvent(argSource);
+				stream.addEvent([\group, envir[\target].asTarget]);
+				envir.busses.keysValuesDo({ | key, value |
+					event.put(key, value.index);
+				});
+				if (process.isPlaying.not) { process.play(
+					envir[\clock] ?? { TempoClock.default },
+					nil,
+					envir[\quant])
+				};
+			}{
+				"WILL WILL WILL WILL WILL SCHEDULE".postln;
+				clock = envir[\clock] ?? { TempoClock.default };
+				clock.schedAbs(
+					clock.beats.ceil - 0.00001,
+					{
+						stream.addEvent(argSource);
+						stream.addEvent([\group, envir[\target].asTarget]);
+						envir.busses.keysValuesDo({ | key, value |
+							event.put(key, value.index);
+						});
+						if (process.isPlaying.not) { process.play(
+							envir[\clock] ?? { TempoClock.default },
+							nil,
+							envir[\quant])
+						};
+						
+					})
+			}
+		};
+	}
+	/*
+	play { | argSource |
+		/*  If quant is defined in envir, then
+			schedule start or addEvent to happen at beginning of next beat.
+			Else start immediately.
+			NOTE: It may make sense to always start at next beat.
+		*/
+		var quant, clock;
+		quant = envir[\quant];
+		if (quant.isNil) {
+			this.prPlay(argSource)
+		}{
+			clock = envir[\clock] ?? { TempoClock.default };
+			clock.schedAbs(clock.beats.ceil, { this prPlay: argSource });
+		}
+	}
+	prPlay { | argSource | // argSource should be a kind of Event.
 		var stream, event;
 		// postf("playing PatternPlayer. player is: %, envir is: %\n", player, envir);
 		
@@ -75,7 +157,7 @@ PatternPlayer : SourcePlayer {
 			};
 		};
 	}
-
+	*/
 	release {
 		process.stop; // later maybe add fadeOut ...
 	}

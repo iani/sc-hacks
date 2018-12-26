@@ -4,7 +4,7 @@
 - Function: +> *>
 - Event +> *>
 
--------+------------+------------+--------------------------------------|
+|------------+------------+------------+--------------------------------------|
 | *receiver* | *operator* | *argument* | *action*                             |
 |------------+------------+------------+--------------------------------------|
 | Symbol     | =+>=       | Symbol     | Play Synthdef                        |
@@ -113,7 +113,6 @@
 	}
 
 	//	player { | envir | ^(envir ? this) }
-
 	*> { | reader, param = \out | // many writers to one reader. Readers bus stays same
 		// The new writer gets the reader's bus. Thus a new writer is added to the reader.
 	     ^reader.asPersistentBusProxy(\in) linkReadersBus2Writer: (
@@ -172,9 +171,12 @@
 	}
 
 	**> { | key, envir |
-		// play function as routine. Note different argumnent+adverb convention:
-		// name: name where the routine will be stored.
-		// envir: The (name of the) envir to play the routine in. If nil, defaults to currentEnvir.
+		/* play function as routine, wrapping it in a loop statement, i.e
+			{ function.loop }.fork;
+		Note different argumnent+adverb convention:
+		 name: name where the routine will be stored.
+		 envir: The (name of the) envir to play the routine in. If nil, defaults to currentEnvir.
+		*/
 		(envir ? currentEnvironment).playLoop(key, this);
 	}
 }
