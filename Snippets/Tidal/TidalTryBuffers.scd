@@ -82,6 +82,8 @@ TempoClock.default.schedAbs(
 	WhiteNoise.ar(Decay.kr(trig));
 } +> \trigtest;
 //:SuperDirt start and process buffers
+// Note: Server gets stuck when repeating
+// Redoing sample loading below.
 SuperDirt.start;
 Server.default.waitForBoot({
 	var bufname;
@@ -110,17 +112,73 @@ Server.default.waitForBoot({
 		}
 	});
 })
-//:
+//:SuperDirt loadbuffers only
+Server.default.options.numBuffers = 1024 * 16;
+Server.default.waitForBoot({
+	var bufname;
+	SuperDirt.new.loadSoundFiles.buffers.keysValuesDo({ | name, buffers |
+		Registry(\buffers, name, { buffers[0] });
+		Registry(\tidalbuffers, name, {
+			[buffers[0],
+				if (buffers[0].numChannels == 1) {
+					'buf1'
+				}{
+					'buf2'
+				}
+			]});
+		buffers do: { | b, i |
+			bufname = format("%%", name, i).asSymbol;
+			Registry(\buffers, bufname, { b });
+			Registry(\tidalbuffers, bufname, {
+			[b,
+				if (b.numChannels == 1) {
+					'buf1'
+				}{
+					'buf2'
+				}
+			]})
+		}
+	});
+});
+//:test registry after buffer load
 Registry.at(\tidalbuffers, \stab4);
-//:
+//:test buffer after buffer load
 \stab4.b;
-//:
-SynthDef(\buf1, { | buf = 0, rate = 1 |
-	var src, env;
-	src = PlayBuf.ar(1, buf, rate, 1, 0, 2);
-	Out.ar(0, src);
+//:buf1 sythdef
+SynthDef(\buf1, { | buf = 0, rate = 1, amp = 1.0, gate = 1 |
+	// mono buffer, stereo output
+	var src; // , env;
+	src = PlayBuf.ar(1, buf, rate, 1, 0, 0, 0);
+	// env = Env.asr(); // Env([1, 1, 0], [1, 0.1], \sine, 1);
+	// env = Env([1, 1, 0], [1, 0.1], \sine, 1);
+	Out.ar(0, (src * Linen.kr(gate, 0.001, amp, 0.01, 2)).dup);
 }).add
-//:
-(buf: \stab4.b, instrument: \buf1, rate: [0.1, 10].pwhite) +> \test;
-//:
+//:buf2 sythdef
+SynthDef(\buf2, { | buf = 0, rate = 1, amp = 1.0, gate = 1 |
+	// stereo buffer, stereo output
+	var src; // , env;
+	src = PlayBuf.ar(2, buf, rate, 1, 0, 0, 0);
+	// env = Env.asr(); // Env([1, 1, 0], [1, 0.1], \sine, 1);
+	// env = Env([1, 1, 0], [1, 0.1], \sine, 1);
+	Out.ar(0, (src * Linen.kr(gate, 0.001, amp, 0.01, 2)).dup);
+}).add
+//:test buf1 synthdef
+(buf: \stab4.b, instrument: \buf1, rate: [0.5, 1.9].pwhite,
+dur: [0.05, 0.15, 0.01].pbrown, amp: [0.2, 0.07, 0.05].pseq) +> \test;
+//:find stereo buffernames 
+Registry.at(\tidalbuffers).select ({ | b | b[1] === \buf2}).keys;
+//:test buf2 synthdef
+(buf: [\birds.b, \tabla.b, \alphabet.b].pseq, instrument: \buf2, rate: [0.15, 2.9].pwhite,
+dur: 0.15, amp: [0.02, 0.007, 0.005].pseq) +> \test;
+//:server kill all
 Server.killAll;
+//:test env
+SynthDef(\env, { | amp = 1.0, gate = 1 |
+	var src, env;
+	src = WhiteNoise.ar;
+	// env = Env.asr(); // Env([1, 1, 0], [1, 0.1], \sine, 1);
+	env = Env.adsr; // Env([1, 1, 0], [1, 0.1], \sine, 1);
+	Out.ar(0, src * Linen.kr(gate, 0.01, 0.7, 0.3, 2));
+}).add;
+//:test env pat
+(instrument: \env, dur: 1.5, amp: 1) +> \testenv;
