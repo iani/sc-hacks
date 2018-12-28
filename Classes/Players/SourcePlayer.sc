@@ -65,7 +65,7 @@ PatternPlayer : SourcePlayer {
 			event = stream.event;
 			quant = envir[\quant];
 			if (quant.isNil) {
-				"WILL NOTTTTTT SCHEDULE".postln;
+				/* this branch may be removed - always synchronize changes to beat */
 				stream.addEvent(argSource);
 				stream.addEvent([\group, envir[\target].asTarget]);
 				envir.busses.keysValuesDo({ | key, value |
@@ -77,7 +77,6 @@ PatternPlayer : SourcePlayer {
 					envir[\quant])
 				};
 			}{
-				"WILL WILL WILL WILL WILL SCHEDULE".postln;
 				clock = envir[\clock] ?? { TempoClock.default };
 				clock.schedAbs(
 					clock.beats.ceil - 0.00001,

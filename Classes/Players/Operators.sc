@@ -241,7 +241,8 @@
 + String {
 	+> { | player, clockPlayer |
 		/* parse the string as a sequence of buffer names from SuperDirt
-			Play these in player player, and use clockPlayer as a name of the kr player
+
+			Possible future implementation: use clockPlayer as a name of the kr player
 			that generates the beats. 
 			The kr player must output the beats in a kr bus.
 		*/

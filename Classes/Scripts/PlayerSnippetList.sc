@@ -14,7 +14,8 @@ PlayerSnippetList : SnippetList {
 	}
 	
 	*folderPath {
-		^PathName(this.filenameSymbol.asString).pathOnly ++ "Players/"
+		^"../../".resolveRelative ++ "Players/";
+		// ^PathName(this.filenameSymbol.asString).pathOnly ++ "Players/"
 	}
 
 	*utilitiesMenu {

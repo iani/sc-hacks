@@ -99,7 +99,9 @@ SnippetList {
 	}
 	
 	*folderPath {
-		^PathName(this.filenameSymbol.asString).pathOnly ++ "Snippets/"
+		// postln (("../../".resolveRelative ++ "Snippets/*").pathMatch);
+		// ^PathName(this.filenameSymbol.asString).pathOnly ++ "Snippets/";
+		^"../../".resolveRelative ++ "Snippets/"
 	}
 
 	*new { | path |
@@ -383,7 +385,7 @@ SnippetList {
 		before do: _.run;
 
 		// DEBUGGING DOUBLE PLAY ON PRELOAD
-		"DEBUG MESSAGES STAET HERE ================".postln;
+		"DEBUG MESSAGES START HERE ================".postln;
 		"head is".postln;
 		head.postln;
 
