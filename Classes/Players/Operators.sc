@@ -239,12 +239,23 @@
 // ================================================================
 // new, 11 Feb 2018 11:59: support playing buffers in beat patterns.  Inspired by tidal.
 + String {
-	+> { | player, clockPlayer |
+	+> { | player, envir |
+		var buffers, instruments;
+		#buffers, instruments = this.split($ ).collect { | name |
+			Registry.at(\tidalbuffers)[name.asSymbol];
+		}.flop;
+		player = player.asPlayer;
+		player.postln;
+		player.envir.postln;
+		player.envir[\quant] ?? {
+			player.envir[\quant] = 1;
+		};
+		player.asPlayer(envir) play: 
+		(instrument: instruments.pseq, buf: buffers.pseq, dur: 1 / instruments.size, rate: 1) 
 		/* parse the string as a sequence of buffer names from SuperDirt
-
+			tempoClock is the clock for synchronizing the pattern.
 			Possible future implementation: use clockPlayer as a name of the kr player
-			that generates the beats. 
-			The kr player must output the beats in a kr bus.
+			that generates the beats, where the kr player outputs the beats in a kr bus.
 		*/
 	}
 	

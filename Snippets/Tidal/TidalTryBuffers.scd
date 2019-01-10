@@ -182,3 +182,50 @@ SynthDef(\env, { | amp = 1.0, gate = 1 |
 }).add;
 //:test env pat
 (instrument: \env, dur: 1.5, amp: 1) +> \testenv;
+//:prepare string +> \pattern.
+var string, bufs, instruments;
+string = "hh stab4 birds stab4 birds hh4";
+#bufs, instruments = string.split($ ).collect { | name |
+	Registry.at(\tidalbuffers)[name.asSymbol];
+}.flop;
+(instrument: instruments.pseq, buf: bufs.pseq, dur: 1.5 / instruments.size, rate: 1.63) +> \test1;
+//:test string +> \player
+"hh stab4 birds stab4 birds hh4" +> \testenv;
+//:test string +> \player
+"hh4 hh4 hh4" +> \testenv;
+//:test string +> \player
+"hh hh hh" +> \testenv;
+//:test string +> \player
+"hh hh" +> \testenv2;
+//:test string +> \player
+"hh hh hh hh hh" +> \testenv5;
+//:test string +> \player
+"hh1" +> \testenv0;
+//:test string +> \player
+"arpy" +> \testenv0;
+//:test string +> \player
+"hh2 hh2" +> \testenv2;
+//:Change tempo
+TempoClock.default.tempo = 2;
+//:Change tempo
+TempoClock.default.tempo = 0.2;
+//:long pattern
+"bd sd hh cp mt arpy drum odx bd arpy bass2 feel future" +> \longpat;
+//:set tempo back to 1
+TempoClock.default.tempo = 1;
+//:stop testenv5
+\testenv5.stop;
+//:stop testen
+\testenv.stop;
+//:stop testenv2
+\testenv2.stop;
+//:bufffer list gui?
+\buffers1.bl_(height: 500).window.v(ListView());
+//:bufffer list gui?
+\buffers1.bl_(height: 500).window.v(ListView());
+//:
+BufferGUI();
+//:
+Registry.at(\buffers);
+//:
+\808.b;

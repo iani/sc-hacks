@@ -81,6 +81,7 @@
 				w.layout = layoutClass.new(
 					*items
 				);
+				this.bounds.postln; 
 				w.bounds = w.bounds.height_(items.size * 20);
 			});
 		}.fork(AppClock);	
@@ -134,4 +135,10 @@
 		)
 	}
 	
+}
+
++ Window {
+	v { | ... items |
+		this.layout = VLayout(*items);
+	}
 }

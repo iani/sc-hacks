@@ -12,8 +12,12 @@ BufferGUI {
 				ListView()
 				.items_((Registry.at(\buffers) ?? { IdentityDictionary() }).keys.asArray.sort)
 				.enterKeyAction_({ | me |
-					(Registry.at(\buffers) ?? { IdentityDictionary() })
-					.keys.asArray.sort[me.items[me.value]].postln.play
+					/*
+					me.postln;
+					me.value.postln;
+					me.items[me.value].postln;
+					*/
+					me.items[me.value].asSymbol.b.play;
 				})
 				.addNotifier(Buffer, \loaded, { | buffers, n |
 					n.listener.items = buffers.keys.asArray.sort;
