@@ -238,11 +238,12 @@
 
 // ================================================================
 // new, 11 Feb 2018 11:59: support playing buffers in beat patterns.  Inspired by tidal.
+// 18 Jan 2019 11:15 Will be remodeled to work with Beat and Cycle classes
 + String {
 	+> { | player, envir |
 		var buffers, instruments;
 		#buffers, instruments = this.split($ ).collect { | name |
-			Registry.at(\tidalbuffers)[name.asSymbol];
+			Registry.at(\tidal)[name.asSymbol];
 		}.flop;
 		player = player.asPlayer;
 		player.postln;

@@ -90,7 +90,7 @@ Server.default.waitForBoot({
 	"booted".postln;
 	~dirt.buffers.keysValuesDo({ | name, buffers |
 		Registry(\buffers, name, { buffers[0] });
-		Registry(\tidalbuffers, name, {
+		Registry(\tidal, name, {
 			[buffers[0],
 				if (buffers[0].numChannels == 1) {
 					'buf1'
@@ -101,7 +101,7 @@ Server.default.waitForBoot({
 		buffers do: { | b, i |
 			bufname = format("%%", name, i).asSymbol;
 			Registry(\buffers, bufname, { b });
-			Registry(\tidalbuffers, bufname, {
+			Registry(\tidal, bufname, {
 			[b,
 				if (b.numChannels == 1) {
 					'buf1'
@@ -118,7 +118,7 @@ Server.default.waitForBoot({
 	var bufname;
 	SuperDirt.new.loadSoundFiles.buffers.keysValuesDo({ | name, buffers |
 		Registry(\buffers, name, { buffers[0] });
-		Registry(\tidalbuffers, name, {
+		Registry(\tidal, name, {
 			[buffers[0],
 				if (buffers[0].numChannels == 1) {
 					'buf1'
@@ -129,7 +129,7 @@ Server.default.waitForBoot({
 		buffers do: { | b, i |
 			bufname = format("%%", name, i).asSymbol;
 			Registry(\buffers, bufname, { b });
-			Registry(\tidalbuffers, bufname, {
+			Registry(\tidal, bufname, {
 			[b,
 				if (b.numChannels == 1) {
 					'buf1'
@@ -141,7 +141,7 @@ Server.default.waitForBoot({
 	});
 });
 //:test registry after buffer load
-Registry.at(\tidalbuffers, \stab4);
+Registry.at(\tidal, \stab4);
 //:test buffer after buffer load
 \stab4.b;
 //:buf1 sythdef
@@ -166,7 +166,7 @@ SynthDef(\buf2, { | buf = 0, rate = 1, amp = 1.0, gate = 1 |
 (buf: \stab4.b, instrument: \buf1, rate: [0.5, 1.9].pwhite,
 dur: [0.05, 0.15, 0.01].pbrown, amp: [0.2, 0.07, 0.05].pseq) +> \test;
 //:find stereo buffernames 
-Registry.at(\tidalbuffers).select ({ | b | b[1] === \buf2}).keys;
+Registry.at(\tidal).select ({ | b | b[1] === \buf2}).keys;
 //:test buf2 synthdef
 (buf: [\birds.b, \tabla.b, \alphabet.b].pseq, instrument: \buf2, rate: [0.15, 2.9].pwhite,
 dur: 0.15, amp: [0.02, 0.007, 0.005].pseq) +> \test;
@@ -186,7 +186,7 @@ SynthDef(\env, { | amp = 1.0, gate = 1 |
 var string, bufs, instruments;
 string = "hh stab4 birds stab4 birds hh4";
 #bufs, instruments = string.split($ ).collect { | name |
-	Registry.at(\tidalbuffers)[name.asSymbol];
+	Registry.at(\tidal)[name.asSymbol];
 }.flop;
 (instrument: instruments.pseq, buf: bufs.pseq, dur: 1.5 / instruments.size, rate: 1.63) +> \test1;
 //:test string +> \player

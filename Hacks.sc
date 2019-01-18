@@ -31,7 +31,7 @@ Hacks {
 		var bufname;
 		SuperDirt.new.loadSoundFiles.buffers.keysValuesDo({ | name, buffers |
 			Registry(\buffers, name, { buffers[0] });
-			Registry(\tidalbuffers, name, {
+			Registry(\tidal, name, {
 				[buffers[0],
 					if (buffers[0].numChannels == 1) {
 						'buf1'
@@ -42,7 +42,7 @@ Hacks {
 			buffers do: { | b, i |
 				bufname = format("%%", name, i).asSymbol;
 				Registry(\buffers, bufname, { b });
-				Registry(\tidalbuffers, bufname, {
+				Registry(\tidal, bufname, {
 					[b,
 						if (b.numChannels == 1) {
 							'buf1'

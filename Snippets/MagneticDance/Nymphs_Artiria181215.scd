@@ -296,13 +296,21 @@ twist of hand
 \gps <+.lsm0 '/magnetometer0'.osc(0, [-1.0, 0.5], [0.2, 15]);
 \pan <+.lsm0 '/magnetometer0'.osc(1, [-0.25, 0.25], [-1, 1]);
 \amp <+.lsm0 '/magnetometer0'.osc(2, [-1.05, 0.5], \amp);
-//:grain synth connection
+//:grain synth connection lsm0 less abstract 
 \dur <+.lsm0 '/gyroscope0'.osc(1, [-80, 40], [0.01, 1.5]);
 \pos <+.lsm0 '/gyroscope0'.osc(0, [-20, 40], [0.0, 1.0]);
 \rate <+.lsm0 '/gyroscope0'.osc(2, [-20, 40], [1, 2.5]);
 \gps <+.lsm0 '/magnetometer0'.osc(0, [-1.0, 0.5], [0.2, 15]);
 \pan <+.lsm0 '/magnetometer0'.osc(1, [-0.25, 0.25], [-1, 1]);
 \amp <+.lsm0 '/magnetometer0'.osc(2, [-1.05, 0.5], \amp);
+//:grain synth connection lsm1 less abstract 
+\dur <+.lsm1 '/gyroscope1'.osc(1, [-80, 40], [0.01, 1.5]);
+\pos <+.lsm1 '/gyroscope1'.osc(0, [-20, 40], [0.0, 1.0]);
+\rate <+.lsm1 '/gyroscope1'.osc(2, [-20, 40], [1, 2.5]);
+\gps <+.lsm1 '/magnetometer1'.osc(0, [-1.0, 0.5], [0.2, 15]);
+\pan <+.lsm1 '/magnetometer1'.osc(1, [-0.25, 0.25], [-1, 1]);
+\amp <+.lsm01 '/magnetometer1'.osc(2, [-1.05, 0.5], \amp);
+
 //:grain synth connection
 \dur <+.lsm0 '/gyroscope0'.osc(2, [-80, 40], [0.01, 1.5]);
 \pos <+.lsm0 '/gyroscope0'.osc(0, [-40, 40], [0.0, 1.0]);
