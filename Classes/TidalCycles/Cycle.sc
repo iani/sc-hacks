@@ -91,7 +91,7 @@ Cycle {
 			}{} // nil stops scheduling
 		})
 	}
-
+ 
 	reset { stream.reset }
 	
 }
