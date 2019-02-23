@@ -7,6 +7,8 @@ Hacks {
 
 	*initClass {
 		StartUp add: {
+			var server;
+			server = Server.default;
 			this.gui;
 			if (SuperDirt.isNil) {
 				"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".postln;
@@ -18,9 +20,45 @@ Hacks {
 				"Samples will be loaded when booting the default Server".postln;
 				"****************************************************************".postln;
 				Server.default.options.numBuffers = 1024 * 16;
-				ServerBoot.add({
-					this.loadSuperDirtBuffers;
+				// This can break scsynth because ServerBoot is badly implemented (really).
+				
+				/*
+				ServerTree.add({
+					// defer makes it safer, but it is just a dirty workaround
+					//	 { this.loadSuperDirtBuffers; }.defer(1);
+					// TESTING:
+					this.loadSuperDirtBuffers; 
+			})
+				*/
+				
+				
+				/* // lost this fix...
+				this.addNotifier (Server.default, \doOnServerBoot, {
+					this.loadSuperDirtBuffers; 
 				})
+				*/
+				
+				ServerBoot add: {
+					// must wait, otherwise the server may not be able
+					// to create the root node, and no Synths can be started:
+					//					this.loadSuperDirtBuffers;
+					"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".postln;
+					"Will load SuperDirt buffers in 1 second".postln;
+					"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".postln;
+					
+					{ this.loadSuperDirtBuffers; }.defer(1);					
+				};
+				// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				// Unfortunately this does not work either:
+				/*
+				OSCFunc({|msg|
+					this.loadSuperDirtBuffers;
+					//	server.changed(\notified); // this fixes things
+					// if(flag) { server.clientID = msg[2] };
+					//			failOSCFunc.free;
+				}, '/done', server.addr, argTemplate:['/notify', nil]);
+				*/
+				
 			}
 			
 		}
