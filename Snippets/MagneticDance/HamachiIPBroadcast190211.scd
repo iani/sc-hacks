@@ -108,3 +108,19 @@ answer[answer.findRegexp("\\[nymphs-phantasmata\\]")[0][0]..].split(Char.nl)[1..
 Nymphs.getClients;
 //:Testing Nymphs:ping;
 Nymphs.ping;
+//:ips found?
+Nymphs.ips;
+//:send test once
+Nymphs.ips.first.postln.sendMsg('/test');
+//:Xreate a  osc fun for testing
+f = OSCFunc({ | msg ... args | msg.postln;}, '/atest');
+//:create routine sending to /atest
+r = {
+	loop {
+		NetAddr.localAddr.sendMsg('/atest', 50, 50, 50);
+		0.25.wait;
+	}
+	
+}.fork;
+//:
+f.free;
