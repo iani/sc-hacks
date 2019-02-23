@@ -144,3 +144,9 @@ currentEnvironment.put(\freq, \test.bus);
 \test.bus.set(400 + 1000.rand)
 //:
 \test.envir;
+//:
+Nymphs.getClients;
+//:
+Nymphs.ips;
+//:
+p = Pi('/pi1');
