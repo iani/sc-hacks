@@ -42,6 +42,12 @@ Nymphs : Singleton {
 		localPis do: _.clear;
 		localPis = names collect:  Pi(_);
 	}
+
+	/*
+	map { | synth, pi, param |
+		
+	}
+	*/
 }
 
 Pi {
@@ -59,7 +65,7 @@ Pi {
 
 	init {
 		this.initForwarding;
-		this.makeBuses;
+		//	this.makeBuses;
 	}
 
 	initForwarding {
@@ -71,10 +77,16 @@ Pi {
 	}
 
 	makeBuses {
+		var bus, envir;
+		envir = name.envir;
 		buses = ();
 		[
-			\ax, \ay, \az, \gx, \gy, \gz, \mx, \my, \mz
-		] do: { | param | buses[param] = Bus.control(Server.default. 1); }
+			\ax, \ay, \az, \mx, \my, \mz, \gx, \gy, \gz
+		] do: { | param |
+			bus = Bus.control(Server.default, 1);
+			buses[param] = bus;
+			envir.put(param, bus);
+		}
 		
 	}
 

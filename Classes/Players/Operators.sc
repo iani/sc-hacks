@@ -106,6 +106,10 @@
 		^PersistentBusProxy(this, param);
 	}
 
+	map { | param, bus |
+		this.envir.put(param, bus);
+	}
+	
 	+> { | player, envir |
 		// play named SynthDef in player.
 		// Push environment before playing. See optional 4th argument in Nevent:play for push.

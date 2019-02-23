@@ -122,5 +122,25 @@ r = {
 	}
 	
 }.fork;
-//:
+//:free the oscfunc;
 f.free;
+//:Prepare mapping for Nymphs. Test 1
+\test.bus.set(600);
+//:create player
+{ | freq = 400 |
+	SinOsc.ar(freq, 0, 0.01)
+} +> \test;
+//:map to bus
+\test.map(\freq, \test.bus);
+//:create differet player
+{ | freq = 400 |
+	LFSaw.ar(freq, 0, 0.1)
+} +> \test;
+//:map player
+\test.pp.map(\freq, \test.bus.index);
+//:set freq to a bus
+currentEnvironment.put(\freq, \test.bus);
+//:
+\test.bus.set(400 + 1000.rand)
+//:
+\test.envir;
