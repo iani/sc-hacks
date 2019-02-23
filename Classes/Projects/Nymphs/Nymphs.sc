@@ -50,7 +50,7 @@ Nymphs : Singleton {
 	*/
 }
 
-Pi {
+LocalPi {
 	/* 
 		Handle communication and action for osc messages received from one RPI
 	*/
@@ -58,14 +58,29 @@ Pi {
 	var <buses;
 	var <oscForwardingFunc;
 	var <ips; // cache ips from Nymphs for speed
+	var <paramNames; 
+	var <inspecs, <outspecs, <envir;
+	
 
 	*new { | name |
 		^this.newCopyArgs(name.asSymbol).init;
 	}
 
 	init {
-		this.initForwarding;
 		//	this.makeBuses;
+		paramNames = [
+			\ax, \ay, \az, \mx, \my, \mz, \gx, \gy, \gz
+		];
+		envir = name.envir;
+		inspecs = paramNames collect: { | param |
+			// inspecs[param] = ControlSpec(-40, 40);
+			ControlSpec(-40, 40);
+		};
+		outspecs = paramNames collect: { | param |
+			// outspecs[param] = \freq.asSpec;
+			\freq.asSpec;
+		};
+		this.initForwarding;
 	}
 
 	initForwarding {
@@ -73,21 +88,23 @@ Pi {
 		this.disableForwarding; // prevent double forwarding
 		oscForwardingFunc = OSCFunc({ | msg |
 			ips do: { | addr | addr.sendMsg(*msg) };
+			msg[1..] do: { | val, i |
+				envir[paramNames[i]] = outspecs[i].map(inspecs[i].unmap(val));
+			}
 		}, name);
 	}
 
 	makeBuses {
+		/*
 		var bus, envir;
 		envir = name.envir;
 		buses = ();
-		[
-			\ax, \ay, \az, \mx, \my, \mz, \gx, \gy, \gz
-		] do: { | param |
+		paramNames do: { | param |
 			bus = Bus.control(Server.default, 1);
 			buses[param] = bus;
 			envir.put(param, bus);
 		}
-		
+		*/
 	}
 
 	disableForwarding {
@@ -98,4 +115,19 @@ Pi {
 		this.disableForwarding;
 		buses do: _.free;
 	}
+}
+
+RemotePi : LocalPi {
+	
+	initForwarding {
+		ips = Nymphs.ips;
+		this.disableForwarding; // prevent double forwarding
+		oscForwardingFunc = OSCFunc({ | msg |
+			// ips do: { | addr | addr.sendMsg(*msg) };
+			msg[1..] do: { | val, i |
+				envir[paramNames[i]] = outspecs[i].map(inspecs[i].unmap(val));
+			}
+		}, name);
+	}
+
 }
