@@ -6,25 +6,35 @@
 1.0.rand;
 
 pi;
-//:
+
+://:
+(
 Server.default.boot;
+)
 //:
+(
 {
 	SinOsc.ar(400, 0, 0.1)
 }.play;
+)
 //:
+(
 {
 	SinOsc.ar(
 		MouseX.kr(200, 2000, \exponential),
 		0, 0.1)
 }.play;
+)
 //:
+(
 {
 	SinOsc.ar(
 		SinOsc.ar(5).range(400, 450),
 		0, 0.1)
 }.play;
+)
 //:
+(
 {
 	SinOsc.ar(
 		SinOsc.ar(
@@ -32,7 +42,9 @@ Server.default.boot;
 		).range(400, 450),
 		0, 0.1)
 }.play;
+)
 //:
+(
 {
 	SinOsc.ar(
 		SinOsc.ar(
@@ -40,7 +52,9 @@ Server.default.boot;
 		).range(400, 4500),
 		0, 0.1)
 }.play;
+)
 //:
+(
 {
 	SinOsc.ar(
 		SinOsc.ar(
@@ -50,7 +64,9 @@ Server.default.boot;
 		).range(400, 4500),
 		0, 0.1)
 }.play;
+)
 //:
+(
 {
 	SinOsc.ar(
 		SinOsc.ar(
@@ -60,9 +76,13 @@ Server.default.boot;
 		).range(400, 4500),
 		0, 0.1)
 }.play;
+)
 //:Example of creating an object from a class
+(
 Window.new().front;
 //
+)
 //:Example of creating an object from a class
+(
 Window("MY WINDOW", Rect(400, 400, 800, 300)).front;
 //
