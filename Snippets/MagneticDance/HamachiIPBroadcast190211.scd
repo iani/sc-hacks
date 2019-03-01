@@ -144,6 +144,7 @@ currentEnvironment.put(\freq, \test.bus);
 \test.bus.set(400 + 1000.rand)
 //:
 \test.envir;
+
 //:
 Nymphs.getClients;
 //:
@@ -152,5 +153,20 @@ Nymphs.ips;
 p = LocalPi('/pi1');
 //:
 '/pi1'.envir;
-//:
+//:test 1
 { SinOsc.ar(\ax.kr(400), 0, 0.1) } +> '/pi1';
+//:modify test 1
+{ SinOsc.ar(\ax.kr(400) * [1, 1.2], 0, 0.1) } +> '/pi1';
+//:modify test 3
+{ SinOsc.ar(\ax.kr(400) * [1, 1.2], 0, \ay.kr(0.1) / 80000 ) } +> '/pi1';
+//:try modifying a spec!!!
+p.outspecs[1] = \amp.asSpec;
+
+{ SinOsc.ar(\ax.kr(400) * [1, 1.2], 0, \ay.kr(0.1) ) } +> '/pi1';
+//:Nikos' pi = '/pi3'
+p = RemotePi('/pi3');
+//:
+'/pi3'.envir;
+//:
+{ SinOsc.ar(\ax.kr(400), 0, 0.1) } +> '/pi3';
+//:

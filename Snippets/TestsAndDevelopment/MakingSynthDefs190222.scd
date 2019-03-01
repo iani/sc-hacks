@@ -31,4 +31,4 @@ SynthDef(\linen01, { | out = 0, freq = 100, amp 0.1, pan = 0, gate = 1 |
 	Out.ar(out, Pan2.ar(src, pan, amp));
 }).add;
 //:test linen. watch how synth gets released
-(instrument: \linen01, dur: 1.5, legato: 0.2) +> \test;
+(instrument: \linen01, dur: 1.5, legato: 0.2, degree: [-10, 10, 1].pbrown) +> \test;
