@@ -70,7 +70,7 @@ SimpleDef {
 	}
 
 	/* Note: You can get perc-like sounds with asr, which work with different 
-		values of legato.  
+		values of legato.
 	*/
 	*asr { | name, sourceFunc |
 		^SynthDef(name, { | out = 0, freq = 100, amp 0.1, pan = 0, gate = 1 |
@@ -79,6 +79,27 @@ SimpleDef {
 			src = src * EnvGen.kr(Env.asr, gate, timeScale: \dur.kr, doneAction: 2);
 			Out.ar(out, Pan2.ar(src, pan, amp));
 		}).add;
+	}
+
+	// Note: like perc, this does not work well with legato parameter 
+	*sine { | name, sourceFunc |
+		^SynthDef(name, { | out = 0, freq = 100, amp 0.1, pan = 0, gate = 1 |
+			var src;
+			src = sourceFunc.(freq);
+			src = src * EnvGen.kr(Env.sine, gate, timeScale: \dur.kr, doneAction: 2);
+			Out.ar(out, Pan2.ar(src, pan, amp));
+		}).add
+	}
+
+	// fade in and out same value. Works with legato.  Uses Env.ne(....)
+	*fade { | name, sourceFunc |
+		^SynthDef(name, { | out = 0, freq = 100, amp 0.1, pan = 0, gate = 1, dur = 1 |
+			var src, env;
+			src = sourceFunc.(freq);
+			env = Env.new([0, 1, 0], [1, 1], \sine, 1);
+			src = src * EnvGen.kr(env, gate, timeScale: dur / 2, doneAction: 2);
+			Out.ar(out, Pan2.ar(src, pan, amp));
+		}).add
 	}
 }
 
