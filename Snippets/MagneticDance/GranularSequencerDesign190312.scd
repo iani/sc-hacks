@@ -59,7 +59,9 @@ This is not a good solution, because we have to wait before retriggering is poss
 { | buf = 0 |
 	// buf 0 is default. can be changed by user at any moment
 	// via \buf <+envirname \samplename.b.bufnum;
-	PlayBuf.ar(1, buf, 1, Changed.kr(\trig.kr(0)), 0, loop: 0, doneAction: 0);
+	PlayBuf.ar(1, buf, 1, Changed.kr(\trig.kr(0)),
+		\offset.kr(0) * BufSampleRate.kr(buf),
+		loop: 0, doneAction: 0);
 } +> \buftest;
 
 //:+ test with new value of trig every time.
@@ -67,6 +69,30 @@ This is not a good solution, because we have to wait before retriggering is poss
 10 do: { | i |
 	postf("this is the %th try\n", i + 1);
 	"setting trig to 0".postln;
+	\trig <+.buftest UniqueID.next.postln;
+	"waiting 0.25 seconds".postln;
+	0.25.wait;
+};
+//Next: Try different buffers - starting always at beginning of buffer
+//:+ test with new value of trig every time.
+// to generate unique numbers, use UniqueId.next; works every time. 
+100 do: { | i |
+	postf("this is the %th try\n", i + 1);
+	"setting trig to 0".postln;
+	\buf <+.buftest format("nikk%", i % 5).asSymbol.b.bufnum;
+	\trig <+.buftest UniqueID.next.postln;
+	"waiting 0.25 seconds".postln;
+	0.25.wait;
+};
+//Next: Try longer buffer. 
+//:+ test with new value of trig every time.
+// and new offset start 
+// to generate unique numbers, use UniqueId.next; works every time. 
+100 do: { | i |
+	postf("this is the %th try\n", i + 1);
+	"setting trig to 0".postln;
+	\buf <+.buftest format("nikk%", i % 5).asSymbol.b.bufnum;
+	\offset <+.buftest 0.rrand(2.5);
 	\trig <+.buftest UniqueID.next.postln;
 	"waiting 0.25 seconds".postln;
 	0.25.wait;
@@ -81,7 +107,8 @@ This is not a good solution, because we have to wait before retriggering is poss
 } +> \buftest;
 
 // ================================================================
-// ΝΟΤΕ! TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// ΝΟΤΕ! FIX: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// TODO: Check why fix in SynthPlayer with process.objectClosed was needed.
 //:Need to debug node with synth player ;-()
 //:trying with buftest above first
 \buftest.stop;
