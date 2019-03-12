@@ -33,6 +33,13 @@
 		this.p(eventName).toggle(source);
 	}
 
+	set { | ... args |
+		// set group of event of symbol
+		^this.target.set(*args);
+	}
+
+	target { ^this.e.target }
+	
 	e { ^Nevent(this) }
 	push { ^this.e.push }
 

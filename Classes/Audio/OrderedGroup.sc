@@ -9,6 +9,9 @@ See Nevent.
 OrderedGroup {
 	classvar all;
 	var <group, <count;
+	// added  9 Mar 2019 17:57
+	// var <subgroups; // allow Nenvirs to have their own group
+	// to be able to independently set synth parameters when patterns are playing.
 	*initClass {
 		ServerTree add: {
 			this.makeGroups;
@@ -18,6 +21,7 @@ OrderedGroup {
 	*new { ^super.new.init; }
 
 	init {
+		// subgroups = ();
 		group = Group();
 		this.all addFirst: this;
 		count = all.size;
@@ -26,6 +30,10 @@ OrderedGroup {
 	all {
 		all ?? { all = List() };
 		^all;
+	}
+
+	set { | ... args |
+		group.set(*args);
 	}
 	
 	*makeGroups {
@@ -38,9 +46,14 @@ OrderedGroup {
 	getGroup {
 		// get a new real group from the server
 		group = Group();
+		// Force making of new subgroups for individual envirs:
+		// subgroups = (); // previous groups are invalid and thus must be rejected
+		// { this.makeEnvirGroups }.defer(0.1);
 		// Groups are always re-created before any synths at ServerTree.
 	}
 
+	
+	
 	*last {
 		// get the last group from the list of all.
 		// this is the first group that was made, and is therefore the last group in the server's order.
