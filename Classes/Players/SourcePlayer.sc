@@ -13,7 +13,6 @@ PatternPlayer : SourcePlayer {
 	// var <>clock, <>quant;
 	listenToServerBoot {
 		// only SynthPlayer reacts to this
-		
 	}
 
 	playSource { | argPlayer, argSource |
@@ -41,14 +40,20 @@ PatternPlayer : SourcePlayer {
 			source.addEvent(argSource);			
 		};
 		if (process.isNil) {
+			"STARTING NEW PATTERN PROCESS.".postln;
+			postf("quant is: %\n", envir[\quant]);		
 			source.put (\group, envir[\target].asTarget);
 			envir.busses.keysValuesDo({ | key, value |
 				source.put(key, value.index);
 			});
 			process = source.play(
-				envir[\clock] ?? { TempoClock.default },
+				// Replace with:
+				// envir.getClock;
+				// envir[\clock] ?? { TempoClock.default },
+					Clocks.getClock(envir),
 				nil,
-				envir[\quant]
+				envir[\quant] ?? { Clocks.quant }
+			// envir[\quant] ? 1
 			);
 			process addDependant: { | whochanged, whathappened |
 				switch (whathappened,
@@ -66,18 +71,26 @@ PatternPlayer : SourcePlayer {
 			quant = envir[\quant];
 			if (quant.isNil) {
 				/* this branch may be removed - always synchronize changes to beat */
+				"WILL NOT SYNCHRONIZE".postln;
 				stream.addEvent(argSource);
 				stream.addEvent([\group, envir[\target].asTarget]);
 				envir.busses.keysValuesDo({ | key, value |
 					event.put(key, value.index);
 				});
 				if (process.isPlaying.not) { process.play(
-					envir[\clock] ?? { TempoClock.default },
+					// Replace with:
+					// Clocks.getClock;
+					// envir[\clock] ?? { TempoClock.default },
+					Clocks.getClock(envir),
 					nil,
-					envir[\quant])
+					envir[\quant]) ?? { Clocks.quant }
 				};
 			}{
-				clock = envir[\clock] ?? { TempoClock.default };
+				// Replace with:
+				// envir.getClock;
+				// "WILL SYNCHRONIZE !!!!!!!!!!!!!!!!".postln;
+				// postf("quant is: %\n", envir[\quant]);
+				clock = Clocks.getClock(envir);
 				clock.schedAbs(
 					clock.beats.ceil - 0.00001,
 					{
@@ -87,9 +100,13 @@ PatternPlayer : SourcePlayer {
 							event.put(key, value.index);
 						});
 						if (process.isPlaying.not) { process.play(
-							envir[\clock] ?? { TempoClock.default },
+							// Replace with:
+							// envir.getClock;
+							// envir[\clock] ?? { TempoClock.default },
+							Clocks.getClock(envir),
 							nil,
-							envir[\quant])
+							envir[\quant]) ?? { Clocks.quant }
+							//							envir[\quant]) ? 1
 						};
 						
 					})

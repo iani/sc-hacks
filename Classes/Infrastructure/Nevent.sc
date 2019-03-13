@@ -1,5 +1,17 @@
 Nevent : EnvironmentRedirect {
 	classvar <libRoot = \environments;
+	// classvar <parent, <>defaultTempo = 1;
+	// cannot use shared tempo clock in parent because after stopping it cannot
+	// restart. TempoClock:play throws error TempoClock:nextTimeOnGrid
+	// must check this or pattern playing is broken!
+	/* shared parent for all new events
+		Set quant and clock fields to customize beat quantization and
+		tempo of newly created PatternPlayers
+	*/
+	// instead try using this:
+	classvar <clocks; // dictionary of clocks per envir???? What about shared clocks?
+	// Should be clock->envir list.  On clock stop, create a new one
+	// and push it to all envirs.
 	var <name, <players, busses, <writers, routines;
 
 	/* // not needed? Check?
@@ -21,10 +33,30 @@ Nevent : EnvironmentRedirect {
 	
 	*initClass {
 		StartUp add: {
+			// this code should go to Nevent:makeClock;
+			// var defaultTempoClock;
+			// defaultTempoClock = this.makeTempoClock;
+			// this.addNotifier(defaultTempoClock, \stop, {
+				/* // NO! NOT THIS ONE:
+				parent = (quant: parent[\quant], clock: this.makeTempoClock);
+				*/
+				// BUT THIS ONE!
+			//	"Nevent replaces stopped TempoClocks for all instances".postln;
+				/*
+					clocks keysValuesDo: { | clock, envirs |
+					     clock.value = TempoClock(clock.value.tempo);
+					     envirs do: { | e | e[\clock] = clock.value }
+					}
+				*/
+				
+			// });
 			ControlSpec.makeMoreDefaults; // method defined in sc-hacks
+			// parent = (quant: 1, clock: defaultTempoClock);
 			this.new (\default, true); // pushes \default to current environment
 		}; 
 	}
+
+	// *makeTempoClock { ^TempoClock(defaultTempo); }
 	
 	*play { | envirName, playerName, source, doPush = true |
 		// Get player for environment by name and play source.
@@ -32,6 +64,18 @@ Nevent : EnvironmentRedirect {
 	}
 	
 	*new { | name, doPush = false |
+		/* // not this. Replace this with this.makeClock in init method!
+		postf("parent clock % is playing???? %\n",
+			parent[\clock],
+			parent[\clock].isPlaying
+		);
+		if (parent[\clock].isPlaying) {
+			"I do not need to make a new clock.".postln;
+		}{
+			"I NEED TO MAKE A NEW CLOCK.".postln;
+			parent[\clock] = TempoClock(parent[\clock].tempo);
+		};
+		*/
 		^Registry(libRoot, name, {
 			this.newCopyArgs((), nil, name, ())
 			.makeDispatch(() putPairs: [
@@ -55,6 +99,7 @@ Nevent : EnvironmentRedirect {
 	}
 
 	init {
+		// Here add this.makeClock; // or setCLock!
 		this[\target] = OrderedGroup.last;
  		writers = Set();
 		this.class.changed(\new, this);

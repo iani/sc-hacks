@@ -1,5 +1,7 @@
 // 23 Νοέ 2017 16:40
 // A Task that runs with a TempoClock and synchronizes the start point of Players.
+// 13 Mar 2019 09:27: not used since 2018.
+// Obsolete?
 PlayerClock {
 	var <clock, <beatPattern, <timePattern;
 	var beatStream, timeStream;
