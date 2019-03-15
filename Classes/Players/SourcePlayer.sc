@@ -40,7 +40,7 @@ PatternPlayer : SourcePlayer {
 			source.addEvent(argSource);			
 		};
 		if (process.isNil) {
-			"STARTING NEW PATTERN PROCESS.".postln;
+			// "STARTING NEW PATTERN PROCESS.".postln;
 			postf("quant is: %\n", envir[\quant]);		
 			source.put (\group, envir[\target].asTarget);
 			envir.busses.keysValuesDo({ | key, value |
@@ -71,7 +71,7 @@ PatternPlayer : SourcePlayer {
 			quant = envir[\quant];
 			if (quant.isNil) {
 				/* this branch may be removed - always synchronize changes to beat */
-				"WILL NOT SYNCHRONIZE".postln;
+				// "WILL NOT SYNCHRONIZE".postln;
 				stream.addEvent(argSource);
 				stream.addEvent([\group, envir[\target].asTarget]);
 				envir.busses.keysValuesDo({ | key, value |

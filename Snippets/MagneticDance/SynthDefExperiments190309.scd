@@ -8,6 +8,12 @@ SimpleDef("plain", { WhiteNoise.ar() });
 //:
 SimpleDef("plain2", { | freq | SinOsc.ar(freq) });
 //:
+SimpleDef.customEnv("plain3", { | freq | SinOsc.ar(freq) }, { Env.new([0, 1, 0], [\atk.kr(1), \rel.kr(1)], \wel) });
+//:
+\plain3 +> \plain3;
+//:
+\freq <+ 1000;
+//:
 SimpleDef.perc("perc1", { | freq | SinOsc.ar(freq) });
 //:
 SimpleDef.asr("asr1", { | freq | SinOsc.ar(freq) });

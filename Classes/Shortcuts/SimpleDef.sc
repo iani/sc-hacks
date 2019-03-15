@@ -101,6 +101,21 @@ SimpleDef {
 			Out.ar(out, Pan2.ar(src, pan, amp));
 		}).add
 	}
+
+	*customEnv { | name, sourceFunc, env |
+		^SynthDef(name, { | out = 0, freq = 100, amp 0.1, pan = 0, gate = 1, dur = 1 |
+			/*
+				Provide custom envelope shape.
+				Note: The envelope must specify a release node, to work properly in patterns.
+			*/
+			var src; //, env;
+			src = sourceFunc.(freq);
+			// env = Env.new([0, 1, 0], [1, 1], \sine, 1);
+			src = src * EnvGen.kr(env.value, gate, timeScale: dur / 2, doneAction: 2);
+			Out.ar(out, Pan2.ar(src, pan, amp));
+		}).add
+	}
+	
 }
 
 /*
