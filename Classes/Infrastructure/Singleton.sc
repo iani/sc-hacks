@@ -22,6 +22,17 @@ Singleton {
 			this.new()	
 		}).perform(selector, *args)
 	}
+
+	/* // why is no subclassing of this possible?
+	new {
+		^super.new.init; // use init to customize state in your subclass
+	}
+
+	init {
+		// use init to customize state in your subclass
+	}
+	*/
+	
 }
 
 

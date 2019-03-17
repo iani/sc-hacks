@@ -1,4 +1,7 @@
 // Devlog. 16 Mar 2019 14:17
+//:Pre rehearsal dev 17 Mar 2019 13:13
+//:Testing class for 3 site setup
+
 //:TODOS 16 Mar 2019 14:17
 //: 1. Load buffers - more reliable
 //: load buffers from sounds - step 1
@@ -99,10 +102,16 @@ Server.default.waitForBoot({
 
 //:test rate again;
 \rate <+ 0.25
-//:test with bus.
-
-
-
+//:Do we have busses? Yes we do
+\ratebus.bus;
+//:repeat: check bus numbers
+\ratebus2.bus;
+//:now prepare control through bus
+\freqbus.bus.set(1000);
+{ SinOsc.ar(\freq.kr(400), 0, 0.1 )} +> \bustest;
+\freq <+ \freqbus;
+//:ok control through bus works this way.
+\freqbus.bus.set(100 + 1000.rand);
 //: 2. Send osc sensor received data to BUSES and use buses to map to parameters but also to trigger
 //: 3. Devise easily and visibly adjustable way to calibrate mapping of received sensor values to target synthesis values.
 //: 4. Adjust and improve granulation synth process for more reliable performance characteristics
