@@ -5,8 +5,9 @@ IDE_Fantasy : Singleton {
 	var <>localpis, <locations, <>mylocation;
 	var <>clientIPs, <>clientNames; // only the remote clients are listed here
 	// the local client is localhost. ...
-	var <busnames; /*
-
+	var <busnames;
+	/*
+		each bus must have a unique name. There are 54 buses, one per sensor:
 		2                 * 3       * 9
 		// pi's per perf, num perf, params per pi
 		// total num params: 54.  54 names. 
@@ -16,9 +17,10 @@ IDE_Fantasy : Singleton {
 		location is one of: stanford, corfu athens
 		num is one of: 1 (=master/left) 2 (=slave, right)
 		sensor is one of: 
-		ax, ay, az, gx, gy, gz, mx, my, mz
-		where a = accellerometer, g = gyroscope, m = magnetormeter
-		
+		ax, ay, az, 
+		mx, my, mz
+		gx, gy, gz, 
+		where a = accellerometer, m = magnetormeter, g = gyroscope
 	*/
 	var <buses;
 	var <oscFuncs; // one func per pi
@@ -52,12 +54,12 @@ IDE_Fantasy : Singleton {
 			corfu: [\pi3, \pi4],
 			stanford: [\pi5, \pi6]
 		);
-		this.makeBuses;
+		// this.makeBuses;
 		this.connectOSC;
 	}
 
 	makeBuses {
-		this.freeBuses; // free previous buses if restarting
+		//		buses do: _.free;  // free previous buses if restarting
 		
 	}
 
@@ -111,6 +113,8 @@ IDE_Fantasy : Singleton {
 	}
 
 	makeLocalOscFunc { | pie |
+		var myBuses;
+		// myBuses = buses[pie];
 		OSCFunc({ | msg |
 			clientIPs do: { | addr | addr.sendMsg(*msg) };
 			this.playLocally(msg);
