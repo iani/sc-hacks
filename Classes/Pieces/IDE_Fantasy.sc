@@ -4,9 +4,25 @@
 IDE_Fantasy : Singleton {
 	var <>localpis, <locations, <>mylocation;
 	var <>clientIPs, <>clientNames; // only the remote clients are listed here
-	var <oscFuncs;
-	var <localGraphicsAddr;
 	// the local client is localhost. ...
+	var <busnames; /*
+
+		2                 * 3       * 9
+		// pi's per perf, num perf, params per pi
+		// total num params: 54.  54 names. 
+		// naming convention: 
+		location_num_sensor
+		where:
+		location is one of: stanford, corfu athens
+		num is one of: 1 (=master/left) 2 (=slave, right)
+		sensor is one of: 
+		ax, ay, az, gx, gy, gz, mx, my, mz
+		where a = accellerometer, g = gyroscope, m = magnetormeter
+		
+	*/
+	var <buses;
+	var <oscFuncs; // one func per pi
+	var <localGraphicsAddr;
 	/*
 	*initClass {
 		StartUp add: {
@@ -24,6 +40,11 @@ IDE_Fantasy : Singleton {
 	}	
 	*/
 
+	start { | where = \corfu |
+		mylocation = where;
+		this.init;
+	}
+
 	init {
 		localGraphicsAddr = NetAddr("127.0.0.1", 14000);
 		locations = (
@@ -31,6 +52,21 @@ IDE_Fantasy : Singleton {
 			corfu: [\pi3, \pi4],
 			stanford: [\pi5, \pi6]
 		);
+		this.makeBuses;
+		this.connectOSC;
+	}
+
+	makeBuses {
+		this.freeBuses; // free previous buses if restarting
+		
+	}
+
+	freeBuses {
+		// nothing at the moment
+		
+	}
+	
+	connectOSC {
 		localpis = locations[mylocation];
 		Nymphs.getClients;
 		{
@@ -43,9 +79,8 @@ IDE_Fantasy : Singleton {
 			postf("my location is: %\n", mylocation);
 			this.makeOSCFuncs;
 		}.defer(1);
-		
 	}
-
+	
 	makeOSCFuncs {
 		/*
 			make busses and oscfuncs for all 6 rpis.
@@ -93,11 +128,7 @@ IDE_Fantasy : Singleton {
 		postf("sending %, %\n", localGraphicsAddr, msg);
 		localGraphicsAddr.sendMsg(*msg);
 	}
-	
-	start { | where = \corfu |
-		mylocation = where;
-		this.init;
-	}
+
 }
 
 /*

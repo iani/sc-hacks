@@ -1,7 +1,7 @@
 // Devlog. 16 Mar 2019 14:17
 //:Pre rehearsal dev 17 Mar 2019 13:13
 //:Testing class for 3 site setup
-
+IDE_Fantasy start: \corfu;
 //:TODOS 16 Mar 2019 14:17
 //: 1. Load buffers - more reliable
 //: load buffers from sounds - step 1
