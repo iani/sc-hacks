@@ -17,7 +17,7 @@ Hacks {
 			}{
 				"****************************************************************".postln;
 				"*** Sample library from SuperDirt/TidalCycles is available *** ".postln;
-				"Samples will be loaded when booting the default Server".postln;
+				//				"Samples will be loaded when booting the default Server".postln;
 				"****************************************************************".postln;
 				Server.default.options.numBuffers = 1024 * 16;
 				// This can break scsynth because ServerBoot is badly implemented (really).
@@ -38,16 +38,22 @@ Hacks {
 				})
 				*/
 				
-				ServerBoot add: {
+				//				ServerBoot add: {
 					// must wait, otherwise the server may not be able
 					// to create the root node, and no Synths can be started:
 					//					this.loadSuperDirtBuffers;
-					"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".postln;
-					"Will load SuperDirt buffers in 1 second".postln;
-					"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".postln;
-					
-					{ this.loadSuperDirtBuffers; }.defer(1);					
-				};
+				//				"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".postln;
+				//	"Will load SuperDirt buffers in 1 second".postln;
+				//	"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".postln;
+					//					Server.default.sync;
+					// "Now I Synced so I should load SuperDirt buffers".postln;
+				//	"// I will try this without a defer and see what happens".postln;
+					// { this.loadSuperDirtBuffers; }.defer(1);
+					// "NOW RUNNING THIS: 	SuperDirt.new.loadSoundFiles.buffers.postln".postln;
+					// SuperDirt.new.loadSoundFiles.buffers.postln;
+					// "What did you seee???????".postln;
+					// this.loadSuperDirtBuffers;
+				// };
 				// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				// Unfortunately this does not work either:
 				/*
@@ -67,6 +73,7 @@ Hacks {
 
 	*loadSuperDirtBuffers {
 		var bufname;
+		"This is loadSuperDirtBuffers doing SuperDirt.new.loadSoundFiles".postln;
 		SuperDirt.new.loadSoundFiles.buffers.keysValuesDo({ | name, buffers |
 			Registry(\buffers, name, { buffers[0] });
 			Registry(\tidal, name, {

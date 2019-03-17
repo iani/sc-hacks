@@ -145,8 +145,8 @@ s = Server.local.waitForBoot({
 		);
 	};
 });
-//:
-//start clusters
+
+//:start clusters
 t = Task {
 	//instantiate reverb synth
 	Synth(\reverb_ef, [\in, ~bus, \out, 0]);
@@ -156,7 +156,7 @@ t = Task {
 		rrand(5.5,12.0).wait;
 	}.loop;
 }.start;
-//:
+//:stop clusters
 //stop clusters
 t.stop;
 //:

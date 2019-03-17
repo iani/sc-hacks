@@ -3,9 +3,11 @@
 
 () +> \sc;
 
-//:
+//:SimpleDef: First test: SimpleDef.new
 SimpleDef("plain", { WhiteNoise.ar() });
-//:
+//:SimpleDef new: Test basic sound
+(instrument: \plain) +> \simpledeftest;
+//:SimpleDef plain 2 - has FREQUENCY
 SimpleDef("plain2", { | freq | SinOsc.ar(freq) });
 //:
 SimpleDef.customEnv("plain3", { | freq | SinOsc.ar(freq) }, { Env.new([0, 1, 0], [\atk.kr(1), \rel.kr(1)], \wel) });
