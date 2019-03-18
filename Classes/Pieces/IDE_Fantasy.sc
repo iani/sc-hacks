@@ -99,7 +99,9 @@ IDE_Fantasy : Singleton {
 			postf("IDE: client names are: %\nclient IPs are: %\n",
 				this.clientIPs, this.clientNames
 			);
-			postf("my location is: %\n", mylocation);
+			"\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".postln;
+			postf("================ my location is: % ================\n", mylocation);
+			"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".postln;
 			this.makeOSCFuncs;
 		}.defer(1);
 	}
@@ -119,11 +121,11 @@ IDE_Fantasy : Singleton {
 		locations.values.asArray.flat do: { | p |
 			//			p.postln;
 			if (localpis includes: p) {
-				postf("p is local! %\n", p);
+				postf("==== local: % ==== \n", p);
 				postf("%'s buses are: %\n", p, buses[p]);
 				this.makeLocalOscFunc(p, buses[p]);
 			}{
-				postf("p is remote! %\n", p);
+				postf("==== remote: % ==== \n", p);
 				postf("%'s buses are: %\n", p, buses[p]);
 				this.makeRemoteOscFunc(p, buses[p]);
 			}
