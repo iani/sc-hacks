@@ -1,5 +1,59 @@
 // Devlog. 16 Mar 2019 14:17
 //:Pre rehearsal dev 17 Mar 2019 13:13
+//:construct bus names
+var busnames, buses, locations, base;
+/*
+	each bus must have a unique name. There are 54 buses, one per sensor:
+	2                 * 3       * 9
+	// pi's per perf, num perf, params per pi
+	// total num params: 54.  54 names. 
+	// naming convention: 
+	location_num_sensor
+	where:
+	location is one of: stanford, corfu athens
+	num is one of: 1 (=master/left) 2 (=slave, right)
+	sensor is one of: 
+	ax, ay, az, 
+	mx, my, mz
+	gx, gy, gz, 
+	where a = accellerometer, m = magnetormeter, g = gyroscope
+
+	Example: 
+	\athens1ax // accelleration x of left sensor in athens
+*/
+// var <buses; // dict containing one bus array per pie name.
+buses = ();
+locations = (
+	athens: [\pi1, \pi2],
+	corfu: [\pi3, \pi4],
+	stanford: [\pi5, \pi6]
+);
+locations.keys.asArray do: { | location |
+	locations[location] do: { | p, num |
+		base = format("%%", location, num + 1);
+		buses[p] = [
+			\ax, \ay, \az,
+			\mx, \my, \mz,
+			\gx, \gy, \gz
+		].collect({ | n | format("%%", base, n).asSymbol.bus })
+	}
+};
+buses[\pi1];
+buses[\pi2];
+locations.keys do: { | l |
+	l.postln;
+	locations[l] do: { | p | p.postln; buses[p].postln }
+};
+//:testing bus created by above
+\corfu2gz.bus;
+//:finding out which buses were created
+\test.bus;
+Registry.at(\busses);
+\test.bus.set(123);
+//:test bus value
+\test.bus.get;
+//:debug graphics app
+NetAddr("127.0.0.1", 14000).sendMsg('/test', 1, 2, 3);
 //:Testing class for 3 site setup
 IDE_Fantasy start: \corfu;
 //:TODOS 16 Mar 2019 14:17

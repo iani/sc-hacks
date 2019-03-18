@@ -22,7 +22,7 @@ IDE_Fantasy : Singleton {
 		gx, gy, gz, 
 		where a = accellerometer, m = magnetormeter, g = gyroscope
 	*/
-	var <buses;
+	var <buses; // dict containing one bus array per pie name.
 	var <oscFuncs; // one func per pi
 	var <localGraphicsAddr;
 	/*
@@ -91,46 +91,47 @@ IDE_Fantasy : Singleton {
 
 			
 		*/
-		var ct; // strange compilation problem?
-
 		"\n\nResetting for security. Freeing any previous oscfuncs.\n\n".postln;
 		oscFuncs do: _.free;
 		postf("my localpis are: %\n", localpis);
 		oscFuncs = ();
-		locations.values.asArray.flat do: _.postln;
-		ct = locations.values.asArray.flat;
-
-		ct do: { | p |
-			p.postln;
+		locations.values.asArray.flat do: { | p |
+			//			p.postln;
 			if (localpis includes: p) {
 				postf("p is local! %\n", p);
-				this.makeLocalOscFunc(p);
+				postf("p's buses are: %\n", buses[p]);
+				this.makeLocalOscFunc(p, buses[p]);
 			}{
 				postf("p is remote! %\n", p);
-				this.makeRemoteOscFunc(p);
+				postf("p's buses are: %\n", buses[p]);
+				this.makeRemoteOscFunc(p, buses[p]);
 			}
 		}
 	}
 
-	makeLocalOscFunc { | pie |
+	makeLocalOscFunc { | pie, buses |
 		var myBuses;
 		// myBuses = buses[pie];
 		OSCFunc({ | msg |
 			clientIPs do: { | addr | addr.sendMsg(*msg) };
-			this.playLocally(msg);
+			this.playLocally(msg, buses);
 		}, pie);
 	}
 	
-	makeRemoteOscFunc { | pie |
+	makeRemoteOscFunc { | pie, buses |
 		OSCFunc({ | msg |
+			// DO NOT BROADCAST osc received from remote clients
 			//		clientIPs do: { | addr | addr.sendMsg(*msg) };
-			this.playLocally(msg);
+			this.playLocally(msg, buses);
 		}, pie);
 	}
 
-	playLocally { | msg |
+	playLocally { | msg, buses |
+		// send to graphics locally
 		postf("sending %, %\n", localGraphicsAddr, msg);
 		localGraphicsAddr.sendMsg(*msg);
+		// set buses
+		postf("My pie is: %\n. I will set these buses: %\n", msg[0], buses)
 	}
 
 }
