@@ -1,5 +1,13 @@
 // Devlog. 16 Mar 2019 14:17
 //:Pre rehearsal dev 17 Mar 2019 13:13
+//:test hamachi situation
+"hamachi list".unixCmdGetStdOutLines[1..] do: { | l |
+	"--------------".postln;
+	l.postln;
+	
+};
+//:
+Nymphs
 //:construct bus names
 var busnames, buses, locations, base;
 /*

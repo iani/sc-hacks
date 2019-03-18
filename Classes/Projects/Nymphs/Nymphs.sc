@@ -1,6 +1,8 @@
 /* 23 Feb 2019 11:27
 For Nymphs: Dancing Through Phantasmata project
 
+Nymphs.getClients;
+
 */
 Nymphs : Singleton {
 	var <clients; // dictionary of client names and ip's used for display.
@@ -12,7 +14,7 @@ Nymphs : Singleton {
 		clients = ();
 		ips = [];
 		hamachi = "hamachi list".unixCmdGetStdOut;
-		hamachi[hamachi.findRegexp("\\[nymphs-phantasmata\\]")[0][0]..]
+		hamachi[hamachi.findRegexp("\\[magnetic-dance\\]")[0][0]..]
 		.split(Char.nl)[1..].select({ | s |
 			s.size > 1
 		}).collect({ | line |

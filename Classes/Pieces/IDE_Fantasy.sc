@@ -5,8 +5,7 @@ IDE_Fantasy : Singleton {
 	var <>localpis, <locations, <>mylocation;
 	var <>clientIPs, <>clientNames; // only the remote clients are listed here
 	// the local client is localhost. ...
-	var <busnames;
-	/*
+	/* busnames and buses are stored in dictionaries, one array per pie.
 		each bus must have a unique name. There are 54 buses, one per sensor:
 		2                 * 3       * 9
 		// pi's per perf, num perf, params per pi
@@ -22,9 +21,10 @@ IDE_Fantasy : Singleton {
 		gx, gy, gz, 
 		where a = accellerometer, m = magnetormeter, g = gyroscope
 	*/
-	var <buses; // dict containing one bus array per pie name.
-	var <oscFuncs; // one func per pi
-	var <localGraphicsAddr;
+	var <busnames, <buses; // dicts containing names and buses: one bus array per pie name.
+	// busnames serve for reference and also to free buses when reinitializing.
+	var <oscFuncs; // one func per pie
+	var <localGraphicsAddr; // forward data from pies to this address
 	/*
 	*initClass {
 		StartUp add: {
@@ -54,13 +54,34 @@ IDE_Fantasy : Singleton {
 			corfu: [\pi3, \pi4],
 			stanford: [\pi5, \pi6]
 		);
-		// this.makeBuses;
+		this.makeBuses;
 		this.connectOSC;
 	}
 
 	makeBuses {
-		//		buses do: _.free;  // free previous buses if restarting
-		
+		var base, names;
+		busnames do: { | a | a do: _.free };  // free previous buses if restarting
+		busnames = ();
+		buses = ();
+		locations = (
+			athens: [\pi1, \pi2],
+			corfu: [\pi3, \pi4],
+			stanford: [\pi5, \pi6]
+		);
+		locations.keys.asArray do: { | location |
+			locations[location] do: { | p, num |
+				base = format("%%", location, num + 1);
+				names = [
+					\ax, \ay, \az,
+					\mx, \my, \mz,
+					\gx, \gy, \gz
+				].collect({ | n |
+					format("%%", base, n).asSymbol
+				});
+				busnames[p] = names;
+				buses[p] = names.collect({ | n | n.bus});
+			}
+		};		
 	}
 
 	freeBuses {
@@ -99,11 +120,11 @@ IDE_Fantasy : Singleton {
 			//			p.postln;
 			if (localpis includes: p) {
 				postf("p is local! %\n", p);
-				postf("p's buses are: %\n", buses[p]);
+				postf("%'s buses are: %\n", p, buses[p]);
 				this.makeLocalOscFunc(p, buses[p]);
 			}{
 				postf("p is remote! %\n", p);
-				postf("p's buses are: %\n", buses[p]);
+				postf("%'s buses are: %\n", p, buses[p]);
 				this.makeRemoteOscFunc(p, buses[p]);
 			}
 		}
