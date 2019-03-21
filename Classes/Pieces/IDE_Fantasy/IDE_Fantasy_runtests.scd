@@ -1,6 +1,9 @@
 // 21 Mar 2019 15:45
 //:start unconnected
 IDE_Fantasy startLocally: \stanford;
+//:
+IDE_Fantasy.busnames;
+
 //:Code loading of script at end of start
 (PathName(IDE_Fantasy.filenameSymbol.asString).pathOnly ++ "IDE_Fantasy_Script.scd");
 

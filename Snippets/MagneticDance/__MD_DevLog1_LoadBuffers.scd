@@ -129,6 +129,9 @@ Server.default.waitForBoot({
 //:Test loaded buffer
 \lamentodellaninfa.b.bufnum;
 //play;
+//:Test loaded buffer
+\lamentodellaninfa.b.play;
+//play;
 //:test loaded buffer 2
 'lamentodellaninfa-stereo'.b.play;
 //:test granulation
@@ -139,7 +142,7 @@ Server.default.waitForBoot({
 {
 	var bnum;
 	bnum = \lamentodellaninfa.b.bufnum;
-	GrainBuf.ar(1,
+	GrainBuf.ar(2,
 		Impulse.kr(\per.kr(1)),
 		\dur.kr(0.5),
 		bnum,

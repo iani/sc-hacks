@@ -47,7 +47,7 @@ IDE_Fantasy : Singleton {
 				})
 			};
 			
-			})
+			});
 		}
 	}
 	
@@ -158,25 +158,31 @@ IDE_Fantasy : Singleton {
 		localpis = locations[mylocation];
 		postf("my localpis are: %\n", localpis);
 		locations.values.asArray.flat do: { | p |
-			//			p.postln;
+			//	NOTE: Using busnames, not buses.
+			// going back to earlier setting parameters idea.
 			if (localpis includes: p) {
 				postf("==== local: % ==== \n", p);
-				postf("%'s buses are: %\n", p, buses[p]);
-				this.makeLocalOscFunc(p, buses[p]);
+				postf("%'s buses are: %\n", p, busnames[p]);
+				this.makeLocalOscFunc(p, busnames[p]);
 			}{
 				postf("==== remote: % ==== \n", p);
-				postf("%'s buses are: %\n", p, buses[p]);
-				this.makeRemoteOscFunc(p, buses[p]);
+				postf("%'s buses are: %\n", p, busnames[p]);
+				this.makeRemoteOscFunc(p, busnames[p]);
 			}
 		}
 	}
 
+	/*
+		Use already tested mechanism of sc-hacks 
+		to connect to sound and to display
+	*/
 	makeLocalOscFunc { | pie, buses |
 		var myBuses;
 		// myBuses = buses[pie];
 		OSCFunc({ | msg |
 			clientIPs do: { | addr | addr.sendMsg(*msg) };
-			this.playLocally(msg, buses);
+			this.playLocally(msg, buses); // only plays graphics
+			// for sound, use sc-hacks techniques
 		}, pie);
 	}
 	
@@ -192,9 +198,14 @@ IDE_Fantasy : Singleton {
 		// send to graphics locally
 		// postf("sending %, %\n", localGraphicsAddr, msg);
 		localGraphicsAddr.sendMsg(*msg);
-		buses do: { | bus, index |
-			bus.set(msg[index + 1]);
+		// only play graphics
+		// for sound, use sc-hacks techniques
+		/*
+			buses do: { | bus, index |
+			// bus.set(msg[index + 1]);
+			\ide.changed(bus, msg[index + 1]);
 		};
+		*/
 		// set buses
 		// postf("My pie is: %\n. I will set these buses: %\n", msg[0], buses)
 	}
