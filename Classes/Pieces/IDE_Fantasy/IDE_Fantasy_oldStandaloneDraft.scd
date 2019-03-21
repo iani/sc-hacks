@@ -25,6 +25,22 @@ IDE_Fantasy : Singleton {
 	// busnames serve for reference and also to free buses when reinitializing.
 	var <oscFuncs; // one func per pie
 	var <localGraphicsAddr; // forward data from pies to this address
+	/*
+	*initClass {
+		StartUp add: {
+			// { postf("will init now: %\n", this); } ! 100;
+			Nymphs.getClients;
+			{
+				// postf("IDE found these clients: %\n", Nymphs.clients);
+				this.clientIPs = Nymphs.clients.values.array;
+				this.clientNames = Nymphs.clients.keys;
+				postf("IDE: client names are: %\nclient IPs are: %\n",
+					this.clientIPs, this.clientNames
+				);
+			}.defer(1);
+		}	
+	}	
+	*/
 
 	start { | where = \corfu, enableRemote = false |
 		// per default, do not connect to hamachi.
@@ -36,6 +52,33 @@ IDE_Fantasy : Singleton {
 		if (enableRemote) { this.connectHamachi };
 	}
 
+	standalone { | where = \corfu |
+		// develop locally without net connection
+		mylocation = where;
+		this.initLocationsAndBuses;
+		// "standalone method is not yet implemented. Nothing will happen".postln;
+		this.connectOSCstandalone;
+	}
+
+	connectOSCstandalone {
+		localpis = locations[mylocation];
+		"\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".postln;
+		postf("================ my location is: % ================\n", mylocation);
+		"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".postln;
+		"\n\nResetting for security. Freeing any previous oscfuncs.\n\n".postln;
+		oscFuncs.postln;
+		"these were the oscfuncs".postln;
+		oscFuncs do: _.free;
+
+		locations.values.asArray.flat do: { | p |
+			//			p.postln;
+			postf("==== MAKING Remote - non forwarding oscfunc for: % ==== \n", p);
+			postf("%'s buses are: %\n", p, buses[p]);
+			this.makeRemoteOscFunc(p, buses[p]);
+		}
+	}
+
+	
 	initLocationsAndBuses {
 		localGraphicsAddr = NetAddr("127.0.0.1", 14000);
 		locations = (
@@ -44,6 +87,13 @@ IDE_Fantasy : Singleton {
 			stanford: [\pi5, \pi6]
 		);
 		this.makeBuses;
+		/* // this is for standalone only. Mistakenly here:
+		locations.values.asArray.flat do: { | p |
+			//			p.postln;
+			this.makeDevOscFunc(p, buses[p]);
+		};
+		*/
+		//		this.connectOSC;
 	}
 	
 	makeBuses {
