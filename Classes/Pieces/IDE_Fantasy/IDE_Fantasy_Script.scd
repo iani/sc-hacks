@@ -12,21 +12,24 @@
 		\dur.kr(1.5),
 		bnum,
 		\rate.kr(2),
-		\pos.kr(0) * BufSampleRate.kr(bnum)
+		\pos.kr(0) * BufSampleRate.kr(bnum),
+		pan: \pan.kr(0)
 	)
-} +> \il;
+} +> \stanford1;
 //:
-\il.v(
-	\per.slider([0.2, 20], \il),
-	\amp.slider(\amp, \il),
-	\rate.slider([0.2, 5], \il),
-	\pos.slider([0, 50], \il)
+\stanford1.v(
+	\per.slider([0.2, 20], \stanford1),
+	\amp.slider(\amp, \stanford1),
+	\rate.slider([0.2, 5], \stanford1),
+	\pos.slider([0, 50], \stanford1),
+	\pan.slider([-1, 1], \stanford1)
 );
 //:
-\per <+.il '/pi5'.osc(3, [-40, 40], [0.2, 10]);
-\amp <+.il '/pi5'.osc(1, [-10, 40], \amp);
-\rate <+.il '/pi5'.osc(2, [-40, 40], [0.2, 2]);
-\pos <+.il '/pi5'.osc(6, [0, 4], [0.2, 5]);
+\per <+.stanford1 '/pi5'.osc(3, [-40, 40], [0.2, 10]);
+\amp <+.stanford1 '/pi5'.osc(1, [-10, 40], \amp);
+\rate <+.stanford1 '/pi5'.osc(2, [-40, 40], [0.2, 2]);
+\pos <+.stanford1 '/pi5'.osc(6, [0, 4], [0.2, 5]);
+\pan <+.stanford1 '/pi5'.osc(7, [-2, 2], [-1, 1]);
 //:
 
 /*
