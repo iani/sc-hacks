@@ -174,6 +174,14 @@
 		buffer.objectClosed;
 	}
 
+	freeBus {
+		// free bus and remove from registry
+		var bus;
+		bus = this.bus;
+		bus.free;
+		bus.objectClosed;
+	}
+	
 	loadBuffer { | path |
 		path = path.standardizePath;
 		^Registry(\buffers, this, {

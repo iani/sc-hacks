@@ -48,7 +48,8 @@ IDE_Fantasy : Singleton {
 	
 	makeBuses {
 		var base, names;
-		busnames do: { | a | a do: _.free };  // free previous buses if restarting
+		"Freeing previous buses for security".postln;
+		busnames do: { | a | a do: _.freeBus };  // free previous buses if restarting
 		busnames = ();
 		buses = ();
 		locations = (
