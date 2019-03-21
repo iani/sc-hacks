@@ -44,10 +44,38 @@ IDE_Fantasy : Singleton {
 
 	start { | where = \corfu |
 		mylocation = where;
-		this.init;
+		this.initLocationsAndBuses;
+		this.connectOSC;
 	}
 
-	init {
+	standalone { | where = \corfu |
+		// develop locally without net connection
+		mylocation = where;
+		this.initLocationsAndBuses;
+		// "standalone method is not yet implemented. Nothing will happen".postln;
+		this.connectOSCstandalone;
+	}
+
+	connectOSCstandalone {
+		localpis = locations[mylocation];
+		"\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".postln;
+		postf("================ my location is: % ================\n", mylocation);
+		"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".postln;
+		"\n\nResetting for security. Freeing any previous oscfuncs.\n\n".postln;
+		oscFuncs.postln;
+		"these were the oscfuncs".postln;
+		oscFuncs do: _.free;
+
+		locations.values.asArray.flat do: { | p |
+			//			p.postln;
+			postf("==== MAKING Remote - non forwarding oscfunc for: % ==== \n", p);
+			postf("%'s buses are: %\n", p, buses[p]);
+			this.makeRemoteOscFunc(p, buses[p]);
+		}
+	}
+
+	
+	initLocationsAndBuses {
 		localGraphicsAddr = NetAddr("127.0.0.1", 14000);
 		locations = (
 			athens: [\pi1, \pi2],
@@ -55,9 +83,15 @@ IDE_Fantasy : Singleton {
 			stanford: [\pi5, \pi6]
 		);
 		this.makeBuses;
-		this.connectOSC;
+		/* // this is for standalone only. Mistakenly here:
+		locations.values.asArray.flat do: { | p |
+			//			p.postln;
+			this.makeDevOscFunc(p, buses[p]);
+		};
+		*/
+		//		this.connectOSC;
 	}
-
+	
 	makeBuses {
 		var base, names;
 		busnames do: { | a | a do: _.free };  // free previous buses if restarting
@@ -84,11 +118,6 @@ IDE_Fantasy : Singleton {
 		};		
 	}
 
-	freeBuses {
-		// nothing at the moment
-		
-	}
-	
 	connectOSC {
 		localpis = locations[mylocation];
 		Nymphs.getClients;
@@ -111,7 +140,6 @@ IDE_Fantasy : Singleton {
 			make busses and oscfuncs for all 6 rpis.
 			for all 6 rpis: set the busses.
 			for local rpis only: additionally broadcast the data to the 2 remoteClient ips
-
 			
 		*/
 		"\n\nResetting for security. Freeing any previous oscfuncs.\n\n".postln;
@@ -151,10 +179,10 @@ IDE_Fantasy : Singleton {
 
 	playLocally { | msg, buses |
 		// send to graphics locally
-		postf("sending %, %\n", localGraphicsAddr, msg);
+		// postf("sending %, %\n", localGraphicsAddr, msg);
 		localGraphicsAddr.sendMsg(*msg);
 		// set buses
-		postf("My pie is: %\n. I will set these buses: %\n", msg[0], buses)
+		// postf("My pie is: %\n. I will set these buses: %\n", msg[0], buses)
 	}
 
 }
