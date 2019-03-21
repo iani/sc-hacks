@@ -19,7 +19,7 @@ Singleton {
 			args.postln;
 			*/
 		^Registry(this, \default, {
-			this.new()	
+			this.newCopyArgs()	
 		}).perform(selector, *args)
 	}
 

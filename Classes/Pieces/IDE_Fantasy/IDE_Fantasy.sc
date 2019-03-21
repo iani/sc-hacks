@@ -25,7 +25,13 @@ IDE_Fantasy : Singleton {
 	// busnames serve for reference and also to free buses when reinitializing.
 	var <oscFuncs; // one func per pie
 	var <localGraphicsAddr; // forward data from pies to this address
+	//	var <>pollRate = 0.1; // speed of polling loop. See startUpdateLoop
 
+	default {
+		// ^Registry(this, \default { });
+		^this;
+	}
+	
 	start { | where = \corfu, enableRemote = false |
 		// per default, do not connect to hamachi.
 		// if enableRemote is true, then connect to hamachi.
@@ -33,6 +39,7 @@ IDE_Fantasy : Singleton {
 		this.initLocationsAndBuses;
 		this.clearHamachi;
 		this.makeOSCFuncs;
+		// this.startUpdateLoop;
 		if (enableRemote) { this.connectHamachi };
 	}
 
@@ -148,6 +155,19 @@ IDE_Fantasy : Singleton {
 		// postf("My pie is: %\n. I will set these buses: %\n", msg[0], buses)
 	}
 
+	/*
+	startUpdateLoop {
+		// only starts with start method.
+		// only stops with command-.
+		{
+			loop {
+				this.changed(\data);
+				pollRate.wait;
+			};
+		}.fork(AppClock);
+		
+	}
+	*/
 }
 
 /*
