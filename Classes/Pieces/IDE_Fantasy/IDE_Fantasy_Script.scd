@@ -31,13 +31,70 @@
 \pos <+.stanford1 '/pi5'.osc(6, [0, 4], [0.2, 5]);
 \pan <+.stanford1 '/pi5'.osc(7, [-2, 2], [-1, 1]);
 //:
+// ================================================================
+// Testing different pos range
+// Perhaps corfu1 ? 
+// ================================================================
+{
+	var bnum;
+	bnum = \lamentodellaninfa.b.bufnum;
+	\amp.kr(0.1) * GrainBuf.ar(2,
+		Impulse.kr(\per.kr(1)),
+		\dur.kr(1.5),
+		bnum,
+		\rate.kr(2),
+		\pos.kr(0) * BufSampleRate.kr(bnum),
+		pan: \pan.kr(0)
+	)
+} +> \stanford1;
+//:
+\stanford1.v(
+	\per.slider([0.2, 20], \stanford1),
+	\amp.slider(\amp, \stanford1),
+	\rate.slider([0.2, 5], \stanford1),
+	\pos.slider([0, 50], \stanford1),
+	\pan.slider([-1, 1], \stanford1)
+);
+//:
+\per <+.stanford1 '/pi5'.osc(3, [-40, 40], [0.2, 10]);
+\amp <+.stanford1 '/pi5'.osc(1, [-10, 40], \amp);
+\rate <+.stanford1 '/pi5'.osc(2, [-40, 40], [0.2, 2]);
+\pos <+.stanford1 '/pi5'.osc(6, [-5, 5], [0.0, 55]);
+\pan <+.stanford1 '/pi5'.osc(7, [-2, 2], [-1, 1]);
+//:
+//:
+// ================================================================
+// Testing different rate range
+// Definitely stanford1 ? 
+// ================================================================
+{
+	var bnum;
+	bnum = \lamentodellaninfa.b.bufnum;
+	\amp.kr(0.1) * GrainBuf.ar(2,
+		Impulse.kr(\per.kr(1)),
+		\dur.kr(1.5),
+		bnum,
+		\rate.kr(2),
+		\pos.kr(0) * BufSampleRate.kr(bnum),
+		pan: \pan.kr(0)
+	)
+} +> \stanford1;
+//:
+\stanford1.v(
+	\per.slider([0.2, 20], \stanford1),
+	\amp.slider(\amp, \stanford1),
+	\rate.slider([0.2, 5], \stanford1),
+	\pos.slider([0, 50], \stanford1),
+	\pan.slider([-1, 1], \stanford1)
+);
+//:
+\per <+.stanford1 '/pi5'.osc(3, [-40, 40], [0.2, 10]);
+\amp <+.stanford1 '/pi5'.osc(1, [-10, 40], \amp);
+\rate <+.stanford1 '/pi5'.osc(2, [-10, 40], [0.2, 1]);
+\pos <+.stanford1 '/pi5'.osc(6, [-5, 5], [0.0, 55]);
+\pan <+.stanford1 '/pi5'.osc(7, [-2, 2], [-1, 1]);
+//:
 
-/*
-\per <+ \stanford1ax;
-\dur <+ \stanford1ay;
-\rate <+ \stanford1az;
-\pos <+ \stanford1mx;
-*/
 
 
 
