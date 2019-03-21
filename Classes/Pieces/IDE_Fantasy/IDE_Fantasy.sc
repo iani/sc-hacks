@@ -27,13 +27,42 @@ IDE_Fantasy : Singleton {
 	var <localGraphicsAddr; // forward data from pies to this address
 	//	var <>pollRate = 0.1; // speed of polling loop. See startUpdateLoop
 
+	*initClass {
+		/* Making sure that the system gets ready for performance 
+			right after each recompile.
+		*/
+		StartUp add: {
+			Server.default.waitForBoot({
+			
+			var server, bname;
+			"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".postln;
+			server = Server.default;
+			
+			(Platform.userAppSupportDir +/+ "sounds/*.wav").pathMatch.postln;
+			(Platform.userAppSupportDir +/+ "sounds/*.wav").pathMatch do: { | p |
+				bname = PathName(p).fileNameWithoutExtension.asSymbol;
+				// PathName(p).allFolders.postln;
+				Registry(\buffers, bname, {
+					Buffer.read(server, p).postln;
+				})
+			};
+			
+			})
+		}
+	}
+	
 	default {
 		// ^Registry(this, \default { });
 		^this;
 	}
+
+	startLocally { | where = \corfu |
+		// for tests, start without connecting to remote clients
+		this.start(where, false);
+	}
 	
-	start { | where = \corfu, enableRemote = false |
-		// per default, do not connect to hamachi.
+	start { | where = \corfu, enableRemote = true |
+		// per default, do connect to hamachi.
 		// if enableRemote is true, then connect to hamachi.
 		mylocation = where;
 		this.initLocationsAndBuses;
@@ -41,6 +70,18 @@ IDE_Fantasy : Singleton {
 		this.makeOSCFuncs;
 		// this.startUpdateLoop;
 		if (enableRemote) { this.connectHamachi };
+		{
+			this.loadMainScript;
+		}.defer(1); // give enough time for all buses to be created.
+	}
+
+	loadMainScript {
+		// Server must be still up and running from compile / StartUp time!
+		var path;
+		path = PathName(IDE_Fantasy.filenameSymbol.asString).pathOnly ++ "IDE_Fantasy_Script.scd";
+		"LOADING: ".post; path.postln;
+		path.load;
+		
 	}
 
 	initLocationsAndBuses {
@@ -151,6 +192,9 @@ IDE_Fantasy : Singleton {
 		// send to graphics locally
 		// postf("sending %, %\n", localGraphicsAddr, msg);
 		localGraphicsAddr.sendMsg(*msg);
+		buses do: { | bus, index |
+			bus.set(msg[index + 1]);
+		};
 		// set buses
 		// postf("My pie is: %\n. I will set these buses: %\n", msg[0], buses)
 	}

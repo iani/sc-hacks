@@ -174,12 +174,17 @@
 		buffer.objectClosed;
 	}
 
+	// bus shortcuts
 	freeBus {
 		// free bus and remove from registry
 		var bus;
 		bus = this.bus;
 		bus.free;
 		bus.objectClosed;
+	}
+
+	get { | func |
+		^this.bus.get(func); // use value in func if provided.
 	}
 	
 	loadBuffer { | path |

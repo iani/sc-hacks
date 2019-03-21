@@ -170,10 +170,10 @@ Server.default.waitForBoot({
 \ratebus2.bus;
 //:now prepare control through bus
 \freqbus.bus.set(1000);
-{ SinOsc.ar(\freq.kr(400), 0, 0.1 )} +> \bustest;
+{ SinOsc.ar(\freq.kr(400) / 2, 0, 0.1 )} +> \bustest;
 \freq <+ \freqbus;
 //:ok control through bus works this way.
-\freqbus.bus.set(100 + 1000.rand);
+\freqbus.bus.set(400 + 1000.rand);
 //: 2. Send osc sensor received data to BUSES and use buses to map to parameters but also to trigger
 //: 3. Devise easily and visibly adjustable way to calibrate mapping of received sensor values to target synthesis values.
 //: 4. Adjust and improve granulation synth process for more reliable performance characteristics
