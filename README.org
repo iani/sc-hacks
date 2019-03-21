@@ -5,3 +5,49 @@ Use is made of the sample bank and buffer loading code of SuperDirt from the [[h
 This library reviews the techniques developed previous libraries for SuperCollider [[https://github.com/iani/tiny-sc][tiny-sc]] and [[https://github.com/iani/tiny-inc][tiny-inc]], and builds a cleaner, more consistent version.
 
 Documentation on the new library is available here: http://iani.github.io/sc-hacks-doc/.
+* IDE Fantasy user manual
+** Locations
+
+For March 2019, there are three locations:
+
+- =\athens=
+- =\corfu=
+- =\stanford=
+
+The symbol =\location= below must be one of the three symbols above, depending on where the supercollider program is actually running. 
+
+** Start IDE Fantasy without connecting
+
+ #+BEGIN_SRC sclang
+ IDE_Fantasy start: \location;
+ #+END_SRC
+
+This sets remote clients to an empty array and does not poll hamachi.
+Data received locally are not forwarded to any remote locations.
+
+** Start IDE Fantasy and connect to remote locations
+
+ #+BEGIN_SRC sclang
+ IDE_Fantasy start: \location;
+ #+END_SRC
+
+
+This sets remote clients to an empty array and poll hamachi.
+Data received locally are forwarded to any remote locations found on hamachi.
+
+** Manually connect or disconnect remote locations
+
+*** Poll hamachi to find remote locations
+  #+BEGIN_SRC sclang
+  IDE_Fantasy.connectHamachi;
+  #+END_SRC
+
+Run  =hamachi list= as unix command and set remote names and ips of connected locations by parsing the output of that command.
+If IDE_Fantasy is running (if OSC functions are active), then osc data received from local sensors are forwarded to all connected locations.
+
+*** Clear remote clients and stop sending to remote locations
+  #+BEGIN_SRC sclang
+  IDE_Fantasy.clearHamachi;
+  #+END_SRC
+
+ Set remote names and IPs to empty array. IDE_Fantasy stops sending to remote locations.
