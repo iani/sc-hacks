@@ -6,7 +6,10 @@ This library reviews the techniques developed previous libraries for SuperCollid
 
 Documentation on the new library is available here: http://iani.github.io/sc-hacks-doc/.
 * IDE Fantasy user manual
+
 ** Locations
+
+When starting =IDE_Fantasy= you must always specify the name of location where you are running, because that is how the system knows which data to send to the other locations.  The name of the location is Symbol.
 
 For March 2019, there are three locations:
 
@@ -14,7 +17,17 @@ For March 2019, there are three locations:
 - =\corfu=
 - =\stanford=
 
-The symbol =\location= below must be one of the three symbols above, depending on where the supercollider program is actually running. 
+The symbol =\location= below must be one of the three symbols above, depending on where the SuperCollider program is actually running. 
+
+** Starting IDE Fantasy
+*** 2 options for starting: locally and networked
+ There are two ways to start IDE Fantasy: 
+
+(1) Standalone : In this mode, SC does not connect to hamachi, and no data are sent to or received from remote locations.  
+
+#+BEGIN_SRC sclang
+
+#+END_SRC
 
 ** Start IDE Fantasy without connecting
 

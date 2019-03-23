@@ -1,5 +1,7 @@
 // 21 Mar 2019 15:45
 //:start unconnected
+IDE_Fantasy start: \stanford;
+//:start unconnected
 IDE_Fantasy startLocally: \stanford;
 //:
 IDE_Fantasy.busnames;

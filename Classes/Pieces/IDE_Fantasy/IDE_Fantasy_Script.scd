@@ -39,6 +39,7 @@
 // ================================================================
 //  Corfu 2 
 // ================================================================
+/*
 {
 	var bnum;
 	bnum = \lamentodellaninfa.b.bufnum;
@@ -66,6 +67,7 @@
 \pos <+.corfu2 '/pi4'.osc(6, [-5, 5], [0.0, 55]);
 \pan <+.corfu2 '/pi4'.osc(7, [-2, 2], [-1, 1]);
 //:
+*/
 //:
 // ================================================================
 // Athens 1 
@@ -102,6 +104,7 @@
 // PV_below 
 // Athens 2
 // ================================================================
+/*
 {
 	var bnum, src, chain;
 	bnum = \lamentodellaninfa.b.bufnum;
@@ -135,6 +138,7 @@
 \pan <+.athens2 '/pi2'.osc(7, [-2, 2], [-1, 1]);
 \thresh <+.athens2 '/pi2'.osc(8, [-2, 2], [0.01, 1]);
 //:
+*/
 /*
 //:
 // ================================================================
@@ -197,7 +201,7 @@
 	chain = PV_BrickWall(chain, \thresh.kr(0.1, 0.5));
 	Pan2.ar(IFFT(chain), \pan.kr(0))
 } +> \stanford1;
-//:
+//:tuning amp on 23 Mar 2019 09:41
 \stanford1.v(
 	\per.slider([0.2, 20], \stanford1),
 	\amp.slider(\amp, \stanford1),
@@ -208,7 +212,7 @@
 );
 //:
 \per <+.stanford1 '/pi5'.osc(3, [-40, 40], [0.2, 10]);
-\amp <+.stanford1 '/pi5'.osc(1, [-10, 40], \amp);
+\amp <+.stanford1 '/pi5'.osc(1, [-5, 30], \amp);
 \rate <+.stanford1 '/pi5'.osc(2, [-10, 40], [0.2, 1]);
 \pos <+.stanford1 '/pi5'.osc(6, [-5, 5], [0.0, 55]);
 \pan <+.stanford1 '/pi5'.osc(7, [-2, 2], [-1, 1]);
