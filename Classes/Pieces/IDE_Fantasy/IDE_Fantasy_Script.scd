@@ -1,7 +1,8 @@
 // 21 Mar 2019 16:18
-// { "testing".postln; } ! 50;
 //:give basic feedback
 // { "Starting sound script".postln; } ! 50;
+// Last check before performance: 23 Mar 2019 10:41 (Stanford)
+
 // ================================================================
 //: Corfu 1
 // ================================================================
