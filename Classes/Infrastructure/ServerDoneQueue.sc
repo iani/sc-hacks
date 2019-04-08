@@ -14,7 +14,12 @@ When all actions have been done, the ServerDone instance which loaded them issue
 
 ServerDone add: { Buffer.alloc(Server.default, 44100 ) };
 
-TODO: Define method "loadQueue" for SynthDefs and Functions that return synthdefs or buffers
+TODO: Define method "que" ("loadQueue") for SynthDefs and prototypes that allocate or read buffers.
+
+SynthDef:que
+Note: we still need to provide names for storing buffers: How?
+"path string".que(name)
+[Float or Integer (num seconds or num frames), numChannels].que(name)
 
 */
 
@@ -22,6 +27,7 @@ ServerDone : Singleton {
 	var <actions;
 	var <waitRoutine;
 
+	/*
 	*initClass {
 		StartUp add: {
 			OSCFunc({
@@ -31,6 +37,7 @@ ServerDone : Singleton {
 		}
 		
 	}
+	*/
 
 	add { | action |
 		actions ?? { actions = List() };
