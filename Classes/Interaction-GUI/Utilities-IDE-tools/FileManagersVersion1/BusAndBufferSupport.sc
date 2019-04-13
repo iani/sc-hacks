@@ -140,6 +140,8 @@
 				seconds.doIfExists({
 					Buffer.read(Server.default, seconds, action: func);
 				},{
+					"WARNING:".postln;
+					postf("%\n not found. Allocating empty buffer", this);
 					Buffer.alloc(Server.default,
 						1 * Server.default.sampleRate,
 						numChannels,

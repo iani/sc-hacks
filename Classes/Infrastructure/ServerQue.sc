@@ -1,4 +1,14 @@
-/*  8 Apr 2019 09:26
+/* New notes 11 Apr 2019 03:13
+
+Load synthdefs, allocate and read buffers.
+
+Make sure that all synthdef or buffers are loaded in a sequence (not concurrently).
+
+If server is not booted, then prompt user with gui or command to boot it.
+
+================================================================
+
+Notes 8 Apr 2019 09:26: 
 An implementation of server sync which I can understand and use.
 
 To load SynthDefs, allocate or read buffers, add functions which do these one at a time to ServerDone with: 
@@ -23,51 +33,45 @@ Note: we still need to provide names for storing buffers: How?
 
 */
 
-ServerDone : Singleton {
+ServerQueue : Singleton {
 	var <actions;
 	var <waitRoutine;
-
-	/*
-	*initClass {
-		StartUp add: {
-			OSCFunc({
-				"I received done message and will notify done".postln;
-				Server.default changed: '/done';
-			}, '/done');
-		}
-		
-	}
-	*/
 
 	add { | action |
 		actions ?? { actions = List() };
 		actions add: action;
 		if (actions.size == 1) {
-			this.start;
-			postf("now I execute the action that I was passed: %\n");
-			action.value.postln; // boot the action list with the first action
+			this.checkServerThenStart;
+			postf("now I execute the action that I was passed: %\n", action);
+			action.(this).postln; // start the action loading with the first action
+			// If there are more actions in the list, then do not start,
+			// Because it means that there are still actions being processed.
 		};
+	}
+
+	checkServerThenStart {
+		if (Server.default.serverRunning) {
+			this.start;
+		}{
+			Server.default.waitForBoot({ this.start; });
+		}
 	}
 
 	start {
 		var action;
-		"Starting now".postln;
 		waitRoutine = {
 			while {
 				actions.size > 0;
 			}{
 				this.yield;
-				postf("before doing next action: %\n", actions);
+				postf("actions before doing next action: %\n", actions);
 				action = actions removeAt: 0;
-				action.value;
+				action.(this);
 				postf("the action is %\n", action);
-				postf("after doing next action: %\n", actions);
+				postf("actions remaining after doing next action: %\n", actions);
 			};
 			"will notify changed now".postln;
-			this.changed('emptiedQueue');
+			this.changed(\emptiedQueue);
 		}.fork;
-		this.addNotifier(Server.default, '/done', {
-			waitRoutine.next;
-		})
 	}
 }
