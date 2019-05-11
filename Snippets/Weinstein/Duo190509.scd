@@ -26,26 +26,31 @@ postf("allocated % buffers", fibs.size);
 	};	
 }
 //:+Do a test run recording buffers with fibonacci durations
-[1, 2, 3, 5, 8, 13, 21, 34, 55] do: { | f |
-	var dur, bufname, buf, bufnum;
-	dur = f;
+~buffers = [1, 2, 3, 5, 8, 13, 21, 34, 55] collect: { | f |
+	format("f%", f).asSymbol.b(f);
+};
+~buffers do: { | bufname, i |
+	var buf, bufnum;
 	bufname = format("f%", f).asSymbol;
 	buf = bufname.b;
 	bufnum = buf.bufnum;
 	postf("Recording into buffer: %\n", buf);
-	postf("Duration is: %\n", dur);
+	postf("Duration is: %\n", buf.dur);
 	{
 		RecordBuf.ar(
-			In.ar(4) ,
+			In.ar(4),
 			bufnum,
 			loop: 0,
  			doneAction: 2
 		);
-	} +> \bufrec;	
-	dur.wait;
+	} +> \bufrec;
+	buf.dur.wait;
+	postf("Done recording into %. Starting playback of %\n", bufname, bufname);
+	{
+		PlayBuf.ar(1, bufnum, doneAction: 2)
+	} +> \bufplay;
 };
 "DONE".postln;
-
 
 //:================================================================
 //:Early tries - buffer input recording and playback
@@ -66,3 +71,9 @@ Server.default.options.numOutputBusChannels;
 Server.default.options.numInputBusChannels;
 
 \f55.b.play;
+//:sound check
+{ | pos = 0 | Pan2.ar(WhiteNoise.ar(0.1), pos) } +> \soundcheck;
+//:
+\pos <+ -1;
+//:
+\pos <+ 1;
