@@ -50,12 +50,17 @@ postf("allocated % buffers", fibs.size);
 	chain = PV_BrickWall(chain, \thresh.kr(0.1, 0.5));
 	Pan2.ar(IFFT(chain), \pan.kr(0))
 } +> \bufplay;
-//:+Do a test run recording buffers with fibonacci durations
+//:+the piece
+//forward input from dan to output 3
+//{ Out.ar(2, In.ar(3)) } +> \dan;
+// run recording buffers with fibonacci durations
 ~buffers = [1, 2, 3, 5, 8, 13, 21, 34, 55] collect: { | f |
 	format("f%", f).asSymbol.b(f);
 };
-\bnum <+.bufplay ~buffers[0].bufnum;	
-
+\bnum <+.bufplay ~buffers[0].bufnum;
+// start recording // record
+Server.default.record;
+1.0.wait; // make sure there is enough time to record.
 ~buffers do: { | buf, i |
 	var bufnum;
 	bufnum = buf.bufnum;
@@ -182,6 +187,10 @@ Server.default.options.numInputBusChannels;
 \f55.b.play;
 //:sound check
 { | pos = 0 | Pan2.ar(WhiteNoise.ar(0.1), pos) } +> \soundcheck;
+//:sound check
+{
+	Out.ar(0, SinOsc.ar([1, 2, 3] * 440, 0, 0.1 ))
+} +> \soundcheck;
 //:
 \pos <+ -1;
 //:
@@ -223,3 +232,10 @@ Server.default.options.numInputBusChannels;
 \pan <+.stanford1 '/pi5'.osc(7, [-2, 2], [-1, 1]);
 \thresh <+.stanford1 '/pi5'.osc(8, [-2, 2], [-1, 1]);
 //:================================================================
+Server.default.options.numOutputBusChannels;
+//:
+\f1.b.play;
+//:
+\f3.b.play;
+//:
+Server.default.stopRecording;

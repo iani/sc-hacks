@@ -25,16 +25,44 @@ postf("allocated % buffers", fibs.size);
 		0.1.wait;
 	};	
 }
+//:perpare gui
+\bufplay.tr_(400, 300);
+\bufplay.v(
+	\per.slider([0.2, 20], \bufplay),
+	\dur.slider([0.1, 5], \bufplay),
+	\amp.slider([0.01, 3], \bufplay),
+	\rate.slider([0.2, 5], \bufplay),
+	\pos.slider([0, 5], \bufplay),
+	\pan.slider([-1, 1], \bufplay)
+);
+//:connect to OSC
+\per <+.bufplay '/pi1'.osc(3, [-20, 40], [0.9, 10]);
+\dur <+.bufplay '/pi1'.osc(1, [-10, 40], [0.1, 5]);
+\amp <+.bufplay '/pi1'.osc(4, [-10, 40], [0.01, 3]);
+\rate <+.bufplay '/pi1'.osc(2, [-40, 40], [0.9, 1.2]);
+\pos <+.bufplay '/pi1'.osc(6, [-10, 4], [0.2, 5]);
+\pan <+.bufplay '/pi1'.osc(7, [-2, 2], [-1, 1]);
+//:start granulation
+{ | bnum = 0 |
+	\amp.kr(0.1) * GrainBuf.ar(2,
+		Impulse.kr(\per.kr(1)),
+		\dur.kr(1.5),
+		bnum,
+		\rate.kr(2),
+		\pos.kr(0) * BufSampleRate.kr(bnum),
+		pan: \pan.kr(0)
+	)
+} +> \bufplay;
 //:+Do a test run recording buffers with fibonacci durations
 ~buffers = [1, 2, 3, 5, 8, 13, 21, 34, 55] collect: { | f |
 	format("f%", f).asSymbol.b(f);
 };
-~buffers do: { | bufname, i |
-	var buf, bufnum;
-	bufname = format("f%", f).asSymbol;
-	buf = bufname.b;
+\bnum <+.bufplay ~buffers[0].bufnum;	
+
+~buffers do: { | buf, i |
+	var bufnum;
 	bufnum = buf.bufnum;
-	postf("Recording into buffer: %\n", buf);
+	postf("Recording into buffer: %\n, bufnum: %\n", buf, bufnum);
 	postf("Duration is: %\n", buf.dur);
 	{
 		RecordBuf.ar(
@@ -45,12 +73,46 @@ postf("allocated % buffers", fibs.size);
 		);
 	} +> \bufrec;
 	buf.dur.wait;
-	postf("Done recording into %. Starting playback of %\n", bufname, bufname);
-	{
+	postf("Done recording into %. Starting playback of %\n", buf, buf);
+	\bnum <+.bufplay bufnum;
+	/*
+		{
 		PlayBuf.ar(1, bufnum, doneAction: 2)
-	} +> \bufplay;
+		} +> \bufplay;
+	*/
 };
 "DONE".postln;
+//:testing
+\f1.b;
+\f1.b.play;
+//:================================================================
+//:code from IDE
+//: Corfu 1
+// ================================================================
+{
+	var bnum;
+	bnum = \f3.b.bufnum;
+	\amp.kr(0.1) * GrainBuf.ar(2,
+		Impulse.kr(\per.kr(1)),
+		\dur.kr(1.5),
+		bnum,
+		\rate.kr(2),
+		\pos.kr(0) * BufSampleRate.kr(bnum),
+		pan: \pan.kr(0)
+	)
+} +> \bufplay;
+//:
+//:
+\bufplay.tr_(400, 300);
+//:
+\bufplay.v(
+	\per.slider([0.2, 20], \bufplay),
+	\dur.slider([0.1, 5], \bufplay),
+	\amp.slider(\amp, \bufplay),
+	\rate.slider([0.2, 5], \bufplay),
+	\pos.slider([0, 5], \bufplay),
+	\pan.slider([-1, 1], \bufplay)
+);
 
 //:================================================================
 //:Early tries - buffer input recording and playback
@@ -65,6 +127,8 @@ postf("allocated % buffers", fibs.size);
 		doneAction: 2
 	);
 } +> \recording;
+//:
+\buffer.b.play;
 //:check server output channels
 Server.default.options.numOutputBusChannels;
 //:check server input channels
