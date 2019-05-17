@@ -25,10 +25,32 @@ NetAddr.localAddr.sendMsg(\pi1, 1, 2, 3, -20 rrand: 40, 5);
 NetAddr("127.0.0.1", 57120).sendMsg(\test, 1);
 //:Be careful : LOcaladdr can sometimes have port 57121
 NetAddr.localAddr;
-//:connect parameter only
-\paramexample <+.bufplay '/pi1'.osc(3, [-20, 40], \freq);
-//:connect bus only
-\busexample.bus <+.bufplay '/pi1'.osc(3, [-20, 40], \freq);
-//:connect parameter + bus
-\bothexample <+.bufplay '/pi1'.osc(3, [-20, 40], \freq);
-\bothexample.bus <+.bufplay '/pi1'.osc(3, [-20, 40], \freq);
+//:test connecting bus, parameter, both
+//connect param
+\myparam <+.bufplay '/paramexample'.osc(3, [-20, 40], \freq);
+//connect bus only
+\mybus.bus <+.bufplay '/busexample'.osc(3, [-20, 40], \freq);
+//connect parameter + bus
+\myboth <+.bufplay '/bothexample'.osc(3, [-20, 40], \freq);
+\myboth.bus <+.bufplay '/bothexample'.osc(3, [-20, 40], \freq);
+//:+
+10 do: {
+	var envir, addr, val, mybusval, mybothbusval;
+	envir = \paramexample.e;
+	addr = NetAddr.localAddr;
+	[\paramexample, \busexample, \bothexample] do: { | who |
+		val = -20 rrand: 40;
+		postf("testing %, sending val: %\n", who, val);
+		addr.sendMsg(who, 1, 2, 3, val, 5);
+		1.wait;
+		\mybus.bus.get({ | argval | mybusval = argval });
+		\myboth.bus.get({ | argval | mybothbusval = argval });
+		1.wait;
+		postf("myparam param value is:: %\n", envir[\myparam]);
+		postf("mybus bus value is: %\n", mybusval);
+		postf("myboth param value is: %\n", envir[\myboth]);
+		postf("myboth bus value is: %\n", mybothbusval);
+		1.wait;
+	}
+	
+};

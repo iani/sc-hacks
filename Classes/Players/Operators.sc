@@ -270,5 +270,12 @@
 			that generates the beats, where the kr player outputs the beats in a kr bus.
 		*/
 	}
-	
+}
+
++ Bus {
+	<+ { | argument, envir |
+		// argument interprets this differently according to class
+		// See file ArgSetParameter.sc
+		argument.setParameter(this, envir.e);
+	}	
 }
