@@ -51,7 +51,6 @@ trajectory.size - 2 do: { | i |
 };
 }.fork
 //:Variant of extension 1 (d): "Staccato" (gaps)
-// (Portamento)
 {
 var trajectory;
 trajectory = Array.rand(50, 200.0, 5000.0);
@@ -63,8 +62,7 @@ trajectory.size - 2 do: { | i |
 	0.5.wait;
 };
 }.fork
-//:Variant of extension 1 (d): Random waits
-// (Portamento)
+//:Variant of extension 1 (e): Random waits
 {
 var trajectory;
 trajectory = Array.rand(50, 200.0, 5000.0);
@@ -129,46 +127,46 @@ trajectory = Array.rand(50, 200.0, 5000.0);
 	1.wait;
 } ! 20;
 }.fork;
-//:Extension 3c: Play The same trajectory with varied delay times ("canon")
+//:Extension 3c: Play The same trajectory with varied delay times
 {
 	var trajectory, times;
 	trajectory = Array.rand(50, 200.0, 5000.0);
 	times = Pseq(Array.rand(trajectory.size, 0.1, 0.4));
-{
 	{
-		var timestream;
-		timestream = times.asStream;
-		trajectory.size - 2 do: { | i |
-			
-			{ SinOsc.ar(
-				Line.kr(trajectory[i], trajectory[i + 1], 0.2, doneAction: 2),
-				0, 0.1 / 5
-			)}.play;
-			(timestream.next * 5).wait;
-		};
-	}.fork;
-	[0.25, 1, 2].choose.wait;
-} ! 20;
+		{
+			var timestream;
+			timestream = times.asStream;
+			trajectory.size - 2 do: { | i |
+				
+				{ SinOsc.ar(
+					Line.kr(trajectory[i], trajectory[i + 1], 0.2, doneAction: 2),
+					0, 0.1 / 5
+				)}.play;
+				(timestream.next * 5).wait;
+			};
+		}.fork;
+		[0.25, 1, 2].choose.wait;
+	} ! 20;
 }.fork;
 //:Extension 3d: "Canon per augmentationem et diminutionem"
 {
 	var trajectory, times;
 	trajectory = Array.rand(50, 200.0, 5000.0);
 	times = Pseq(Array.rand(trajectory.size, 0.1, 0.4));
-{
 	{
-		var timestream, stretchfactor;
-		stretchfactor = [0.5, 1, 2, 4, 8].choose; // time stretch for each voice
-		timestream = (times * stretchfactor).asStream;
-		trajectory.size - 2 do: { | i |
-			{ SinOsc.ar(
-				Line.kr(trajectory[i], trajectory[i + 1],
-					0.2 * stretchfactor, doneAction: 2),
-				0, 0.1 / 5
-			)}.play;
-			(timestream.next * 5).wait;
-		};
-	}.fork;
-	[0.25, 1, 2].choose.wait;
-} ! 20;
+		{
+			var timestream, stretchfactor;
+			stretchfactor = [0.5, 1, 2, 4, 8].choose; // time stretch for each voice
+			timestream = (times * stretchfactor).asStream;
+			trajectory.size - 2 do: { | i |
+				{ SinOsc.ar(
+					Line.kr(trajectory[i], trajectory[i + 1],
+						0.2 * stretchfactor, doneAction: 2),
+					0, 0.1 / 5
+				)}.play;
+				(timestream.next * 5).wait;
+			};
+		}.fork;
+		[0.25, 1, 2].choose.wait;
+	} ! 20;
 }.fork;

@@ -1,6 +1,13 @@
 // 17 Mar 2019 13:32
-// planned for lac19
+/* Doc review 19 May 2019 17:57:
+This was used on March 23 for the performance at LAC19.
 
+A new version is planned for the performance at Musraramix on May 30.
+
+The new version will not boot the server and load the sound files at startup.
+Instead it will require message "boot" to do this.
+
+*/
 IDE_Fantasy : Singleton {
 	var <>localpis, <locations, <>mylocation;
 	var <>clientIPs, <>clientNames; // only the remote clients are listed here

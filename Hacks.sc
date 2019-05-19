@@ -123,6 +123,7 @@ Hacks {
 
 	*gui {
 		this.br_.v(
+			{ IDE_Fantasy.boot }.button("Start IDE Fantasy"),
 			{ SnippetList.gui }.button("Snippet List"),
 			{ PlayerSnippetList.gui }.button("Player Snippet List"),
 			{ PlayerGui() }.button("Player Gui"),
