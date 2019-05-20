@@ -2,7 +2,7 @@
 /* 
 Based on version used on March 23 for the performance at LAC19.
 
-This version is for the performance at Musraramix on May 30.
+THIS VERSION IS FOR THE PERFORMANCE AT MUSRARAMIX ON MAY 30.
 
 It does not boot the server and load the sound files at startup.
 Instead it requires message "boot" to start.
@@ -106,9 +106,10 @@ IDE_Fantasy : Singleton {
 		buses = ();
 		locations = (
 			athens: [\pi1, \pi2],
-			corfu: [\pi3, \pi4],
-			stanford: [\pi5, \pi6]
+			musrara: [\pi5]
+			// stanford: [\pi5, \pi6]
 		);
+		/*
 		locations.keys.asArray do: { | location |
 			locations[location] do: { | p, num |
 				base = format("%%", location, num + 1);
@@ -122,7 +123,8 @@ IDE_Fantasy : Singleton {
 				busnames[p] = names;
 				buses[p] = names.collect({ | n | n.bus});
 			}
-		};		
+		};
+		*/		
 	}
 
 	clearHamachi {

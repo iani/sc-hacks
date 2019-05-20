@@ -1,3 +1,4 @@
+// 19 May 2019 19:11 Version for Musraramix (190530)
 // 11 May 2019 12:52 - adding fft processing effects
 //:perpare gui
 \bufplay.tr_(400, 300);
