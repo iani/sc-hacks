@@ -36,11 +36,11 @@ NetAddr.localAddr;
 //:+
 10 do: {
 	var envir, addr, val, mybusval, mybothbusval;
-	envir = \paramexample.e;
+	envir = \bufplay.e;
 	addr = NetAddr.localAddr;
 	[\paramexample, \busexample, \bothexample] do: { | who |
 		val = -20 rrand: 40;
-		postf("testing %, sending val: %\n", who, val);
+		postf("\n\ntesting %, sending val: %\n", who, val);
 		addr.sendMsg(who, 1, 2, 3, val, 5);
 		1.wait;
 		\mybus.bus.get({ | argval | mybusval = argval });
@@ -51,6 +51,18 @@ NetAddr.localAddr;
 		postf("myboth param value is: %\n", envir[\myboth]);
 		postf("myboth bus value is: %\n", mybothbusval);
 		1.wait;
-	}
-	
+	}	
 };
+//:debugging param set 1: connect
+\myparam <+.debug '/paramexample'.osc(3, [-20, 40], \freq);
+//:debugging param set 2: set
+NetAddr.localAddr.sendMsg('/paramexample', 1, 2, 3, 5, 5, 6);
+//:debugging param set 3: check
+\debug.e;
+//:debugging bus set 4: connect bus
+\myparam.bus <+.debug '/paramexample'.osc(3, [-20, 40], \freq);
+//:debugging bus set 6: get + post bus value
+\myparam.bus.get({ | val | postf("value is: %\n", val )});
+//: ================================================================
+//:Testing sound
+() +> \sound;

@@ -28,21 +28,20 @@ IDE_Fantasy : Singleton {
 		gx, gy, gz, 
 		where a = accellerometer, m = magnetormeter, g = gyroscope
 	*/
-	var <busnames, <buses; // dicts containing names and buses: one bus array per pie name.
+	var <busnames, <buses; // dicts containing names and buses: one bus array per PI name.
 	// busnames serve for reference and also to free buses when reinitializing.
-	var <oscFuncs; // one func per pie
-	var <localGraphicsAddr; // forward data from pies to this address
+	var <oscFuncs; // one func per PI
+	var <localGraphicsAddr; // forward data from pis to this address
 	//	var <>pollRate = 0.1; // speed of polling loop. See startUpdateLoop
 
 	boot {
 		Server.default.waitForBoot({
-			
 			var server, bname;
 			"\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".postln;
 			"Server booted. Loading Sounds".postln;
 			"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n".postln;
 			server = Server.default;
-			"Found these sound files: ".post;
+			"Found % sound files: ".post;
 			(Platform.userAppSupportDir +/+ "sounds/*.wav").pathMatch.postln;
 			(Platform.userAppSupportDir +/+ "sounds/*.wav").pathMatch do: { | p |				
 				bname = PathName(p).fileNameWithoutExtension.asSymbol;
@@ -83,7 +82,7 @@ IDE_Fantasy : Singleton {
 	loadMainScript {
 		// Server must be still up and running from compile / StartUp time!
 		var path;
-		path = PathName(IDE_Fantasy.filenameSymbol.asString).pathOnly ++ "IDE_Fantasy_Script.scd";
+		path = PathName(IDE_Fantasy.filenameSymbol.asString).pathOnly ++ "IDE_Fantasy_Musraramix.scd";
 		"LOADING: ".post; path.postln;
 		path.load;
 		
