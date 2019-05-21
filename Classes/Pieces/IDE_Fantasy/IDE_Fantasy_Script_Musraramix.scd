@@ -25,7 +25,7 @@
 \pos <+.priest '/pi1'.osc(6, [-10, 4], [0.2, 5]);
 \pan <+.priest '/pi1'.osc(7, [-2, 2], [-1, 1]);
 
-//:PRIEST granulation + binshift
+//:PRIEST sound: granulation + binshift
 {
 	var src, chain, bnum;
 	bnum = \lamentodellaninfa.b.bufnum;
@@ -42,47 +42,91 @@
 	Pan2.ar(IFFT(chain), \pan.kr(0))
 	// src
 } +> \priest;
-//:Find initial settings
-\thresh <+.priest 5;
 
 //:================ ECHO ================
-
-\bufplay.tr_(400, 300);
-\bufplay.v(
-	\per.slider([0.2, 20], \bufplay),
-	\dur.slider([2, 5], \bufplay),
-	// \amp.slider([0.00, 3.5], \bufplay),
-	\amp.slider(\amp, \bufplay),
-	\rate.slider([0.2, 5], \bufplay),
-	\pos.slider([0, 5], \bufplay),
-	\pan.slider([-1, 1], \bufplay),
-	\thresh.slider([-1, 1], \bufplay)
+\echo.br_(400, 300);
+\echo.v(
+	\per.slider([0.2, 20], \echo),
+	\dur.slider([2, 5], \echo),
+	// \amp.slider([0.00, 3.5], \echo),
+	\amp.slider(\amp, \echo),
+	\rate.slider([0.2, 5], \echo),
+	\pos.slider([0, 5], \echo),
+	\pan.slider([-1, 1], \echo),
+	\thresh.slider([0, 30], \echo)
 );
 //:connect to OSC
 // per for dafnis and priest
-\per <+.bufplay '/pi2'.osc(3, [-40, 10], [0.2, 5]);
-\per <+.bufplay '/pi2'.osc(3, [-40, 10], [0.2, 5]);
-// dur for dafnis and priest
-\dur <+.bufplay '/pi2'.osc(1, [-10, 40], [2, 5]);
-// \amp <+.bufplay '/pi2'.osc(4, [-10, 40], [0.00, 3.5]);
-\amp <+.bufplay '/pi2'.osc(4, [-10, 40], \amp);
-// rate for dafnis and priest
-// \rate <+.bufplay '/pi2'.osc(2, [-20, 20], [0.25, 1.2]);
+\per <+.echo '/pi1'.osc(3, [-40, 10], [0.2, 5]);
+\dur <+.echo '/pi1'.osc(1, [-10, 40], [2, 5]);
+\amp <+.echo '/pi1'.osc(4, [-10, 40], \amp);
 // rate for chloe
-\rate <+.bufplay '/pi2'.osc(2, [-20, 20], [1, 1.2]);
-\pos <+.bufplay '/pi2'.osc(6, [-10, 4], [0.2, 5]);
-\pan <+.bufplay '/pi2'.osc(7, [-2, 2], [-1, 1]);
-// thresh for DAFNIS
-// \thresh <+.bufplay '/pi1'.osc(5, [-20, 40], [-0.98, 0.21]);
-// \thresh <+.bufplay '/pi1'.osc(5, [-20, 40], [0.75, 1.21]);
-// thresh for PRIEST
-// \thresh <+.bufplay '/pi1'.osc(5, [-20, 40], [0.75, 1.21]);
+\rate <+.echo '/pi1'.osc(2, [-20, 20], [1, 1.2]);
+\pos <+.echo '/pi1'.osc(6, [-10, 4], [0.2, 5]);
+\pan <+.echo '/pi1'.osc(7, [-2, 2], [-1, 1]);
 // thresh for ECHO
-// \thresh <+.bufplay '/pi2'.osc(5, [-20, 40], [0.01, 10.99]);
+// \thresh <+.echo '/pi1'.osc(5, [-20, 40], [0.01, 10.99]);
 // thresh echo try 2
-\thresh <+.bufplay '/pi2'.osc(5, [-20, 40], [5.01, 30.99]);
+\thresh <+.echo '/pi1'.osc(5, [-20, 40], [5.01, 30.99]);
+//: thresh echo try 3
+// \thresh <+.echo '/pi1'.osc(3, [-20, 40], [0.9, 10]);
 
-//:granulation + brickwall for duo
+
+//:granulation + magabove - trying different effect
+// ECHO
+{
+	var src, chain, bnum;
+	bnum = \lamentodellaninfa.b.bufnum;
+	src = \amp.kr(0.1, 1.0) * 1.5 * GrainBuf.ar(2,
+		Impulse.kr(\per.kr(1)),
+		\dur.kr(1.5) * 2,
+		bnum,
+		\rate.kr(2, 1.0),
+		\pos.kr(0, 1.0) * BufSampleRate.kr(bnum)
+		//		pan: \pan.kr(0) // moved pan after FFT
+	);
+	chain = FFT(LocalBuf(2048, 1), src);
+	chain = PV_MagAbove(chain, \thresh.kr(0.1, 0.5));
+	Pan2.ar(IFFT(chain), \pan.kr(0))
+} +> \echo;
+
+//:================ DAFNIS ================
+\dafnis.br_(400, 300);
+\dafnis.v(
+	\per.slider([0.2, 20], \dafnis),
+	\dur.slider([2, 5], \dafnis),
+	// \amp.slider([0.00, 3.5], \dafnis),
+	\amp.slider(\amp, \dafnis),
+	\rate.slider([0.2, 5], \dafnis),
+	\pos.slider([0, 5], \dafnis),
+	\pan.slider([-1, 1], \dafnis),
+	\thresh.slider([-1.0, 1.0], \dafnis)
+);
+//:Connect to OSC
+// per for dafnis and priest
+\per <+.dafnis '/pi2'.osc(3, [-40, 10], [0.2, 5]);
+\per <+.dafnis '/pi2'.osc(3, [-40, 10], [0.2, 5]);
+// dur for dafnis and priest
+\dur <+.dafnis '/pi2'.osc(1, [-10, 40], [2, 5]);
+// \amp <+.dafnis '/pi2'.osc(4, [-10, 40], [0.00, 3.5]);
+\amp <+.dafnis '/pi2'.osc(4, [-10, 40], \amp);
+// rate for dafnis and priest
+// \rate <+.dafnis '/pi2'.osc(2, [-20, 20], [0.25, 1.2]);
+// rate for chloe
+\rate <+.dafnis '/pi2'.osc(2, [-20, 20], [1, 1.2]);
+\pos <+.dafnis '/pi2'.osc(6, [-10, 4], [0.2, 5]);
+\pan <+.dafnis '/pi2'.osc(7, [-2, 2], [-1, 1]);
+// thresh for DAFNIS
+// \thresh <+.dafnis '/pi1'.osc(5, [-20, 40], [-0.98, 0.21]);
+// \thresh <+.dafnis '/pi1'.osc(5, [-20, 40], [0.75, 1.21]);
+// thresh for PRIEST
+// \thresh <+.dafnis '/pi1'.osc(5, [-20, 40], [0.75, 1.21]);
+// thresh for DAFNIS
+// \thresh <+.dafnis '/pi2'.osc(5, [-20, 40], [0.01, 10.99]);
+// thresh dafnis try 2
+\thresh <+.dafnis '/pi2'.osc(5, [-20, 40], [-0.9, 0.39]);
+
+//:granulation + brickwall
 // DAFNIS
 {
 	var src, chain, bnum;
@@ -98,4 +142,4 @@
 	chain = FFT(LocalBuf(2048, 1), src);
 	chain = PV_BrickWall(chain, \thresh.kr(0.1, 0.5));
 	Pan2.ar(IFFT(chain), \pan.kr(0))
-} +> \bufplay;
+} +> \dafnis;
