@@ -58,18 +58,18 @@
 //:connect to OSC
 // per for dafnis and priest
 \per <+.echo '/pi1'.osc(3, [-40, 10], [0.2, 5]);
-\dur <+.echo '/pi1'.osc(1, [-10, 40], [2, 5]);
-\amp <+.echo '/pi1'.osc(4, [-10, 40], \amp);
+\dur <+.echo '/pi2'.osc(1, [-10, 40], [2, 5]);
+\amp <+.echo '/pi2'.osc(4, [-10, 40], \amp);
 // rate for chloe
-\rate <+.echo '/pi1'.osc(2, [-20, 20], [1, 1.2]);
-\pos <+.echo '/pi1'.osc(6, [-10, 4], [0.2, 5]);
-\pan <+.echo '/pi1'.osc(7, [-2, 2], [-1, 1]);
+\rate <+.echo '/pi2'.osc(2, [-20, 20], [1, 1.2]);
+\pos <+.echo '/pi2'.osc(6, [-10, 4], [0.2, 5]);
+\pan <+.echo '/pi2'.osc(7, [-2, 2], [-1, 1]);
 // thresh for ECHO
-// \thresh <+.echo '/pi1'.osc(5, [-20, 40], [0.01, 10.99]);
+// \thresh <+.echo '/pi2'.osc(5, [-20, 40], [0.01, 10.99]);
 // thresh echo try 2
-\thresh <+.echo '/pi1'.osc(5, [-20, 40], [5.01, 30.99]);
+\thresh <+.echo '/pi2'.osc(5, [-20, 40], [5.01, 30.99]);
 //: thresh echo try 3
-// \thresh <+.echo '/pi1'.osc(3, [-20, 40], [0.9, 10]);
+// \thresh <+.echo '/pi2'.osc(3, [-20, 40], [0.9, 10]);
 
 
 //:granulation + magabove - trying different effect
@@ -103,21 +103,21 @@
 	\thresh.slider([-1.0, 1.0], \dafnis)
 );
 //:Connect to OSC
-\per <+.dafnis '/pi2'.osc(3, [-40, 10], [0.2, 5]);
-\dur <+.dafnis '/pi2'.osc(1, [-10, 40], [2, 5]);
-\amp <+.dafnis '/pi2'.osc(4, [-10, 40], \amp);
-\rate <+.dafnis '/pi2'.osc(2, [-20, 20], [0.7, 1.0]);
-\pos <+.dafnis '/pi2'.osc(6, [-10, 4], [0.2, 5]);
-\pan <+.dafnis '/pi2'.osc(7, [-2, 2], [-1, 1]);
+\per <+.dafnis '/pi5'.osc(3, [-40, 10], [0.2, 5]);
+\dur <+.dafnis '/pi5'.osc(1, [-10, 40], [2, 5]);
+\amp <+.dafnis '/pi5'.osc(4, [-10, 40], \amp);
+\rate <+.dafnis '/pi5'.osc(2, [-20, 20], [0.7, 1.0]);
+\pos <+.dafnis '/pi5'.osc(6, [-10, 4], [0.2, 5]);
+\pan <+.dafnis '/pi5'.osc(7, [-2, 2], [-1, 1]);
 // thresh for DAFNIS
 // \thresh <+.dafnis '/pi1'.osc(5, [-20, 40], [-0.98, 0.21]);
 // \thresh <+.dafnis '/pi1'.osc(5, [-20, 40], [0.75, 1.21]);
 // thresh for PRIEST
 // \thresh <+.dafnis '/pi1'.osc(5, [-20, 40], [0.75, 1.21]);
 // thresh for DAFNIS
-// \thresh <+.dafnis '/pi2'.osc(5, [-20, 40], [0.01, 10.99]);
+// \thresh <+.dafnis '/pi5'.osc(5, [-20, 40], [0.01, 10.99]);
 // thresh dafnis try 2
-\thresh <+.dafnis '/pi2'.osc(5, [-20, 40], [-0.9, 0.39]);
+\thresh <+.dafnis '/pi5'.osc(5, [-20, 40], [-0.9, 0.39]);
 
 //:DAFNIS granulation + brickwall
 {
