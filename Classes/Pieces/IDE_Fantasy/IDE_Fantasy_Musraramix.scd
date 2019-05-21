@@ -91,7 +91,7 @@
 } +> \echo;
 
 //:================ DAFNIS ================
-\dafnis.br_(400, 300);
+\dafnis.bl_(400, 300);
 \dafnis.v(
 	\per.slider([0.2, 20], \dafnis),
 	\dur.slider([2, 5], \dafnis),

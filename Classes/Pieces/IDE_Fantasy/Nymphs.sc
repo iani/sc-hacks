@@ -14,7 +14,7 @@ Nymphs : Singleton {
 		clients = ();
 		ips = [];
 		hamachi = "hamachi list".unixCmdGetStdOut;
-		hamachi[hamachi.findRegexp("\\[nymphs-phantasmata\\]")[0][0]..]
+		hamachi[hamachi.findRegexp("\\[ide-fantasy\\]")[0][0]..]
 		.split(Char.nl)[1..].select({ | s |
 			s.size > 1
 		}).collect({ | line |

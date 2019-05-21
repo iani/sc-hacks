@@ -92,39 +92,11 @@ IDE_Fantasy : Singleton {
 		localGraphicsAddr = NetAddr("127.0.0.1", 14000);
 		locations = (
 			athens: [\pi1, \pi2],
-			corfu: [\pi3, \pi4],
-			stanford: [\pi5, \pi6]
-		);
-		this.makeBuses;
-	}
-	
-	makeBuses {
-		var base, names;
-		"Freeing previous buses for security".postln;
-		busnames do: { | a | a do: _.freeBus };  // free previous buses if restarting
-		busnames = ();
-		buses = ();
-		locations = (
-			athens: [\pi1, \pi2],
 			musrara: [\pi5]
+			// athens: [\pi1, \pi2],
+			// corfu: [\pi3, \pi4],
 			// stanford: [\pi5, \pi6]
 		);
-		/*
-		locations.keys.asArray do: { | location |
-			locations[location] do: { | p, num |
-				base = format("%%", location, num + 1);
-				names = [
-					\ax, \ay, \az,
-					\mx, \my, \mz,
-					\gx, \gy, \gz
-				].collect({ | n |
-					format("%%", base, n).asSymbol
-				});
-				busnames[p] = names;
-				buses[p] = names.collect({ | n | n.bus});
-			}
-		};
-		*/		
 	}
 
 	clearHamachi {
