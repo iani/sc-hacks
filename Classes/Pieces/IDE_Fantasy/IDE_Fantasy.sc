@@ -140,12 +140,12 @@ IDE_Fantasy : Singleton {
 			// going back to earlier setting parameters idea.
 			if (localpis includes: p) {
 				postf("==== local: % ==== \n", p);
-				postf("%'s buses are: %\n", p, busnames[p]);
-				this.makeLocalOscFunc(p, busnames[p]);
+				// postf("%'s buses are: %\n", p, busnames[p]);
+				this.makeLocalOscFunc(p);
 			}{
 				postf("==== remote: % ==== \n", p);
-				postf("%'s buses are: %\n", p, busnames[p]);
-				this.makeRemoteOscFunc(p, busnames[p]);
+				// postf("%'s buses are: %\n", p, busnames[p]);
+				this.makeRemoteOscFunc(p);
 			}
 		}
 	}
@@ -154,25 +154,25 @@ IDE_Fantasy : Singleton {
 		Use already tested mechanism of sc-hacks 
 		to connect to sound and to display
 	*/
-	makeLocalOscFunc { | pie, buses |
+	makeLocalOscFunc { | pie |
 		var myBuses;
 		// myBuses = buses[pie];
 		OSCFunc({ | msg |
 			clientIPs do: { | addr | addr.sendMsg(*msg) };
-			this.playLocally(msg, buses); // only plays graphics
+			this.playLocally(msg); // only plays graphics
 			// for sound, use sc-hacks techniques
 		}, pie);
 	}
 	
-	makeRemoteOscFunc { | pie, buses |
+	makeRemoteOscFunc { | pie |
 		OSCFunc({ | msg |
 			// DO NOT BROADCAST osc received from remote clients
 			//		clientIPs do: { | addr | addr.sendMsg(*msg) };
-			this.playLocally(msg, buses);
+			this.playLocally(msg);
 		}, pie);
 	}
 
-	playLocally { | msg, buses |
+	playLocally { | msg |
 		// send to graphics locally
 		// postf("sending %, %\n", localGraphicsAddr, msg);
 		localGraphicsAddr.sendMsg(*msg);
