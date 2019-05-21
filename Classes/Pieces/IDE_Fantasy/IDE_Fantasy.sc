@@ -41,7 +41,7 @@ IDE_Fantasy : Singleton {
 			"Server booted. Loading Sounds".postln;
 			"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n".postln;
 			server = Server.default;
-			"Found % sound files: ".post;
+			postf("Found % sound files: \n", (Platform.userAppSupportDir +/+ "sounds/*.wav").pathMatch.size);
 			(Platform.userAppSupportDir +/+ "sounds/*.wav").pathMatch.postln;
 			(Platform.userAppSupportDir +/+ "sounds/*.wav").pathMatch do: { | p |				
 				bname = PathName(p).fileNameWithoutExtension.asSymbol;
