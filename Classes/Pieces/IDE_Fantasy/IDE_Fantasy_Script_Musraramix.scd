@@ -103,17 +103,10 @@
 	\thresh.slider([-1.0, 1.0], \dafnis)
 );
 //:Connect to OSC
-// per for dafnis and priest
 \per <+.dafnis '/pi2'.osc(3, [-40, 10], [0.2, 5]);
-\per <+.dafnis '/pi2'.osc(3, [-40, 10], [0.2, 5]);
-// dur for dafnis and priest
 \dur <+.dafnis '/pi2'.osc(1, [-10, 40], [2, 5]);
-// \amp <+.dafnis '/pi2'.osc(4, [-10, 40], [0.00, 3.5]);
 \amp <+.dafnis '/pi2'.osc(4, [-10, 40], \amp);
-// rate for dafnis and priest
-// \rate <+.dafnis '/pi2'.osc(2, [-20, 20], [0.25, 1.2]);
-// rate for chloe
-\rate <+.dafnis '/pi2'.osc(2, [-20, 20], [1, 1.2]);
+\rate <+.dafnis '/pi2'.osc(2, [-20, 20], [0.7, 1.0]);
 \pos <+.dafnis '/pi2'.osc(6, [-10, 4], [0.2, 5]);
 \pan <+.dafnis '/pi2'.osc(7, [-2, 2], [-1, 1]);
 // thresh for DAFNIS
@@ -126,8 +119,7 @@
 // thresh dafnis try 2
 \thresh <+.dafnis '/pi2'.osc(5, [-20, 40], [-0.9, 0.39]);
 
-//:granulation + brickwall
-// DAFNIS
+//:DAFNIS granulation + brickwall
 {
 	var src, chain, bnum;
 	bnum = \lamentodellaninfa.b.bufnum;
