@@ -23,7 +23,7 @@
 // rate for chloe
 // \rate <+.priest '/pii5'.osc(2, [-20, 20], [1, 1.2]);
 \pos <+.priest '/pi1'.osc(6, [-10, 4], [0.2, 5]);
-\pan <+.priest '/pi1'.osc(7, [-2, 2], [-1, 1]);
+\thresh <+.priest '/pi1'.osc(7, [-20, 20], [0.5, 1.5]);
 
 //:PRIEST sound: granulation + binshift
 {

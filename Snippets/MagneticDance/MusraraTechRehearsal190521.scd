@@ -1,6 +1,6 @@
 //:
 "hamachi list".unixCmdGetStdOut;
 //:
-IDE_Fantasy start: \athens;
+ide_fantasy start: \athens;
 
-OK 
+ok
