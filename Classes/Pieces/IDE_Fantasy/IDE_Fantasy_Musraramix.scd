@@ -11,7 +11,7 @@
 	\rate.slider([0.2, 5], \priest),
 	\pos.slider([0, 5], \priest),
 	\pan.slider([-1, 1], \priest),
-	\thresh.slider([0.1, 20], \priest)
+	\thresh.slider([0.1, 2], \priest)
 );
 // connect to OSC
 // //:connect to OSC
@@ -23,7 +23,7 @@
 // rate for chloe
 // \rate <+.priest '/pii5'.osc(2, [-20, 20], [1, 1.2]);
 \pos <+.priest '/pi1'.osc(6, [-10, 4], [0.2, 5]);
-\thresh <+.priest '/pi1'.osc(7, [-20, 20], [0.5, 1.5]);
+\thresh <+.priest '/pi1'.osc(7, [-2, 5], [0.25, 1.9]);
 
 //:PRIEST sound: granulation + binshift
 {
@@ -55,19 +55,20 @@
 	\pan.slider([-1, 1], \echo),
 	\thresh.slider([0, 30], \echo)
 );
-//:connect to OSC
+//connect to OSC
 // per for dafnis and priest
-\per <+.echo '/pi1'.osc(3, [-40, 10], [0.2, 5]);
+\per <+.echo '/pi2'.osc(3, [-40, 10], [0.2, 5]);
 \dur <+.echo '/pi2'.osc(1, [-10, 40], [2, 5]);
 \amp <+.echo '/pi2'.osc(4, [-10, 40], \amp);
 // rate for chloe
-\rate <+.echo '/pi2'.osc(2, [-20, 20], [1, 1.2]);
+/// \rate <+.echo '/pi2'.osc(2, [-20, 20], [1, 1.2]);
+\rate <+.echo '/pi2'.osc(2, [-5, 20], [0.75, 1.5]);
 \pos <+.echo '/pi2'.osc(6, [-10, 4], [0.2, 5]);
 \pan <+.echo '/pi2'.osc(7, [-2, 2], [-1, 1]);
-// thresh for ECHO
+// thresh for ECHOST
 // \thresh <+.echo '/pi2'.osc(5, [-20, 40], [0.01, 10.99]);
 // thresh echo try 2
-\thresh <+.echo '/pi2'.osc(5, [-20, 40], [5.01, 30.99]);
+\thresh <+.echo '/pi2'.osc(5, [-20, 40], [0.01, 10.99]);
 //: thresh echo try 3
 // \thresh <+.echo '/pi2'.osc(3, [-20, 40], [0.9, 10]);
 
