@@ -92,7 +92,8 @@ IDE_Fantasy : Singleton {
 		localGraphicsAddr = NetAddr("127.0.0.1", 14000);
 		locations = (
 			athens: [\pi1, \pi2],
-			musrara: [\pi5]
+			musrara: [\pi5, \text, \color]
+			// text, color: for graphics
 			// athens: [\pi1, \pi2],
 			// corfu: [\pi3, \pi4],
 			// stanford: [\pi5, \pi6]
@@ -188,6 +189,11 @@ IDE_Fantasy : Singleton {
 		// postf("My pie is: %\n. I will set these buses: %\n", msg[0], buses)
 	}
 
+	playMeta {
+		// send graphics commands for scene changes
+		// locally and to all clients
+		
+	}
 	/*
 	startUpdateLoop {
 		// only starts with start method.
