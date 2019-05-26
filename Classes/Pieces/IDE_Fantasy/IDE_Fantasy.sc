@@ -17,7 +17,7 @@ IDE_Fantasy : Singleton {
 		2                 * 3       * 9
 		// pi's per perf, num perf, params per pi
 		// total num params: 54.  54 names. 
-		// naming convention: 
+		// naming convention:
 		location_num_sensor
 		where:
 		location is one of: stanford, corfu athens
@@ -92,7 +92,7 @@ IDE_Fantasy : Singleton {
 		localGraphicsAddr = NetAddr("127.0.0.1", 14000);
 		locations = (
 			athens: [\pi1, \pi2],
-			musrara: [\pi5, \text, \color]
+			musrara: [\pi5]
 			// text, color: for graphics
 			// athens: [\pi1, \pi2],
 			// corfu: [\pi3, \pi4],

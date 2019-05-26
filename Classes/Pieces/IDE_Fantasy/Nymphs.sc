@@ -6,12 +6,14 @@ Nymphs.getClients;
 */
 Nymphs : Singleton {
 	var <clients; // dictionary of client names and ip's used for display.
+	var <godotClients;
 	var <ips;     // array of NetAddr used for fast forwarding.
 	var <localPis;
 	getClients {
-		var hamachi, addr;
+		var hamachi, addr, godotAddr;
 		"Nymphs: getting client names and ip's from Hamachi.".postln;
 		clients = ();
+		godotClients = ();
 		ips = [];
 		hamachi = "hamachi list".unixCmdGetStdOut;
 		hamachi[hamachi.findRegexp("\\[ide-fantasy\\]")[0][0]..]
@@ -25,6 +27,8 @@ Nymphs : Singleton {
 			addr = NetAddr(pair[1], 57120);
 			clients[pair[0].asSymbol] = addr;
 			ips = ips add: addr;
+			godotAddr = NetAddr(pair[1], 14000);
+			godotClients[pair[0].asSymbol] = godotAddr;
 		});
 		postf("Found these clients: %\n", clients);
 	}
