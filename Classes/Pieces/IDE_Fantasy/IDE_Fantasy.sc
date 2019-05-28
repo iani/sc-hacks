@@ -69,7 +69,8 @@ IDE_Fantasy : Singleton {
 	
 	start { | where = \corfu, enableRemote = true |
 		// per default, do connect to hamachi.
-		// if enableRemote is true, then connect to hamachi.
+		// if enableRemote is true, then connect to hamachi, else do not connect.
+		// if standalone 		
 		mylocation = where;
 		this.initLocationsAndBuses;
 		this.clearHamachi;
@@ -81,19 +82,31 @@ IDE_Fantasy : Singleton {
 		}.defer(1); // give enough time for all buses to be created.
 	}
 
-	loadMainScript {
-		// Server must be still up and running from compile / StartUp time!
+	startConductor {
 		var path;
-		path = PathName(IDE_Fantasy.filenameSymbol.asString).pathOnly ++ "IDE_Fantasy_Musraramix.scd";
-		"LOADING: ".post; path.postln;
-		path.load;
-		path = PathName(IDE_Fantasy.filenameSymbol.asString).pathOnly ++ "IDE_Fantasy_Musraramix_" ++ mylocation.asString ++ ".scd";
+		path = PathName(IDE_Fantasy.filenameSymbol.asString).pathOnly
+		++ "IDE_Fantasy_Musraramix_"
+		++  "musrara" // mylocation.asString
+		++ ".scd";
 		postf("I am looking for this storyboard script: %\n", path);
 		postf("I found this storyboard script: %\n", path.pathMatch);
 		if (path.pathMatch.size == 1) {
 			postf("I will now load: %\n", path);
 			path.load;
 		}
+		
+	}
+
+	loadMainScript {
+		// Server must be still up and running from compile / StartUp time!
+		var path;
+		"!!!!!!!!!!!!!!!!".postln;
+		postf("standalone has value: % ", standalone);
+		"!!!!!!!!!!!!!!!!".postln;
+		path = PathName(IDE_Fantasy.filenameSymbol.asString).pathOnly ++ "IDE_Fantasy_Musraramix.scd";
+		"LOADING: ".post;
+		path.postln;
+		path.load;
 	}
 
 	initLocationsAndBuses {
