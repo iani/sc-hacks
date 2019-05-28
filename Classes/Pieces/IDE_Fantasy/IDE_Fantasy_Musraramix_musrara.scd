@@ -49,6 +49,7 @@ IDE_Fantasy start: \musrara;
 	Nymphs.getClients;
 	1.wait;
 	clients = Nymphs.godotClients.values.asArray;
+	clients = clients add: NetAddr("127.0.0.1", 14000);
 	postf("GODOT client names: %\nclient ips:%\n",
 		Nymphs.godotClients.keys.asArray,
 		Nymphs.godotClients.values.asArray
@@ -56,7 +57,7 @@ IDE_Fantasy start: \musrara;
 	sendColors = { | colors |
 		clients do: {  | addr |
 			addr.sendMsg('/background', *colors);
-			postf("% sent: %\n", addr, colors);
+			postf("% sent: %, %\n", addr, '/background', colors);
 		};
 		
 	};
