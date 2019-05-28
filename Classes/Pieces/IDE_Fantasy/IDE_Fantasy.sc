@@ -100,10 +100,8 @@ IDE_Fantasy : Singleton {
 	loadMainScript {
 		// Server must be still up and running from compile / StartUp time!
 		var path;
-		"!!!!!!!!!!!!!!!!".postln;
-		postf("standalone has value: % ", standalone);
-		"!!!!!!!!!!!!!!!!".postln;
-		path = PathName(IDE_Fantasy.filenameSymbol.asString).pathOnly ++ "IDE_Fantasy_Musraramix.scd";
+		path = PathName(IDE_Fantasy.filenameSymbol.asString).pathOnly
+		++ "IDE_Fantasy_Musraramix.scd";
 		"LOADING: ".post;
 		path.postln;
 		path.load;
