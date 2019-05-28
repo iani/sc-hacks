@@ -7,6 +7,8 @@ THIS VERSION IS FOR THE PERFORMANCE AT MUSRARAMIX ON MAY 30.
 It does not boot the server and load the sound files at startup.
 Instead it requires message "boot" to start.
 
+IDE_Fantasy.boot;
+
 */
 IDE_Fantasy : Singleton {
 	var <>localpis, <locations, <>mylocation;
@@ -85,7 +87,13 @@ IDE_Fantasy : Singleton {
 		path = PathName(IDE_Fantasy.filenameSymbol.asString).pathOnly ++ "IDE_Fantasy_Musraramix.scd";
 		"LOADING: ".post; path.postln;
 		path.load;
-		
+		path = PathName(IDE_Fantasy.filenameSymbol.asString).pathOnly ++ "IDE_Fantasy_Musraramix_" ++ mylocation.asString ++ ".scd";
+		postf("I am looking for this storyboard script: %\n", path);
+		postf("I found this storyboard script: %\n", path.pathMatch);
+		if (path.pathMatch.size == 1) {
+			postf("I will now load: %\n", path);
+			path.load;
+		}
 	}
 
 	initLocationsAndBuses {
