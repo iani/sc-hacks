@@ -39,7 +39,7 @@
 	);
 	chain = FFT(LocalBuf(2048, 1), src);
 	chain = PV_BinShift(chain, \thresh.kr(0.1, 0.5));
-	Pan2.ar(IFFT(chain), \pan.kr(0))
+	Pan2.ar(Mix(IFFT(chain)), \pan.kr(0))
 	// src
 } +> \priest;
 
@@ -88,7 +88,7 @@
 	);
 	chain = FFT(LocalBuf(2048, 1), src);
 	chain = PV_MagAbove(chain, \thresh.kr(0.1, 0.5));
-	Pan2.ar(IFFT(chain), \pan.kr(0))
+	Pan2.ar(Mix(IFFT(chain)), \pan.kr(0))
 } +> \echo;
 
 //:================ DAFNIS ================
@@ -134,5 +134,5 @@
 	);
 	chain = FFT(LocalBuf(2048, 1), src);
 	chain = PV_BrickWall(chain, \thresh.kr(0.1, 0.5));
-	Pan2.ar(IFFT(chain), \pan.kr(0))
+	Pan2.ar(Mix(IFFT(chain)), \pan.kr(0))
 } +> \dafnis;
