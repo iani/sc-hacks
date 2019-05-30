@@ -69,9 +69,9 @@ IDE_Fantasy start: \musrara;
 		format("% min, % sec", (dur / 60).floor.asInteger, dur % 60);
 	};
 	scenes = [
-		[20, "1a dafnis", [0.9, 0.0, 0.0]], // 1a  meet dafnis solo
-		[20, "1b chloe", [0.0, 0.9, 0.0]], // 1b  meet chloe solo
-		[20, "1c priest", [0.0, 0.0, 0.9]], // 1c  meet priest solo
+		[20, "1a dafnis", [0.5, 0.0, 0.0]], // 1a  meet dafnis solo
+		[20, "1b chloe", [0.0, 0.5, 0.0]], // 1b  meet chloe solo
+		[20, "1c priest", [0.0, 0.0, 0.5]], // 1c  meet priest solo
 		[120, "2 dafnis meets chloe", [0.3, 0.3, 0.0]], // 2   dafnis meets chloe
 		[60, "3 priest in village", [0.0, 0.0, 0.3]], // 3   priest enters solo
 		[120, "4 priest meets chloe", [0.0, 0.3, 0.3]], // 4   priest meets chloe
