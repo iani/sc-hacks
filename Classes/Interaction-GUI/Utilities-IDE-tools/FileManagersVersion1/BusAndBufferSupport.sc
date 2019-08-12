@@ -131,6 +131,7 @@
 	
 	// 20 Jul 2018 22:31 reimplementing this with registry.
 	b { | seconds = 1, numChannels = 1, func |
+		// See also newer variant in Hacks class
 		// allocate if needed.
 		// use func as completion function.
 		^Registry(\buffers, this, {
@@ -140,6 +141,8 @@
 				seconds.doIfExists({
 					Buffer.read(Server.default, seconds, action: func);
 				},{
+					postf("Could not find audio file:\n  %\n", seconds);
+					"=== Allocating empty buffer of 1 second duration ===".postln;
 					Buffer.alloc(Server.default,
 						1 * Server.default.sampleRate,
 						numChannels,

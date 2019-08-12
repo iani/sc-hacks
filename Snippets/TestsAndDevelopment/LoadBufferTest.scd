@@ -17,3 +17,30 @@ Library.at(\buffers).keys.asArray.first.b.play;
 	};
 	"DONE".postln;
 }.fork;
+// ================================================================
+//:
+"~/sounds/*.WAV".pathMatch;
+//:recurse subfolders
+var canRecurseP;
+canRecurseP = { | p | (p +/+ "*").pathMatch.size > 0 };
+
+"~/sounds/*".pathMatch do: { | p |
+	postf("% ---- % ---- %\n", p,p.last === $/, canRecurseP.(p));
+};
+//:
+Hacks.loadAudioFilesRecursively;
+//:
+ServerBoot.add({ "loading file 1".postln; }, S.default);
+ServerBoot.add({ "loading file 2".postln; }, S.default);
+//:alternative using Notification
+// Uses modified ServerStatusWatcher::prFinalizeBoot
+\ccc.addNotifier(S.default, \booted, { | n | postf("% BOOT RECEIPT\n", n.listener)});
+//:Test load of folder with Hacks
+Hacks.loadAudioFilesRecursively;
+//:
+\CB.b.play;
+'001_AMENCUT_002'.b.postln.play;
+'002_AMENCUT_003'.b.play;
+'003_AMENCUT_004'.b.play;
+
+'032_AMENCUT_032'.b.plot;
