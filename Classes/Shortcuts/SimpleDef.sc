@@ -47,7 +47,7 @@ Linen : UGen {
 
 SimpleDef {
 	*new { | name, sourceFunc |
-		^SynthDef(name, { | out = 0, freq = 100, amp 0.1, pan = 0, gate = 1 |
+		^SynthDef(name, { | out = 0, freq = 100, amp = 0.1, pan = 0, gate = 1 |
 			var src;
 			src = sourceFunc.(freq);
 			src = src * Linen.kr(gate, 0.01, 1, 0.3, 2);

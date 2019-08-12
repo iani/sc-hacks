@@ -16,12 +16,10 @@ OSCDependant {
 	}
 
 	*new { | message, index, inspec, outspec |
-		^this.newCopyArgs(message, index, inspec.asSpec, outspec.asSpec);
-		
+		^this.newCopyArgs(message, index, inspec.asSpec, outspec.asSpec);		
 	}
 
 	setParameter { | argParamName, argEnvir |
-		// [this, \setParameter, paramName, envir].postln;
 		envir = argEnvir;
 		paramName = argParamName;
 		envir.addNotifier(OSCFunc, message,
@@ -30,10 +28,11 @@ OSCDependant {
 	}
 	
 	setParam { | msg |
-		// envir.postln;
-		envir.put(paramName, outspec.map(inspec.unmap(msg[index])));
-		// envir.postln;
-	}	
+		// vary behavior according to paramName class.
+		paramName.setParam(outspec.map(inspec.unmap(msg[index])), envir);
+		// (OLD:) This is used if paramName is a symbol:
+		// envir.put(paramName, outspec.map(inspec.unmap(msg[index])));
+	}
 }
 
 OSCDependantDict {
@@ -48,11 +47,9 @@ OSCDependantDict {
 	addOscDependant { | paramName, oscDependant |
 		dict[paramName] = oscDependant;
 		cache = dict.values.asArray;
-		// cache.postln;
 	}
 	
 	valueArray { | msg |
-		// [this, \valuearray, msg].postln;
 		cache do: _.setParam(msg[0]);
 	}
 }
@@ -72,7 +69,16 @@ NullSpec {
 	osc { | index = 0, inspec = \nil, outspec = \nil |
 		^OSCDependant(this, index, inspec, outspec)
 	}
-	
+
+	setParam { | value, envir |
+		envir.put(this, value);
+	}
+}
+
++ Bus {
+	setParam { | value |
+		this.set(value);
+	}
 }
 
 + Function {
@@ -82,3 +88,4 @@ NullSpec {
 		^this.value(number)
 	}
 }
+

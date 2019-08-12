@@ -141,8 +141,8 @@
 				seconds.doIfExists({
 					Buffer.read(Server.default, seconds, action: func);
 				},{
-					postf("Could not find audio file:\n  %\n", seconds);
-					"=== Allocating empty buffer of 1 second duration ===".postln;
+					"WARNING:".postln;
+					postf("%\n not found. Allocating empty buffer", this);
 					Buffer.alloc(Server.default,
 						1 * Server.default.sampleRate,
 						numChannels,

@@ -12,15 +12,19 @@ here to store them.)
 */
 
 Singleton {
+	*new { | name = \default |
+		^Registry(this, \default, {
+			this.newCopyArgs()	
+		})
+	}
+
 	*doesNotUnderstand { | selector ... args |
 		/*
 			{ "blah".postln; } ! 10;
 			selector.postln;
 			args.postln;
 			*/
-		^Registry(this, \default, {
-			this.newCopyArgs()	
-		}).perform(selector, *args)
+		^this.new.perform(selector, *args)
 	}
 
 	/* // why is no subclassing of this possible?

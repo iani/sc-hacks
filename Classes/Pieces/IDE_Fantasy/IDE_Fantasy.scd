@@ -1,6 +1,14 @@
-// 17 Mar 2019 13:32
-// planned for lac19
+// 19 May 2019 18:01
+/* 
+Based on version used on March 23 for the performance at LAC19.
 
+THIS VERSION IS FOR THE PERFORMANCE AT MUSRARAMIX ON MAY 30.
+
+It does not boot the server and load the sound files at startup.
+Instead it requires message "boot" to start.
+
+IDE_Fantasy.boot;
+*/
 IDE_Fantasy : Singleton {
 	var <>localpis, <locations, <>mylocation;
 	var <>clientIPs, <>clientNames; // only the remote clients are listed here
@@ -10,7 +18,7 @@ IDE_Fantasy : Singleton {
 		2                 * 3       * 9
 		// pi's per perf, num perf, params per pi
 		// total num params: 54.  54 names. 
-		// naming convention: 
+		// naming convention:
 		location_num_sensor
 		where:
 		location is one of: stanford, corfu athens
@@ -21,34 +29,31 @@ IDE_Fantasy : Singleton {
 		gx, gy, gz, 
 		where a = accellerometer, m = magnetormeter, g = gyroscope
 	*/
-	var <busnames, <buses; // dicts containing names and buses: one bus array per pie name.
+	var <busnames, <buses; // dicts containing names and buses: one bus array per PI name.
 	// busnames serve for reference and also to free buses when reinitializing.
-	var <oscFuncs; // one func per pie
-	var <localGraphicsAddr; // forward data from pies to this address
+	var <oscFuncs; // one func per PI
+	var <localGraphicsAddr; // forward data from pis to this address
 	//	var <>pollRate = 0.1; // speed of polling loop. See startUpdateLoop
 
-	*initClass {
-		/* Making sure that the system gets ready for performance 
-			right after each recompile.
-		*/
-		StartUp add: {
-			Server.default.waitForBoot({
-			
+	boot {
+		Server.default.waitForBoot({
 			var server, bname;
-			"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".postln;
+			"\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".postln;
+			"Server booted. Loading Sounds".postln;
+			"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n".postln;
 			server = Server.default;
-			
+			postf("Found % sound files: \n", (Platform.userAppSupportDir +/+ "sounds/*.wav").pathMatch.size);
 			(Platform.userAppSupportDir +/+ "sounds/*.wav").pathMatch.postln;
-			(Platform.userAppSupportDir +/+ "sounds/*.wav").pathMatch do: { | p |
+			(Platform.userAppSupportDir +/+ "sounds/*.wav").pathMatch do: { | p |				
 				bname = PathName(p).fileNameWithoutExtension.asSymbol;
+				postf("Loading %\n", bname);
 				// PathName(p).allFolders.postln;
 				Registry(\buffers, bname, {
-					Buffer.read(server, p).postln;
+					Buffer.read(server, p);
 				})
 			};
-			
-			});
-		}
+			"\n================ SOUNDS LOADED ================\n".postln;
+		});
 	}
 	
 	default {
@@ -63,7 +68,8 @@ IDE_Fantasy : Singleton {
 	
 	start { | where = \corfu, enableRemote = true |
 		// per default, do connect to hamachi.
-		// if enableRemote is true, then connect to hamachi.
+		// if enableRemote is true, then connect to hamachi, else do not connect.
+		// if standalone 		
 		mylocation = where;
 		this.initLocationsAndBuses;
 		this.clearHamachi;
@@ -75,50 +81,41 @@ IDE_Fantasy : Singleton {
 		}.defer(1); // give enough time for all buses to be created.
 	}
 
+	startConductor {
+		var path;
+		path = PathName(IDE_Fantasy.filenameSymbol.asString).pathOnly
+		++ "IDE_Fantasy_Musraramix_"
+		++  "musrara" // mylocation.asString
+		++ ".scd";
+		postf("I am looking for this storyboard script: %\n", path);
+		postf("I found this storyboard script: %\n", path.pathMatch);
+		if (path.pathMatch.size == 1) {
+			postf("I will now load: %\n", path);
+			path.load;
+		}
+		
+	}
+
 	loadMainScript {
 		// Server must be still up and running from compile / StartUp time!
 		var path;
-		path = PathName(IDE_Fantasy.filenameSymbol.asString).pathOnly ++ "IDE_Fantasy_Script.scd";
-		"LOADING: ".post; path.postln;
+		path = PathName(IDE_Fantasy.filenameSymbol.asString).pathOnly
+		++ "IDE_Fantasy_Musraramix.scd";
+		"LOADING: ".post;
+		path.postln;
 		path.load;
-		
 	}
 
 	initLocationsAndBuses {
 		localGraphicsAddr = NetAddr("127.0.0.1", 14000);
 		locations = (
 			athens: [\pi1, \pi2],
-			corfu: [\pi3, \pi4],
-			stanford: [\pi5, \pi6]
+			musrara: [\pi5]
+			// text, color: for graphics
+			// athens: [\pi1, \pi2],
+			// corfu: [\pi3, \pi4],
+			// stanford: [\pi5, \pi6]
 		);
-		this.makeBuses;
-	}
-	
-	makeBuses {
-		var base, names;
-		"Freeing previous buses for security".postln;
-		busnames do: { | a | a do: _.freeBus };  // free previous buses if restarting
-		busnames = ();
-		buses = ();
-		locations = (
-			athens: [\pi1, \pi2],
-			corfu: [\pi3, \pi4],
-			stanford: [\pi5, \pi6]
-		);
-		locations.keys.asArray do: { | location |
-			locations[location] do: { | p, num |
-				base = format("%%", location, num + 1);
-				names = [
-					\ax, \ay, \az,
-					\mx, \my, \mz,
-					\gx, \gy, \gz
-				].collect({ | n |
-					format("%%", base, n).asSymbol
-				});
-				busnames[p] = names;
-				buses[p] = names.collect({ | n | n.bus});
-			}
-		};		
 	}
 
 	clearHamachi {
@@ -162,12 +159,12 @@ IDE_Fantasy : Singleton {
 			// going back to earlier setting parameters idea.
 			if (localpis includes: p) {
 				postf("==== local: % ==== \n", p);
-				postf("%'s buses are: %\n", p, busnames[p]);
-				this.makeLocalOscFunc(p, busnames[p]);
+				// postf("%'s buses are: %\n", p, busnames[p]);
+				this.makeLocalOscFunc(p);
 			}{
 				postf("==== remote: % ==== \n", p);
-				postf("%'s buses are: %\n", p, busnames[p]);
-				this.makeRemoteOscFunc(p, busnames[p]);
+				// postf("%'s buses are: %\n", p, busnames[p]);
+				this.makeRemoteOscFunc(p);
 			}
 		}
 	}
@@ -176,25 +173,26 @@ IDE_Fantasy : Singleton {
 		Use already tested mechanism of sc-hacks 
 		to connect to sound and to display
 	*/
-	makeLocalOscFunc { | pie, buses |
+	makeLocalOscFunc { | pie |
 		var myBuses;
 		// myBuses = buses[pie];
 		OSCFunc({ | msg |
 			clientIPs do: { | addr | addr.sendMsg(*msg) };
-			this.playLocally(msg, buses); // only plays graphics
+			this.playLocally(msg); // only plays graphics
 			// for sound, use sc-hacks techniques
 		}, pie);
 	}
 	
-	makeRemoteOscFunc { | pie, buses |
+
+	makeRemoteOscFunc { | pie |
 		OSCFunc({ | msg |
 			// DO NOT BROADCAST osc received from remote clients
 			//		clientIPs do: { | addr | addr.sendMsg(*msg) };
-			this.playLocally(msg, buses);
+			this.playLocally(msg);
 		}, pie);
 	}
 
-	playLocally { | msg, buses |
+	playLocally { | msg |
 		// send to graphics locally
 		// postf("sending %, %\n", localGraphicsAddr, msg);
 		localGraphicsAddr.sendMsg(*msg);
@@ -210,6 +208,11 @@ IDE_Fantasy : Singleton {
 		// postf("My pie is: %\n. I will set these buses: %\n", msg[0], buses)
 	}
 
+	playMeta {
+		// send graphics commands for scene changes
+		// locally and to all clients
+		
+	}
 	/*
 	startUpdateLoop {
 		// only starts with start method.
