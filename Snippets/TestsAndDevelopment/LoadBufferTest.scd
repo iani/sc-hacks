@@ -36,11 +36,19 @@ ServerBoot.add({ "loading file 2".postln; }, S.default);
 // Uses modified ServerStatusWatcher::prFinalizeBoot
 \ccc.addNotifier(S.default, \booted, { | n | postf("% BOOT RECEIPT\n", n.listener)});
 //:Test load of folder with Hacks
-Hacks.loadAudioFilesRecursively;
+Hacks.loadAudioFiles;
 //:
 \CB.b.play;
 '001_AMENCUT_002'.b.postln.play;
 '002_AMENCUT_003'.b.play;
 '003_AMENCUT_004'.b.play;
 
-'032_AMENCUT_032'.b.plot;
+'031_AMENCUT_032'.b.plot;
+
+'031_AMENCUT_032'.b.play;
+
+'023_AMENCUT_024'.b.play;
+//:window tests - tmp
+\e.window;
+\x.window;
+\y.window;
