@@ -175,6 +175,7 @@
 		buffer = this.b;
 		buffer.free;
 		buffer.objectClosed;
+		this.removeMessage(\booted); // do not reload on server reboot
 	}
 
 	// bus shortcuts

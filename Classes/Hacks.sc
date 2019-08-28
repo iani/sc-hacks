@@ -51,7 +51,7 @@ Hacks : Singleton {
 	}
 
 	loadAudioFile { | path |
-		/* Load audiofile from path into buffer.
+		/* Load audiofile from path into buffer, to default server.
 			Always reload to server whenever it (re)boots.
 			If default server is booted, then load now.
 		*/

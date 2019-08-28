@@ -85,7 +85,7 @@ Notification {
 	}
 
 	*removeListenersOf { | notifier |
-		// Corrected 140612 after MC because it breaks if the notifier is an empty envir ().
+		// Corrected 140612 after MC because it breaks if notifier is empty envir ().
 		// Because ().asArray is [] which matches the whole tree.  See leafDoFrom!
 		all.leafDoFrom([notifier], { | path, notification |
 			notification.notifier.removeDependant(notification);
