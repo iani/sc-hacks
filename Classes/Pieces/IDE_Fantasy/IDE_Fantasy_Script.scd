@@ -1,11 +1,18 @@
 // 21 Mar 2019 16:18
-//:give basic feedback
+//:give basic feedbackjan
 // { "Starting sound script".postln; } ! 50;
 // Last check before performance: 23 Mar 2019 10:41 (Stanford)
 
 // ================================================================
 //: Corfu 1
 // ================================================================
+//:
+
+\lamentodellaninfa.b;
+
+//:
+
+
 {
 	var bnum;
 	bnum = \lamentodellaninfa.b.bufnum;
@@ -30,12 +37,12 @@
 	\pan.slider([-1, 1], \corfu1)
 );
 //:
-\per <+.corfu1 '/pi3'.osc(3, [-20, 40], [0.9, 10]);
-\amp <+.corfu1 '/pi3'.osc(1, [-10, 40], \amp);
-\dur <+.corfu1 '/pi3'.osc(1, [-10, 40], [0.1, 5]);
-\rate <+.corfu1 '/pi3'.osc(2, [-40, 40], [0.9, 1.2]);
-\pos <+.corfu1 '/pi3'.osc(6, [-10, 4], [0.2, 5]);
-\pan <+.corfu1 '/pi3'.osc(7, [-2, 2], [-1, 1]);
+\per <+.corfu1 '/pi1'.osc(3, [-20, 40], [0.9, 10]);
+\amp <+.corfu1 '/pi1'.osc(1, [-10, 40], \amp);
+\dur <+.corfu1 '/pi1'.osc(1, [-10, 40], [0.1, 5]);
+\rate <+.corfu1 '/pi1'.osc(2, [-40, 40], [0.9, 1.2]);
+\pos <+.corfu1 '/pi1'.osc(6, [-10, 4], [0.2, 5]);
+\pan <+.corfu1 '/pi1'.osc(7, [-2, 2], [-1, 1]);
 //:
 // ================================================================
 //  Corfu 2 
