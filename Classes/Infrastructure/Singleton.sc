@@ -8,7 +8,6 @@ where <SingletonSubclass> is a subclass of Singleton defined by the user.
 (Other instances can be created and used if needed, but there is no mechanism provided
 here to store them.)
 
-
 */
 
 Singleton {

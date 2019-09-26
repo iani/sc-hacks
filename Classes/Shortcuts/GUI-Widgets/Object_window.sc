@@ -26,7 +26,7 @@
 			var window;
 			// when window closes it removes itself from registry.
 			// see Notification:onObjectClosed, and Regsitry class.
-			window = Window(this.asString, rect);
+			window = Window(this.asString, rect, false);
 			// save window rect for use when re-opening:
 			window.view.mouseLeaveAction_({ | topview |
 				Registry.put(\windowRects, this, key, topview.findWindow.bounds)
@@ -60,7 +60,9 @@
 	}
 
 	bounds { | key = \default |
-		^Registry(\windowRects, this, key, { Rect(0, 0, 400, 400) } )
+		^Registry(\windowRects, this, key, {
+			PlatformGuiDefaults.bounds
+		} )
 	}
 
 	// Shortcuts for VLayout and Hlayout
@@ -82,7 +84,9 @@
 					*items
 				);
 				this.bounds.postln; 
-				w.bounds = w.bounds.height_(items.size * 20);
+				w.bounds = w.bounds.height_( // 20 or 40
+					items.size * PlatformGuiDefaults.lineHeight
+				);
 			});
 		}.fork(AppClock);	
 	}
@@ -112,7 +116,9 @@
 		}.defer(0.1);
 		// Used as component in VLayout: 
 		^HLayout(
-			StaticText().string_(name ?? { this.asString }),
+			StaticText()
+			.font_(PlatformGuiDefaults.font)
+			.string_(name ?? { this.asString }),
 			Slider()
 			.orientation_(\horizontal)
 			.action_({ | me |
@@ -122,7 +128,9 @@
 				{ notification.listener.value = controlspec.unmap(value ? 0) }.defer;
 			}),
 			NumberBox()
-			.maxWidth_(80)
+			.font_(PlatformGuiDefaults.font)
+			.decimals_(5)
+			.maxWidth_(180)
 			.clipLo_(controlspec.minval)
 			.clipHi_(controlspec.maxval)
 			// .decimals_(10)

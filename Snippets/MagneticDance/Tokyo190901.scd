@@ -7,8 +7,10 @@ Hacks.loadAudioFiles;
 //:test lamentodellaninfa
 \lamentodellaninfa.b.postln.play;
 //:Play stereo with amplitude control
-{ PlayBuf.ar(1, \lamentodellaninfa.b.bufnum, doneAction: 2) * \amp.kr(1).dup(2) } +> \l;
-\amp <+ 15;
+\amp <+.l 15;
+
+{ PlayBuf.ar(1, \lamentodellaninfa.b.bufnum, doneAction: 2) * \amp.kr(1).dup(2)
+} +> \l;
 //:grain lamentodellaninfa test
 {
 	var bnum;
@@ -29,13 +31,13 @@ Hacks.loadAudioFiles;
 	\pos.slider([0, 1], \tokyo1, \pos),
 	\per.slider([0.2, 20, \exp], \tokyo1, \per),
 	\dur.slider([0.1, 5, \exp], \tokyo1, \dur),
-	\rate.slider([0.2, 5], \tokyo1, \rate),
+	\rate.slider([0.7, 1.2], \tokyo1, \rate),
 	\pan.slider([-1, 1], \tokyo1, \pan),
 );
 //:
 \per <+.tokyo1 '/pi1'.osc(3, [-20, 40], [0.9, 10]);
 \amp <+.tokyo1 '/pi1'.osc(1, [-10, 40], \amp);
-\dur <+.tokyo1 '/pi1'.osc(1, [-10, 40], [0.1, 5]);
-\rate <+.tokyo1 '/pi1'.osc(2, [-40, 40], [0.9, 1.2]);
-\pos <+.tokyo1 '/pi1'.osc(6, [-10, 4], [0.2, 5]);
+\dur <+.tokyo1 '/pi1'.osc(4, [-10, 10], [0.1, 5]);
+\rate <+.tokyo1 '/pi1'.osc(0, [-10, 20], [0.1, 5]);
+\pos <+.tokyo1 '/pi1'.osc(6, [-10, 20], [0.7, 1.2]);
 \pan <+.tokyo1 '/pi1'.osc(7, [-2, 2], [-1, 1]);

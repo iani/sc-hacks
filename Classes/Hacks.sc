@@ -23,12 +23,13 @@ Hacks : Singleton {
 		);
 	}
 
-	loadAudioFiles { | path |
+	loadAudioFiles { | path = "~/sounds" |
 		/* Load audio files contained in folder specified by path
 			and it subfolders. 
 		*/
 		var filePaths, server;
 		filePaths = List();
+		postf("LOADING AUDIO FILES FROM FOLDER: %\n", path);
 		this.audioFilePaths(path ? "~/sounds", filePaths);
 		server = S.default; // cache server for iteration over file paths
 		filePaths do: { | afpath |
@@ -84,5 +85,52 @@ Hacks : Singleton {
 		});
 		^Registry.put(\buffers, name, buffer)
 	}
-	
+	/*
+	bufferListGui {
+		var bufferListModel; // contains list of buffers and names
+		// Updates buffers and names and list when they change
+		// Returns name list for listview
+		// Returns single buffer for listview for playing or other purposes.
+		bufferListModel = BufferListModel()
+		\buffers.v(
+			ListView()
+			.font_(Font("Helvetica", 32))
+			.items_
+			.action_({ | me |
+				me.items[me.selection].postln;
+			})
+		)
+	}
+	*/
+	buffers {
+		^this.buffersOrDict.values;
+	}
+
+	buffersOrDict {
+		^(Registry.at(\buffers) ?? { IdentityDictionary.new })
+	}
+
+	bufferNames {
+		^this.buffersOrDict.keys;
+	}
+	}
+
+/* Adapted from History::formatTime
+*/
+
++ SimpleNumber {
+	formatTime {
+		var val, h, m, s;
+		val = this;
+		h = val div: (60 * 60);
+		val = val - (h * 60 * 60);
+		m = val div: 60;
+		val = val - (m * 60);
+		s = val;
+		if (h > 0) {
+			^"%:%:%".format(h, m, s.round(0.01))
+		}{
+			^"%:%".format(m, s.round(0.001))
+		}
+	}
 }

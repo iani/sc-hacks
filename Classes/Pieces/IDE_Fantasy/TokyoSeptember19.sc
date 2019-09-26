@@ -1,5 +1,5 @@
 //  2 Sep 2019 17:02
-// planned for lac19
+// Copied from class for lac19
 
 TokyoSeptember19 : Singleton {
 	var <>localpis, <locations, <>mylocation;
@@ -27,7 +27,7 @@ TokyoSeptember19 : Singleton {
 	var <localGraphicsAddr; // forward data from pies to this address
 	//	var <>pollRate = 0.1; // speed of polling loop. See startUpdateLoop
 
-	*initClass {
+	*disabledInitclass {
 		/* Making sure that the system gets ready for performance 
 			right after each recompile.
 		*/
