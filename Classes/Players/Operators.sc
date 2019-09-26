@@ -114,7 +114,7 @@
 	}
 
 	map { | param, bus |
-		this.envir.put(param, bus);
+		this.envir.put(param, bus.bus);
 	}
 	
 	+> { | player, envir |

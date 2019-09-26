@@ -1,12 +1,11 @@
 /* 17 Aug 2018 15:12
 Encapsulate function to act as dependant in notification
-
 */
 
 OSCDependant {
 	var <message, <index, <inspec, <outspec;
 	var <envir, <paramName;
-	
+
 	*initClass {
 		StartUp add: {
 			thisProcess addOSCRecvFunc: { | msg, time, addr, recvPort |
@@ -17,7 +16,6 @@ OSCDependant {
 
 	*new { | message, index, inspec, outspec |
 		^this.newCopyArgs(message, index, inspec.asSpec, outspec.asSpec);
-		
 	}
 
 	setParameter { | argParamName, argEnvir |
@@ -72,6 +70,14 @@ NullSpec {
 	osc { | index = 0, inspec = \nil, outspec = \nil |
 		^OSCDependant(this, index, inspec, outspec)
 	}
+
+	/*
+		
+	oscd { paramName |
+		// access osc dependant, for bus
+		//	^
+	}
+	*/
 	
 }
 

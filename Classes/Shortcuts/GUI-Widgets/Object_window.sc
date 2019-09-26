@@ -85,7 +85,7 @@
 				);
 				this.bounds.postln; 
 				w.bounds = w.bounds.height_( // 20 or 40
-					items.size * PlatformGuiDefaults.lineHeight
+					items.size * PlatformGuiDefaults.lineHeight + 5
 				);
 			});
 		}.fork(AppClock);	
