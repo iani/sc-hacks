@@ -85,5 +85,64 @@ BusOsc.watch(\test1,
 ("/" ++ \pi1).asSymbol.asCompileString;
 //:
 \test.busOsc(\pi1, 0, -10, 10);
+//:Test again BusOsc for mapping
+BusOsc.watch(\test2, //name
+	// bus   osc  index min max
+	[\test2, \pi1, 0, -10, 10]
+);
+//:sound for testing again
+{ WhiteNoise.ar(Env.perc.kr(levelScale: 0.1, gate: \amp.kr(0.1, 0.1) > 0.5))} +> \test;
+//;map
+// envir  param  bus
+\test.map(\amp, \test2);
+//:multiple gates
+{
+	var src;
+	src = (1..10).normalize[1..9] collect: { | i |
+		[WhiteNoise.ar(Env.perc.kr(levelScale: 0.1,
+			gate: \amp.kr(0.1, 0.1) > i)),
+			WhiteNoise.ar(Env.perc.kr(levelScale: 0.1,
+				gate: \amp.kr(0.1, 0.1) < i))
+		]
+	};
+	Mix(src.flat).stereo
+} +> \test;
+//:multiple gates with different filters
+{
+	var src;
+	src = (1..10).normalize[1..9] collect: { | i, j |
+		[
+			Ringz.ar(
+				WhiteNoise.ar(Env.perc.kr(levelScale: 0.05,
+					gate: \amp.kr(0.1, 0.1) > i)),
+				j + 1 * 100, 0.5
+			),
+			Ringz.ar(
+				WhiteNoise.ar(Env.perc.kr(levelScale: 0.05,
+					gate: \amp.kr(0.1, 0.1) < i)),
+				j + i * 100, 0.5
+			)
+		]
+	};
+	Mix(src.flat).stereo
+} +> \test;
+//:Sine envelope
+{
+	var src;
+	src = (1..10).normalize[1..9] collect: { | i, j |
+		[
+			Ringz.ar(
+				WhiteNoise.ar(Env.sine.kr(levelScale: 0.005,
+					gate: \amp.kr(0.1, 0.1) > i)),
+				j + 1 * 100, 2.0
+			),
+			Ringz.ar(
+				WhiteNoise.ar(Env.sine.kr(levelScale: 0.005,
+					gate: \amp.kr(0.1, 0.1) < i)),
+				j + i * 100, 2.0
+			)
+		]
+	};
+	Mix(src.flat).stereo
+} +> \test;
 //:
-\something.addNotifier(\test, '/pi1', { | val | val.postln; });:
