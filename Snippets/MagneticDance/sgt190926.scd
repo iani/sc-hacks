@@ -94,7 +94,7 @@ BusOsc.watch(\test2, //name
 { WhiteNoise.ar(Env.perc.kr(levelScale: 0.1, gate: \amp.kr(0.1, 0.1) > 0.5))} +> \test;
 //;map
 // envir  param  bus
-\test.map(\amp, \test2);
+\test.map(\amp, \sx);
 //:multiple gates
 {
 	var src;
@@ -113,12 +113,12 @@ BusOsc.watch(\test2, //name
 	src = (1..10).normalize[1..9] collect: { | i, j |
 		[
 			Ringz.ar(
-				WhiteNoise.ar(Env.perc.kr(levelScale: 0.05,
+				WhiteNoise.ar(Env.perc.kr(levelScale: 0.015,
 					gate: \amp.kr(0.1, 0.1) > i)),
 				j + 1 * 100, 0.5
 			),
 			Ringz.ar(
-				WhiteNoise.ar(Env.perc.kr(levelScale: 0.05,
+				WhiteNoise.ar(Env.perc.kr(levelScale: 0.015,
 					gate: \amp.kr(0.1, 0.1) < i)),
 				j + i * 100, 0.5
 			)
