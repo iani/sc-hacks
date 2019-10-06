@@ -1,28 +1,13 @@
 //:Synapsewear connection
 /* Synapseware data format: 
-/synapseWear, time, status, x, y, z, ...
+/pi1, time, status, x, y, z, ...
 */
 //:Connect to synapse, scale input
 BusOsc.watch(\synapse, //name
-	[\sx, \synapseWear, 2, -2e4, 2e4],
-	[\sy, \synapseWear, 3, -2e4, 2e4],
-	[\sz, \synapseWear, 4, -2e4, 2e4],
+	[\sx, \pi1, 2, -20, 20],
+	[\sy, \pi1, 3, -20, 20],
+	[\sz, \pi1, 4, -20, 20],
 );
-//:Test connection to synths
-{
-	Mix([
-		LFSaw.ar(\freq1.kr(0.2, 0.5).range(200, 400), 0, 0.05),
-		SinOsc.ar(\freq2.kr(0.3, 0.5).range(500, 1000), 0, 0.05),
-		SinOsc.ar(\freq3.kr(0.4, 0.5).range(1500, 2000), 0, 0.05),
-	]
-	).stereo
-} +> \sgt;
-//:test parameter change
-\freq1 <+ 0.8;
-//:connect x to sound
-\sgt.map(\freq1, \sx);
-\sgt.map(\freq2, \sy);
-\sgt.map(\freq3, \sz);
 
 //:Load samples
 //:Test sample
@@ -32,7 +17,7 @@ Hacks.loadAudioFiles;
 {
 	GrainBuf.ar(
 		2,
-		Impulse.kr(\gps.kr(1).range(0.05, 10)),
+		Impulse.kr(\gps.kr(1).range(1, 10)),
 		\dur.kr(1) * 0.25,
 		sndbuf: \lamentodellaninfa.b.bufnum,
 		rate: \rate.kr(1).range(0.5, 1.5),
@@ -59,26 +44,11 @@ Hacks.loadAudioFiles;
 );
 // ================================================================
 //: add triggering
-//:+Very simple test rung
-{ WhiteNoise.ar(Env.perc.kr(levelScale: 0.1, gate: \amp.kr(0.1, 0.1) > 0.5))} +> \test;
-[0, 0.5001, 0.4, 0.501, 0.45, 0.51, 0.49] do: { | i |
-	\amp <+ i;
-	i.postln;
-	0.5.wait;
-}
-//:Connect to osc
-\testbus.busOsc('/pi1', 0, -10, 10);
-//:map test amp to bus
-\test.map(\amp, \test);
-//:test watch method
-BusOsc.watch(\test1,
-	[\test, \pi1, 0, -10, 10]
-);
 //:sound for testing again
 { WhiteNoise.ar(Env.perc.kr(levelScale: 0.1, gate: \amp.kr(0.1, 0.1) > 0.5))} +> \test;
 //;map
 // envir  param  bus
-\test.map(\amp, \sx);
+\test.map(\amp, \sz);
 //:multiple gates
 {
 	var src;
@@ -97,12 +67,12 @@ BusOsc.watch(\test1,
 	src = (1..10).normalize[1..9] collect: { | i, j |
 		[
 			Ringz.ar(
-				WhiteNoise.ar(Env.perc.kr(levelScale: 0.015,
+				WhiteNoise.ar(Env.perc.kr(levelScale: 0.005,
 					gate: \amp.kr(0.1, 0.1) > i)),
 				j + 1 * 100, 0.5
 			),
 			Ringz.ar(
-				WhiteNoise.ar(Env.perc.kr(levelScale: 0.015,
+				WhiteNoise.ar(Env.perc.kr(levelScale: 0.005,
 					gate: \amp.kr(0.1, 0.1) < i)),
 				j + i * 100, 0.5
 			)
@@ -116,12 +86,12 @@ BusOsc.watch(\test1,
 	src = (1..10).normalize[1..9] collect: { | i, j |
 		[
 			Ringz.ar(
-				WhiteNoise.ar(Env.sine.kr(levelScale: 0.005,
+				WhiteNoise.ar(Env.sine.kr(levelScale: 0.002,
 					gate: \amp.kr(0.1, 0.1) > i)),
 				j + 1 * 100, 2.0
 			),
 			Ringz.ar(
-				WhiteNoise.ar(Env.sine.kr(levelScale: 0.005,
+				WhiteNoise.ar(Env.sine.kr(levelScale: 0.002,
 					gate: \amp.kr(0.1, 0.1) < i)),
 				j + i * 100, 2.0
 			)
@@ -129,4 +99,48 @@ BusOsc.watch(\test1,
 	};
 	Mix(src.flat).stereo
 } +> \test;
+\test.map(\amp, \sz);
+//:Sine envelope with freq + dur control
+{
+	var src, freq, dur;
+	freq = \freq.kr(0.5, 0.5).range(0.2, 1.5);
+	dur = \dur.kr(0.5, 0.5).range(1, 4);
+	src = (1..10).normalize[1..9] collect: { | i, j |
+		[
+			Ringz.ar(
+				WhiteNoise.ar(Env.sine.kr(levelScale: 0.002,
+					gate: \amp.kr(0.1, 0.1) > i)),
+				j + 1 * 100 * freq, 2.0
+			),
+			Ringz.ar(
+				WhiteNoise.ar(Env.sine.kr(levelScale: 0.002,
+					gate: \amp.kr(0.1, 0.1) < i)),
+				j + i * 100 * freq, 2.0
+			)
+		]
+	};
+	Mix(src.flat).stereo
+} +> \test;
+\test.map(\amp, \sz);
+\test.map(\freq, \sx);
+\test.map(\dur, \sy);
+
+// ================================================================
+// TESTS
+//:Test connection to synths
+{
+	Mix([
+		LFSaw.ar(\freq1.kr(0.2, 0.5).range(200, 400), 0, 0.05),
+		SinOsc.ar(\freq2.kr(0.3, 0.5).range(500, 1000), 0, 0.05),
+		SinOsc.ar(\freq3.kr(0.4, 0.5).range(1500, 2000), 0, 0.05),
+	]
+	).stereo
+} +> \sgt;
+//:test parameter change
+\freq1 <+ 0.8;
+//:connect x to sound
+\sgt.map(\freq1, \sx);
+\sgt.map(\freq2, \sy);
+\sgt.map(\freq3, \sz);
+
 //:
