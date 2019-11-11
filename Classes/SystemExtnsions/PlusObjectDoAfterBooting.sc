@@ -1,3 +1,7 @@
+/*
+Experimental. Added Aug 12 2019.
+Evaluate usage cases and compare to doWhenBooted, waitForBoot.
+*/
 + Object {
 	doAfterBooting { | afterBootAction, alreadyRunningAction, server |
 		server ?? { server = Server.default };

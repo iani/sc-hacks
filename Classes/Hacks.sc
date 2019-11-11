@@ -5,9 +5,18 @@ In future possibly also perform other global management tasks.
 
 Hacks : Singleton {
 
-	homedir {
-		^PathName(this.filenameSymbol.asString).pathOnly;
+	homeDir {
+		^PathName(this.class.filenameSymbol.asString).pathOnly;
 	}
+
+	snippetDir {
+		^PathName(this.homeDir).parentPath ++ "Snippets/";
+	}
+
+	synthdefDir {
+		^this.snippetDir ++ "SynthDefs/";
+	}
+	
 
 	defaultGui {
 		this.br_.v(
@@ -23,6 +32,8 @@ Hacks : Singleton {
 		);
 	}
 
+	
+	
 	loadAudioFiles { | path = "~/sounds" |
 		/* Load audio files contained in folder specified by path
 			and it subfolders. 
