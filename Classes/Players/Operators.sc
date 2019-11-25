@@ -113,8 +113,13 @@
 		^PersistentBusProxy(this, param);
 	}
 
-	map { | param, bus |
-		this.envir.put(param, bus.bus);
+	map { | ... paramBusPairs |
+		// map parameter - bus pairs named by symbols
+		var envir;
+		envir = this.envir;
+		paramBusPairs pairsDo: { | param, bus |
+			envir.put(param, bus.bus);
+		};
 	}
 	
 	+> { | player, envir |
