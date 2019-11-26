@@ -35,9 +35,15 @@
 
 	set { | ... args |
 		// set group of event of symbol
+		// does not set event variables!
 		^this.target.set(*args);
 	}
 
+	put { | param, val |
+		// set event parameter
+		this.e.put(param, val);
+	}
+	
 	target { ^this.e.target }
 	
 	e { ^Nevent(this) }
@@ -227,6 +233,17 @@
 		 envir: The (name of the) envir to play the routine in. If nil, defaults to currentEnvir.
 		*/
 		(envir ? currentEnvironment).playLoop(key, this);
+	}
+
+	map { | envir, param, controlplayer |
+		/* DRAFT!
+			Play control rate function into bus
+		*/
+		var busname;
+		busname = format("%_%", envir, param).asSymbol;
+		controlplayer ?? { controlplayer = busname };
+		envir.map(param, busname);
+		{ Out.kr(busname.bus.index, this.value) } +> controlplayer;
 	}
 
 	playFor { | playerName, dur = 1 |

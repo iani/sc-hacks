@@ -42,9 +42,16 @@
 \thresh <+.pv1 0.7;
 \thresh <+.pv1 0.97;
 //: Magabove
+\thresh <+.pv1 0.75;
 Pvs({ | ch |
 	PV_MagAbove(ch, \thresh.kr(1).linexp(0.001, 25))
-});
+}, startpos: 0);
+//:
+\pv1.map(\thresh, \thresh);
+//:
+\thresh.bus.set(0.0);
+//:
+{ Out.kr(\thresh.bus, Line.kr(0, 1, 60)) } +> \threshnoise;
 //: MagBelow
 Pvs({ | ch |
 	PV_MagBelow(ch, \thresh.kr(1).linexp(0.1, 25))
@@ -112,3 +119,18 @@ Pvs({ | ch |
 Pvs({ | ch |
 	PV_BrickWall(ch, \shift.kr(0).linexp(0.0001, 0.5), 1)
 });
+//:BinWipe requires two buffers
+/*
+Pvs({ | ch |
+	PV_BinWipe(ch, \shift.kr(0).linexp(0.0001, 0.5), 1)
+});
+*/
+//:RandComb
+Pvs({ | ch |
+	PV_RandComb(ch, \wipe.kr(0).linexp(0.0001, 0.9),
+		Impulse.kr(10))
+});
+//:
+\wipe <+.pv1 1.015;
+\wipe <+.pv1 1;
+\fxvol <+.pv1 2;

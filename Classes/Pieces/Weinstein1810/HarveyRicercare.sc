@@ -133,7 +133,7 @@ HarveyRicercare {
 			}.defer;
 			{
 				RecordBuf.ar(In.ar(4), \ricercare.b.bufnum, 0,
-					\level.kr(1), loop: 0, doneAction: 2
+		 			\level.kr(1), loop: 0, doneAction: 2
 				);
 				Silent.ar;
 			} +> \ricercare;

@@ -34,12 +34,17 @@ Pvs({ | ch |
 */
 
 Pvs {
-	*new { | f, player = \cauche1, effect = \pv1 |
+	*new { | f, player = \cauche1, effect = \pv1,
+		srcvol = 0, fxvol = 1, startpos = 809 |
+		// renew values of environment from eventual previous call:
+		effect.put(\srcvol, srcvol);
+		effect.put(\fxvol, fxvol);
+		effect.put(\startpos, startpos);
 		player *> effect;
 		{
 			PlayBuf.ar(1, \prologue.b, \rate.kr(0.5, 1).urange(0.5, 1.5),
 				Impulse.kr(\period.kr(9e10).reciprocal),
-				\startpos.kr(809) + 10 * 44100, 1);
+				\startpos.kr(startpos) + 10 * 44100, 1);
 		} +> player;
 		{
 			var src, fx;
@@ -48,7 +53,7 @@ Pvs {
 			chain = FFT(LocalBuf(2048, 1), src);
 			chain = f.(chain);
 			fx = IFFT(chain);
-			Mix([src * \srcvol.kr(0.5), fx * \fxvol.kr(0.5)]).stereo;
+			Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]).stereo;
 		} +> effect;
 	}
 }
