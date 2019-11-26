@@ -124,25 +124,41 @@
 	
 	+> { | player, envir |
 		// play named SynthDef in player.
-		// Push environment before playing. See optional 4th argument in Nevent:play for push.
+		// Push environment before playing.
+		// See optional 4th argument in Nevent:play for push.
 		^player.asPlayer(envir).play(this); // accept non-symbol player arg
 	}
 
+	// ================ LINKING PLAYERS ================
 	//	player { | envir | ^(envir ? this) }
-	*> { | reader, param = \out | // many writers to one reader. Readers bus stays same
-		// The new writer gets the reader's bus. Thus a new writer is added to the reader.
+	*> { | reader, param = \out | // many writers to one reader.
+		// Readers bus stays same
+		// The new writer gets the reader's bus.
+		// Thus a new writer is added to the reader.
 	     ^reader.asPersistentBusProxy(\in) linkReadersBus2Writer: (
 	           PersistentBusProxy(this, param)
          )
 	}
 
-	*< { | reader, param = \out | // many readers to one writer. Writers bus stays same
-		// The new reader gets the writer's bus.  Thus a new reader is added to the writer.
+	*< { | reader, param = \out | // many readers to one writer.
+		// Writers bus stays same
+		// The new reader gets the writer's bus.
+		// Thus a new reader is added to the writer.
 	     ^reader.asPersistentBusProxy(\in) linkWritersBus2Reader: (
 	           PersistentBusProxy(this, param)
          )		
 	}
 
+	soundIn { | chan = 0 |
+		// TODO: play soundin in players envir. Add numChannels argument
+		var soundinPlayer;
+		soundinPlayer = format("%_%", \soundin, this).asSymbol;		
+		soundinPlayer *> this;
+		{ SoundIn.ar(chan) } +> soundinPlayer;
+	}
+
+	// ================================================================
+	// different actions depending on argument
 	<+ { | argument, envir |
 		// argument interprets this differently according to class
 		// See file ArgSetParameter.sc
@@ -171,6 +187,21 @@
 	getSpec { | param, envir |
 		this.p(envir).getSpec(param, param.asSpec)
 	}
+
+	playFor { | playerName, startpos = 0, dur = 1 |
+		/* Utility. Play buffer for given duration
+			with playbuf. */
+		{
+			PlayBuf.ar(
+				this.b.numChannels,
+				this.b,
+				\rate.kr(1),
+				\trig.kr(1),
+				\startpos.kr((startpos * this.b.sampleRate)),
+				1
+			) * \amp.kr(1)
+		}.playFor(playerName, dur);	
+	}
 }
 
 + Function {
@@ -194,6 +225,26 @@
 		 envir: The (name of the) envir to play the routine in. If nil, defaults to currentEnvir.
 		*/
 		(envir ? currentEnvironment).playLoop(key, this);
+	}
+
+	playFor { | playerName, dur = 1 |
+		/* Utility. Play in player for given duration.
+			DONE: Enable time-overlapping calls to playFor
+			on the same player:
+			stop the previous routine if a new playFor
+			is sent while the routine is still playing.
+		*/
+		var routine;
+		playerName.changed(\playFor);
+		routine = {
+			this +> playerName;
+			dur.wait;
+			playerName.stop;
+			routine.removeNotifier(playerName, \playFor);
+		}.fork;
+		routine.addNotifier(playerName, \playFor, { | n |
+			n.listener.stop;
+		});
 	}
 }
 

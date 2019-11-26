@@ -32,8 +32,17 @@ Hacks : Singleton {
 		);
 	}
 
-	
-	
+	listAudioBuffers {
+		Registry.at(\buffers) keysValuesDo: { | key, buffer |
+			postf("buffer % : % channels, %\n",
+				key.asCompileString,
+				buffer.numChannels,
+				(buffer.numFrames / buffer.sampleRate).longFormatTime;
+			);
+			buffer.postln;
+		}
+	}
+
 	loadAudioFiles { | path = "~/sounds" |
 		/* Load audio files contained in folder specified by path
 			and it subfolders. 
@@ -142,6 +151,21 @@ Hacks : Singleton {
 			^"%:%:%".format(h, m, s.round(0.01))
 		}{
 			^"%:%".format(m, s.round(0.001))
+		}
+	}
+
+	longFormatTime {
+		var val, h, m, s;
+		val = this;
+		h = val div: (60 * 60);
+		val = val - (h * 60 * 60);
+		m = val div: 60;
+		val = val - (m * 60);
+		s = val;
+		if (h > 0) {
+			^"% hours, % minutes: % seconds".format(h, m, s.round(0.01))
+		}{
+			^"% minutes, % seconds".format(m, s.round(0.001))
 		}
 	}
 }
