@@ -48,4 +48,7 @@ var chan = 0;
 \soundin.p(\effect);
 //:test again performing operator
 { WhiteNoise.ar(0.1) }.perform('+>', \player, \envir);
-
+//:+test inf wait;
+1.postln;
+inf.wait;
+"this will never happen";

@@ -188,8 +188,9 @@
 		this.p(envir).getSpec(param, param.asSpec)
 	}
 
-	playFor { | playerName, startpos = 0, dur = 1 |
+	playBuf { | playerName, startpos = 0, dur |
 		/* Utility. Play buffer for given duration
+			Default duration is inf i.e. loop buffer forever.
 			with playbuf. */
 		{
 			PlayBuf.ar(
@@ -200,7 +201,7 @@
 				\startpos.kr((startpos * this.b.sampleRate)),
 				1
 			) * \amp.kr(1)
-		}.playFor(playerName, dur);	
+		}.playFor(playerName, dur ? inf);	
 	}
 }
 

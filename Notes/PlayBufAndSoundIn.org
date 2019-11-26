@@ -1,0 +1,11 @@
+# 26 Nov 2019 03:40
+* done
+- aFunction.playFor(\playername, dur) :: play function in player \playername, for dur seconds. 
+- aSymbol.playBuf(\playername, startpos, dur) :: play buffer aSymbol in player \playername, starting at startpos, for dur seconds.  Default duration is infinite, and buffer loop is turned on.
+- aSymbol.soundIn(chan = 0) :: get SoundIn.ar(chan) in player named 'soundin_aSymbol', and link its output to player aSymbol. Player aSymbol can get the soundin signal through Inp.ar(chan).  
+* planned
+- aSymbol.loop(startpos, period, dur, playerName) :: Loop playbuf with buffer named aSymbol, in player playerName, using Impulse.kr(period.reciprocal) as trigger and startpos as startpos.  playerName defaults to aSymbol_loop. Play the loop for dur seconds. Dur defaults to inf.
+- aSymbol.loopIn(inputPlayer, startpos, period, dur, playerName) :: like aSymbol.loop, but also link the output of the loop playing player to the input of inputPlayer. The inputPlayer can get the output of the loop with Inp.ar.
+- aSymbol.recordIn(dur = 1, chan = 0, playerName) :: Record SoundIn.ar(chan) into buffer named aSymbol.  Buffer duration is dur. playerName defaults to aSymbol_record. RecordBuf keeps looping until player is stopped. 
+
+
