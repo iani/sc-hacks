@@ -197,9 +197,10 @@
 				this.b.numChannels,
 				this.b,
 				\rate.kr(1),
-				\trig.kr(1),
+				// \trig.kr(1),
+				Impulse.kr(\period.kr(9e10).reciprocal),
 				\startpos.kr((startpos * this.b.sampleRate)),
-				1
+				1 // loop on
 			) * \amp.kr(1)
 		}.playFor(playerName, dur ? inf);	
 	}
@@ -237,12 +238,17 @@
 		*/
 		var routine;
 		playerName.changed(\playFor);
+		// "!!!!!!!!!!!!!!!!!! OUTSIDE !!!!!!!!!!!!!!!!!!!".postln;
+		// currentEnvironment.postln;
 		routine = {
 			this +> playerName;
+			//	"!!!!!!!!!!!!!!!!!! INSIDE !!!!!!!!!!!!!!!!!!!".postln;
+			// currentEnvironment.postln;
 			dur.wait;
 			playerName.stop;
 			routine.removeNotifier(playerName, \playFor);
 		}.fork;
+		playerName.push;
 		routine.addNotifier(playerName, \playFor, { | n |
 			n.listener.stop;
 		});

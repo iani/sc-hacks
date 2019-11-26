@@ -14,6 +14,8 @@ BufRd  *ar { arg numChannels, bufnum=0, phase=0.0, loop=1.0, interpolation=2;
 
 + Symbol {
 
+	/*
+		// SEE FILE Operstors.scd for newer version:
 	playBuf {
 		| bufnum = 0, numChannels = 1, rate = 1.0, trigger = 1.0, 
 		startPos = 0.0, loop = 1, doneAction = 2,
@@ -33,7 +35,7 @@ BufRd  *ar { arg numChannels, bufnum=0, phase=0.0, loop=1.0, interpolation=2;
 			doneAction
 		)
 	}
-
+	*/
 	/// TODO: Complete the following ////////////
 	playBufKr { 
 		| numChannels = 1, bufnum=0, rate=1.0, trigger=1.0,

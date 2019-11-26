@@ -4,17 +4,43 @@ Hacks.loadAudioFiles;
 Hacks.listAudioBuffers;
 //:playback prologue - find start
 {
-	PlayBuf.ar(1, \prologue.b, \rate.kr(1), \trig.kr(1),
-		44100 * 10, 1).stereo;
+	PlayBuf.ar(1, \prologue.b, \rate.kr(1),
+		Impulse.kr(\period.kr(9e10).reciprocal),
+		// \trig.kr(1),
+		\startpos.kr(10) * 44100, 1).stereo;
 } +> \playbufstereo;
+//:change period. + start point
+\period <+ 10.2; // keep this
+\startpos <+ 790.2;
+//:
+\period <+ 30;
 //:playback prologue - play for limited duration with playFor
 {
 	PlayBuf.ar(1, \prologue.b, \rate.kr(1), \trig.kr(1),
 		44100 * 10, 1).stereo
 }.playFor(\playbufstereo, 6.5);
-//:try playFor on buffer name
+//:try playBuf
 //                            startpos, dur
-\prologue.playFor(\playbufmono, 10, 6.5);
+\prologue.playBuf(\playbufmono, 10, 6.5);
+//:try playBuf with changing startpos and period
+//                           play for ever
+\prologue.playBuf(\playbufmono, 10);
+//:
+~rate = 0.52;
+//:
+~period = 5;
+//:
+~period = 0.95;
+//:
+\period <+.playbufmono 1;
+//:
+~rate;
+//:
+\prologue.e;
+//:
+\period <+ 1;
+//:
+~period;
 //:test soundin
 \soundinTest.soundIn;
 { Inp.ar.stereo * LFNoise0.kr(10, 0, 0.9) } +> \soundinTest;
