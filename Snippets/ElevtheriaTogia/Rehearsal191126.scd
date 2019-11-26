@@ -1,17 +1,74 @@
-//:
-Hacks.loadAudioFiles;
-//:
 Hacks.listAudioBuffers;
+//:setup sensors
+BusOsc.watch1(\thisissensestagetest, '/minibee/data',
+	[\testbus1_x, 1, 0.47, 0.53, 1],
+	[\testbus1_y, 2, 0.47, 0.53, 1],
+	[\testbus1_z, 3, 0.47, 0.53, 1],
+	[\testbus2_x, 1, 0.47, 0.53, 2],
+	[\testbus2_y, 2, 0.47, 0.53, 2],
+	[\testbus3_z, 3, 0.47, 0.53, 2]
+);
+
 //:playback prologue - find start
 {
-	PlayBuf.ar(1, \prologue.b, \rate.kr(1),
+	PlayBuf.ar(1, \prologue.b, \rate.kr(1, 1).urange(0.5, 1.5),
 		Impulse.kr(\period.kr(9e10).reciprocal),
 		// \trig.kr(1),
 		\startpos.kr(10) * 44100, 1).stereo;
 } +> \playbufstereo;
+//:iannis
+\playbufstereo.map(\rate, \testbus2_y);
 //:change period. + start point
-\period <+ 10.2; // keep this
-\startpos <+ 790.2;
+\period <+.playbufstereo 30.2; // keep this
+\startpos <+.playbufstereo 790.2;
+\rate <+.playbufstereo 0.2;
+//:
+//:
+\playbufstereo *> \pvsmear;
+//:binshift test 1
+{
+	var src, chain;
+	src = Inp.ar;
+	chain = FFT(LocalBuf(2048, 1), src);
+	chain = PV_BinShift(chain, \stretch.kr(0.1) * \sf.kr(1), \thresh.kr(0.1) * 2);
+	Pan2.ar(IFFT(chain), \pan.kr(0));
+} +> \pvsmear;
+//:
+\pvsmear.map(\stretch, \testbus1_x, \thresh, \testbus1_y, \sf, \testbus1_z);
+//:magabove test 1
+{
+	var src, chain;
+	src = Inp.ar;
+	chain = FFT(LocalBuf(2048, 1), src);
+	chain = PV_MagAbove(chain, \thresh.kr(0.1).urange(0.001, 2.5));
+	Pan2.ar(IFFT(chain), \pan.kr(0)) * 5;
+} +> \pvsmear;
+//:magbelow test 1
+{
+	var src, chain;
+	src = Inp.ar;
+	chain = FFT(LocalBuf(2048, 1), src);
+	chain = PV_MagBelow(chain, \thresh.kr(0.1).urange(0.001, 102.5));
+	Pan2.ar(IFFT(chain), \pan.kr(0)) * 5;
+} +> \pvsmear;
+//:
+\pvsmear.map(\thresh, \testbus2_x);
+//:magsmear test 1
+{
+	var src, chain;
+	src = Inp.ar;
+	chain = FFT(LocalBuf(2048, 1), src);
+	chain = PV_MagSmear(chain, \thresh.kr(0.1).urange(0.01, 10));
+	Pan2.ar(IFFT(chain), \pan.kr(0)) * 2;
+} +> \pvsmear;
+
+//:
+\stretch <+ 1;
+\thresh <+ 0.5;
+//;
+\pvsmear.map(\stretch, \testbus1_x, \thresh, \testbus1_y, \sf, \testbus1_z);
+//:
+
 //:
 \period <+ 30;
 //:playback prologue - play for limited duration with playFor
