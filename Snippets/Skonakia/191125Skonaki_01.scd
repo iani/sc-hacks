@@ -30,3 +30,5 @@
 {
 	WhiteNoise.ar(0.1).stereo;
 }.playFor(\test)
+//:Soundin
+{ Inp.ar.stereo * LFPulse.kr(1, 0, 0.9) } +> \intest.soundIn;
