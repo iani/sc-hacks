@@ -33,6 +33,8 @@
 		this.p(eventName).toggle(source);
 	}
 
+	use { | func | this.e.use(func); }
+
 	set { | ... args |
 		// set group of event of symbol
 		// does not set event variables!
@@ -224,6 +226,8 @@
 		// envir: The (name of the) envir to play the routine in. If nil, defaults to currentEnvir.
 		(envir ? currentEnvironment).playRoutine(key, this);
 	}
+
+	++> { | envir | envir.use(this) }
 
 	**> { | key, envir |
 		/* play function as routine, wrapping it in a loop statement, i.e

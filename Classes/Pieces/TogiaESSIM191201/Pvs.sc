@@ -33,16 +33,27 @@ Pvs({ | ch |
 //:
 */
 
+//:summary of phrases:
+/*
+1. 0
+2. 750
+3. 767
+4. 744
+5. 809
+*/
+
 Pvs {
-	*new { | f, player = \cauche1, effect = \pv1,
+	*new { | f, pinit, fxinit, player = \cauche1, effect = \pv1,
 		srcvol = 0, fxvol = 1, startpos = 809 |
 		// renew values of environment from eventual previous call:
 		effect.put(\srcvol, srcvol);
 		effect.put(\fxvol, fxvol);
 		effect.put(\startpos, startpos);
+		player.use(pinit);
+		effect.use(fxinit);
 		player *> effect;
 		{
-			PlayBuf.ar(1, \prologue.b, \rate.kr(0.5, 1).urange(0.5, 1.5),
+			PlayBuf.ar(1, \prologue.b, \rate.kr(0.5, 1).urange(0.25, 1.5),
 				Impulse.kr(\period.kr(9e10).reciprocal),
 				\startpos.kr(startpos) + 10 * 44100, 1);
 		} +> player;

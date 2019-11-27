@@ -4,13 +4,15 @@ PrologueFantasy {
 		ServerBoot add: {
 			{
 				Hacks.loadAudioFiles;
+				//            name of window ,     osc message monitored
 				BusOsc.watch1(\thisissensestagetest, '/minibee/data',
-					[\testbus1_x, 1, 0.47, 0.53, 1],
-					[\testbus1_y, 2, 0.47, 0.53, 1],
-					[\testbus1_z, 3, 0.47, 0.53, 1],
-					[\testbus2_x, 1, 0.47, 0.53, 2],
-					[\testbus2_y, 2, 0.47, 0.53, 2],
-					[\testbus3_z, 3, 0.47, 0.53, 2]
+					// bus name, data index, min, max, sensor id
+					[\x1, 1, 0.47, 0.53, 1],
+					[\y1, 2, 0.47, 0.53, 1],
+					[\z1, 3, 0.47, 0.53, 1],
+					[\x2, 1, 0.47, 0.53, 2],
+					[\y2, 2, 0.47, 0.53, 2],
+					[\z2, 3, 0.47, 0.53, 2]
 				);
 			}.defer(1);
 		};

@@ -33,19 +33,43 @@
 29. MagFreeze
 30. BinScramble
 */
+//:summary of phrases:
+/*
+1. 0
+2. 750
+3. 767
+4. 744
+5. 809
+*/
+//Pvs arguments:
+// player, effect, scvol, fxvol, startpos
+//:+ player = \cauche1, effect = \pv1,
+Pvs({ | ch |
+	PV_MagClip(ch, \thresh.kr(1).linexp(0.1, 25))
+	// PV_MagAbove(ch, \thresh.kr(1).linexp(0.01, 65))
+}, { ~startpos = 809 }, { ~thresh = 25 });
+30.wait;
+\pv1.map(\thresh, \z1);
+30.wait;
+Pvs({ | ch |
+	// PV_MagBelow(ch, \thresh2.kr(1).linexp(0.1, 25))
+ 	PV_BinShift(ch,
+		\stretch.kr(0).urange(0.001, 5),
+		\shift.kr(0).urange(-5.0, 5.0)
+	)
+}, { ~startpos = 809; ~rate = 0.75 }, { ~stretch = 0; ~shift = 0; },
+	\cauche2, \pv2);
+10.wait;
+\pv2.map(\stretch, \x1, \shift, \z1);
+40.wait;
+\cauche1.map(\rate, \y1);
+10.wait;
 //:
-\srcvol <+.pv1 0;
-\thresh <+.pv1 0;
-\thresh <+.pv1 0.1;
-\thresh <+.pv1 0.3;
-\thresh <+.pv1 0.5;
-\thresh <+.pv1 0.7;
-\thresh <+.pv1 0.97;
-//: Magabove
-\thresh <+.pv1 0.75;
+
+//: Magabove new Pvs version
 Pvs({ | ch |
 	PV_MagAbove(ch, \thresh.kr(1).linexp(0.001, 25))
-}, startpos: 0);
+}, { ~startpos = 155 }, { ~thresh = 0.0090 });
 //:
 \pv1.map(\thresh, \thresh);
 //:
@@ -60,17 +84,21 @@ Pvs({ | ch |
 Pvs({ | ch |
 	PV_MagClip(ch, \thresh.kr(1).linexp(0.1, 25))
 });
+\pv1.map(\thresh, \x1);
+10.wait;
+\cauche1.map(\rate, \y1);
 //: LocalMax
 Pvs({ | ch |
 	PV_LocalMax(ch, \thresh.kr(1).linexp(0.001, 3.5))
 });
+\pv1.map(\thresh, \z1);
 //: MagSmear
 Pvs({ | ch |
 	PV_MagSmear(ch, \thresh.kr(1).urange(0.1, 20))
 });
 //: BinShift
 Pvs({ | ch |
-	PV_BinShift(ch,
+ 	PV_BinShift(ch,
 		\stretch.kr(0).urange(0.001, 5),
 		\shift.kr(0).urange(-5.0, 5.0)
 	)
@@ -128,7 +156,7 @@ Pvs({ | ch |
 //:RandComb
 Pvs({ | ch |
 	PV_RandComb(ch, \wipe.kr(0).linexp(0.0001, 0.9),
-		Impulse.kr(10))
+		Dust.kr(1))
 });
 //:
 \wipe <+.pv1 1.015;

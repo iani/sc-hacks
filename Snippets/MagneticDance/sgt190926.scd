@@ -67,7 +67,7 @@ Hacks.loadAudioFiles;
 //================================================================
 //First triggering tests
 //:+Dummy test
-{ WhiteNoise.ar(Env.perc.kr(levelScale: 0.1, gate: \amp.kr(0.1, 0.1) > 0.5))} +> \test;
+{ WhiteNoise.ar(Env.perc.kr(levelScale: 0.1, gate: \amp.kr(0.1, 0.1) > 0.5)) } +> \test;
 [0, 0.5001, 0.4, 0.501, 0.45, 0.51, 0.49] do: { | i |
 	\amp <+ i;
 	i.postln;

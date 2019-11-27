@@ -11,8 +11,8 @@ PlatformGuiDefaults {
 	*initClass {
 		StartUp add: {
 			if (thisProcess.platform.name === \linux) {
-				font = Font("Helvetica", 36);
-				lineHeight = 48;
+				font = Font("Helvetica", 20);
+				lineHeight = 30;
 				bounds = Rect(0, 0, 1000, 400)
 				// add more lines for other defaults when needed
 			}{
