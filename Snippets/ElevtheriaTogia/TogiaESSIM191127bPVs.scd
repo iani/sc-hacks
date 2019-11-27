@@ -41,6 +41,8 @@
 4. 744
 5. 809
 */
+//:
+
 //Pvs arguments:
 // player, effect, scvol, fxvol, startpos
 //:+ player = \cauche1, effect = \pv1,
@@ -51,18 +53,19 @@ Pvs({ | ch |
 30.wait;
 \pv1.map(\thresh, \z1);
 30.wait;
+\cauche1.map(\rate, \y1);
+40.wait;
 Pvs({ | ch |
 	// PV_MagBelow(ch, \thresh2.kr(1).linexp(0.1, 25))
  	PV_BinShift(ch,
 		\stretch.kr(0).urange(0.001, 5),
 		\shift.kr(0).urange(-5.0, 5.0)
 	)
-}, { ~startpos = 809; ~rate = 0.75 }, { ~stretch = 0; ~shift = 0; },
+}, { ~startpos = 0; ~rate = 0.75 }, { ~stretch = 0; ~shift = 0; },
 	\cauche2, \pv2);
-10.wait;
+20.wait;
 \pv2.map(\stretch, \x1, \shift, \z1);
 40.wait;
-\cauche1.map(\rate, \y1);
 10.wait;
 //:
 
@@ -92,7 +95,7 @@ Pvs({ | ch |
 	PV_LocalMax(ch, \thresh.kr(1).linexp(0.001, 3.5))
 });
 \pv1.map(\thresh, \z1);
-//: MagSmear
+//: MagSmear !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 Pvs({ | ch |
 	PV_MagSmear(ch, \thresh.kr(1).urange(0.1, 20))
 });
@@ -143,6 +146,7 @@ Pvs({ | ch |
 Pvs({ | ch |
 	PV_PhaseShift(ch, \shift.kr(0).urange(-5.0, 5.0), 1)
 });
+
 //:BrickWall
 Pvs({ | ch |
 	PV_BrickWall(ch, \shift.kr(0).linexp(0.0001, 0.5), 1)
