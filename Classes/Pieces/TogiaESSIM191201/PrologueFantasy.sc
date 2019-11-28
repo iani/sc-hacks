@@ -1,6 +1,7 @@
 
 PrologueFantasy {
 	*setup {
+		// Server.default.options.numOutputBusChannels = 8;
 		ServerBoot add: {
 			{
 				Hacks.loadAudioFiles;

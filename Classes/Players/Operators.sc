@@ -240,8 +240,8 @@
 	}
 
 	map { | envir, param, controlplayer |
-		/* DRAFT!
-			Play control rate function into bus
+		/* Play control rate function into bus
+			controlplayer: optional name of player playing the func
 		*/
 		var busname;
 		busname = format("%_%", envir, param).asSymbol;

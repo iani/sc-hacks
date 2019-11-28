@@ -58,13 +58,17 @@ Pvs {
 				\startpos.kr(startpos) + 10 * 44100, 1);
 		} +> player;
 		{
-			var src, fx;
+			var src, fx, out;
 			var chain;
 			src = Inp.ar;
 			chain = FFT(LocalBuf(2048, 1), src);
 			chain = f.(chain);
 			fx = IFFT(chain);
 			Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]).stereo;
+			/*
+				out = Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]).stereo;
+				PanAz(8, out, \pos.kr(0));
+			*/
 		} +> effect;
 	}
 }
