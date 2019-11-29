@@ -32,7 +32,12 @@ Pvs({ | ch |
 });
 //:
 */
-
+//: Rate calculation
+var spec;
+spec = ControlSpec(0.1, 1.5);
+(0, 0.1 .. 1) do: { | i |
+	[i, spec.map(i)].postln;
+};
 //:summary of phrases:
 /*
 1. 0
