@@ -47,7 +47,6 @@
 \shift <+.violafx 0.1;
 \violafx.map(\stretch, \x1);
 \violafx.map(\shift, \y1);
-//:
 Pvs({ | ch |
 	PV_MagClip(ch, \thresh.kr(1).linexp(0.1, 25))
 }, {
@@ -58,14 +57,23 @@ Pvs({ | ch |
 	~fxvol = 0;
 	~srcvol = 1;
 });
-//:
+20.wait;
 { XLine.kr(1, 0.0001, 20) }.map(\pv1, \srcvol);
 { XLine.kr(0.0001, 1, 5) }.map(\pv1, \fxvol);
-//:
-{ XLine.kr(1, 0.0001, 20) }.map(\pv2, \srcvol);
-{ XLine.kr(0.0001, 1, 5) }.map(\pv2, \fxvol);
-//:
-\thresh <+.pv1 0.1;
+\pv1.map(\thresh, \z1);
+30.wait;
+Pvs({ | ch |
+	// PV_MagBelow(ch, \thresh2.kr(1).linexp(0.1, 25))
+ 	PV_BinShift(ch,
+		\stretch.kr(0).urange(0.001, 5),
+		\shift.kr(0).urange(-5.0, 5.0)
+	)
+}, { ~startpos = 809; ~rate = 0.75 }, { ~stretch = 0.1; ~shift = 0.1; },
+	\cauche2, \pv2
+);
+70.wait;
+\pv1.map(\stretch, \x1);
+\pv1.map(\shift, \y1);
 //:
 PFX({ | ch |
 	//	PV_MagClip(ch, \thresh.kr(1).linexp(0.1, 25))
