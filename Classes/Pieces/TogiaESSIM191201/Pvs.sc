@@ -32,12 +32,15 @@ Pvs({ | ch |
 });
 //:
 */
+/*
 //: Rate calculation
 var spec;
 spec = ControlSpec(0.1, 1.5);
 (0, 0.1 .. 1) do: { | i |
 	[i, spec.map(i)].postln;
 };
+//:
+*/
 //:summary of phrases:
 /*
 1. 0
@@ -53,7 +56,7 @@ Pvs {
 		// renew values of environment from eventual previous call:
 		effect.put(\srcvol, srcvol);
 		effect.put(\fxvol, fxvol);
-		effect.put(\startpos, startpos);
+		player.put(\startpos, startpos);
 		player.use(pinit);
 		effect.use(fxinit);
 		player *> effect;
@@ -76,4 +79,27 @@ Pvs {
 			*/
 		} +> effect;
 	}
+}
+
+PFX {
+		*new { | f, fxinit, effect = \pv1, srcvol = 0, fxvol = 1 |
+		// renew values of environment from eventual previous call:
+		effect.put(\srcvol, srcvol);
+		effect.put(\fxvol, fxvol);
+		effect.use(fxinit);
+		{
+			var src, fx, out;
+			var chain;
+			src = Inp.ar;
+			chain = FFT(LocalBuf(2048, 1), src);
+			chain = f.(chain);
+			fx = IFFT(chain);
+			Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]).stereo;
+			/*
+				out = Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]).stereo;
+				PanAz(8, out, \pos.kr(0));
+			*/
+		} +> effect;
+	}
+	
 }

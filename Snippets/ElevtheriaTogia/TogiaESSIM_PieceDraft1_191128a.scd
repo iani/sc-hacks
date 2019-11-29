@@ -1,4 +1,4 @@
-//:Using shortcut class to try out different PV ugens
+//:phrase beginnings in buffer (in seconds)
 /*
 1. 0
 2. 750
@@ -6,24 +6,30 @@
 4. 744
 5. 809
 */
-//:
+//:Effects selected
+1. MagClip
+2. MagAbove
+3. LocalMax
+4. MagSmear
+5. BinShift
 
 //Pvs arguments:
 // player, effect, scvol, fxvol, startpos
+// ================ PIECE STARTS HERE ================
 //:+ player = \cauche1, effect = \pv1,
 \viola *> \violafx;
 \violafx *> \violapan;
 { SoundIn.ar(0) } +> \viola;
 {
-	var src, fx, out, srcvol = 1, fxvol = 0;
+	var src, fx, out, srcvol = 0, fxvol = 1;
 	var chain, f;
 	src = Inp.ar;
 	chain = FFT(LocalBuf(2048, 1), src);
 	f = { | ch |
 		//	PV_MagClip(ch, \thresh.kr(1).linexp(0.1, 55))
 		PV_BinShift(ch,
-			\stretch.kr(0).urange(0.001, 5),
-			\shift.kr(0).urange(-5.0, 5.0)
+			\stretch.kr(0).urange(0.0001, 1.5),
+			\shift.kr(0).urange(-5.0, 3.0)
 		);
 	};
 	chain = f.(chain);
@@ -35,29 +41,77 @@
 	*/
 } +> \violafx;
 { Inp.ar.stereo } +> \violapan;
-\fxvol <+ 1;
-\srcvol <+ 0;
-\stretch <+ 0.1;
-\shift <+ 0.1;
-1.wait;
+\fxvol <+.violafx 1;
+\srcvol <+.violafx 0;
+\stretch <+.violafx 0.1;
+\shift <+.violafx 0.1;
+\violafx.map(\stretch, \x1);
+\violafx.map(\shift, \y1);
+//:
 Pvs({ | ch |
 	PV_MagClip(ch, \thresh.kr(1).linexp(0.1, 25))
-	// PV_MagAbove(ch, \thresh.kr(1).linexp(0.01, 65))
 }, {
 	~startpos = 809;
 	~rate = 0.6;
 }, {
-	~thresh = 1;
+	~thresh = 0.1;
 	~fxvol = 0;
 	~srcvol = 1;
 });
+//:
+{ XLine.kr(1, 0.0001, 20) }.map(\pv1, \srcvol);
+{ XLine.kr(0.0001, 1, 5) }.map(\pv1, \fxvol);
+//:
+{ XLine.kr(1, 0.0001, 20) }.map(\pv2, \srcvol);
+{ XLine.kr(0.0001, 1, 5) }.map(\pv2, \fxvol);
+//:
+\thresh <+.pv1 0.1;
+//:
+PFX({ | ch |
+	//	PV_MagClip(ch, \thresh.kr(1).linexp(0.1, 25))
+	PV_MagAbove(ch, \thresh.kr(1).linexp(0.01, 65))
+}, { ~fxvol = 0; ~srcvol = 1 }, \pv2);
+//:
+\cauche1 *> \pv2;
+//:
+\thresh <+.pv2 0.65;
+//:
 20.wait;
-{ XLine.kr(1, 0.0001, 10) }.map(\pv1, \srcvol);
-{ XLine.kr(0.0001, 1, 10) }.map(\pv1, \fxvol);
-10.wait;
+{ XLine.kr(1, 0.0001, 20) }.map(\pv1, \srcvol);
+{ XLine.kr(0.0001, 1, 5) }.map(\pv1, \fxvol);
 \pv1.map(\thresh, \z1);
 30.wait;
-\cauche1.map(\rate, \y1);
+//:
+{
+	var src, fx, out, srcvol = 1, fxvol = 0;
+	var chain, f;
+	src = Inp.ar;
+	chain = FFT(LocalBuf(2048, 1), src);
+	f = { | ch |
+		//	PV_MagClip(ch, \thresh.kr(1).linexp(0.1, 55))
+		/*		PV_BinShift(ch,
+			\stretch.kr(1).urange(0.001, 5),
+			\shift.kr(1).urange(-5.0, 5.0)
+		);
+		*/
+		PV_MagAbove(ch, \thresh.kr(1).linexp(0.01, 65))
+	
+	};
+	chain = f.(chain);
+	fx = IFFT(chain);
+	Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]).stereo;
+	/*
+		out = Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]).stereo;
+		PanAz(8, out, \pos.kr(0));
+	*/
+} +> \pv1;
+//:
+\default +> \pv1;
+//:
+\stretch <+ 0.5;
+\shift <+ 0.5;
+//:
+// \cauche1.map(\rate, \y1);
 40.wait;
 Pvs({ | ch |
 	// PV_MagBelow(ch, \thresh2.kr(1).linexp(0.1, 25))
@@ -96,13 +150,20 @@ Pvs({ | ch |
 \cauche1.map(\rate, \y1);
 //: LocalMax
 Pvs({ | ch |
-	PV_LocalMax(ch, \thresh.kr(1).linexp(0.001, 3.5))
+	PV_LocalMax(ch, \thresh.kr(1).linexp(0.001, 5.0));
 });
-\pv1.map(\thresh, \z1);
+//:
+\thresh <+ 0.9;
+// \pv1.map(\thresh, \z1);
+//: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //: MagSmear !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 Pvs({ | ch |
 	PV_MagSmear(ch, \thresh.kr(1).urange(0.1, 20))
 });
+//:
+\fxvol <+ 1;
+\srcvol <+ 0;
+\thresh <+ 0.1;
 //: BinShift
 Pvs({ | ch |
  	PV_BinShift(ch,
