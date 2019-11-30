@@ -5,6 +5,11 @@ In future possibly also perform other global management tasks.
 
 Hacks : Singleton {
 
+	*initClass {
+		// no comment
+		CmdPeriod add: { CmdPeriod.changed(\cmdPeriod) };
+	}
+	
 	homeDir {
 		^PathName(this.class.filenameSymbol.asString).pathOnly;
 	}

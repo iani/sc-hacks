@@ -65,15 +65,16 @@ Pvs({ | ch |
 Pvs({ | ch |
 	// PV_MagBelow(ch, \thresh2.kr(1).linexp(0.1, 25))
  	PV_BinShift(ch,
-		\stretch.kr(0).urange(0.001, 5),
-		\shift.kr(0).urange(-5.0, 5.0)
+		\stretch.kr(0).urange(0.001, 4),
+		\shift.kr(0).urange(-5.0, 4.0)
 	)
 }, { ~startpos = 809; ~rate = 0.75 }, { ~stretch = 0.1; ~shift = 0.1; },
 	\cauche2, \pv2
 );
 70.wait;
-\pv1.map(\stretch, \x1);
-\pv1.map(\shift, \y1);
+\pv2.map(\stretch, \x1);
+\pv2.map(\shift, \y1);
+//: at minute 4 the opening theme starts: NEXT MILESTONE
 //:
 PFX({ | ch |
 	//	PV_MagClip(ch, \thresh.kr(1).linexp(0.1, 25))
