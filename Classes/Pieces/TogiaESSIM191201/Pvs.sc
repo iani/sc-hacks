@@ -117,37 +117,11 @@ Pbuf {
 		});
 		// perform custom initialization if present:
 		player.use(init);
-		player.e.put(\startpos, startpos);
-		player.e.postln;
 		{
 			PlayBuf.ar(1, buffer.b, \rate.kr(1),
 				Impulse.kr(\period.kr(9e10).reciprocal),
-				// startpos value remains same as when synthdef was first loaded
-				// Synthdef is not loaded again - because of Player/SynthPlayer
-				// Implementaion. TODO: Fix this? CHECK THIS!
-				// \startpos.kr(startpos)
-				(startpos + startoffset * buffer.b.sampleRate), 1
+				(\startpos.kr(startpos) + startoffset * buffer.b.sampleRate), 1
 			).stereo;
-		} +> \player;
-	}
-}
-
-Time : Singleton {
-	var startTime = 0;
-	var stopTime, totalTime;
-	*new {
-		^super.new.init;
-	}
-
-	init {
-		startTime = Process.elapsedTime;
-		this.addNotifier(CmdPeriod, \cmdPeriod, { this.stop });
-	}
-
-	stop {
-		stopTime = Process.elapsedTime;
-		totalTime = stopTime - startTime;
-		postf("seconds: %, min:secs: %\n", totalTime, totalTime.formatTime);
-		this.removeNotifier(CmdPeriod, \cmdPeriod);
+		} +> player;
 	}
 }
