@@ -67,13 +67,15 @@ Pvs {
 				\startpos.kr(startpos) + 10 * 44100, 1);
 		} +> player;
 		{
-			var src, fx, out;
+			var src, fx, finalout;
 			var chain;
 			src = Inp.ar;
 			chain = FFT(LocalBuf(2048, 1), src);
 			chain = f.(chain);
 			fx = IFFT(chain);
-			(\amp.kr(1) * Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)])).stereo;
+			//
+			finalout = (\amp.kr(1) * Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)])).stereo;
+			//			PanAz(8, finalout, \pan.kr(0).urange(-1.0, 1.0));
 			/*
 				out = Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]);
 				PanAz(8, out * \amp.kr(1), \pos.kr(0));
@@ -89,17 +91,20 @@ PFX {
 		effect.put(\fxvol, fxvol);
 		effect.use(fxinit);
 		{
-			var src, fx, out;
+			var src, fx, finalout;
 			var chain;
 			src = Inp.ar;
 			chain = FFT(LocalBuf(2048, 1), src);
 			chain = f.(chain);
 			fx = IFFT(chain);
-			(\amp.kr(1) * Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)])).stereo;
+			// (\amp.kr(1) * Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)])).stereo;
 			/*
 				out = Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]); 
 				PanAz(8, out * \amp.kr(1), \pos.kr(0));
 			*/
+			finalout = (\amp.kr(1) * Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)])).stereo;
+			//	PanAz(8, finalout, \pan.kr(0).urange(-1.0, 1.0));
+
 		} +> effect;
 	}
 	
@@ -121,7 +126,7 @@ Pbuf {
 			PlayBuf.ar(1, buffer.b, \rate.kr(1),
 				Impulse.kr(\period.kr(9e10).reciprocal),
 				(\startpos.kr(startpos) + startoffset * buffer.b.sampleRate), 1
-			).stereo;
+			)
 		} +> player;
 	}
 }
