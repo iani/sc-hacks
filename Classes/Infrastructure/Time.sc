@@ -57,3 +57,40 @@ Time : Singleton {
 		name.changed(\stopped);
 	}
 }
+
+AbsWait : Singleton {
+	/*
+		convert absolute wait time from start of piece
+		to relative wait time, and call wait on relative time.
+	*/
+	var previousTime = 0;
+
+	abswait { | abstime = 1 |
+		var reltime;
+		abstime = abstime max: previousTime; // prevent abstime before previousTime;
+		reltime = abstime - previousTime;
+		previousTime = abstime;
+		postf("will wait till % seconds (%)\n", abstime, abstime.longFormatTime);
+		reltime.wait;
+		postf("waited % seconds. Time now:%\n", reltime, abstime.longFormatTime);
+	}
+}
+
++ SimpleNumber {
+	abswait {
+	/*
+		convert absolute wait time from start of piece
+		to relative wait time, and call wait on relative time.
+	*/
+		AbsWait.abswait(this);
+	}
+}
+
++ Array {
+	secs { // convert from minutes, seconds to seconds
+		^this[0] * 60 + this[1]
+	}
+	abswait { // abswait for [minutes, seconds]
+		this.secs.abswait;
+	}	
+}

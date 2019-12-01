@@ -29,20 +29,13 @@ Pvs({ | ch |
 //:preliminary viola input test
 { SoundIn.ar(0) * \amp.kr(1) } +> \violapan; // violapan is linked to amp control gui
 //:mixer setup
-\amps.tr_(500).v(
-	\amp.slider([0, 5].asSpec, \pv1, "pv1 amp"),
-	\amp.slider([0, 5].asSpec, \pv2, "pv2 amp"),
-	\amp.slider([0, 5].asSpec, \pv3, "pv3 amp"),
-	\amp.slider([0, 5].asSpec, \pv4, "pv4 amp"),
-	\amp.slider([0, 5].asSpec, \violapan, "viola amp"),
-	\time.timer
-);
+
 //Pvs arguments:
 // player, effect, scvol, fxvol, startpos
+//:+ player = \cauche1, effect = \pv1,
 // ================================================================
 // ================ PIECE STARTS HERE ================
 // ================================================================
-//:+ player = \cauche1, effect = \pv1,
 // START RECORDING ( 9th channel: direct in)  20 MINUTES  
 // Server.default.record(numChannels: 9, duration: (20 * 60);
 // 0.1.wait;
@@ -90,11 +83,14 @@ Pvs({ | ch |
 	~fxvol = 0;
 	~srcvol = 1;
 });
-20.wait;
+20.abswait;
 { XLine.kr(1, 0.0001, 20) }.map(\pv1, \srcvol);
 { XLine.kr(0.0001, 1, 5) }.map(\pv1, \fxvol);
+/*
+\z1.bus.set(0.51);
+*/
 \pv1.map(\thresh, \z1);
-30.wait;
+50.abswait;
 Pvs({ | ch |
 	// PV_MagBelow(ch, \thresh2.kr(1).linexp(0.1, 25))
  	PV_BinShift(ch,
@@ -104,10 +100,62 @@ Pvs({ | ch |
 }, { ~startpos = 809; ~rate = 0.75 }, { ~stretch = 0.1; ~shift = 0.1; },
 	\cauche2, \pv2
 ).postln;
-70.wait;
+[1, 10].abswait;
 \pv2.map(\stretch, \x1);
 \pv2.map(\shift, \y1);
-//: at minute 4 the opening theme starts: NEXT MILESTONE
+// at minute 4 the opening theme starts: NEXT MILESTONE
+[3, 50].abswait;
+// fade out effects, fade in source sound
+{ XLine.kr(0.0001, 1.0, 10) }.map(\pv1, \srcvol);
+{ XLine.kr(1.0, 0.00001, 15) }.map(\pv1, \fxvol);
+[5, 0].abswait;
+//crossfade to higher BinShift range
+\fadeTime <+.violafx 5;
+{
+	var src, fx, out, srcvol = 0, fxvol = 1;
+	var chain, f;
+	src = Inp.ar;
+	chain = FFT(LocalBuf(2048, 1), src);
+	f = { | ch |
+		//	PV_MagClip(ch, \thresh.kr(1).linexp(0.1, 55))
+		PV_BinShift(ch,
+			\stretch.kr(0).urange(0.0001, 1.5),
+			\shift.kr(0).urange(-1.0, 3.0)
+		);
+	};
+	chain = f.(chain);
+	fx = IFFT(chain);
+	Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]).stereo;
+	/*
+		out = Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]).stereo;
+		PanAz(8, out, \pos.kr(0));
+	*/
+} +> \violafx;
+[5, 30].abswait;
+{ XLine.kr(0.0001, 1.0, 10) }.map(\pv1, \srcvol);
+{ XLine.kr(1.0, 0.00001, 15) }.map(\pv1, \fxvol);
+//:
+{
+	var src, fx, out, srcvol = 0, fxvol = 1;
+	var chain, f;
+	src = Inp.ar;
+	chain = FFT(LocalBuf(2048, 1), src);
+	f = { | ch |
+		//	PV_MagClip(ch, \thresh.kr(1).linexp(0.1, 55))
+		PV_MagAbove(ch,
+			\stretch.kr(0).urange(0.0001, 1.5),
+			\shift.kr(0).urange(-1.0, 3.0)
+		);
+	};
+	chain = f.(chain);
+	fx = IFFT(chain);
+	Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]).stereo;
+	/*
+		out = Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]).stereo;
+		PanAz(8, out, \pos.kr(0));
+	*/
+} +> \violafx;
+
 //:
 PFX({ | ch |
 	//	PV_MagClip(ch, \thresh.kr(1).linexp(0.1, 25))

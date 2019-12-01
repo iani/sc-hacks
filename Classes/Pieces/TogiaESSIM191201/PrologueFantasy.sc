@@ -15,6 +15,14 @@ PrologueFantasy {
 					[\y2, 2, 0.47, 0.53, 2],
 					[\z2, 3, 0.47, 0.53, 2]
 				);
+				\amps.tr_(500).v(
+					\amp.slider([0, 5].asSpec, \pv1, "pv1 amp"),
+					\amp.slider([0, 5].asSpec, \pv2, "pv2 amp"),
+					\amp.slider([0, 5].asSpec, \pv3, "pv3 amp"),
+					\amp.slider([0, 5].asSpec, \pv4, "pv4 amp"),
+					\amp.slider([0, 5].asSpec, \violapan, "viola amp"),
+					\time.timer
+				);
 			}.defer(1);
 		};
 		Server.default.boot;	
