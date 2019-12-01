@@ -73,10 +73,10 @@ Pvs {
 			chain = FFT(LocalBuf(2048, 1), src);
 			chain = f.(chain);
 			fx = IFFT(chain);
-			Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]).stereo;
+			(\amp.kr(1) * Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)])).stereo;
 			/*
-				out = Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]).stereo;
-				PanAz(8, out, \pos.kr(0));
+				out = Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]);
+				PanAz(8, out * \amp.kr(1), \pos.kr(0));
 			*/
 		} +> effect;
 	}
@@ -95,10 +95,10 @@ PFX {
 			chain = FFT(LocalBuf(2048, 1), src);
 			chain = f.(chain);
 			fx = IFFT(chain);
-			Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]).stereo;
+			(\amp.kr(1) * Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)])).stereo;
 			/*
-				out = Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]).stereo;
-				PanAz(8, out, \pos.kr(0));
+				out = Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]); 
+				PanAz(8, out * \amp.kr(1), \pos.kr(0));
 			*/
 		} +> effect;
 	}

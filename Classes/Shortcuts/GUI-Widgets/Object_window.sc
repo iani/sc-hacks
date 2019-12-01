@@ -100,16 +100,15 @@
 
 + Symbol {
 	slider { | controlspec, envir, name |
-		// var mappedValue;
+		// shortcut for slider displaying/setting a parameter in an environment
 		controlspec = (controlspec ? this).asSpec;
 		if (envir.isNil) {
 			envir = currentEnvironment;
 		}{
 			envir = envir.e;
 		};
-		/* The parameter set action is taken from SimpleNumber:setParameter:
-			envir.put(this, controlspec.map(me.value))
-		*/
+		// The parameter set action is taken from SimpleNumber:setParameter:
+		//	envir.put(this, controlspec.map(me.value))
 		// hack to push currently stored value of parameter to widgets:
 		{
 			envir.changed(this, envir[this]);
@@ -142,7 +141,26 @@
 			})
 		)
 	}
-	
+	timer { | name |
+		// shortcut for time display widget 
+		^HLayout(
+			StaticText()
+			.font_(PlatformGuiDefaults.font)
+			.string_(name ?? { this.asString }),
+			NumberBox()
+			.font_(PlatformGuiDefaults.font)
+			.decimals_(0)
+			.addNotifier(this, \time, { | mins, secs, n |
+				n.listener.value = mins;
+			}),
+			NumberBox()
+			.font_(PlatformGuiDefaults.font)
+			.decimals_(2)
+			.addNotifier(this, \time, { | mins, secs, n |
+				n.listener.value = secs;
+			})
+		)
+	}
 }
 
 + Window {
