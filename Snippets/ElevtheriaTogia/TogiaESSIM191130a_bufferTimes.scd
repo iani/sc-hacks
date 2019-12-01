@@ -18,4 +18,11 @@ Pbuf(60.2, init: {
 	~period = 8.4217412992999 / ~rate;
 });  // start of 5 x 2 heartbeats 1st time
 // \period <+.pbuf 8.217412992999;
+//:THIS IS THE HEARTBEAT
+Time();
+Pbuf(260.2, init: {
+	~rate = 1;
+	~period = 8.4217412992999 / ~rate;
+});  // start of 5 x 2 heartbeats 1st time
+// \period <+.pbuf 8.217412992999;
 //:

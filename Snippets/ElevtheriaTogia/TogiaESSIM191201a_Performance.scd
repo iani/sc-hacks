@@ -91,6 +91,7 @@ Pvs({ | ch |
 */
 \pv1.map(\thresh, \z1);
 50.abswait;
+// CAUCHE 2 pv2 ================================================================
 Pvs({ | ch |
 	// PV_MagBelow(ch, \thresh2.kr(1).linexp(0.1, 25))
  	PV_BinShift(ch,
@@ -132,9 +133,8 @@ Pvs({ | ch |
 	*/
 } +> \violafx;
 [5, 30].abswait;
-{ XLine.kr(0.0001, 1.0, 10) }.map(\pv1, \srcvol);
-{ XLine.kr(1.0, 0.00001, 15) }.map(\pv1, \fxvol);
-//:
+// { XLine.kr(0.0001, 1.0, 10) }.map(\pv1, \srcvol);
+// { XLine.kr(1.0, 0.00001, 15) }.map(\pv1, \fxvol);
 {
 	var src, fx, out, srcvol = 0, fxvol = 1;
 	var chain, f;
@@ -143,9 +143,7 @@ Pvs({ | ch |
 	f = { | ch |
 		//	PV_MagClip(ch, \thresh.kr(1).linexp(0.1, 55))
 		PV_MagAbove(ch,
-			\stretch.kr(0).urange(0.0001, 1.5),
-			\shift.kr(0).urange(-1.0, 3.0)
-		);
+			\thresh.kr(0).urange(0.0001, 25));
 	};
 	chain = f.(chain);
 	fx = IFFT(chain);
@@ -155,6 +153,20 @@ Pvs({ | ch |
 		PanAz(8, out, \pos.kr(0));
 	*/
 } +> \violafx;
+{ XLine.kr(0.0001, 0.5, 10) }.map(\violafx, \thresh);
+[6, 0].abswait;
+\violafx.map(\thresh, \z1);
+[7, 0].abswait;
+\fadeTime <+.pv1 3;
+Pbuf(260.2, init: {
+	~rate = 1;
+	~period = 8.4217412992999 / ~rate;
+});
+[8, 30].abswait;
+Pbuf((12 * 60) + 28, init: {
+	~rate = 1;
+	~period = 32; / ~rate;
+});
 
 //:
 PFX({ | ch |
