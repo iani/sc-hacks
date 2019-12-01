@@ -66,7 +66,7 @@ Time(); // time start of initial motiv in playback:
 \violafx *> \violapan;
 { SoundIn.ar(0) } +> \viola;
 \srcvol <+.violafx 0;
-\fxvol <+.violafx 10;
+\fxvol <+.violafx 5;
 {
 	var src, fx, finalout, srcvol = 0, fxvol = 1;
 	var chain, f;
@@ -82,15 +82,15 @@ Time(); // time start of initial motiv in playback:
 	chain = f.(chain);
 	fx = IFFT(chain);
 	// Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]).stereo;
-	finalout = 2 * Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]);
+	finalout = Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]);
 } +> \violafx;
 {
-	// 	PanAz(8, Inp.ar, \pan.kr(0).urange(-1.0, 1.0));
-	Inp.ar.stereo;
+	PanAz(8, Inp.ar, \pan.kr(0).urange(-1.0, 1.0));
+	// Inp.ar.stereo;
 } +> \violapan;
-
-\fxvol <+.violafx 5;
-\srcvol <+.violafx 0;
+\violapan.map(\pan, \z2);
+// \fxvol <+.violafx 5;
+// \srcvol <+.violafx 0;
 \stretch <+.violafx 0.1;
 \shift <+.violafx 0.1;
 \violafx.map(\stretch, \x1);
@@ -113,7 +113,7 @@ Pvs({ | ch |
 \z1.bus.set(0.51);
 */
 \pv1.map(\thresh, \z1);
-[1, 9].abswait;
+[0, 50].abswait;
 // CAUCHE 2 pv2 ================================================================
 Pvs({ | ch |
 	// PV_MagBelow(ch, \thresh2.kr(1).linexp(0.1, 25))
@@ -124,7 +124,7 @@ Pvs({ | ch |
 }, { ~startpos = 809; ~rate = 0.75 }, { ~stretch = 0.1; ~shift = 0.1; },
 	\cauche2, \pv2
 );
-[1, 50].abswait;
+[3, 0].abswait;
 \pv2.map(\stretch, \x1);
 \pv2.map(\shift, \y1);
 // at minute 4 the opening theme starts: NEXT MILESTONE
@@ -179,7 +179,7 @@ Pvs({ | ch |
 	};
 	chain = f.(chain);
 	fx = IFFT(chain);
-	2 * Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]);
+	Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]);
 } +> \violafx;
 // raise MagAbove threshold from 0e-4 to 0.5 in 10 seconds
 { XLine.kr(0.0001, 0.5, 15) }.map(\violafx, \thresh);
