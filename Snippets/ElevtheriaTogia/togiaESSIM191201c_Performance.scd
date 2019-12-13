@@ -53,7 +53,7 @@ Pvs({ | ch |
 //:+ ================ PIECE STARTS HERE ================
 // ================================================================
 // START RECORDING ( 9th channel: direct in)  20 MINUTES  
-// Server.default.record(numChannels: 9, duration: (20 * 60);
+Server.default.record(numChannels: 9, duration: (20 * 60));
 // 0.1.wait;
 // VIOLA ================================================================
 Time(); // time start of initial motiv in playback:
@@ -85,7 +85,7 @@ Time(); // time start of initial motiv in playback:
 	finalout = Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]);
 } +> \violafx;
 {
-	PanAz(8, Inp.ar, \pan.kr(0).urange(-1.0, 1.0));
+	PanAz.ar(8, Inp.ar, \pan.kr(0).urange(-1.0, 1.0));
 	// Inp.ar.stereo;
 } +> \violapan;
 \violapan.map(\pan, \z2);
@@ -100,7 +100,7 @@ Pvs({ | ch |
 	PV_MagClip(ch, \thresh.kr(1).linexp(0.1, 25))
 }, {
 	~startpos = 809;
-	~rate = 0.6;
+	~rate = 0.6;\
 }, {
 	~thresh = 0.1;
 	~fxvol = 0;
