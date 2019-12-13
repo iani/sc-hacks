@@ -65,7 +65,7 @@
 {
 	var data, addr;
 	// use a stream instead of an array:
-	data = Pseq((1..10)).asStream;
+	data = Pseq((0, 0.001..1)).asStream;
 	addr = NetAddr("127.0.0.1", 51000); // hydra default port
 	data do: { | i |
 		postf("sending count from 1 to 10: %\n", i);
@@ -74,3 +74,18 @@
 	};
 	"I reached 10 and therefore I stop now".postln;
 } *> \myloop
+//:using for osc streaming
+// sIMPLE: INSTEAD OF postln use addr.sendMsg ..
+{
+	var data, addr;
+	// use a stream instead of an array:
+	data = Pseq((0, 0.01..2pi).sin).asStream;
+	addr = NetAddr("127.0.0.1", 51000); // hydra default port
+	data do: { | i |
+		postf("sending count from 1 to 10: %\n", i);
+		addr.sendMsg('/test', i);
+		0.1.wait;
+	};
+	"I reached 10 and therefore I stop now".postln;
+} *> \myloop
+//:
