@@ -1,5 +1,28 @@
 //: 15 Dec 2019 14:43
 // Revisit bus mapping mechanism to make it more flexible.
+/* NOTE: TODO: the urange using kr func with \lo and \hi parameters
+could be generated via shortcut:
+
+\aplayer.umap(\parameter);
+
+Example:
+
+\urangetest.umap(\freq, lo, hi);
+
+lo and hi are the initial values for lo and hi controls.
+
+Then a second shortcut could be used to set the lo and hi parameter
+values for each parameter using a urange func.
+
+\aplayer.setLo(param value);
+\aplayer.setHi(param value);
+
+Example (see bottom of present file): 
+
+\urangetest.setLo(\freq, 500);
+\urangetest.setHi(\freq, 1000);
+
+*/
 //:Initial tries with functions playing to busses.
 { SinOsc.ar(\freq.kr(1000), 0, 0.1).stereo } +> \maptest;
 // \freqbus.bus.set(2000);
