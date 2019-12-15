@@ -24,4 +24,12 @@ Server.default.record(numChannels: 2, duration: 60); // Duration: 1 minute
 \level <+.p1 2;
 //:check rate parameter setting
 [0.25, 1.5].asSpec.map(0.5);
-
+//:TESTING TIMER
+"0 wait here".postln;
+5.abswait;
+"5 sec milestone here - this should appear after 5 seconds".postln;
+7.abswait;
+"7 is 2 seconds later than 5".postln;
+12.abswait;
+"12 is 5 seconds later than 5".postln;
+Time().elapsedTime.postln;

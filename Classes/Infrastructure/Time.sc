@@ -16,16 +16,28 @@ Time();
 
 */
 
-Time : Singleton {
-	var <name, startTime = 0, stopTime, totalTime;
+Time {
+	var <name, <startTime = 0, <stopTime, <totalTime;
+	var <lastTime; // the last time waited
 	var broadcaster; // broadcasting routine
 	*new { | name = \time |
-		^this.newCopyArgs(name.asSymbol).init;
+		^Registry(this, name, {
+			this.newCopyArgs(name.asSymbol).init;
+		})
+	}
+
+	elapsedTime {
+		^Process.elapsedTime - startTime;
 	}
 
 	init {
-		startTime = Process.elapsedTime;
+		this.reset;
 		this.addNotifier(CmdPeriod, \cmdPeriod, { this.stop });
+	}
+
+	reset {
+		startTime = Process.elapsedTime;
+		lastTime = 0; // At start of the timing process. 0 seconds elapsed
 		this.startBroadcasting;
 	}
 
@@ -35,10 +47,18 @@ Time : Singleton {
 		postf("seconds: %, min:secs: %\n", totalTime, totalTime.formatTime);
 		this.removeNotifier(CmdPeriod, \cmdPeriod);
 		this.stopBroadcasting;
+		this.remove; // remove instance, forcing future instances to re-init
+	}
+
+	remove {
+		Registry.remove(this.class, name);	
 	}
 
 	startBroadcasting {
+		// this routine is only for watching the timer in displays etc.
+		// it does not do any timing!
 		name.changed(\started);
+		broadcaster.stop; // stop previous broadcasting routine if running
 		broadcaster = {
 			var dt;
 			inf do: { | i |
@@ -46,24 +66,37 @@ Time : Singleton {
 				//                    mins        secs
 				{ name.changed(\time, dt div: 60, dt % 60); }.defer;
 				1.wait;
-			}
-			
+			}			
 		}.fork
-		
 	}
 
 	stopBroadcasting {
 		broadcaster.stop;
 		name.changed(\stopped);
+		"The Timer stopped".postln;
+	}
+
+	abswait { | abstime = 1 |
+		/*
+		convert absolute wait time from start of piece
+		to relative wait time, and call wait on relative time.
+		*/
+		var dt; // how much time do I have to wait relative to previous wait?
+		dt = (abstime max: lastTime) - lastTime; // always wait till now or later
+		lastTime = abstime;
+		postf("Timer waiting % seconds\n", dt);
+		dt.wait;
 	}
 }
 
-AbsWait : Singleton {
+// WRONG!!!! ????????
+// AbsWait : Singleton {
 	/*
 		convert absolute wait time from start of piece
 		to relative wait time, and call wait on relative time.
 	*/
-	var previousTime = 0;
+/*
+var previousTime = 0;
 
 	abswait { | abstime = 1 |
 		var reltime;
@@ -75,14 +108,17 @@ AbsWait : Singleton {
 		postf("waited % seconds. Time now:%\n", reltime, abstime.longFormatTime);
 	}
 }
+*/
 
 + SimpleNumber {
-	abswait {
+	abswait { | name = \time |
 	/*
 		convert absolute wait time from start of piece
 		to relative wait time, and call wait on relative time.
-	*/
-		AbsWait.abswait(this);
+		*/
+		// WRONG!!!!! - ????????:
+		// AbsWait.abswait(this);
+		Time(name).abswait(this);
 	}
 }
 
@@ -92,5 +128,5 @@ AbsWait : Singleton {
 	}
 	abswait { // abswait for [minutes, seconds]
 		this.secs.abswait;
-	}	
+	}
 }
