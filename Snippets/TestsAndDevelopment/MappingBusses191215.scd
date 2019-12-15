@@ -1,0 +1,25 @@
+//: 15 Dec 2019 14:43
+// Revisit bus mapping mechanism to make it more flexible.
+//:Initial tries with functions playing to busses.
+{ SinOsc.ar(\freq.kr(1000), 0, 0.1).stereo } +> \maptest;
+// \freqbus.bus.set(2000);
+// this is not the right way to do the indirectio:
+// \maptest.map(\freq, \freqbus);
+// Instead we map a function to freq directly.
+// 
+{ SinOsc.kr(\x1.kr(1)).range(1000, 2000) }.map(\maptest, \freq);
+//The question is how do I set \x1 in the kr function above?
+\maptest_freq.isPlaying;
+\x1 <+.maptest_notfreq 10; // countertest
+\x1 <+.maptest_freq 10;    // works!
+//:try mapping the x1 control of the buscontrol kr player
+\x1bus.bus.set(5);
+\maptest_freq.map(\x1, \x1bus);
+\x1bus.bus.set(0.1);
+//:test urange dynamic changes with mapping
+{ SinOsc.ar(\freq.kr(1200), 0, 0.5).stereo } +> \freqtest;
+{ \myfreq.kr(0).urange(1000, 2000) }.map(\freqtest, \freq);
+//:
+\freqtest_freq.map(\myfreq, \x1);
+//:
+\x1.bus.set(0.9)

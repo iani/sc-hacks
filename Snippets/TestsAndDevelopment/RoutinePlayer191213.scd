@@ -1,9 +1,9 @@
 //:basic principle
 //loops forever
 //use *> operator (because +> is for synths)
-// the loop must be explicitly written!
-{
-	loop { 
+// the loop must be explicitly written!{
+
+loop { 
 		100.rand.postln; 1.wait
 	}
 } *> \myloop;
@@ -61,7 +61,7 @@
 
 //=================================================
 //:using for osc streaming
-// sIMPLE: INSTEAD OF postln use addr.sendMsg ..
+// instead of postln use addr.sendMsg ..
 {
 	var data, addr;
 	// use a stream instead of an array:
