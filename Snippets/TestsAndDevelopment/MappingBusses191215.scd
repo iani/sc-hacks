@@ -22,4 +22,25 @@
 //:
 \freqtest_freq.map(\myfreq, \x1);
 //:
-\x1.bus.set(0.9)
+\x1.bus.set(0.9);
+//:Try changing the range of urange dynamically with control parameters
+{ LFSaw.ar(\freq.kr(1200), 0, 0.1).stereo } +> \urangetest;
+{ \myfreq.kr(0).urange(\lo.kr(1000), \hi.kr(2000)) }.map(\urangetest, \freq);
+//:
+\urangetest_freq.map(\myfreq, \x1);
+//:
+\x1.bus.set(0.7);
+//:
+\x1.bus.set(0.0);
+//:
+\lo <+.urangetest_freq 800;
+//:
+\lo <+.urangetest_freq 500;
+//:
+\hi <+.urangetest_freq 1500;
+//:
+\x1.bus.set(1.0);
+//:
+\x1.bus.set(0.1);
+//:
+\x1.bus.set(0.0);
