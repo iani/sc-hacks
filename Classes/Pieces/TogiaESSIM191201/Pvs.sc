@@ -123,10 +123,23 @@ Pbuf {
 		// perform custom initialization if present:
 		player.use(init);
 		{
-			PlayBuf.ar(1, buffer.b, \rate.kr(1),
+			PlayBuf.ar(1, buffer.b.postln, \rate.kr(1),
 				Impulse.kr(\period.kr(9e10).reciprocal),
 				(\startpos.kr(startpos) + startoffset * buffer.b.sampleRate), 1
 			)
+		} +> player;
+	}
+}
+
+Pbuf2 {
+	*new { | initFunc, player = \pi |
+		player.e.use(initFunc);
+		{
+			PlayBuf.ar(1, \prologue.b,
+				\rate.kr(1),
+				Impulse.kr(\period.kr(9e10).reciprocal),
+				\startpos.kr(player.e.startpos) + 10 * 44100, 1
+			);
 		} +> player;
 	}
 }

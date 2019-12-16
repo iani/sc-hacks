@@ -17,9 +17,11 @@ Time();
 */
 
 Time {
+	classvar <>verbose = false; // track 2 ways to calculate dt
 	var <name, <startTime = 0, <stopTime, <totalTime;
-	var <lastTime; // the last time waited
+	//	var <lastTime; // the last time waited // NOT NEEDED IN NEW APPROACH
 	var broadcaster; // broadcasting routine
+
 	*new { | name = \time |
 		^Registry(this, name, {
 			this.newCopyArgs(name.asSymbol).init;
@@ -37,7 +39,7 @@ Time {
 
 	reset {
 		startTime = Process.elapsedTime;
-		lastTime = 0; // At start of the timing process. 0 seconds elapsed
+		// lastTime = 0; // At start of the timing process. 0 seconds elapsed
 		this.startBroadcasting;
 	}
 
@@ -82,12 +84,40 @@ Time {
 		to relative wait time, and call wait on relative time.
 		*/
 		var dt; // how much time do I have to wait relative to previous wait?
-		dt = (abstime max: lastTime) - lastTime; // always wait till now or later
-		lastTime = abstime;
+		// this approach will not work if there are t.wait statements
+		// in the executed snippet:
+		// dt = (abstime max: lastTime) - lastTime; // always wait till now or later
+		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		// try alternate approach for dt
+		// "====== ALTERNATIVE APPROACH: calculating dt from start of piece!".postln;
+		// this approach also works if there are relative wait statements
+		// in the code of the executed snippet (t.wait):
+		dt = abstime - (Process.elapsedTime - startTime);
+		if (verbose) { this.postDetails(dt, abstime) };
+		// lastTime = abstime; // this is no longer needed
 		postf("Timer waiting % seconds\n", dt);
 		dt.wait;
 	}
+
+	postDetails { | argDt, abstime |
+		// ================================================================
+		// COMPARING TWO APPROACHES: Calculate remainder
+		// 1. from previous time waited
+		// 2. from beginning of piece and now
+		// no longer using approach 1:
+		// postf("lastTime was %, time requested is %, dt is %\n",
+		// lastTime, abstime, argDt);
+		postf("started at %, now %, dt from start: %, dt requested %, dt from now %\n",
+			startTime, Process.elapsedTime, 
+			Process.elapsedTime - startTime, abstime,
+			abstime - (Process.elapsedTime - startTime)
+		);
+
+		
+	}
 }
+
+
 
 // WRONG!!!! ????????
 // AbsWait : Singleton {

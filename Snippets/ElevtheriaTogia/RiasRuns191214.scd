@@ -24,12 +24,26 @@ Server.default.record(numChannels: 2, duration: 60); // Duration: 1 minute
 \level <+.p1 2;
 //:check rate parameter setting
 [0.25, 1.5].asSpec.map(0.5);
-//:TESTING TIMER
-"0 wait here".postln;
-5.abswait;
-"5 sec milestone here - this should appear after 5 seconds".postln;
-7.abswait;
-"7 is 2 seconds later than 5".postln;
-12.abswait;
-"12 is 5 seconds later than 5".postln;
-Time().elapsedTime.postln;
+// ================================================================
+//:checking building blocks
+// Pbuf(startpos, player, buffer, startoffset, init);
+\p1 *> \fx1;
+{ Inp.ar.stereo } +> \fx1;
+
+Pbuf2({ ~startpos = 0; }, \p1); // start of piece;
+Pbuf2({ ~startpos = 809;}, \p1); // semitone upward glissando
+
+// ================================================================
+//:Neutral run through
+//"no_fx".record(20.minsec);
+//prepare stereo for both players
+\p1 *> \fx1;
+{ Inp.ar.stereo } +> \fx1;
+\p2 *> \fx2;
+{ Inp.ar.stereo } +> \fx2;
+// phrase 1
+Pbuf2({ ~startpos = 809;}, \p1); // semitone upward glissando, player 1
+[0, 50].abswait; // phrase 2
+Pbuf2({
+	~startpos = 809;
+}, \p2); // semitone upward glissando, player 2
