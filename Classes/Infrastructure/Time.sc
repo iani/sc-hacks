@@ -95,7 +95,7 @@ Time {
 		dt = abstime - (Process.elapsedTime - startTime);
 		if (verbose) { this.postDetails(dt, abstime) };
 		// lastTime = abstime; // this is no longer needed
-		postf("Timer waiting % seconds\n", dt);
+		postf("Timer waiting % seconds till %\n", dt, abstime);
 		dt.wait;
 	}
 
@@ -112,33 +112,8 @@ Time {
 			(Process.elapsedTime - startTime).round(0.00001), abstime,
 			(abstime - (Process.elapsedTime - startTime)).round(0.00001)
 		);
-
-		
 	}
 }
-
-
-
-// WRONG!!!! ????????
-// AbsWait : Singleton {
-	/*
-		convert absolute wait time from start of piece
-		to relative wait time, and call wait on relative time.
-	*/
-/*
-var previousTime = 0;
-
-	abswait { | abstime = 1 |
-		var reltime;
-		abstime = abstime max: previousTime; // prevent abstime before previousTime;
-		reltime = abstime - previousTime;
-		previousTime = abstime;
-		postf("will wait till % seconds (%)\n", abstime, abstime.longFormatTime);
-		reltime.wait;
-		postf("waited % seconds. Time now:%\n", reltime, abstime.longFormatTime);
-	}
-}
-*/
 
 + SimpleNumber {
 	abswait { | name = \time |
