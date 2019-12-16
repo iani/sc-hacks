@@ -1,6 +1,6 @@
 15 Dec 2019 20:31
 First lets see what needs to happen in the snippet code that uses
-abswait:
+await:
 Simulating here: 
 
 #+BEGIN_SRC sclang
@@ -10,13 +10,13 @@ Timer(); // timer records elapsed time
 // the piece: 
 // reltime = 0; // 0 seconds from start of piece
 \blahlblah; // run some code
-1.abswait; // wait till 1 second from start of piece - we call this abstime
+1.await; // wait till 1 second from start of piece - we call this abstime
 /* This means:
 Wait absttime seconds - 0; // i.e 1 - 0;
 That is, wait 1 seconds.
 */
 \blahblah; 
-10.abswait; // wait till 10 seconds from start of piece
+10.await; // wait till 10 seconds from start of piece
 /* this means:
 Since the last time we waited was at 1 seconds, there remain 9 seconds to wait
 for the next time.
@@ -24,7 +24,7 @@ So we need to wait
 10 - lasttime, i.e. 10 - 1 = 9 seconds.
 So the mechanism is: 
 As soon as a wait has been called, set lasttime to the abstime waited.
-Then the next abswait will subtract from its absvalue the lasttime to find
+Then the next await will subtract from its absvalue the lasttime to find
 the remainder i.e. the relative time it has to wait.
 
 Is that clear now? Let's see...

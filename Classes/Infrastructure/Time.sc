@@ -116,14 +116,14 @@ Time {
 }
 
 + SimpleNumber {
-	abswait { | name = \time |
+	await { | name = \time |
 	/*
 		convert absolute wait time from start of piece
 		to relative wait time, and call wait on relative time.
 		*/
 		// WRONG!!!!! - ????????:
-		// AbsWait.abswait(this);
-		Time(name).abswait(this);
+		// AbsWait.await(this);
+		Time(name).await(this);
 	}
 }
 
@@ -131,7 +131,7 @@ Time {
 	secs { // convert from minutes, seconds to seconds
 		^this[0] * 60 + this[1]
 	}
-	abswait { // abswait for [minutes, seconds]
-		this.secs.abswait;
+	await { // abswait for [minutes, seconds]
+		this.secs.await;
 	}
 }

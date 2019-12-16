@@ -43,7 +43,7 @@ Pbuf2({ ~startpos = 809;}, \p1); // semitone upward glissando
 { Inp.ar.stereo } +> \fx2;
 // phrase 1
 Pbuf2({ ~startpos = 809;}, \p1); // semitone upward glissando, player 1
-[0, 50].abswait; // phrase 2
+[0, 50].await; // phrase 2
 Pbuf2({
 	~startpos = 809;
 }, \p2); // semitone upward glissando, player 2
