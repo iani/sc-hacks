@@ -41,9 +41,13 @@ Pbuf2({ ~startpos = 809;}, \p1); // semitone upward glissando
 { Inp.ar.stereo } +> \fx1;
 \p2 *> \fx2;
 { Inp.ar.stereo } +> \fx2;
-// phrase 1
-Pbuf2({ ~startpos = 809;}, \p1); // semitone upward glissando, player 1
-[0, 50].await; // phrase 2
-Pbuf2({
-	~startpos = 809;
-}, \p2); // semitone upward glissando, player 2
+// phrase 1 semitone upward glissando, player 1
+Pbuf2({ ~startpos = 809; }, \p1); // semitone upward glissando, player 1
+[0, 50].await; // phrase 2 semitone upward glissando, player 2
+Pbuf2({ ~startpos = 809; }, \p2); // semitone upward glissando, player 2
+[7, 0].await;
+Pbuf2({ ~startpos = 260.2; }, \p1); // heartbeat, player 1
+[7, 10].await;
+Pbuf2({ ~startpos = 260.2; }, \p2); // heartbeat, player 2
+[8, 30].await;
+Pbuf2({ ~startpos = (12 * 60) + 28; }, \p1); // scratch, player 1
