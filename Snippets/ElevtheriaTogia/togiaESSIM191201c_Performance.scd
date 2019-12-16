@@ -144,7 +144,7 @@ Pvs({ | ch |
 	src = Inp.ar;
 	chain = FFT(LocalBuf(2048, 1), src);
 	f = { | ch |
-		//	PV_MagClip(ch, \thresh.kr(1).linexp(0.1, 55))
+		//	// WRONG!!!! ????????PV_MagClip(ch, \thresh.kr(1).linexp(0.1, 55))
 		PV_BinShift(ch,
 			\stretch.kr(0).urange(0.0001, 1.5),
 			\shift.kr(0).urange(-1.0, 3.0)
