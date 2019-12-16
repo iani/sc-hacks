@@ -83,7 +83,7 @@
 	addr = NetAddr("127.0.0.1", 51000); // hydra default port
 	data do: { | i |
 		postf("sending count from 1 to 10: %\n", i);
-		addr.sendMsg('/test', i);
+		addr.sendsg('/test', i);
 		0.1.wait;
 	};
 	"I reached 10 and therefore I stop now".postln;
