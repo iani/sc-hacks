@@ -45,21 +45,27 @@ Mapper : Singleton {
 			itemName: \x; // or \gyroscopeX;
 		*/
 		^Registry(Mapper, sensorName, itemName, {
-			nil.asSpec;
+			this.makeMapperFunc(nil);
 		});
 	}
 
 	map { | value, sensorName, itemName |
 		// user spec in item under sensor to map incoming value
-		^this.getSpec(sensorName, itemName).(value);
+		^this.getSpec(sensorName, itemName).value(value).postln;
 	}
 
 	setSpec { | sensorName, itemName, spec |
-		if (spec.isKindOf(Function).not) {
-			var theSpec;
-			theSpec = spec.asSpec;
-			spec = { | val |  theSpec.map(val) };
-		};
-		Registry.put(Mapper, sensorName, itemName, spec);
+		Registry.put(Mapper, sensorName, itemName, this.makeMapperFunc(spec));
 	}
+
+	makeMapperFunc { | specOrFunc |
+		var theSpec;
+		if (specOrFunc.isKindOf(Function)) {
+			^specOrFunc;
+		}{
+			theSpec = specOrFunc.asSpec;
+			^{ | val |  theSpec.map(val) };
+		}
+	}
+	
 }
