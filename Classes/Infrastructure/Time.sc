@@ -107,10 +107,10 @@ Time {
 		// no longer using approach 1:
 		// postf("lastTime was %, time requested is %, dt is %\n",
 		// lastTime, abstime, argDt);
-		postf("started at %, now %, dt from start: %, dt requested %, dt from now %\n",
-			startTime, Process.elapsedTime, 
-			Process.elapsedTime - startTime, abstime,
-			abstime - (Process.elapsedTime - startTime)
+		postf("start %, now %, elapsed %, requested %, dt %\n",
+			startTime.round(0.00001), Process.elapsedTime.round(0.00001), 
+			(Process.elapsedTime - startTime).round(0.00001), abstime,
+			(abstime - (Process.elapsedTime - startTime)).round(0.00001)
 		);
 
 		
