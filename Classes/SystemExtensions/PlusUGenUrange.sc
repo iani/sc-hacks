@@ -3,8 +3,8 @@
 		// explicitly map from range 0-1 to target range
 		// adapted from UGen::range
 		var mul, add;
-		mul = (hi - lo) ;
-			add = lo;
+		mul = (hi - lo);
+		add = lo;
 		^MulAdd(this, mul, add);
 	}
 
@@ -17,6 +17,7 @@
 		}
 	}
 }
+
 /*
 LinExp : PureUGen {
 	checkInputs { ^this.checkSameRateAsFirstInput }

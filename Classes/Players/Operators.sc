@@ -121,6 +121,8 @@
 		^PersistentBusProxy(this, param);
 	}
 
+	isPlaying { ^this.p.isPlaying }
+
 	map { | ... paramBusPairs |
 		// map parameter - bus pairs named by symbols
 		var envir;
@@ -248,6 +250,11 @@
 		controlplayer ?? { controlplayer = busname };
 		envir.map(param, busname);
 		{ Out.kr(busname.bus.index, this.value) } +> controlplayer;
+		"trying to get clarity".postln;
+		postf("the main player's environment is %\n", envir);
+		postf("the KR PLAYER is %\n", controlplayer);
+		postf("the KR PLAYER player is %\n", controlplayer.p);
+		postf("the KR PLAYER player envir is %\n", controlplayer.p.envir);
 	}
 
 	playFor { | playerName, dur = 1 |

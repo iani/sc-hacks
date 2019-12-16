@@ -106,14 +106,14 @@ Pvs({ | ch |
 	~fxvol = 0;
 	~srcvol = 1;
 });
-20.abswait;
+20.await;
 { XLine.kr(1, 0.0001, 20) }.map(\pv1, \srcvol);
 { XLine.kr(0.0001, 1, 5) }.map(\pv1, \fxvol);
 /*
 \z1.bus.set(0.51);
 */
 \pv1.map(\thresh, \z1);
-[1, 9].abswait;
+[1, 9].await;
 // CAUCHE 2 pv2 ================================================================
 Pvs({ | ch |
 	// PV_MagBelow(ch, \thresh2.kr(1).linexp(0.1, 25))
@@ -124,18 +124,18 @@ Pvs({ | ch |
 }, { ~startpos = 809; ~rate = 0.75 }, { ~stretch = 0.1; ~shift = 0.1; },
 	\cauche2, \pv2
 );
-[1, 50].abswait;
+[1, 50].await;
 \pv2.map(\stretch, \x1);
 \pv2.map(\shift, \y1);
 // at minute 4 the opening theme starts: NEXT MILESTONE
-[3, 50].abswait;
+[3, 50].await;
 // fade out effects, fade in source sound in cauche 1 pv1
 { XLine.kr(0.0001, 1.0, 10) }.map(\pv1, \srcvol);
 { XLine.kr(1.0, 0.00001, 15) }.map(\pv1, \fxvol);
 // fade out effects, fade in source sound in cauche 1 pv1
 { XLine.kr(0.0001, 1.0, 10) }.map(\pv2, \srcvol);
 { XLine.kr(1.0, 0.00001, 15) }.map(\pv2, \fxvol);
-[5, 0].abswait;
+[5, 0].await;
 //crossfade to higher BinShift range
 \fadeTime <+.violafx 5;
 {
@@ -158,14 +158,14 @@ Pvs({ | ch |
 		PanAz(8, out, \pos.kr(0));
 	*/
 } +> \violafx;
-[5, 30].abswait;
+[5, 30].await;
 // FADE !!!!OUT!!!! EFFECTS FROM pv2 CAUCHE 2
 { XLine.kr(0.0001, 1.0, 10) }.map(\pv2, \srcvol);
 { XLine.kr(1.0, 0.00001, 15) }.map(\pv2, \fxvol);
 // { XLine.kr(0.0001, 1.0, 10) }.map(\violafx, \srcvol);
 // { XLine.kr(1.0, 0.00001, 15) }.map(\violafx, \fxvol);
 // viola fx: replace BinShift with MagAbove
-[5, 40].abswait;
+[5, 40].await;
 \thresh <+.violafx 0;
 {
 	var src, fx, out, srcvol = 0, fxvol = 1;
@@ -183,23 +183,23 @@ Pvs({ | ch |
 } +> \violafx;
 // raise MagAbove threshold from 0e-4 to 0.5 in 10 seconds
 { XLine.kr(0.0001, 0.5, 15) }.map(\violafx, \thresh);
-[6, 0].abswait;
+[6, 0].await;
 // start controlling viola magabove threshold from z1 sensor
 \violafx.map(\thresh, \z1);
-[7, 0].abswait;
+[7, 0].await;
 \fadeTime <+.pv1 3;
 // start heartbeat on cauche1
 Pbuf(260.2, \cauche1, init: {
     ~rate = 1;
     ~period = 8.4217412992999 / ~rate;
 });
-[7, 10].abswait;
+[7, 10].await;
 // start heartbeat on cauche2
 Pbuf(260.2, \cauche2, init: {
     ~rate = 1;
     ~period = 8.4217412992999 / ~rate;
 });
-[7, 15].abswait;
+[7, 15].await;
 // add localmax to cauche2 = pv2
 PFX({ | ch |
 	PV_LocalMax(ch, \thresh.kr(1).linexp(0.001, 5.0));
@@ -208,14 +208,14 @@ PFX({ | ch |
 { XLine.kr(0.0001, 1.0, 10) }.map(\pv2, \fxvol);
 { XLine.kr(1.0, 0.00001, 15) }.map(\pv2, \srcvol);
 // and raise threshold from 0 to 0.7 in 30 seconds
-[7, 50].abswait; // control pv2 cauche2 fx thresh with y1
+[7, 50].await; // control pv2 cauche2 fx thresh with y1
 \pv2.map(\thresh, \y1);
-[8, 30].abswait; // start scratch on cauche1
+[8, 30].await; // start scratch on cauche1
 Pbuf((12 * 60) + 28, \cauche1, init: {
 	~rate = 1;
 	~period = 32;
 });
-[8, 50].abswait; // add binshift to viola, controlled by z1.
+[8, 50].await; // add binshift to viola, controlled by z1.
 {
 	var src, fx, finalout, srcvol = 0, fxvol = 1;
 	var chain, f;
@@ -234,12 +234,12 @@ Pbuf((12 * 60) + 28, \cauche1, init: {
 	finalout = Mix([src * \srcvol.kr(srcvol), fx * \fxvol.kr(fxvol)]);
 	PanAz(8, finalout, \pan.kr(0).urange(-1.0, 1.0));
 } +> \violafx;
-[9, 00].abswait; // start scratch on cauche2
+[9, 00].await; // start scratch on cauche2
 Pbuf((12 * 60) + 28, \cauche2, init: {
 	~rate = 1;
 	~period = 32;
 });
-[9, 30].abswait; // add binshift to pv1 and pv2, controlled by x1, y1.
+[9, 30].await; // add binshift to pv1 and pv2, controlled by x1, y1.
 
 //:
 PFX({ | ch |
