@@ -51,7 +51,7 @@ Mapper : Singleton {
 
 	map { | value, sensorName, itemName |
 		// user spec in item under sensor to map incoming value
-		^this.getSpec(sensorName, itemName).value(value).postln;
+		^this.getSpec(sensorName, itemName).value(value);
 	}
 
 	setSpec { | sensorName, itemName, spec |
