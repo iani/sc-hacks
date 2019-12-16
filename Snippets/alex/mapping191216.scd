@@ -15,6 +15,7 @@ OSCFunc({ |msg|
 
 //:set the map
 Mapper.setSpec(\sensor1, \x, {|val| val.linlin(0.2, 0.8, 0, 10) });
+Mapper.setSpec(\sensor1, \z, {|val| val.linlin(0.4, 0.6, 0, 1) });
 
 
 //:create osc func using map
@@ -24,8 +25,8 @@ OSCFunc({ |msg|
 	#x, y, z = msg[2..];
 	addr.sendMsg('/sensor1',
 		Mapper.map(x, \sensor1, \x),
-		Mapper.map(y, \sensor1, \y).postln,
-		Mapper.map(x, \sensor1, \x)		
+		Mapper.map(y, \sensor1, \y),
+		Mapper.map(z, \sensor1, \z).postln		
 		
 	)
 		//Mapper.map(y, \sensor1, \y))
