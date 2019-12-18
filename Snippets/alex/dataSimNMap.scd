@@ -46,3 +46,15 @@ OSCFunc({ |msg|
 		Mapper.map(x, \sensor1, \x).postln;
 	)
 }, '/minibee/data', argTemplate: [1]);
+
+//:
+
+"i start here".postln;
+1.wait;
+"onesec late".postln;
+3.wait;
+"three sec later".postln;
+10.await;
+"this is running at tenth sec abs time".postln;
+
+ 
