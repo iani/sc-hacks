@@ -78,7 +78,7 @@ Time {
 		"The Timer stopped".postln;
 	}
 
-	abswait { | abstime = 1 |
+	await { | abstime = 1 |
 		/*
 		convert absolute wait time from start of piece
 		to relative wait time, and call wait on relative time.

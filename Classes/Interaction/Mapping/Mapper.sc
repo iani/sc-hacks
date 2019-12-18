@@ -67,5 +67,4 @@ Mapper : Singleton {
 			^{ | val |  theSpec.map(val) };
 		}
 	}
-	
 }
