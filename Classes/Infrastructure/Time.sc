@@ -66,7 +66,8 @@ Time {
 			inf do: { | i |
 				dt = Process.elapsedTime - startTime;
 				//                    mins        secs
-				{ name.changed(\time, dt div: 60, dt % 60); }.defer;
+				// { name.changed(\time, dt div: 60, dt % 60); }.defer;
+				{ name.changed(\time, dt) }.defer;
 				1.wait;
 			}			
 		}.fork
@@ -80,8 +81,8 @@ Time {
 
 	await { | abstime = 1 |
 		/*
-		convert absolute wait time from start of piece
-		to relative wait time, and call wait on relative time.
+			convert absolute wait time from start of piece
+			to relative wait time, and call wait on relative time.
 		*/
 		var dt; // how much time do I have to wait relative to previous wait?
 		// this approach will not work if there are t.wait statements
@@ -112,6 +113,31 @@ Time {
 			(Process.elapsedTime - startTime).round(0.00001), abstime,
 			(abstime - (Process.elapsedTime - startTime)).round(0.00001)
 		);
+	}
+
+	gui {
+		{
+			name.tr_(width: 400).v(
+				HLayout(
+					StaticText()
+					.font_(PlatformGuiDefaults.font)
+					.string_("mins"),
+					NumberBox()
+					.font_(PlatformGuiDefaults.font)
+					.addNotifier(name, \time, { | val, n |
+						{ n.listener.value = val div: 60; }.defer;
+					}),
+					StaticText()
+					.font_(PlatformGuiDefaults.font)
+					.string_("secs"),
+					NumberBox()
+					.font_(PlatformGuiDefaults.font)
+					.addNotifier(name, \time, { | val, n |
+						{ n.listener.value = val % 60; }.defer;
+					})
+				)
+			)
+		}.defer;
 	}
 }
 

@@ -315,8 +315,15 @@ One can combine any of the three types of includes in one headline.  For example
 : //:combine includes / include1 ^ serveroptions $ buffers meter scope
 
 loads =include1.scd= before the snippet, =serveroptions.sc= before booting the server and =buffers=, =meter=, =scope= immediately after the server is booted.
+* Snippet syntax for CuePlayer
+  :PROPERTIES:
+  :DATE:     <2019-12-19 Thu 21:25>
+  :END:
 
-
+//:(seconds)
+//:<beats>
+//:[minutes, seconds]
+j
 * Implementation notes
   :PROPERTIES:
   :DATE:     <2017-10-05 Thu 17:31>

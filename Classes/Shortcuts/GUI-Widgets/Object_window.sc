@@ -83,7 +83,7 @@
 				w.layout = layoutClass.new(
 					*items
 				);
-				this.bounds.postln; 
+				// this.bounds.postln; 
 				w.bounds = w.bounds.height_( // 20 or 40
 					items.size * PlatformGuiDefaults.lineHeight + 5
 				);
