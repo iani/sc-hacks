@@ -175,7 +175,8 @@ PatternPlayer : SourcePlayer {
 	}
 	*/
 	release {
-		process.stop; // later maybe add fadeOut ...
+		process.release;
+		//		process.stop; // later maybe add fadeOut ...
 	}
 
 	stop { process.stop }

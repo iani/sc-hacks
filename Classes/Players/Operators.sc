@@ -123,6 +123,13 @@
 
 	isPlaying { ^this.p.isPlaying }
 
+	<@ { | val | ^this.bus.set(val) }
+	
+	@> { | param, envir |
+		// map bus named by me to param in envir
+		^(envir ?? { envir.e }).map(param, this);
+	}
+	
 	map { | ... paramBusPairs |
 		// map parameter - bus pairs named by symbols
 		var envir;
@@ -169,6 +176,7 @@
 
 	// ================================================================
 	// different actions depending on argument
+	// see also @> for mapping busses
 	<+ { | argument, envir |
 		// argument interprets this differently according to class
 		// See file ArgSetParameter.sc
@@ -214,6 +222,12 @@
 			) * \amp.kr(1)
 		}.playFor(playerName, dur ? inf);	
 	}
+
+	release {
+		//	| fadeTime |
+		// ^this.p.release(fadeTime)
+		^this.p.release;
+	}
 }
 
 + Function {
@@ -241,6 +255,10 @@
 		(envir ? currentEnvironment).playLoop(key, this);
 	}
 
+	@> { | param, envir |
+		this.map(envir ?? { envir.e }, param);
+	}
+
 	map { | envir, param, controlplayer |
 		/* Play control rate function into bus
 			controlplayer: optional name of player playing the func
@@ -250,11 +268,6 @@
 		controlplayer ?? { controlplayer = busname };
 		envir.map(param, busname);
 		{ Out.kr(busname.bus.index, this.value) } +> controlplayer;
-		"trying to get clarity".postln;
-		postf("the main player's environment is %\n", envir);
-		postf("the KR PLAYER is %\n", controlplayer);
-		postf("the KR PLAYER player is %\n", controlplayer.p);
-		postf("the KR PLAYER player envir is %\n", controlplayer.p.envir);
 	}
 
 	playFor { | playerName, dur = 1 |

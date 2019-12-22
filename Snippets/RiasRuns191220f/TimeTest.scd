@@ -30,3 +30,8 @@ Time().simpleGui;
 //:second test
 5.wait;
 "blah".postln;
+//:
+{ WhiteNoise.ar(0.5).stereo } +> \test;
+1.wait;
+~fadeTime = 7;
+\test.release(7);

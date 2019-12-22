@@ -12,5 +12,4 @@
 	).stereo;
 } +> \p1;
 \level <+.p1 2;
-//:check rate parameter setting
-[0.25, 1.5].asSpec.map(0.5);
+

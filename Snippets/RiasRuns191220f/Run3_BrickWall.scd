@@ -1,9 +1,13 @@
 // ================================================================
-//:Neutral run through
-// "00no_fx".record(10.20.minsec); // record for 10 minutes and 10 seconds
+//:Trying brick wall
+// "01BrickWall".record(10.20.minsec); // record for 10 minutes and 10 seconds
 //prepare stereo for both players
 \p1 *> \fx1;
-{ Inp.ar.stereo } +> \fx1;
+// { Inp.ar.stereo } +> \fx1;
+PV({ | ch |
+	PV_MagClip(ch, \thresh.kr(1).linexp(0.1, 25))
+	// PV_MagAbove(ch, \thresh.kr(1).linexp(0.01, 65))
+}, { ~startpos = 809 }, { ~thresh = 25 })
 \p2 *> \fx2;
 { Inp.ar.stereo } +> \fx2;
 // phrase 1 semitone upward glissando, player 1

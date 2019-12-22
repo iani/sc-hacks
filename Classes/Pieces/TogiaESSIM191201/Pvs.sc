@@ -1,3 +1,7 @@
+/* THESE ARE EARLY DFAFTS USED FOR PERFORMANCES IN NOVEMBER 2019
+THEY ARE SOMEWHAT COMPLEX TO USE.
+INSTEAD, SEE THE PV CLASS FOR A SIMPLER SHORTCUT.
+*/
 // Some shortcuts for the Prologue Fantasy Piece 191130
 // Shortcut for trying out many pvs
 /* template:
