@@ -266,6 +266,13 @@
 		var busname;
 		busname = format("%_%", envir, param).asSymbol;
 		controlplayer ?? { controlplayer = busname };
+		postf(
+			"mapping controlplayer % to param % of envir % using bus %\n",
+			controlplayer,
+			param,
+			envir,
+			busname
+		);
 		envir.map(param, busname);
 		{ Out.kr(busname.bus.index, this.value) } +> controlplayer;
 	}

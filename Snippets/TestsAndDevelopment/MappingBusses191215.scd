@@ -72,9 +72,9 @@ Example (see bottom of present file):
 \x1 <@ 0.1301;
 // ================================================================
 //:playing some shapes
-{ SinOsc.ar(\freq.kr(1440), 0, 0.01).stereo } +> \src;
+{ SinOsc.ar(\freq.kr(1440), 0, 0.01).stereo } +> \src; // source synth
 5.wait;
-{ SinOsc.kr(\freq.kr(15)).range(1500, 1600) } @>.src \freq;
+{ SinOsc.kr(\freq.kr(15)).range(1500, 1600) } @>.src \freq; // map to freq
 5.wait;
 { Line.kr(300, 4000, 10) } @>.src \freq;
 10.wait;

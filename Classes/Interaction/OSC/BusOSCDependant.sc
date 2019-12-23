@@ -43,7 +43,7 @@ BusOsc {
 
 		*/
 		// create gui for watching several busses
-		name.v(
+		name.br_(800).v(
 			*specs.collect({ | specArray |
 				// 0 bus, 1 msg, 2 index, 3 min, 4 max
 				this.new(*specArray).widget;
@@ -94,7 +94,9 @@ BusOsc {
 			StaticText().string_(index.asString).font_(PlatformGuiDefaults.font),
 			slider = Slider().orientation_(\horizontal)
 			.minWidth_(200),
-			numbox = NumberBox().font_(PlatformGuiDefaults.font)
+			numbox = NumberBox()
+			.maxWidth_(80)
+			.font_(PlatformGuiDefaults.font)
 			.decimals_(3)
 			.addNotifier(name, msg.addSlashIfNeeded, { | val |
 				{
@@ -102,13 +104,17 @@ BusOsc {
 					numbox.value = val;
 				}.defer;
 			}),
-			NumberBox().font_(PlatformGuiDefaults.font)
+			NumberBox()
+			.maxWidth_(80)
+			.font_(PlatformGuiDefaults.font)
 			.decimals_(3)
 			.value_(min)
 			.action_({ | me |
 				this.setMin(me.value);
 			}),
-			NumberBox().font_(PlatformGuiDefaults.font)
+			NumberBox()
+			.maxWidth_(80)
+			.font_(PlatformGuiDefaults.font)
 			.decimals_(3)
 			.value_(max)
 			.action_({ | me |
