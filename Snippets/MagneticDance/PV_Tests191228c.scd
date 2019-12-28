@@ -3,9 +3,10 @@
 //;buffer check
 \lamentodellaninfa.b.play;
 //:buffer check with Pbuf2
-Pbuf2({ ~startpos = 809; ~buffer = \prologue }, \p1);
+\p1 *> \fx1;
+\p2 *> \fx2;
 Pbuf2({ ~startpos = 809; ~buffer = \lamentodellaninfa }, \p1);
-Pbuf2({ ~startpos = 0; ~buffer = \lamentodellaninfa }, \p2);
+Pbuf2({ ~startpos = 0; ~buffer = \prologue }, \p2);
 //:setup sensors
 BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 	[\x1, 1, 0.47, 0.53, 1],
@@ -21,22 +22,40 @@ BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 	[\y4, 2, 0.47, 0.53, 4],
 	[\z4, 3, 0.47, 0.53, 4]
 );
-//:Start playback on glissando
-\p1 *> \fx1;
-\p2 *> \fx2;
-{ Inp.ar.stereo } +> \fx1;
-Pbuf2({ ~startpos = 809; }, \p1);
-//:add brick wall
-PV({ | c |
-	PV_BrickWall(c, \thresh.kr(0.1, 0.5));
-}, true) +> \fx1;
-//:Set threshold to 0 = no wall at all
-\thresh <+.fx1 0;
+//: SENSOR ALLOTMENTS TO PERSONS:
+// asayo = x1 ///jun x4
 //:listen to fx (not src)
 \srcvol <+.fx1 0;
 \fxvol <+.fx1  1;
 \srcvol <+.fx2 0;
-\fxvol <+.fx2  0;
+\fxvol <+.fx2  10;
+//:
+\fxvol <+.fx1  0;
+//:add brick wall fx1
+PV({ | c |
+	PV_BrickWall(c, \thresh.kr(0.1, 0.5));
+}, true) +> \fx1;
+//:
+\rate <+.p2 0.25;
+//:
+//:PV_Magabove fx2
+PV({ | c |
+	PV_MagBelow(c, \thresh.kr(0.1, 0.5));
+}, true) +> \fx2;
+//:connect input control busses to fx parameters
+\x1 @>.fx1_thresh \x1;
+\x4 @>.fx2_thresh \x1;
+//:set range mappers range and type
+//:change mapping range to fit MagBelow linexp 0.01, 7 is good
+{ \x1.kr(0).urange(0.000001, 0.29515975) } @>.fx1 \thresh; // BRICKWALL
+{ \x1.kr(0).linexp(0.01, 25) } @>.fx2 \thresh; // MAGBELOW
+
+//: ================================================================
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// ================================================================
+
+//:Set threshold to 0 = no wall at all
+\thresh <+.fx1 0;
 
 //:open fx slightly
 \thresh <+.fx1 0.01;
@@ -76,12 +95,9 @@ PV({ | c |
 //:change mapping range to fit MagBelow
 { \x1.kr(0).linexp(0.01, 10.827) } @>.fx1 \thresh; //
 //:PV_Magabove x4 fx2
-PV({ | c |//:PV_Mag//:PV_Magabove
 PV({ | c |
 	PV_MagBelow(c, \thresh.kr(0.1, 0.5));
 }, true) +> \fx1;
-//:change mapping range to fit MagBelow linexp 0.01, 7 is good
-{ \x1.kr(0).linexp(0.01, 7) } @>.fx1 \thresh; //
 //:PV_Magabove
 PV({ | c |
 	PV_MagBelow(c, \thresh.kr(0.1, 0.5));
@@ -128,11 +144,7 @@ PV({ | c |
 		\shift.kr(0.1, 0.5)
 	);
 }, true) +> \fx2;
-//:connect control busses to fx parameters
-\x1 @>.fx1_stretch \x1;
-\y1 @>.fx1_shift \y1;
-\x4 @>.fx2_stretch \x1;
-\y4 @>.fx2_shift \y1;
+
 
 //:change mapping range to fit MagShift
 { \x1.kr(0).urange(0.5, 2) } @>.fx1 \stretch;
@@ -140,3 +152,8 @@ PV({ | c |
 { \x2.kr(0).urange(0.1, 5) } @>.fx2 \stretch;
 { \y2.kr(0).urange(-25, 25) } @>.fx2 \shift;
 
+//:connect busses to mappers
+\x1 @>.fx1_stretch \x1;
+\y1 @>.fx1_shift \y1;
+\x4 @>.fx2_stretch \x1;
+\y4 @>.fx2_shift \y1;
