@@ -5,33 +5,35 @@ Requirement: sc-hacks library (Uses Singleton class).
 */
 
 MocapData : Singleton {
-	var <path, <header, <data, <columns, <normalized, <raw;
+	var <path, <header, <data, <columns, <normalized, <dataForPCA, <pca;
 	var <stats; // statistics on each column of data;
 	open {
 		Dialog.openPanel({ | argPath |
 			path = argPath;
 			postf("loading file:\n%\n", path);
 			this.preprocessData(
-				CSVFileReader.read(path, delimiter: Char.comma)
+				CSVFileReader.read(path, true, delimiter: Char.comma)
 			);
 		});
 	}
 
 	preprocessData { | file |
 		header = file[0];
-		data = file[1..].select{|x| x.size > 1};
+		data = file[1..]; // .select{|x| x.size > 1};
 		postf("header size: %, data first row size: %, data % OK\n",
 			header.size, data[0].size,
 			['seems not', 'seems'][(header.size == data[0].size).binaryValue]
 		);
 		// raw = 
 		this.initColumns;
-		// this.normalizeData;
+		this.normalizeData;
 		this.makeStats;
 	}
 
 	initColumns {
-		columns = data.flop[1..].collect(_.numerify); }
+		columns = data.flop[1..].collect(_.numerify);
+		dataForPCA = columns.flop;
+	}
 
 	normalizeData {
 		"Normalizing data".postln;
@@ -43,8 +45,26 @@ MocapData : Singleton {
 			"calculating statistics".postln;
 			stats = columns collect: Stats(_);
 		}, "calculate statistics")
-		
 	}
+
+	subtractPC { | data, pc1 |
+		^data collect: { | row |
+			row - ((pc1 * row).sum * pc1);
+		};
+	}
+
+	calcPCA { | ncomponents = 1 |
+		var components, df, pc1;
+		df = dataForPCA;		
+		^pca = (1 .. ncomponents) collect: { | i |
+			pc1 = df.pc1;
+			postf("% : ", i);
+			pc1[..4].round(0.0001).postln;
+			df = this.subtractPC(df, pc1);
+			pc1;
+		}
+	}
+	
 }
 
 Stats {
