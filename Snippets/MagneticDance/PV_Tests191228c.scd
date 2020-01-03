@@ -38,7 +38,7 @@ PV({ | c |
 //:
 \rate <+.p2 0.25;
 //:
-//:PV_Magabove fx2
+//:PV_MagBelow fx2
 PV({ | c |
 	PV_MagBelow(c, \thresh.kr(0.1, 0.5));
 }, true) +> \fx2;
@@ -144,7 +144,6 @@ PV({ | c |
 		\shift.kr(0.1, 0.5)
 	);
 }, true) +> \fx2;
-
 
 //:change mapping range to fit MagShift
 { \x1.kr(0).urange(0.5, 2) } @>.fx1 \stretch;
