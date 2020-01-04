@@ -6,9 +6,7 @@
 		Impulse.kr(\ppm.kr(5)),
 		\dur.kr(0.2),
 		\lamentodellaninfa.b,
-		// LFDNoise3.kr(0.5).range(0.7, 1.2), // rate
 		\rate.kr(1),
-		// LFDNoise3.kr(0.2).range(0.0, 0.99) // pos
 		\pos.kr(0.5)
 	)
 } +> \p1;
