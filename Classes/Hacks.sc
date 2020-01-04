@@ -47,14 +47,37 @@ Hacks : Singleton {
 		}
 	}
 
-	bootAndLoadAudio { | path = "~/sounds" |
+	start { | func, wait = 3 |
+		// SHORTCUT
+		// boot, load audio, then evaluate func, within routine
+		var filename;
+		if (func isKindOf: String) {
+			filename = func;
+			func = {
+				postf("=== Loading: ===\n % \n", filename);
+				filename.load;
+			}
+		};
+		this.bootAndLoadAudio(func: func, wait: wait);
+	}
+	
+	bootAndLoadAudio { | path = "~/sounds", func, wait = 3 |
 		Server.default.waitForBoot(
 			{
 				{
-				"\n===================================".postln;
-				this.loadAudioFiles(path);
+					"\n===================================".postln;
+					this.loadAudioFiles(path);
 					"===================================".postln;
-				}.defer(1)
+
+					func !? {
+						postf("\n--- Running startup func in % seconds ---\n", wait);
+						{
+							wait.wait;
+							"!!!! Running startup function now !!!!!".postln;
+							func.value(this);
+						}.fork;
+					}
+				}.defer(1);
 			};
 		)
 	}
