@@ -9,7 +9,7 @@ Tama.scriptify("blabla");
 Tama : Singleton {
 	start {
 		Hacks.start(
-			this.scriptify("cocokita200104"),
+			this.scriptify("kokokita200104"),
 			1
 		);
 	}	

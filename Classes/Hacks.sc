@@ -75,7 +75,7 @@ Hacks : Singleton {
 							wait.wait;
 							"!!!! Running startup function now !!!!!".postln;
 							func.value(this);
-						}.fork;
+						}.fork(AppClock);
 					}
 				}.defer(1);
 			};

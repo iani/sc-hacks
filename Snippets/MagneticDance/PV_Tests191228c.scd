@@ -6,7 +6,11 @@
 \p1 *> \fx1;
 \p2 *> \fx2;
 Pbuf2({ ~startpos = 809; ~buffer = \lamentodellaninfa }, \p1);
-Pbuf2({ ~startpos = 0; ~buffer = \prologue }, \p2);
+Pbuf2({
+	~startpos = 0;
+	~buffer = \prologue;
+	~rate = 0.25; // 2 octaves lower
+}, \p2);
 //:setup sensors
 BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 	[\x1, 1, 0.47, 0.53, 1],
@@ -28,9 +32,9 @@ BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 \srcvol <+.fx1 0;
 \fxvol <+.fx1  1;
 \srcvol <+.fx2 0;
-\fxvol <+.fx2  10;
-//:
-\fxvol <+.fx1  0;
+\fxvol <+.fx2  10; // jun needs larger amplitude
+//:Start timer with gui
+Time().gui;
 //:add brick wall fx1
 PV({ | c |
 	PV_BrickWall(c, \thresh.kr(0.1, 0.5));
@@ -42,9 +46,6 @@ PV({ | c |
 PV({ | c |
 	PV_MagBelow(c, \thresh.kr(0.1, 0.5));
 }, true) +> \fx2;
-//:connect input control busses to fx parameters
-\x1 @>.fx1_thresh \x1;
-\x4 @>.fx2_thresh \x1;
 //:set range mappers range and type
 //:change mapping range to fit MagBelow linexp 0.01, 7 is good
 { \x1.kr(0).urange(0.000001, 0.29515975) } @>.fx1 \thresh; // BRICKWALL
