@@ -1,3 +1,4 @@
+// ADDING AMPLITUDE CONTROL WITH UGEN Changed.kr  5 Jan 2020 11:55 
 //:sound check
 \default +> \check;
 //:setup sensors
