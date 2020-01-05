@@ -57,13 +57,26 @@ PV({ | c |
 // ================ connect fx1 thresh to x1
 { \x1.kr(0).linexp(0.0000001, 0.295) } @@>.fx1 \thresh; // brickwall jun
 // ================ connect fx1 pan to y1
-{ \y1.kr(0).urange(-1, 1) } @@>.fx1 \pan; // brickwall jun
+{ \y1.kr(0).urange(-1, 1) } @@>.fx1 \pos; // pan pos jun
 //: ================================================================ ASAYO
 Pbuf2({ // start asayo - lamento on p2
 	~startpos = -10;
 	~buffer = \lamentodellaninfa; // \prologue???????
 	~rate = 1;
 }, \p2);
+//: ====================== add magabove fx2
+PV({ | c |
+	PV_MagAbove(c, \thresh.kr(0.000001, 0.5));
+}, true,
+	// { | in | LPF.ar(in, 3000) }
+	// { | in | Ringz.ar(in * 0.1, LFDNoise1.kr(5).range(100, 2000), 0.01) }
+) +> \fx2;
+// ================ connect fx1 thresh to x1
+{ \x2.kr(0).linexp(1, 15.0) } @@>.fx2 \thresh; // brickwall asayo
+{ \y2.kr(0).urange(-1, 1) } @@>.fx2 \pos; // pan pos asayo
+
+//;================ OLDER STUFF ================
+
 //: ====================== add brick wall fx2
 PV({ | c |
 	PV_BrickWall(c, \thresh.kr(0.000001, 0.5));
@@ -82,6 +95,7 @@ PV({ | c |
 ) +> \fx2;
 // ================ connect fx1 thresh to x1
 { \x2.kr(0).linexp(1, 15.0) } @@>.fx2 \thresh; // brickwall asayo
+{ \y2.kr(0).urange(-1, 1) } @@>.fx2 \pos; // pan pos asayo
 //:================ use grains for asayo
 {
 	GrainBuf.ar(1,
@@ -190,3 +204,5 @@ currentEnvironment.target;
 		^(envir ?? { envir.e }).map(param, this);
 	}
 */
+//:
+\fx1.controls
