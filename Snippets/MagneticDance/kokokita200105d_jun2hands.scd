@@ -50,7 +50,7 @@ BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 //: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // ======== RECORD ======== !!!!
 Time().reset.gui;
-"asayojun201005b".record(60 * 15);
+"asayojun201005c".record(60 * 5);
 //: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 //: ================================================================ JUN 1
@@ -87,17 +87,18 @@ Pbuf2({ // start asayo - lamento on p2
 	~buffer = \lamentodellaninfa; // \prologue???????
 	//	~buffer = \prologue;  /// ???????
 	~rate = 1;
-}, \p2);
+}, \p2, { | in | Resonz.ar(in * 5, \freq.kr(500), 0.1)});
 // ====================== add magabove fx2
 PV({ | c |
-	PV_MagAbove(c, \thresh.kr(0.000001, 0.5));
+	PV_MagBelow(c, \thresh.kr(0.000001, 0.5));
 }, true,
 	// { | in | LPF.ar(in, 3000) }
 	// { | in | Ringz.ar(in * 0.1, LFDNoise1.kr(5).range(100, 2000), 0.01) }
 ) +> \fx2;
 // ================ connect fx1 thresh to x1
-{ \x2.kr(0).linexp(1, 15.0) } @@>.fx2 \thresh; // brickwall asayo
+{ \x2.kr(0).linexp(0.01, 15.0) } @@>.fx2 \thresh; // magbelow asayo
 { \y2.kr(0).urange(-1, 1) } @@>.fx2 \pos; // pan pos asayo
+{ \z2.kr(0).linexp(100, 10000) } @@>.fx2 \freq; // pan pos asayo
 
 //;================ OLDER STUFF ================
 
