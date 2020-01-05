@@ -1,4 +1,4 @@
-// ADDING AMPLITUDE CONTROL WITH UGEN Changed.kr  5 Jan 2020 11:55 
+// Adding voice for second hand for jun
 //:sound check
 \default +> \check;
 //:*sound check - stereo
@@ -39,17 +39,21 @@ BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 //:================ initialize fx config
 \p1 *> \fx1; // player - fx setup
 \p2 *> \fx2;
+\p3 *> \fx3;
+\p4 *> \fx4;
 \srcvol <+.fx1 0; // listen to fx - not source
 \fxvol <+.fx1  3;
+\srcvol <+.fx3 0; // listen to fx - not source
+\fxvol <+.fx3 3;
 \srcvol <+.fx2 0;
-\fxvol <+.fx2  1.5; // jun needs larger amplitude
+\fxvol <+.fx2 1.5; // jun needs larger amplitude
 //: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // ======== RECORD ======== !!!!
 Time().reset.gui;
-"asayojun201005a".record(60 * 20);
+"asayojun201005b".record(60 * 15);
 //: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-//: ================================================================ JUN
+//: ================================================================ JUN 1
 Pbuf2({ // start jun - prologue on p1
 	~startpos = 809;
 	~buffer = \prologue;
@@ -63,10 +67,25 @@ PV({ | c |
 { \x1.kr(0).linexp(0.0000001, 0.295) } @@>.fx1 \thresh; // brickwall jun
 // ================ connect fx1 pan to y1
 { \y1.kr(0).urange(-1, 1) } @@>.fx1 \pos; // pan pos jun
-//: ================================================================ ASAYO
+//: ================================================================ JUN 2
+Pbuf2({ // start jun - prologue on p3
+	~startpos = 0;
+	~buffer = \prologue;
+	~rate = 0.5; // 1 octave lower
+}, \p3);
+// ====================== add brick wall fx3
+PV({ | c |
+	PV_BrickWall(c, \thresh.kr(0.0000001, 0.5));
+}, true) +> \fx3;
+// ================ connect fx3 thresh to x3
+{ \x3.kr(0).linexp(0.0000001, 0.295) } @@>.fx3 \thresh; // brickwall jun
+// ================ connect fx3 pan to y3
+{ \y3.kr(0).urange(-1, 1) } @@>.fx3 \pos; // pan pos jun
+//: ================================================================ ASAYO 1
 Pbuf2({ // start asayo - lamento on p2
 	~startpos = -10;
 	~buffer = \lamentodellaninfa; // \prologue???????
+	//	~buffer = \prologue;  /// ???????
 	~rate = 1;
 }, \p2);
 // ====================== add magabove fx2
@@ -79,6 +98,28 @@ PV({ | c |
 // ================ connect fx1 thresh to x1
 { \x2.kr(0).linexp(1, 15.0) } @@>.fx2 \thresh; // brickwall asayo
 { \y2.kr(0).urange(-1, 1) } @@>.fx2 \pos; // pan pos asayo
+
+//;================ OLDER STUFF ================
+
+//: ================================================================ ASAYO 2
+Pbuf2({ // start asayo - lamento on p4
+	~startpos = 90;
+	~buffer = \lamentodellaninfa; // \prologue???????
+	//	~buffer = \prologue;  /// ???????
+	~rate = 1;
+}, \p4);
+// ====================== add magabove fx2
+PV({ | c |
+	PV_MagAbove(c, \thresh.kr(0.000001, 0.5));
+}, true,
+	// { | in | LPF.ar(in, 3000) }
+	// { | in | Ringz.ar(in * 0.1, LFDNoise1.kr(5).range(100, 2000), 0.01) }
+) +> \fx4;
+// ================ connect fx1 thresh to x1
+{ \x2.kr(0).linexp(1, 15.0) } @@>.fx2 \thresh; // brickwall asayo
+{ \y2.kr(0).urange(-1, 1) } @@>.fx2 \pos; // pan pos asayo
+{ \x4.kr(0).linexp(1, 15.0) } @@>.fx4 \thresh; // brickwall asayo
+{ \y4.kr(0).urange(-1, 1) } @@>.fx4 \pos; // pan pos asayo
 
 //;================ OLDER STUFF ================
 
@@ -209,3 +250,5 @@ currentEnvironment.target;
 */
 //:
 \fx1.controls
+//:
+\fx3.stop;
