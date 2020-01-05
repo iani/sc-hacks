@@ -102,6 +102,7 @@
 + Symbol {
 	slider { | controlspec, envir, name |
 		// shortcut for slider displaying/setting a parameter in an environment
+		// this = paramname. name = name to display (default: this).
 		controlspec = (controlspec ? this).asSpec;
 		if (envir.isNil) {
 			envir = currentEnvironment;

@@ -1,3 +1,5 @@
+//:sound check
+\default +> \check;
 //:setup sensors
 BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 	[\x1, 1, 0.47, 0.53, 1],
@@ -13,7 +15,16 @@ BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 	[\y4, 2, 0.47, 0.53, 4],
 	[\z4, 3, 0.47, 0.53, 4]
 );
-//:initialize fx config
+//:================ fx volume controls
+\volumes.v(
+	\srcvol.slider([0, 10], \fx1, "fx1 src"),
+	\fxvol.slider([0, 10], \fx1, "fx1 fx"),
+	\thresh.slider([0.00001, 10, \exp], \fx1, "fx1 thresh"),
+	\srcvol.slider([0, 10], \fx2, "fx2 src"),
+	\fxvol.slider([0, 10], \fx2, "fx2 fx"),
+	\thresh.slider([0.00001, 10, \exp], \fx2, "fx2 thresh"),
+);
+//:================ initialize fx config
 \p1 *> \fx1; // player - fx setup
 \p2 *> \fx2;
 \srcvol <+.fx1 0; // listen to fx - not source
@@ -29,27 +40,26 @@ Pbuf2({ // start jun - prologue on p1
 }, \p1);
 // ====================== add brick wall fx1
 PV({ | c |
-	PV_BrickWall(c, \thresh.kr(0.0000001, 0.5));
+	PV_MagBelow(c, \thresh.kr(10, 0.5));
 }, true) +> \fx1;
 // ================ connect fx1 thresh to x1
-{ \x1.kr(0).urange(0.0000001, 0.295) } @@>.fx1 \thresh; // BRICKWALL
+{ \x1.kr(0).linexp(0.0000001, 10) } @@>.fx1 \thresh; // brickwall jun
 
-// ================================================================ ASAYO
+//: ================================================================ ASAYO
 Pbuf2({ // start asayo - lamento on p2
-	~startpos = 809;
-	~buffer = \prologue;
-	~rate = 0.25; // 2 octaves lower
+	~startpos = -10;
+	~buffer = \lamentodellaninfa;
+	~rate = 1;
 }, \p2);
 // ====================== add brick wall fx2
 PV({ | c |
-	PV_BrickWall(c, \thresh.kr(0.1, 0.5));
+	PV_MagBelow(c, \thresh.kr(10, 0.5));
 }, true) +> \fx2;
 // ================ connect fx1 thresh to x1
-{ \x1.kr(0).urange(0.000001, 0.29515975) } @@>.fx1 \thresh; // BRICKWALL
+{ \x1.kr(0).linexp(0.000001, 10) } @@>.fx1 \thresh; // brickwall asayo
 
 
-
-// older stuff
+// ================================================================ older stuff
 //:listen to fx (not src)
 //:start timer with gui
 Time().gui;
@@ -82,7 +92,7 @@ hhjjulllll\fxvol <+.fx2 1;
 
 //:add brick wall fx1 + fx2
 PV({ | c |
-	PV_BrickWall(c, \thresh.kr(0.1, 0.5));
+	PV_MagBelow(c, \thresh.kr(0.1, 0.5));
 }, true) +> \fx1;
 //:
 PV({ | c |
