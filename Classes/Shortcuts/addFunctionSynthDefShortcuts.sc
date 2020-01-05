@@ -9,12 +9,7 @@
 			input to func for further processing.
 			This way one can add one or more effects to a function.
 			by chaining it through calls to .fx. */
-		^{
-			// var src;
-			// src = this.value;
-			// func.(src); // shorter version:
-			func.(this.value);
-		}
+		^{ func.(this.value) }
 	}
 
 	stereo { // also example of fx use:
@@ -34,7 +29,7 @@
 		^this fx: { | src |
 			var pv, mix, chain;
 			chain = FFT(LocalBuf(2048, 1), src);
-			chain = this.(chain);
+			chain = pvfunc.(chain);
 			pv = IFFT(chain);
 			mix = (\amp.kr(1) *
 				Mix([src * \srcvol.kr(1), pv * \fxvol.kr(0)])
