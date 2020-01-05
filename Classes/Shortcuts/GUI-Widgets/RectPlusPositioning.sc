@@ -2,6 +2,7 @@
 */
 
 + Rect {
+	// Note: Cannot defer these because their values are immediately needed.
 	*tl { | width = 200, height = 200 |
 		^this.new(
 			0, Window.availableBounds.height - height,

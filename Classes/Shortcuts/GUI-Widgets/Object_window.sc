@@ -43,20 +43,21 @@
 		Registry.put(\windowRects, this, key, rect);
 	}
 
+	// defers are done here, because Rect.tl... calls need to return
 	tl_ { | width = 200, height = 200, key = \default |
-		this.bounds_(Rect.tl(width, height), key)
+		{ this.bounds_(Rect.tl(width, height), key) }.defer;
 	}
 
 	tr_ { | width = 200, height = 200, key = \default |
-		this.bounds_(Rect.tr(width, height), key)
-		}
+		{ this.bounds_(Rect.tr(width, height), key) }.defer;
+	}
 
 	bl_ { | width = 200, height = 200, key = \default |
-		this.bounds_(Rect.bl(width, height), key)
-		}
+		{ this.bounds_(Rect.bl(width, height), key) }.defer;
+	}
 
 	br_ { | width = 200, height = 200, key = \default |
-		this.bounds_(Rect.br(width, height), key)
+		{ this.bounds_(Rect.br(width, height), key) }.defer;
 	}
 
 	bounds { | key = \default |

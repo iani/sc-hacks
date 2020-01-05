@@ -276,6 +276,7 @@ Player {
 		//		postf("% releasing at %\n", this, fadeTime);
 		sourcePlayer.release; // (fadeTime);
 	}
+
 }
 
 + Nil {

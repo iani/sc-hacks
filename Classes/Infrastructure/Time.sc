@@ -38,6 +38,7 @@ Time {
 	}
 
 	reset {
+		postf("Resetting %\n", this);
 		startTime = Process.elapsedTime;
 		// lastTime = 0; // At start of the timing process. 0 seconds elapsed
 		this.startBroadcasting;
@@ -60,7 +61,7 @@ Time {
 		// this routine is only for watching the timer in displays etc.
 		// it does not do any timing!
 		name.changed(\started);
-		broadcaster.stop; // stop previous broadcasting routine if running
+		this.stopBroadcasting; // stop previous broadcasting routine if running
 		broadcaster = {
 			var dt;
 			inf do: { | i |

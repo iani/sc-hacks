@@ -43,12 +43,14 @@ BusOsc {
 
 		*/
 		// create gui for watching several busses
+		{
 		name.br_(800).v(
 			*specs.collect({ | specArray |
 				// 0 bus, 1 msg, 2 index, 3 min, 4 max
 				this.new(*specArray).widget;
 			});
 		)
+		}.defer; // enable starting in a routine - using defer
 	}
 	*new { | busname, msg, index, min, max, template |
 		^Registry(this, busname, msg, index, {

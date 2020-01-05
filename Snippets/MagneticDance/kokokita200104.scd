@@ -48,7 +48,7 @@ Time().gui;
 \p2 *> \fx2;
 //:
 \srcvol <+.fx2 1;
-\fxvol <+.fx2 1;
+hhjjulllll\fxvol <+.fx2 1;
 
 //:add brick wall fx1 + fx2
 PV({ | c |
@@ -83,3 +83,16 @@ PV({ | c |
 \p1.stop;
 //:
 Hacks.loadAudioFiles;
+//:
+currentEnvironment.name;
+currentEnvironment.target;
+//:test shortcut for mapping kr funcs to sensors: 
+{ \z2.kr(0).urange(0.00, 0.99) } @@>.p2 \pos;
+
+//:
+/*
+	@> { | param, envir |
+		// map bus named by me to param in envir
+		^(envir ?? { envir.e }).map(param, this);
+	}
+*/

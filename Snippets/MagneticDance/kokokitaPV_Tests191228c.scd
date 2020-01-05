@@ -5,9 +5,9 @@
 //:buffer check with Pbuf2
 \p1 *> \fx1;
 \p2 *> \fx2;
-Pbuf2({ ~startpos = 809; ~buffer = \lamentodellaninfa }, \p1);
+Pbuf2({ ~startpos = 0; ~buffer = \lamentodellaninfa }, \p1);
 Pbuf2({
-	~startpos = 0;
+	~startpos = 809;
 	~buffer = \prologue;
 	~rate = 0.25; // 2 octaves lower
 }, \p2);

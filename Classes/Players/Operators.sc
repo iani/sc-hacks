@@ -59,6 +59,12 @@
 		this.e[\clock] = clock;
 	}
 	clock { ^this.e.clock }
+
+	controls { | eventName |
+		// return control inputs of current player's sourcePlayer,
+		// if available
+		^this.p(eventName).controls;
+	}
 	
 	p { | eventName | ^Nevent(eventName ? this).player(this) }
 	pp { | eventName | ^this.p(eventName).sourcePlayer }
@@ -275,6 +281,7 @@
 		);
 		envir.map(param, busname);
 		{ Out.kr(busname.bus.index, this.value) } +> controlplayer;
+		^controlplayer;
 	}
 
 	playFor { | playerName, dur = 1 |
