@@ -1,6 +1,17 @@
 // ADDING AMPLITUDE CONTROL WITH UGEN Changed.kr  5 Jan 2020 11:55 
 //:sound check
 \default +> \check;
+//:*sound check - stereo
+\pos <+ 0;
+{ PinkNoise.ar(0.01).stereo } +> \stereo;
+"center".postln;
+2.wait;
+"left".postln;
+\pos <+ -1;
+2.wait;
+"right".postln;
+\pos <+ 1;
+2.wait;
 //:setup sensors
 BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 	[\x1, 1, 0.47, 0.53, 1],
@@ -29,7 +40,7 @@ BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 \p1 *> \fx1; // player - fx setup
 \p2 *> \fx2;
 \srcvol <+.fx1 0; // listen to fx - not source
-\fxvol <+.fx1  2;
+\fxvol <+.fx1  3;
 \srcvol <+.fx2 0;
 \fxvol <+.fx2  2; // jun needs larger amplitude
 
@@ -44,15 +55,16 @@ PV({ | c |
 	PV_BrickWall(c, \thresh.kr(0.0000001, 0.5));
 }, true) +> \fx1;
 // ================ connect fx1 thresh to x1
-{ \x1.kr(0).urange(0.0000001, 0.295) } @@>.fx1 \thresh; // brickwall jun
-
+{ \x1.kr(0).linexp(0.0000001, 0.295) } @@>.fx1 \thresh; // brickwall jun
+// ================ connect fx1 pan to y1
+{ \y1.kr(0).urange(-1, 1) } @@>.fx1 \pan; // brickwall jun
 //: ================================================================ ASAYO
 Pbuf2({ // start asayo - lamento on p2
 	~startpos = -10;
-	~buffer = \lamentodellaninfa;
+	~buffer = \lamentodellaninfa; // \prologue???????
 	~rate = 1;
 }, \p2);
-// ====================== add brick wall fx2
+//: ====================== add brick wall fx2
 PV({ | c |
 	PV_BrickWall(c, \thresh.kr(0.000001, 0.5));
 }, true,
@@ -60,7 +72,16 @@ PV({ | c |
 	// { | in | Ringz.ar(in * 0.1, LFDNoise1.kr(5).range(100, 2000), 0.01) }
 ) +> \fx2;
 // ================ connect fx1 thresh to x1
-{ \x1.kr(0).urange(0.000001, 0.29515975) } @@>.fx1 \thresh; // brickwall asayo
+{ \x2.kr(0).linexp(0.000001, 0.935515975) } @@>.fx2 \thresh; // brickwall asayo
+//: ====================== add magabove fx2
+PV({ | c |
+	PV_MagAbove(c, \thresh.kr(0.000001, 0.5));
+}, true,
+	// { | in | LPF.ar(in, 3000) }
+	// { | in | Ringz.ar(in * 0.1, LFDNoise1.kr(5).range(100, 2000), 0.01) }
+) +> \fx2;
+// ================ connect fx1 thresh to x1
+{ \x2.kr(0).linexp(1, 15.0) } @@>.fx2 \thresh; // brickwall asayo
 //:================ use grains for asayo
 {
 	GrainBuf.ar(1,
@@ -75,6 +96,22 @@ PV({ | c |
 \pos <+.p2 29.05;
 \dur <+.p2 1.3;
 \ppm <+.p2 10;
+//:testing triggering through changed
+{ PinkNoise.ar(\onoff.kr(1) * \amp.kr(0.01)).stereo } +> \changedstuff;
+//:alternative sound for triggering
+Pbuf2({ // start asayo - lamento on p2
+	~startpos = -10;
+	~buffer = \lamentodellaninfa; // \prologue???????
+	~rate = 1;
+}, \changedstuff, { | in | in.stereo });
+//:
+{ Decay2.kr(Changed.kr(\z1.kr(1), 0.1), 2) } @@>.changedstuff \level;
+
+// { Amplitude.kr(Changed.kr(\z1.kr(1), 0.1)) } @@>.changedstuff \level;
+//:
+\changedstuff.controls;
+//:
+\amp <+.changedstuff 0.1;
 
 // ================================================================ older stuff
 //:listen to fx (not src)
@@ -105,7 +142,7 @@ Time().gui;
 \p2 *> \fx2;
 //:
 \srcvol <+.fx2 1;
-hhjjulllll\fxvol <+.fx2 1;
+\fxvol <+.fx2 1;
 
 //:add brick wall fx1 + fx2
 PV({ | c |
