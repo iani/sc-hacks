@@ -61,7 +61,7 @@ PV({ | c |
 	// { | in | Ringz.ar(in * 0.1, LFDNoise1.kr(5).range(100, 2000), 0.01) }
 ) +> \fx2;
 // ================ connect fx2 x2 thresh, y2 pos, z2 freq 
-{ \x2.kr(0).linexp(0.01, 15.0) } @@>.fx2 \thresh; // magbelow asayo
+{ \x2.kr(0).linexp(0.0001, 15.0) } @@>.fx2 \thresh; // magbelow asayo
 { \y2.kr(0).urange(-1, 1) } @@>.fx2 \pos; // pan pos asayo
 { \z2.kr(0).linexp(100, 10000) } @@>.p2 \freq; // pan pos asayo
 
