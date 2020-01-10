@@ -40,12 +40,12 @@ BusOsc.watch1(\kumano, '/minibee/data',
 \p2 *> \fx2;
 \p3 *> \fx3;
 \p4 *> \fx4;
-\srcvol <+.fx1 0; // listen to fx - not source
-\fxvol <+.fx1  3;
-\srcvol <+.fx3 0; // listen to fx - not source
-\fxvol <+.fx3 3;
+\srcvol <+.fx1 0; // jun 1
+\fxvol <+.fx1  2;
+\srcvol <+.fx3 0; // jun 2
+\fxvol <+.fx3 2;
 \srcvol <+.fx2 0;
-\fxvol <+.fx2 1.5; // jun needs larger amplitude
+\fxvol <+.fx2 2.5; // asayo
 // fadeTime for fx: Smooth transitions when switching fx synths
 \fadeTime <+.fx1 2;
 \fadeTime <+.fx2 2;
