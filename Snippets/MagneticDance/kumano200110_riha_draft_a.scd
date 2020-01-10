@@ -1,7 +1,10 @@
+//: setup script
+
+(PathName(Document.current.path).pathOnly +/+ "kumano200110_setup.scd").load;
 //: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // ======== RECORD ======== !!!!
 Time().reset.gui;
-"asayojun201005c".record(60 * 5);
+"asayojun201010a".record(60 * 15);
 //: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 //: ================================================================ JUN 1
@@ -15,21 +18,32 @@ PV({ | c |
 	PV_BrickWall(c, \thresh.kr(0.0000001, 0.5));
 }, true) +> \fx1;
 // ================ connect fx1 thresh to x1
-{ \x1.kr(0).linexp(0.0000001, 0.295) } @@>.fx1 \thresh; // brickwall jun
+{ \x1.kr(0).linexp(0.0000001, 0.395) } @@>.fx1 \thresh; // brickwall jun
 // ================ connect fx1 pan to y1
 { \y1.kr(0).urange(-1, 1) } @@>.fx1 \pos; // pan pos jun
 //: ================================================================ JUN 2
 Pbuf2({ // start jun - prologue on p3
 	~startpos = 0;
 	~buffer = \prologue;
-	~rate = 0.5; // 1 octave lower
+	~rate = 0.5; // 1 octave lower?
 }, \p3);
+
 // ====================== add brick wall fx3
 PV({ | c |
 	PV_BrickWall(c, \thresh.kr(0.0000001, 0.5));
 }, true) +> \fx3;
 // ================ connect fx3 thresh to x3
 { \x3.kr(0).linexp(0.0000001, 0.295) } @@>.fx3 \thresh; // brickwall jun
+
+//\rate <+.p3 0.5;
+/*
+PV({ | c |
+	PV_LocalMax(c, \thresh.kr(0.000001, 0.5));
+}, true
+) +> \fx3;
+// ================ connect fx1 thresh to x1
+{ \x3.kr(0).linexp(0.0001, 5.9) } @@>.fx3 \thresh; // localmax thresh asayo
+*/
 // ================ connect fx3 pan to y3
 { \y3.kr(0).urange(-1, 1) } @@>.fx3 \pos; // pan pos jun
 //: ================================================================ ASAYO 1
@@ -49,7 +63,7 @@ PV({ | c |
 // ================ connect fx2 x2 thresh, y2 pos, z2 freq 
 { \x2.kr(0).linexp(0.01, 15.0) } @@>.fx2 \thresh; // magbelow asayo
 { \y2.kr(0).urange(-1, 1) } @@>.fx2 \pos; // pan pos asayo
-{ \z2.kr(0).linexp(100, 10000) } @@>.fx2 \freq; // pan pos asayo
+{ \z2.kr(0).linexp(100, 10000) } @@>.p2 \freq; // pan pos asayo
 
 //: ================================================================ ASAYO 2
 Pbuf2({ // start asayo - lamento on p4
@@ -68,7 +82,7 @@ PV({ | c |
 // ================  connect fx4: x4 thresh, y4 pos, z4 freq 
 { \x4.kr(0).linexp(0.01, 15.0) } @@>.fx4 \thresh; // magbelow asayo
 { \y4.kr(0).urange(-1, 1) } @@>.fx4 \pos; // pan pos asayo
-{ \z4.kr(0).linexp(100, 10000) } @@>.fx4 \freq; // pan pos asayo
+{ \z4.kr(0).linexp(100, 10000) } @@>.p4 \freq; // freq asayo
 
 //: ================================================================
 
@@ -95,14 +109,30 @@ PV({ | c |
 }, true
 ) +> \fx1;
 // ================ connect fx1 thresh to x1
-{ \x1.kr(0).linexp(1, 15.0) } @@>.fx1 \thresh; // localmax thresh asayo
+{ \x1.kr(0).linexp(0.0001, 5.9) } @@>.fx1 \thresh; // localmax thresh asayo
 //: =============== JUN 2b: PV_LocalMax, fx3 ================ JUN 2B
 PV({ | c |
 	PV_LocalMax(c, \thresh.kr(0.000001, 0.5));
 }, true
 ) +> \fx3;
 // ================ connect fx1 thresh to x1
-{ \x3.kr(0).linexp(1, 15.0) } @@>.fx3 \thresh; // localmax thresh asayo
+{ \x3.kr(0).linexp(0.0001, 5.9) } @@>.fx3 \thresh; // localmax thresh asayo
+
+//: ================================================================
+// ================ REJECTED ================
+//: =============== ASAYO 1c: PV_MagShift, fx2 ================ ASAYO 1C
+PV({ | c |
+	PV_MagShift(c, \stretch.kr(0.000001, 0.5), \shift.kr(0.00001, 0.5));
+}, true
+) +> \fx2;
+//: ================ connect fx2 stretch to x2 and shift to y2
+{ \x2.kr(0).linexp(1, 15.0) } @@>.fx2 \stretch;
+{ \y2.kr(0).linexp(1, 15.0) } @@>.fx2 \shift;
+
+//:
+\stretch <+.fx2 0.5;
+
+\shift <+.fx2 10.2;
 
 
 //: ================================================================

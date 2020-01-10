@@ -17,17 +17,24 @@ BusOsc.watch1(\kumano, '/minibee/data',
 { \kumano.window.bounds = \kumano.window.bounds.moveBy(0, 100); }.defer(0.2);
 // { \kumano.wshift(0, 100); }.defer(0.1);
 //:================ fx controls
-\volumes.v(
+
+\volumes.br_(500).v(
 	\srcvol.slider([0, 10], \fx1, "fx1 src"),
 	\fxvol.slider([0, 10], \fx1, "fx1 fx"),
 	\thresh.slider([0.00001, 0.5, \exp], \fx1, "fx1 thresh"),
 	\srcvol.slider([0, 10], \fx2, "fx2 src"),
 	\fxvol.slider([0, 10], \fx2, "fx2 fx"),
 	\thresh.slider([0.00001, 0.5, \exp], \fx2, "fx2 thresh"),
+	\srcvol.slider([0, 10], \fx3, "fx3 src"),
+	\fxvol.slider([0, 10], \fx3, "fx3 fx"),
+	\thresh.slider([0.00001, 0.5, \exp], \fx3, "fx3 thresh"),
+	\srcvol.slider([0, 10], \fx4, "fx4 src"),
+	\fxvol.slider([0, 10], \fx4, "fx4 fx"),
+	\thresh.slider([0.00001, 0.5, \exp], \fx4, "fx4 thresh"),
 );
 //:
 // { \volumes.wshift(0, 100); }.defer(0.1);
-{ \volumes.window.bounds = \volumes.window.bounds.moveBy(0, 100); }.defer(0.2);
+{ \volumes.window.bounds = \volumes.window.bounds.moveBy(0, 500); }.defer(0.2);
 //:================ initialize fx config
 \p1 *> \fx1; // player - fx setup
 \p2 *> \fx2;
