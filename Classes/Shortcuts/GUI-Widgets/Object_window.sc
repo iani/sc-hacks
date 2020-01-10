@@ -66,6 +66,12 @@
 		} )
 	}
 
+	// shortcut for shifting position of window
+	wshift { | x = 0, y = 0 |
+		{
+			this.window.bounds = this.window.bounds.moveBy(x, y);
+		}.defer;
+	}
 	// Shortcuts for VLayout and Hlayout
 	v { | ... items |
 		this.prLayout(items, VLayout);
