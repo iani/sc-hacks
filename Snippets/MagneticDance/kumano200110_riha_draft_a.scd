@@ -39,14 +39,14 @@ Pbuf2({ // start asayo - lamento on p2
 	//	~buffer = \prologue;  /// ???????
 	~rate = 1;
 }, \p2, { | in | Resonz.ar(in * 5, \freq.kr(500), 0.1)});
-// ====================== add magabove fx2
+// ====================== add magbelow fx2
 PV({ | c |
 	PV_MagBelow(c, \thresh.kr(0.000001, 0.5));
 }, true,
 	// { | in | LPF.ar(in, 3000) }
 	// { | in | Ringz.ar(in * 0.1, LFDNoise1.kr(5).range(100, 2000), 0.01) }
 ) +> \fx2;
-// ================ connect fx1 thresh to x1
+// ================ connect fx2 x2 thresh, y2 pos, z2 freq 
 { \x2.kr(0).linexp(0.01, 15.0) } @@>.fx2 \thresh; // magbelow asayo
 { \y2.kr(0).urange(-1, 1) } @@>.fx2 \pos; // pan pos asayo
 { \z2.kr(0).linexp(100, 10000) } @@>.fx2 \freq; // pan pos asayo
@@ -65,21 +65,63 @@ PV({ | c |
 	// { | in | LPF.ar(in, 3000) }
 	// { | in | Ringz.ar(in * 0.1, LFDNoise1.kr(5).range(100, 2000), 0.01) }
 ) +> \fx4;
-// ================ connect fx1 thresh to x1
+// ================  connect fx4: x4 thresh, y4 pos, z4 freq 
 { \x4.kr(0).linexp(0.01, 15.0) } @@>.fx4 \thresh; // magbelow asayo
 { \y4.kr(0).urange(-1, 1) } @@>.fx4 \pos; // pan pos asayo
 { \z4.kr(0).linexp(100, 10000) } @@>.fx4 \freq; // pan pos asayo
 
-//: =============== ASAYO 1b: PV_LocalMax, fx2
+//: ================================================================
+
+//: =============== ASAYO 1b: PV_LocalMax, fx2 ================ ASAYO 1B
 PV({ | c |
 	PV_LocalMax(c, \thresh.kr(0.000001, 0.5));
-}, true,
+}, true
 ) +> \fx2;
 // ================ connect fx1 thresh to x1
-{ \x2.kr(0).linexp(1, 15.0) } @@>.fx2 \thresh; // brickwall asayo
-{ \y2.kr(0).urange(-1, 1) } @@>.fx2 \pos; // pan pos asayo
+{ \x2.kr(0).linexp(1, 15.0) } @@>.fx2 \thresh; // localmax thresh asayo
+//: =============== ASAYO 2b: PV_LocalMax, fx4 ================ ASAYO 2B
+PV({ | c |
+	PV_LocalMax(c, \thresh.kr(0.000001, 0.5));
+}, true
+) +> \fx4;
+// ================ connect fx1 thresh to x1
+{ \x4.kr(0).linexp(1, 15.0) } @@>.fx4 \thresh; // localmax thresh asayo
 
-//;================ OLDER STUFF ================
+//: ================================================================
+
+//: =============== JUN 1b: PV_LocalMax, fx1 ================ JUN 1B
+PV({ | c |
+	PV_LocalMax(c, \thresh.kr(0.000001, 0.5));
+}, true
+) +> \fx1;
+// ================ connect fx1 thresh to x1
+{ \x1.kr(0).linexp(1, 15.0) } @@>.fx1 \thresh; // localmax thresh asayo
+//: =============== JUN 2b: PV_LocalMax, fx3 ================ JUN 2B
+PV({ | c |
+	PV_LocalMax(c, \thresh.kr(0.000001, 0.5));
+}, true
+) +> \fx3;
+// ================ connect fx1 thresh to x1
+{ \x3.kr(0).linexp(1, 15.0) } @@>.fx3 \thresh; // localmax thresh asayo
+
+
+//: ================================================================
+//: ================================================================
+//: ================================================================
+// ================ TO TRY OUT ================
+// From last rehearsal post draft
+\lamentodellaninfa.pb.pv({ | c |
+	PV_LocalMax(c, 0.301)
+}).fx({ | in |
+	Resonz.ar(in * 5,
+		LFNoise1.kr(0.02).range(50, 800),
+		0.5
+	)
+}).stereo +> \pbuf;
+\fxvol <+ 1;
+\srcvol <+ 0;
+
+//:================ OLDER STUFF ================
 
 //: ====================== add brick wall fx2
 PV({ | c |
