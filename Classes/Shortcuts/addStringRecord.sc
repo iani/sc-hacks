@@ -6,12 +6,16 @@ and record default Server, numchan channels for sec seconds.
 
 + String {
 	record { | duration = 60, numChannels = 2 |
-		Server.default.record(this.asRecordingPath,
+		Server.default.record(this.addTimestamp.asRecordingPath,
 			numChannels: numChannels, duration: duration);
 	}
 	
 	asRecordingPath {
 		// convert to recording path by prepending default recording dir
 		^thisProcess.platform.recordingsDir +/+ this ++ ".aiff";
+	}
+
+	addTimestamp {
+		^this ++ Date.localtime.stamp;		
 	}
 }
