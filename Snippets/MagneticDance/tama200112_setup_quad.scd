@@ -51,7 +51,7 @@ BusOsc.watch1(\kumano, '/minibee/data',
 \srcvol <+.fx3 0; // jun 2
 \fxvol <+.fx3 2;
 \srcvol <+.fx2 0;
-\fxvol <+.fx2 2.5; // asayo
+\fxvol <+.fx2 2.8; // asayo
 // fadeTime for fx: Smooth transitions when switching fx synths
 \fadeTime <+.fx1 2;
 \fadeTime <+.fx2 2;
