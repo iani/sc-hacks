@@ -5,6 +5,9 @@ Use is made of the sample bank and buffer loading code of SuperDirt from the [[h
 This library reviews the techniques developed previous libraries for SuperCollider [[https://github.com/iani/tiny-sc][tiny-sc]] and [[https://github.com/iani/tiny-inc][tiny-inc]], and builds a cleaner, more consistent version.
 
 Documentation on the new library is available here: http://iani.github.io/sc-hacks-doc/.
+
+(tests?)
+
 * IDE Fantasy user manual
 
 ** Locations
