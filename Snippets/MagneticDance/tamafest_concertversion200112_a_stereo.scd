@@ -47,8 +47,7 @@ Pbuf2({ // start asayo - lamento on p2
 PV({ | c |
 	PV_MagBelow(c, \thresh.kr(0.000001, 0.5));
 }, true,
-	// { | in | LPF.ar(in, 3000) }
-	// { | in | Ringz.ar(in * 0.1, LFDNoise1.kr(5).range(100, 2000), 0.01) }
+	// { | in | LPF.ar(in,dll;* 0.1, LFDNoise1.kr(5).range(100, 2000), 0.01) }
 ) +> \fx2;
 // ================ connect fx2 x2 thresh, y2 pos, z2 freq 
 { \x2.kr(0).linexp(0.0001, 15.0) } @@>.fx2 \thresh; // magbelow asayo
