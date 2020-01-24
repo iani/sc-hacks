@@ -6,7 +6,7 @@ This library reviews the techniques developed previous libraries for SuperCollid
 
 Documentation on the new library is available here: http://iani.github.io/sc-hacks-doc/.
 
-Test 2.
+Test 2b.
 
 * IDE Fantasy user manual
 
