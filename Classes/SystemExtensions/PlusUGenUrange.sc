@@ -8,6 +8,7 @@
 		^MulAdd(this, mul, add);
 	}
 
+	/* // removed  9 Mar 2020 12:32
 	linexp { | lo = 1.0, hi = 2 |
 		// shortcut for linexp of sources whose range is 0-1
 		if (rate == \audio) {
@@ -16,6 +17,7 @@
 			^LinExp.kr(this, 0, 1, lo, hi);
 		}
 	}
+	*/
 }
 
 /*

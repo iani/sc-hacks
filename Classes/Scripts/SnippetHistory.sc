@@ -3,6 +3,7 @@
 // Only add new code if it is different from the last stored one.
 
 SnippetHistory {
+	classvar <>doSave = false; // 11 Aug 2020 22:36 disable saving - softly
 	var <name, <snippet, <time;
 
 	code { ^snippet.code }
@@ -23,11 +24,15 @@ SnippetHistory {
 	}
 	
 	*save {
+		if (doSave.not) { ^"get out of here and abort." };
+		
 		Registry.at(\CodeSnippets).writeArchive(
-			Platform.userAppSupportDir +/+ "SnippetHistory_" ++ Date.localtime.stamp ++ ".sctxar"
+			Platform.userAppSupportDir
+			+/+ "SCHacksHistory/SnippetHistory_" ++ Date.localtime.stamp ++ ".sctxar"
 		);
 		Registry.at(\PlayerSnippets).writeArchive(
-			Platform.userAppSupportDir +/+ "PlayerHistory_" ++ Date.localtime.stamp ++ ".sctxar"
+			Platform.userAppSupportDir
+			+/+ "SCHacksHistory/PlayerHistory_" ++ Date.localtime.stamp ++ ".sctxar"
 		)
 	}
 

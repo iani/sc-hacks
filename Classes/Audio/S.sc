@@ -6,7 +6,7 @@ An alternative way for setting the default server.
 
 More API from Server class may be ported later to this.
 */
-
+/*
 S : Singleton {
 	*initClass {
 		StartUp add: {
@@ -16,3 +16,5 @@ S : Singleton {
 
 	*default { ^Registry.at(this, \default) }
 }
+*/
+
