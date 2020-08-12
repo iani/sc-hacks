@@ -100,7 +100,7 @@ Routine.run {
 
     s.bootSync(c);
     \BOOTED.postln;
-	OSCFunc.trace(true);
+
 
 	id = UniqueID.next;
 	resp = OSCFunc({|msg|
@@ -108,7 +108,7 @@ Routine.run {
 			resp.free;
 			//	condition.test = true;
 			// condition.signal;
-			\b_alloc_DONE.postln;
+			{ \b_alloc_DONE.postln; }.defer; // post after receiving msg
 		};
 	}, '/synced');
 	
@@ -121,3 +121,57 @@ Routine.run {
 	0.1.wait;
 	OSCFunc.trace(false);
 }
+//:================================================================
+// UniqueID.next;
+// NEXT STEP: IMPLEMENT WITHOUT Condition and out of Routine
+//:
+Server.default.doWhenBooted({
+	// this runs in routine/fork, but we just don't use any
+	// routine funcionality in the present block:
+	var id, resp;
+	"Booted. Starting tests:".postln;
+	OSCFunc.trace(true);
+	id = UniqueID.next;
+	resp = OSCFunc({|msg|
+		if (msg[1] == id) {
+			resp.free;
+			{ \b_alloc_DONE.postln; }.defer; // post after receiving msg
+		};
+	}, '/synced');
+	
+    s.sendMsg("/b_alloc", 0, 44100, 2);
+    s.sendMsg("/b_alloc", 1, 44100, 2);
+    s.sendMsg("/b_alloc", 2, 44100, 2);
+	s.sendMsg("/sync", id);
+	0.1.wait;
+	"Tests finished".postln;
+	OSCFunc.trace(false);
+
+	
+})
+//:  NEXT STEP: Use a class to store sequence (que) of actions
+Server.default.doWhenBooted({
+	// this runs in routine/fork, but we just don't use any
+	// routine funcionality in the present block:
+	var id, resp;
+	"Booted. Starting tests:".postln;
+	OSCFunc.trace(true);
+	id = UniqueID.next;
+	resp = OSCFunc({|msg|
+		if (msg[1] == id) {
+			resp.free;
+			{ \b_alloc_DONE.postln; }.defer; // post after receiving msg
+		};
+	}, '/synced');
+	
+    s.sendMsg("/b_alloc", 0, 44100, 2);
+    s.sendMsg("/b_alloc", 1, 44100, 2);
+    s.sendMsg("/b_alloc", 2, 44100, 2);
+	s.sendMsg("/sync", id);
+	0.1.wait;
+
+	"Tests finished".postln;
+	OSCFunc.trace(false);
+
+	
+})
