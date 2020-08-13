@@ -29,7 +29,7 @@ Que add: { "just testing".postln; };
 300 do: { | i |
 	Que add: { postf("Testing. Iteration count is: %\n", i + 1) };
 }
-//:Buffer.readSync tests
+//:Buffer.readSync test 1
 var path;
 path =
 "/home/iani/.local/share/SuperCollider/downloaded-quarks/Dirt-Samples/808/*.WAV"
@@ -39,15 +39,34 @@ path =
 // { postf("BUFFER AFTER SYNC: %\n", ~buffer) }.sync;
 { ~buffer.play }.sync;
 
-//:More buffer tests: load and play several buffers
+//:+More buffer tests: load and play several buffers
 var paths;
 paths =
 "/home/iani/.local/share/SuperCollider/downloaded-quarks/Dirt-Samples/808/*.WAV"
 .pathMatch;
 paths do: { | path |
-	~buffer = Buffer.readSync(Server.default, path);
-	{ ~buffer.play }.sync;
+	var buffer;
+	buffer = Buffer.readSync(Server.default, path);
+	{ buffer.play }.sync;
+	[0.25, 0.5].choose.wait; // optional. also tested without wait.
 };
+//:More buffer tests: load+collect several buffers, then play them.
+var paths, buffers;
+paths =
+"/home/iani/.local/share/SuperCollider/downloaded-quarks/Dirt-Samples/808/*.WAV"
+.pathMatch;
+buffers = paths collect: { | path |
+	var buffer;
+	buffer = Buffer.readSync(Server.default, path);
+};
+{
+	{
+	loop {
+		buffers.choose.play;
+		[0.25 / 2, 0.25, 0.25 * 2].choose.wait;
+	};
+	}.fork;
+}.sync;
 //:
 Server.default.sendMsg('/sync', 1);
 Que.sendSync;
