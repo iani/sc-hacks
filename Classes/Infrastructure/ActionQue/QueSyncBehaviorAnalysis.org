@@ -1,0 +1,74 @@
+12 Aug 2020 17:46
+States of the que and its sync waiting.
+Must cover all possible cases ...
+
+* Result Of Analysis Below: We need to know whethe the que is already waiting on a sync or not! 
+
+Reason why this is so:
+
+** If this is the first time that the que is started, then we need to evaluate the next element immediately
+
+(Because we are not waiting for sync - and there is no sync expected!)
+
+** If the que is started and a sync message is still being waited, then we need to wait for the sync statement before evaluating the next message
+
+However, we cannot guess whether a sync is being waited from the size of the que.
+This is because if just one item was added to the que and then immediately evaluated, it has been already removed from the que because it must not be evaluated again when sync is received. Therefore, when adding a new element to the list, the que's list can be empty in either case: Either when the que has not been started, or when the que has been started and we are still waiting for a sync. 
+
+* Simulation of function when using a "waiting" variable to store state.
+
+** add an action for the first time.
+
+- before adding que is empty.
+- Value of state "waiting" is false, because the que is not waiting for a /synced message from the server, since this is the first time the que is started.
+
+course of action:
+
+*** If the server is booted, then add action to actions list, set "waiting" to true, and perform next method
+
+
+
+#+begin_src sclang
+
+#+end_src
+
+*** If the server is not booted, add the action to the que, set waiting to true, then boot the server with waitForBoot
+
+#+begin_src sclang
+waiting = true; // any actions added intermediately should wait for this one first
+actions add: action; // prepare this action for eval when the server boots.
+server.waitForBoot({
+     this.next; // update id, eval next action, remove it, send sync for next action
+});
+#+end_src
+
+#+BEGIN_EXAMPLE
+THIS is an example
+#+END_EXAMPLE
+
+
+
+
+
+* Analysis before the above
+** Initial state: Que is empty, no sync has been sent.
+*** initial state
+The que is empty, size == 0. 
+*** First action: add a first element to the que.
+Message \add, adds one element to the que.  Size of que is 1;  Do this: 
+
+1. Evaluate the new element in the que.
+2. Remove it from the que (!!!!!) because we do not want to evaluate it again (!!!!!)
+3. Send sync message to the server to wait for the new element to complete loading on the server.
+
+*** When a synced response is received:
+
+a previous action has finished (synced), and the next action can now be executed - if it exists.  Check if a new action exists:
+
+**** If a new action exists, then evaluate it, and remove it from the que
+
+**** If no new action exists, MARK THE STATE OF THE QUE AS NOT RUNNING (!!!!!)
+
+*** An additional action is added after a previous action has been added.
+
+

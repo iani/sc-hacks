@@ -9,6 +9,7 @@ Que {
 	var <server;    // send sync and expect responses from this server
 	var <id;       // used to match separate sequential synced message receipts
 	var <responder; // permanent OSCFunc matching changing msg id
+	var <waiting = false;
 
 	//	var <que;
 
@@ -22,33 +23,38 @@ Que {
 
 	init {
 		// create id and OSCFunc. Do not start. Start only when adding.
-		id = UniqueID.next;
 		responder = OSCFunc({ | msg |
 			if (msg[1] == this.id) {
-				{ this.next; }.defer;
+				{ this.prNext; }.defer;
 				// { \b_alloc_DONE.postln; }.defer; // post after receiving msg
 			};
 		}, '/synced', server.addr).fix;
 	}
 
-	add {
-		
-		
+	add { | action |
+		actions add: action;
+		if (waiting) {
+			// don't eval the action now, but wait for sync from server
+		}{  // if not waiting, make sure server is booted, then eval action
+			server.waitForBoot({ this.prNext; })
+		}
 	}
 	
-	next {
+	prNext {
 		var next;
 		next = actions[0];
 		if (next.isNil) {
+			waiting = false;
 			"Que done!".postln;
 		}{
 			actions remove: next;
-			postf("now executing action: %\n", next);
-			postf("remaining actions are:%\n", actions);
+			postf("que now executing action: %\n", next);
+			postf("que remaining actions are:%\n", actions);
+			waiting = true;
 			next.value;
 			id = UniqueID.next;
-			postf("now watching to sync with id %\n", id);
 			server.sendMsg("/sync", this.id.postln);
+			postf("que now waiting to sync with id %\n", id);
 		}	
 	}
 }
