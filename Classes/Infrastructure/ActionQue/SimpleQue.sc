@@ -47,7 +47,6 @@ Que {
 	prNext {
 		var next;
 		next = actions[0];
-		current = next;
 		if (next.isNil) {
 			waiting = false;
 			"Que ended!".postln;

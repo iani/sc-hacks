@@ -39,14 +39,15 @@ path =
 // { postf("BUFFER AFTER SYNC: %\n", ~buffer) }.sync;
 { ~buffer.play }.sync;
 
-//:
-// 
-Server.default.sendMsg('/sync', 1);
-Que.sendSync;
-
-{ OSCFunc.trace(false) }.defer(0.1);
-
-//:
+//:More buffer tests: load and play several buffers
+var paths;
+paths =
+"/home/iani/.local/share/SuperCollider/downloaded-quarks/Dirt-Samples/808/*.WAV"
+.pathMatch;
+paths do: { | path |
+	~buffer = Buffer.readSync(Server.default, path);
+	{ ~buffer.play }.sync;
+};
 //:
 Server.default.sendMsg('/sync', 1);
 Que.sendSync;
