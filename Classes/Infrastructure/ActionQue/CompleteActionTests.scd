@@ -142,6 +142,11 @@ Server.default.doWhenBooted({
     s.sendMsg("/b_alloc", 0, 44100, 2);
     s.sendMsg("/b_alloc", 1, 44100, 2);
     s.sendMsg("/b_alloc", 2, 44100, 2);
+	Buffer.read(Server.default,
+		"/home/iani/.local/share/SuperCollider/downloaded-quarks/Dirt-Samples/808/*.WAV"
+		.pathMatch.first;
+	);
+
 	s.sendMsg("/sync", id);
 	0.1.wait;
 	"Tests finished".postln;
