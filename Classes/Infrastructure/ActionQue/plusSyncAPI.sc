@@ -54,13 +54,8 @@ N.B. 2: Buffer
 		bufnum ?? { bufnum = server.nextBufferNumber(1) };
 		buffer = super.newCopyArgs(server, bufnum);
 		{
-			// OSCFunc.trace(true);
 			buffer.doOnInfo_(action).cache
 			.allocRead(path, startFrame, numFrames, {|buf|["/b_query", buf.bufnum] });
-			// postf("ALLOC READ WAS SENT. %\n", buffer);
-			// buffer.postln;
-			
-			// { OSCFunc.trace(false); }.defer(2);
 		}.sync(server);
 		^buffer;
 	}
