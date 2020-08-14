@@ -1,6 +1,12 @@
 /* 12 Aug 2020 14:31
-Simple implementation of a que of actions.
-Used for building and testing CompleteActionTests ...
+Simple implementation of a queue of functions, alternative approach to
+the functionality of Server.sync.
+
+Ensures that each function in the queue will be run after the server has 
+synced (completed) any async commands resulting from the previous action. 
+
+
+Execute each action in the que only after receiving \synced message from
 
 */
 
@@ -9,7 +15,7 @@ Queue {
 	var <server;    // send sync and expect responses from this server
 	var <id;        // used to match separate sequential synced message receipts
 	var <responder; // permanent OSCFunc matching changing msg id
-	var <waiting = false; // = false;
+	var <waiting = false; // If waiting, wait for synced message. Else start.
 	var <next, <result; // last executed code and the result it returned.
 
 	*add { | action |

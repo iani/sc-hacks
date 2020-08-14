@@ -16,7 +16,7 @@ Queue.watch(\test, // queueWatcher
 		postf("total duration: %\n", time - startTime);
 	}
 );
-//:
+//:testing default functionality.
 Queue.watch(\test);
 
 { | i |
