@@ -15,8 +15,9 @@ Queue {
 	var <server;    // send sync and expect responses from this server
 	var <id;        // used to match separate sequential synced message receipts
 	var <responder; // permanent OSCFunc matching changing msg id
-	var <waiting = false; // If waiting, wait for synced message. Else start.
+	var <inactive = true; // If inactive, start. Else wait for synced message.
 	var <next, <result; // last executed code and the result it returned.
+	var <preboot;  // Function to execute before booting server. (Set options, etc)/
 
 	*add { | action |
 		this.new add: action;
@@ -39,17 +40,27 @@ Queue {
 		}, '/synced', server.addr).fix;
 	}
 
+	preboot_ { | function |
+		// Function to execute before booting server. (Set options, etc)/
+		// Warn if the server is running: Prompt user to reboot server.
+		if (server.serverRunning) {
+			postf("Server % is running, its options cannot be modified.\n", server);
+			"Quit the server, then start this Queue to apply changes.".postln;
+		}
+		preboot = function;
+	}
+	
 	add { | action |
 		actions add: action;
-		if (waiting) {
-			// don't eval the action now, but wait for sync from server
-		}{  // if not waiting, make sure server is booted, then eval action
-			waiting = true; // must be before waitForBoot !!!!!!!
+		if (inactive) {  // make sure server is booted, then eval first action
+			inactive = false; // must be before waitForBoot !!!!!!!
+			preboot.(this);
 			server.waitForBoot({ // because waitForBoot messes with more delay
 				this.changed(\started, Process.elapsedTime);
 				this.prNext;
 			})
 		}
+		// if active, wait for sync message from server.
 	}
 	
 	prNext {
@@ -67,7 +78,7 @@ Queue {
 		this.changed(\eval, next, result);
 		next = actions[0];
 		if (next.isNil) {
-			waiting = false;
+			inactive = true;
 			this.changed(\stopped, Process.elapsedTime);
 			"Que ended!".postln;
 		}{
