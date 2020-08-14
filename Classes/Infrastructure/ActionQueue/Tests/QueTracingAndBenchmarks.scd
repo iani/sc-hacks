@@ -1,9 +1,9 @@
 /* 14 Aug 2020 11:48
 Use changed mechanism to follow and check timing of Queue execution.
 */
-
+//:draft - now added as default to Queue
 var startTime;
-Queue.watch(\test,
+Queue.watch(\test, // queueWatcher
 	{ | time |
 		startTime = time;
 		postf("started at: %\n", startTime);
@@ -16,6 +16,8 @@ Queue.watch(\test,
 		postf("total duration: %\n", time - startTime);
 	}
 );
+//:
+Queue.watch(\test);
 
 { | i |
 	{ Synth(\default, [freq: i * 100 + 1500, amp: 0.2])}.sync;

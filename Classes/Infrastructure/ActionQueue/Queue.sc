@@ -85,6 +85,21 @@ Queue {
 	}
 
 	watch { | watcher, onStart, onSync, onStop |
+		// default functionality provided here:
+		var startTime;
+		watcher ?? { watcher = \queueWatcher };
+		onStart ?? { onStart = { | time |
+			startTime = time;
+			postf("started at: %\n", startTime);
+		}};
+		onSync ?? { onSync = { | action, result |
+			postf("evaluated: %, got: %\n", action, result);
+		}};
+		onStop ?? { onStop = { | time |
+			postf("stopped at: %\n", time);
+			postf("total duration: %\n", time - startTime);
+		}};
+		// Connect actions to notifier:
 		watcher.addNotifier(this, \started, { | time |
 			onStart.(time, watcher, this);
 		});
