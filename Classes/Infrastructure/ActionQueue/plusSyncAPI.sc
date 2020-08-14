@@ -16,11 +16,11 @@ N.B. 2: Buffer
 */
 
 + Function {
-	sync { | server | Que(server).add(this) }
+	sync { | server | Queue(server).add(this) }
 }
 
 + String {
-	sync { | server | Que(server).add({ this.load }) }
+	sync { | server | Queue(server).add({ this.load }) }
 }
 
 + Buffer {

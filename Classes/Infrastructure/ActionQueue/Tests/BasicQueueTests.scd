@@ -67,13 +67,77 @@ buffers = paths collect: { | path |
 	};
 	}.fork;
 }.sync;
+//:Even More buffer tests: load and play all .wav (sic) Dirt-Sample folders
+// NOTE; Quit default buffer before running this, to permit large number of buffers
+var folders, buffers;
+Server.default.options.numBuffers = 2048; // override default max number of buffers
+folders =
+"/home/iani/.local/share/SuperCollider/downloaded-quarks/Dirt-Samples/*"
+.pathMatch;
+folders do: { | folder |
+	var paths, buffers;
+	// folder.postln;
+	paths = (folder +/+ "*.wav").pathMatch;
+	buffers = paths collect: { | path |
+		var buffer;
+		buffer = Buffer.readSync(Server.default, path).postln;
+	};
+	{
+		{
+			loop {
+				buffers.choose.play;
+				([0.25 / 2, 0.25, 0.25 * 2] * 24).choose.wait;
+			};
+		}.fork;
+	}.sync;
+};
+//:Even More buffer tests: load and check all .wav (sic) Dirt-Sample folders
+// DEBUG: SEE IF ANY BUFFERS HAVE UNINITIALIZED INFO
+// NOTE; Quit default buffer before running this, to permit large number of buffers
+var folders, buffers;
+Server.default.options.numBuffers = 2048; // override default max number of buffers
+folders =
+"/home/iani/.local/share/SuperCollider/downloaded-quarks/Dirt-Samples/*"
+.pathMatch;
+~count = 0;
+folders do: { | folder, i |
+	var paths, buffers;
+	// folder.postln;
+	paths = (folder +/+ "*.wav").pathMatch;
+	buffers = paths collect: { | path |
+		var buffer;
+		~count = ~count + 1;
+		//	buffer = Buffer.readSync(Server.default, path);
+			buffer = Buffer.read(Server.default, path);
+		~allbuffers = ~allbuffers add: buffer;
+	};
+	postf("buffer count is now: %\n", ~allbuffers.size);
+	//	"waiting for 10 seconds".postln;
+	// 10.wait;
+	postf("loading folder %\n", i);
+	/*
+	{
+		buffers do: _.postln;
+	}.sync;
+	*/
+};
+//:
+~allbuffers.size;
+
 //:
 Server.default.sendMsg('/sync', 1);
 Que.sendSync;
 //:
+Server.killAll;
+//:
 ~buffer;
 //:
-
+~count;
+//:
+~allbuffers.last;
+~allbuffers.first;
+//:
+~allbuffers detect: { | b | b.numFrames.isNil };
 //:
 ~buffer.play;
 //:

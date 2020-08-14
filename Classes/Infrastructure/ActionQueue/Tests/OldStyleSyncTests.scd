@@ -2,36 +2,8 @@
 It says completionMessage.
 Can it be a function? Always?  Is it always evaluated 
 after completion of the server load action?
-
 */
-OSCFunc.trace(true);
-OSCFunc.trace(false);
-c//the function is evaluated to get the completion message - before loading
-//: [/done, /b_alloc, n] 
-Buffer.alloc(Server.default, 100, completionMessage: { | b |
-	postf("allocated: %", b)});
-//: [/done, /b_alloc, n] 
-Buffer.alloc(Server.default, 1000000, completionMessage: \blabhlab);
-//: [/done, /b_allocRead, n]
-Dialog.openPanel({ | path |
-	Buffer.read(Server.default, path);
-})
-//: [/done, /d_recv ]
-SynthDef("tet", {
-	Out.ar(0, SinOsc.ar(400, 0, 0.2))
-}).add;
-//:================================================================
-// going deeper: watching individual buffer and def numbers in
-// messages received from the server
-OSCFunc({ | ... args | args.postln; }, '/done').permanent = true;
-//:
-Buffer.alloc(Server.default, 100);
-//:
 
-Synth("default");
-
-//:
-Server.default.waitForBoot({ "BOOTED".postln })
 //:================================================================
 // Comparing with sync, sendMsgSync examples from doc
 // Can the same effect be obtained without Routine and Condition?
@@ -174,9 +146,6 @@ Server.default.doWhenBooted({
     s.sendMsg("/b_alloc", 2, 44100, 2);
 	s.sendMsg("/sync", id);
 	0.1.wait;
-
 	"Tests finished".postln;
-	OSCFunc.trace(false);
-
-	
+	OSCFunc.trace(false);	
 })
