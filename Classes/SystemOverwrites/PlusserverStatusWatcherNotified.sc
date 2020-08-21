@@ -6,12 +6,11 @@ any more.
 I will incorporate the OSCFunc part below into Hacks 
 to ensure that SuperDirt loads buffers *after* the root node has been created. 
 
- OSCFunc({|msg|
+OSCFunc({|msg|
 				server.changed(\notified); // this fixes things
 				if(flag) { server.clientID = msg[2] };
 				failOSCFunc.free;
 			}, '/done', server.addr, argTemplate:['/notify', nil])
-
 */
 + ServerStatusWatcher {
 	prFinalizeBoot {

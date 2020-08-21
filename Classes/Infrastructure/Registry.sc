@@ -9,7 +9,15 @@ Registry {
 		^this.new(*(pathAndObject[0..pathAndObject.size-2]
 			add: { List() })) add: pathAndObject.last;
 	}
-	
+
+	// Add strings as strings (not individual chars:)
+	/*
+	*arrayAdd { | ... pathAndObject |
+		^this.new(*(pathAndObject[0..pathAndObject.size-2]
+			add: { [] })) add: pathAndObject.last;
+	}
+	*/
+
 	*new { | ... pathAndFunc |
 		var path, makeFunc, instance;
 		makeFunc = pathAndFunc.last;

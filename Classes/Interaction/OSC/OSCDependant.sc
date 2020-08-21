@@ -84,7 +84,12 @@ NullSpec {
 + Function {
 	// asSpec, map: permit arbitrary function as inspec in OSCDependant
 	asSpec { ^this }
+
 	map { | number |
+		/*  // TODO:
+			// note - this has been defined differently in file Operators.sc
+			// need to find out which code is the one to keep
+	*/
 		^this.value(number)
 	}
 }

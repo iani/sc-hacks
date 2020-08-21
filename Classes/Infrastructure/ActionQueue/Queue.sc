@@ -5,7 +5,6 @@ the functionality of Server.sync.
 Ensures that each function in the queue will be run after the server has 
 synced (completed) any async commands resulting from the previous action. 
 
-
 Execute each action in the que only after receiving \synced message from
 
 */
@@ -46,7 +45,7 @@ Queue {
 		if (server.serverRunning) {
 			postf("Server % is running, its options cannot be modified.\n", server);
 			"Quit the server, then start this Queue to apply changes.".postln;
-		}
+		};
 		preboot = function;
 	}
 	

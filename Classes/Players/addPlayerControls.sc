@@ -9,11 +9,13 @@ Used to map controls to sensor inputs.
 \apattern.controls;
 */
 
+/* // this was already defined in file Operators.sc
 + Symbol {
 	controls { | envirName |
 		^this.p(envirName).controls;
 	}
 }
+*/
 
 + Player {
 	controls {
