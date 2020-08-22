@@ -158,6 +158,11 @@ Server.default.waitForBoot({
 });
 //:
 ~buffers;
+//:testing if all buffers have info
+~buffers.values.asArray detect: { | b | b.numFrames.isNil }; // OK!
+//:grouping buffers in dictionaries by folder using _ in name as separator.
+~buffers.keys.asArray.first.asString.split($_);
+
 //:Displaying the buffers in a list view by name
 \buffers.window({ | w |
 	w.bounds = Rect(1800, 0, 1000, 1800);
