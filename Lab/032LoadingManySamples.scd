@@ -75,7 +75,7 @@ dupindexes = List.new;
 ~count = count;
 ~nduplicates = nduplicates;
 ~duplicates = duplicates;
-/
+
 //: collect names and paths combining folder+filename in buffer naming scheme
 var paths, names, count = 0, nduplicates = 0, duplicates, dupindexes;
 paths = List.new;
