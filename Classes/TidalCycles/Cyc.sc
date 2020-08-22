@@ -7,7 +7,7 @@ Runs always.  Counts beats.
 Cyc {
 	classvar <>period = 0.25;
 	classvar <>beat = 0;
-	classvar <>verbose = true;
+	classvar <>verbose = false; // true;
 	*initClass {
 		StartUp add: { this.start };
 		CmdPeriod add: { this.start };
@@ -29,6 +29,4 @@ Cyc {
 	*reset {
 		beat = 0;
 	}
-
-	
 }

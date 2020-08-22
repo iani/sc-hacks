@@ -15,3 +15,5 @@ Cyc.verbose = false;
 \test.addNotifier(Cyc, \beat, { | beat | postf("testing: %\n", beat % 12) });
 //:
 \test.removeNotifier(Cyc, \beat);
+//:
+SD.init;
