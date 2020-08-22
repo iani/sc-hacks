@@ -75,9 +75,128 @@ dupindexes = List.new;
 ~count = count;
 ~nduplicates = nduplicates;
 ~duplicates = duplicates;
+/
+//: collect names and paths combining folder+filename in buffer naming scheme
+var paths, names, count = 0, nduplicates = 0, duplicates, dupindexes;
+paths = List.new;
+names = List.new;
+duplicates = List.new;
+dupindexes = List.new;
+(Quarks.folder +/+ "Dirt-Samples" +/+ "*").pathMatch do:
+{ | folder |
+	postf("adding files from folder: %\n", folder);
+	(folder +/+ "*").pathMatch do:
+	{ | path |
+		var name;
+		count = count + 1;
+		name = path.bufname;
+		if (names includes: name) {
+			postf("duplicate name: %\npath: %\n", name, path);
+			nduplicates = nduplicates + 1;
+			duplicates add: [name, path, names indexOf: name,
+				paths[names indexOf: name]
+			];
+		};
+		paths add: path;
+		names add: name;
+	};
+};
+~paths = paths;
+~names = names;
+~count = count;
+~nduplicates = nduplicates;
+~duplicates = duplicates;
+//:test loading a path using new method
+~paths.first.postln;
+~paths.first.readbuffer; // OK. Returns the buffer
+//:test with wrong path: Should return nil.
+(~paths.first ++ "abcde").readbuffer;  // ok. posts warning and returns nil.
+//:test with all paths:
+var buffers;
+buffers = IdentityDictionary();
+Server.default.quit;
+Server.default.options.numBuffers = ~paths.size + 100;
+Server.default.waitForBoot({
+	~paths do: { | p, i |
+		var buf;
+		postf("% ", i);
+		if (i % 20 == 0) { "".postln; };
+		buf = p.readbuffer;
+		buf !? { buffers[p.bufname] = buf };
+	};
+	postf("\nLoaded % buffers\n", buffers.size);
+	~buffers = buffers;
+});
 //:
-~paths;
-~names;
+//:fast way of combining paths with names - for next step below
+~namespaths = [~names, ~paths].flop;
+//:read buffers with paths from above and store in names from above;
+var buffers, namespaths;
+buffers = IdentityDictionary();
+namespaths = [~names, ~paths].flop;
+Server.default.options.numBuffers = ~paths.size + 100;
+Server.default.waitForBoot({
+	namespaths do: { | np |
+		var name, path;
+		#name, path = np;
+		SoundFile.use(path, { | file |
+			var buffer;
+			if (file.numFrames == 0) {
+				postf("This is not an audio file: %\n", file.path);
+			}{
+				buffer = Buffer(Server.default);
+				buffer.allocRead(file.path, 0, -1);
+				buffer.sampleRate = file.sampleRate;
+				buffer.numFrames = file.numFrames;
+				buffer.numChannels = file.numChannels;
+				buffers[name] = buffer;
+			};
+		})
+	};
+	postf("Loaded % buffers\n", buffers.size);
+	~buffers = buffers;
+});
+//:
+~buffers;
+//:Displaying the buffers in a list view by name
+\buffers.window({ | w |
+	w.bounds = Rect(1800, 0, 1000, 1800);
+	w.layout = VLayout(
+		ListView()
+		.font_(Font("Helvetica", 24))
+		.items_(~buffers.keys.asArray.sort)
+		.action_({ | me |
+			me.item.postln;
+			~buffers[me.item.asSymbol].play;
+		})
+	)
+});
+//:
+
+//: ================================================================
+// more tests and earlier drafts
+~buffers[\gabba_000_0].play;
+~buffers[\gabba_000_1].play;
+//:
+\buffers.window({ | w |
+	w.bounds = Rect(1800, 0, 1000, 1800);
+	w.layout = VLayout(
+		ListView()
+		.font_(Font("Helvetica", 24))
+		.items_(~buffers.keys.asArray.sort)
+		.action_({ | me |
+			me.item.postln;
+			~buffers[me.item.asSymbol].play;
+		})
+	)
+});
+//:Displaying the buffers in a list view by name
+\buffers.br_(1000, 1000).v(ListView());
+
+
+
+~paths.size;
+~names.size;
 ~duplicates;
 //:
 ~duplicates do: _.postln;
@@ -91,7 +210,7 @@ dupindexes = List.new;
 };
 
 //:Set server options to fit enough buffer numbers:
-Server.default.options.numBuffers = 3000;
+
 //:Boot server;
 Server.default.boot;
 //:Iterate SoundFile over all buffers to check their type:
