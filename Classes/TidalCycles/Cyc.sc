@@ -5,8 +5,8 @@ Runs always.  Counts beats.
 */
 
 Cyc {
-	classvar <>period = 0.25;
-	classvar <>beat = 0;
+	classvar <>period = 0.25, periodPat;
+	classvar <>beat = 0, beatPat;
 	classvar <>verbose = false; // true;
 	*initClass {
 		StartUp add: { this.start };
@@ -16,7 +16,7 @@ Cyc {
 	*start {
 		AppClock.sched(0, {
 			this.nextbeat;
-			period;
+			period.next; // works also with streams
 		});
 	}
 

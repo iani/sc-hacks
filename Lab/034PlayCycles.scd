@@ -54,3 +54,15 @@ SD.gui;
 ~a.toggle;
 ~b.toggle;
 ~b.offset = 1;
+//;
+Cyc.period = 0.1;
+Cyc.period = 0.2;
+Cyc.period = 0.25;
+Cyc.period = 0.5;
+Cyc.period = 1.5;
+//;
+~players do: {
+	
+	
+};
+//:

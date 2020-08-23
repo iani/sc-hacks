@@ -118,7 +118,7 @@ SD {
 				// [doc, key].postln;
 				var p;
 				p = players[me.value];
-				switch (key
+				switch (key,
 					$ , { p.toggle },
 					$j, { p.incCycle },
 					$k, { p.decCycle },
@@ -142,10 +142,7 @@ SD {
 					$&, { p.offset = 7 },
 					$*, { p.offset = 8 },
 					$(, { p.offset = 9 },
-					
-					
-				)
-				if (key === $ ) 
+				);
 			})
 			.addNotifier(this, \players, { | n |
 				n.listener.items = players collect: { | p, i |
