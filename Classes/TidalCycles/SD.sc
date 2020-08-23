@@ -116,7 +116,36 @@ SD {
 			})
 			.keyDownAction_({ | me, key |
 				// [doc, key].postln;
-				if (key === $ ) { players[me.value].toggle }
+				var p;
+				p = players[me.value];
+				switch (key
+					$ , { p.toggle },
+					$j, { p.incCycle },
+					$k, { p.decCycle },
+					$h, { p.incOffset },
+					$l, { p.decOffset },
+					$1, { p.cycle = 1 },
+					$2, { p.cycle = 2 },
+					$3, { p.cycle = 3 },
+					$4, { p.cycle = 4 },
+					$5, { p.cycle = 5 },
+					$6, { p.cycle = 6 },
+					$7, { p.cycle = 7 },
+					$8, { p.cycle = 8 },
+					$9, { p.cycle = 9 },
+  					$!, { p.offset = 1 },
+					$@, { p.offset = 2 },
+					$#, { p.offset = 3 },
+					$$, { p.offset = 4 },
+					$%, { p.offset = 5 },
+					$^, { p.offset = 6 },
+					$&, { p.offset = 7 },
+					$*, { p.offset = 8 },
+					$(, { p.offset = 9 },
+					
+					
+				)
+				if (key === $ ) 
 			})
 			.addNotifier(this, \players, { | n |
 				n.listener.items = players collect: { | p, i |

@@ -4,7 +4,7 @@ Uses SD to find the buffer and Cyc to determine the beat via Notification.
 */
 
 SDC {
-	var <buffer, <>cycle = 12, <>offset = 0;
+	var <buffer, <cycle = 12, <offset = 0;
 	var <>defname;
 	var <>args; // args for Synth(defname, args);
 	var <>verbose = false;
@@ -21,6 +21,33 @@ SDC {
 	buffer_ { | argBuffer |
 		buffer = argBuffer;
 		this.init;
+	}
+
+	incCycle {
+		this.cycle = cycle + 1;		
+	}
+
+	incOffset {
+		this.offset = offset + 1;		
+	}
+
+	decCycle {
+		this.cycle = cycle - 1;		
+	}
+
+	decOffset {
+		this.offset = offset - 1;		
+	}
+
+
+	cycle_ { | argCycle = 12 |
+		cycle = argCycle.clip(1, 10000);
+		SD.changed(\players);
+	}
+
+	offset_ { | argOffset = 12 |
+		offset = argOffset.clip(0, 10000);
+		SD.changed(\players);
 	}
 
 	toggle {
@@ -55,7 +82,7 @@ SDC {
 	}
 
 	asItem {
-		^format("% %", this.bufname,
+		^format("% %:% %", this.bufname, cycle, offset,
 			if (listening) { "***" } { "" }
 		);
 	}
