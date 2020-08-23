@@ -17,3 +17,40 @@ Cyc.verbose = false;
 \test.removeNotifier(Cyc, \beat);
 //:
 SD.init;
+//:Test loading buffers with SD
+SD.init;
+//:
+SD.buffers;
+//:
+SD.buffers[SD.buffers.keys.asArray.sort.first];
+//
+SD.buffers[SD.buffers.keys.asArray.sort.first].play;
+//:+
+10 do: {
+	Synth("buf1",
+		[bufnum: SD.buffers[SD.buffers.keys.asArray.sort.first].bufnum]
+	);
+	0.25.wait;
+};
+//:
+Cyc.verbose = true;
+//:
+SD.first;
+//:
+~sdc = SDC(SD.first);
+~sdc.play;
+~sdc.add;
+~sdc.cyclelength = 4;
+~sdc.remove;
+//:
+SD.init;
+//:
+SD.gui;
+//:
+97.asAscii.asSymbol.asCompileString;
+//:
+~a;
+//:
+~a.toggle;
+~b.toggle;
+~b.offset = 1;

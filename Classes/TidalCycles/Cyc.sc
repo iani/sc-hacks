@@ -22,7 +22,7 @@ Cyc {
 
 	*nextbeat {
 		if (verbose) { postf("testing Cyc. beat is: %\n", beat) };
-		this.changed(\beatbeat);
+		this.changed(\beat, beat);
 		beat = beat + 1;
 	}
 	

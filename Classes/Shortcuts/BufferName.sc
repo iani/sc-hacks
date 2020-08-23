@@ -4,6 +4,9 @@ Concat folder with file name.
 Avoids duplicate names in most cases.
 */
 
++ Buffer {
+	bufname { ^this.path.bufname }
+}
 
 + String {
 	bufname {

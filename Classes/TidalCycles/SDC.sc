@@ -4,31 +4,62 @@ Uses SD to find the buffer and Cyc to determine the beat via Notification.
 */
 
 SDC {
-	var <buffer, <>cyclelength = 12, <>beatoffset = 0;
+	var <buffer, <>cycle = 12, <>offset = 0;
 	var <>defname;
 	var <>args; // args for Synth(defname, args);
+	var <>verbose = false;
+	var <listening = false;
 
-	*new { | buffer, cyclelength = 12, beatoffset = 0 |
-		^this.newCopyArgs(buffer, cyclelength, beatoffset).init;	
+	*new { | buffer, cycle = 12, offset = 0 |
+		^this.newCopyArgs(buffer, cycle, offset).init;	
 	}
 
 	init {
 		defname = format("buf%", buffer.numChannels);
 	}
 
-	add { // start listening to beats from Cyc
-		this.addNotifier(Cyc, \beat, { | beat |
-			if (beat + beatoffset % cyclelength == 0) {
-				this.play;
-			}
-		});
+	buffer_ { | argBuffer |
+		buffer = argBuffer;
+		this.init;
 	}
 
+	toggle {
+		if (listening) { this.remove } { this.add }
+	}
+	
+	add { // start listening to beats from Cyc
+		this.addNotifier(Cyc, \beat, { | beat |
+			if (beat + offset % cycle == 0) {
+				this.play;
+			};
+			if (verbose) {
+				postf("% - % - %\n",
+					beat,
+					beat + offset % cycle,
+					beat + offset % cycle == 0
+				);
+			};
+		});
+		listening = true;
+		SD.changed(\players);
+	}
+	
 	remove { // stop listening to beats from Cyc
 		this.removeNotifier(Cyc, \beat);
+		listening = false;
+		SD.changed(\players);
 	}
 	
 	play {
-		Synth(defname, args);
+		Synth(defname, [bufnum: buffer.bufnum] ++ args);
 	}
+
+	asItem {
+		^format("% %", this.bufname,
+			if (listening) { "***" } { "" }
+		);
+	}
+
+	bufname { ^buffer.bufname }
+
 }
