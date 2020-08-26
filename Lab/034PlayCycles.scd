@@ -1,6 +1,10 @@
 /* 23 Aug 2020 06:36
 Test simple Cycle class for playing samples in a cycle of beats.
 */
+//:
+Cyc.verbose = true;
+//:
+Cyc.verbose = false;
 //:Prototype to test scheduling
 var period = 0.25, beat = 0;
 AppClock.sched(0, {

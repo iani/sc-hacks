@@ -72,6 +72,7 @@ SD {
 	}
 
 	*groupBuffers {
+		// not yet implemented
 		buffergroups = MultiLevelIdentityDictionary();
 		
 	}
@@ -164,7 +165,11 @@ SD {
 				currentEnvironment[\cp].buffer = buffers[me.item];
 				this.changed(\players);
 			})
-		)	
+		)
+	}
+
+	*bufferAt { | name |
+		^buffers[name];
 	}
 }
 

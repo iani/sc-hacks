@@ -5,25 +5,39 @@ Runs always.  Counts beats.
 */
 
 Cyc {
-	classvar <>period = 0.25, periodPat;
-	classvar <>beat = 0, beatPat;
+	classvar <>period, periodPat;
+	classvar <>beat, beatPat;
 	classvar <>verbose = false; // true;
+	classvar <thisPeriod, <thisBeat; // give insight to the present state
 	*initClass {
+		this.periodPat = 0.25;
+		this.beatPat = Pseries();
 		StartUp add: { this.start };
 		CmdPeriod add: { this.start };
 	}
 
+	*periodPat_ { | pattern |
+		periodPat = pattern;
+		period = pattern.asStream;
+	}
+
+	*beatPat_ { | pattern |
+		beatPat = pattern;
+		beat = pattern.asStream;
+	}
+	
 	*start {
 		AppClock.sched(0, {
 			this.nextbeat;
-			period.next; // works also with streams
+			thisPeriod = period.next; // works also with streams
 		});
 	}
 
 	*nextbeat {
-		if (verbose) { postf("testing Cyc. beat is: %\n", beat) };
-		this.changed(\beat, beat);
-		beat = beat + 1;
+		this.changed(\beat, thisBeat = beat.next);
+		if (verbose) {
+			postf("Cyc: period: %, beat: %\n", thisPeriod, thisBeat)
+		};
 	}
 	
 	*reset {
