@@ -121,7 +121,7 @@ BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 				+ 0.5,
 				InFeedback.ar(bus,1)),1)
 			+ (\fadd.kr(0.05) * 5 + 0.1 )
-		) / (\ldiv.kr(0.5) * 10 + 0.3);
+		) / (\ldiv.kr(0.5) * 3 + 0.3);
 		Out.ar(bus, fb);
 		env = 1-fb;
 		fq = Latch.ar(WhiteNoise.ar(
@@ -129,10 +129,7 @@ BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 			+ (\noisep.kr(0.6) + 10000 + 10), fb);
 		osc = SinOsc.ar(SinOsc.ar(fq*5/3,0,env**2*10000,fq),0,LPF.ar(env,100));
 		Out.ar(0, \amp.kr(1)*Pan2.ar(osc, Latch.ar(WhiteNoise.ar(1),fb),0.05))})
-} +> \pebproto ;
-//:
-
-
+} +> \peb;
 //: PEB MODIFIED FOR USE WITH SENSORS
 // does NOT WORK - NEED TO MODIFY ABOVE GRADUALLY TO MAKE SOUND RIGHT AWAY
 { | bus = 50 |
@@ -154,7 +151,7 @@ BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 			Out.ar(0, \amp.kr(0.2) *
 				Pan2.ar(osc, Latch.ar(WhiteNoise.ar(1), fb), 0.05))
 	})
-} +> \peb;
+} +> \pebwrong;
 //;test noise par
 //:before scaling
 \noise <+.peb 100; // 10 - 10000
