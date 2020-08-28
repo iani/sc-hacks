@@ -5,11 +5,11 @@ x1-x4 ... z1-z4.
 */
 BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 	[\x1, 1, 0.47, 0.53, 1],
-	//	[\y1, 2, 0.47, 0.53, 1],
-	//	[\z1, 3, 0.47, 0.53, 1],
+	[\y1, 2, 0.47, 0.53, 1],
+	[\z1, 3, 0.47, 0.53, 1],
 	[\x2, 1, 0.47, 0.53, 2], // using sensor module 3
-	// [\y2, 2, 0.47, 0.53, 2],
-	// [\z2, 3, 0.47, 0.53, 2],
+	[\y2, 2, 0.47, 0.53, 2],
+	[\z2, 3, 0.47, 0.53, 2],
 	[\x3, 1, 0.47, 0.53, 3],
 	// [\y3, 2, 0.47, 0.53, 3],
 	// [\z3, 3, 0.47, 0.53, 3],
@@ -109,7 +109,7 @@ BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 		osc = SinOsc.ar(SinOsc.ar(fq*5/3,0,env**2*10000,fq),0,LPF.ar(env,100));
 		Out.ar(0, \amp.kr(1)*Pan2.ar(osc,Latch.ar(WhiteNoise.ar(1),fb),0.05))})
 } +> \pebproto ;
-// next need to add controls for noise, noisep, fadd, ldiv
+// next add controls for noise, noisep, fadd, ldiv
 // adding these one by one to be able to start sound right away
 //: PEB + noise param control
 { | bus = 50 |
@@ -130,6 +130,32 @@ BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 		osc = SinOsc.ar(SinOsc.ar(fq*5/3,0,env**2*10000,fq),0,LPF.ar(env,100));
 		Out.ar(0, \amp.kr(1)*Pan2.ar(osc, Latch.ar(WhiteNoise.ar(1),fb),0.05))})
 } +> \peb;
+//: PEB with more sensitivity for Jun
+{ | bus = 50 |
+	Mix.fill(8, {
+		var fb, env, fq, osc;
+		fb = (LFSaw.ar(
+			Latch.ar(
+				WhiteNoise.ar(0.5).abs
+				+ 0.5,
+				InFeedback.ar(bus,1)),1)
+			+ (\fadd.kr(0.05) * 5 + 0.1 ) //  add * 5 ??? 
+		) / (\ldiv.kr(0.5) * 1.0 + 1.3);
+		Out.ar(bus, fb);
+		env = 1-fb;
+		fq = Latch.ar(WhiteNoise.ar(
+			\noise.kr(0.5) + 1 ** 15 + 10)
+			+ (\noisep.kr(0.6) + 1 ** 15 + 10), fb);
+		osc = SinOsc.ar(SinOsc.ar(fq*
+			//5/3,
+			(\fqmul.kr(0.5) * 10 + 5/3),
+			0,
+			env**2*
+			// 10000,
+			(\oscamp.kr(0.5) * 10000 + 10),
+			fq),0,LPF.ar(env,100));
+		Out.ar(0, \amp.kr(1)*Pan2.ar(osc, Latch.ar(WhiteNoise.ar(1),fb),0.05))})
+} +> \peb;
 //: PEB MODIFIED FOR USE WITH SENSORS
 //:MAP ALL CONTROLS HERE: noise, noisep, fadd, ldiv
 \peb.map(\noise, \x3);
@@ -140,12 +166,11 @@ BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 // 4 SENSORS, 2 PER PLAYER.
 \peb.map(\noise, \x1);
 \peb.map(\noisep, \x2);
+\peb.map(\fqmul, \y1);
+\peb.map(\oscamp, \y2);
+
 \peb.map(\fadd, \x3);
 \peb.map(\ldiv, \x4);
-
-
-
-
 
 //;test noise par
 //:before scaling
