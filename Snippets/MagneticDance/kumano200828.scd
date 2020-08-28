@@ -5,17 +5,17 @@ x1-x4 ... z1-z4.
 */
 BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 	[\x1, 1, 0.47, 0.53, 1],
-	[\y1, 2, 0.47, 0.53, 1],
-	[\z1, 3, 0.47, 0.53, 1],
+	//	[\y1, 2, 0.47, 0.53, 1],
+	//	[\z1, 3, 0.47, 0.53, 1],
 	[\x2, 1, 0.47, 0.53, 2], // using sensor module 3
-	[\y2, 2, 0.47, 0.53, 2],
-	[\z2, 3, 0.47, 0.53, 2],
+	// [\y2, 2, 0.47, 0.53, 2],
+	// [\z2, 3, 0.47, 0.53, 2],
 	[\x3, 1, 0.47, 0.53, 3],
-	[\y3, 2, 0.47, 0.53, 3],
-	[\z3, 3, 0.47, 0.53, 3],
+	// [\y3, 2, 0.47, 0.53, 3],
+	// [\z3, 3, 0.47, 0.53, 3],
 	[\x4, 1, 0.47, 0.53, 4], // using sensor module 3
-	[\y4, 2, 0.47, 0.53, 4],
-	[\z4, 3, 0.47, 0.53, 4]
+	// [\y4, 2, 0.47, 0.53, 4],
+	// [\z4, 3, 0.47, 0.53, 4]
 );
 //:test if bus values are being written
 \x1.get; // bus value range is ca 0 .. 1.0
@@ -120,8 +120,8 @@ BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 				WhiteNoise.ar(0.5).abs
 				+ 0.5,
 				InFeedback.ar(bus,1)),1)
-			+ (\fadd.kr(0.05) * 5 + 0.1 )
-		) / (\ldiv.kr(0.5) * 3 + 0.3);
+			+ (\fadd.kr(0.05) * 10 + 0.1 ) //  add * 5 ??? 
+		) / (\ldiv.kr(0.5) * 2 + 0.3);
 		Out.ar(bus, fb);
 		env = 1-fb;
 		fq = Latch.ar(WhiteNoise.ar(
@@ -131,41 +131,36 @@ BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 		Out.ar(0, \amp.kr(1)*Pan2.ar(osc, Latch.ar(WhiteNoise.ar(1),fb),0.05))})
 } +> \peb;
 //: PEB MODIFIED FOR USE WITH SENSORS
-// does NOT WORK - NEED TO MODIFY ABOVE GRADUALLY TO MAKE SOUND RIGHT AWAY
-{ | bus = 50 |
-	Mix.fill(8, {
-		var fb, env, fq, osc;
-		fb = (LFSaw.ar(
-			Latch.ar(
-				WhiteNoise.ar(\wnmul.kr(0.5)).abs
-				+ \wnadd.kr(0.5),
-				InFeedback.ar(bus,1)), 1) +
-			(\fadd.kr(0.05) * 5 + 0.1)) /
-			(\ldiv.kr(0.5) * 10 + 0.3);
-			Out.ar(bus, fb);
-			env = 1-fb;
-			fq = Latch.ar(WhiteNoise.ar(
-				(\noise.kr(1000) * 10000 + 10) )
-				+ (\noisep.kr(6000) * 10000 + 10), fb);
-			osc = SinOsc.ar(SinOsc.ar(fq*5/3,0,env**2*10000,fq),0,LPF.ar(env,100));
-			Out.ar(0, \amp.kr(0.2) *
-				Pan2.ar(osc, Latch.ar(WhiteNoise.ar(1), fb), 0.05))
-	})
-} +> \pebwrong;
+//:MAP ALL CONTROLS HERE: noise, noisep, fadd, ldiv
+\peb.map(\noise, \x3);
+\peb.map(\noisep, \y3);
+\peb.map(\fadd, \z3);
+\peb.map(\ldiv, \x4);
+//:SECOND MAPPING - MADE FOR WORK WITH 2 PLAYERS
+// 4 SENSORS, 2 PER PLAYER.
+\peb.map(\noise, \x1);
+\peb.map(\noisep, \x2);
+\peb.map(\fadd, \x3);
+\peb.map(\ldiv, \x4);
+
+
+
+
+
 //;test noise par
 //:before scaling
 \noise <+.peb 100; // 10 - 10000
 \noisep <+.peb 50000; // 10 - 10000
 //:after scaling
-\noise <+.peb 0.2;
+\noise <+.peb 0.5;
 \noise <+.peb 0.01;
 \noise <+.peb 0.99;
-\noisep <+.peb 0.2;
+\noisep <+.peb 10.9;
 \noisep <+.peb 0.01;
 \noisep <+.peb 0.99;
-\fadd <+.peb 0.05; // 0.1 - 5
-\fadd <+.peb 0.99; // 0.1 - 5
-\ldiv <+.peb 0.03; // 0.3 - 10
+\fadd <+.peb 0.0; // 0.1 - 5
+\fadd <+.peb 0.; // 0.1 - 5
+\ldiv <+.peb 0.9; // 0.3 - 10
 \ldiv <+.peb 0.99; // 0.3 - 10
 
 //:test wnmul, wnadd, fadd, ldiv
@@ -173,14 +168,14 @@ BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 \wnadd <+.peb 0.0; // no effect? /// DO NOT USE
 \fadd <+.peb 5; // 0.1 - 5
 \ldiv <+.peb 0.3; // 0.3 - 10
-//:MAP ALL CONTROLS HERE: noise, noisep, fadd, ldiv
-\peb.map(\noise, \x3);
-\peb.map(\noisep, \y3);
-\peb.map(\fadd, \z3);
-\peb.map(\ldiv, \x4);
 
 
 //:================================================================
 //:sound check
 \default +> \check;
 \freq <+.check 200;
+
+//:
+Server.default.record;
+
+Server.default.stopRecording;
