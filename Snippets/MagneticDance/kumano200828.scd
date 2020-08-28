@@ -59,7 +59,7 @@ BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 					, 1),
 				(\stdlfreq.kr(0.2) * 5000 + 10),
 				\stdlbwr.kr(0.01) * 100 + 0.01)
-			* (\resinmul.kr(0.1) + 50000 + 500)
+			* (\resinmul.kr(0.1) + 50000 + 500))
 		, \pos.kr(0), \level.kr(0.01))
 } +> \peb1;
 //:play the above softer
@@ -82,3 +82,4 @@ BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 \peb1.map(\stdlfreq, \z1);
 //:test changing resinmul
 \resinmul <+.peb1 300;
+	
