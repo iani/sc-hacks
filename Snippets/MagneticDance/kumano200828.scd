@@ -92,3 +92,34 @@ BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 \peb1.map(\stdlfreq, \z1);
 \peb1.map(\resinmul, \x2);
 //:
+{ | bus = 50 |
+	Mix.fill(8, {
+		var fb, env, fq, osc;
+		fb = (LFSaw.ar(
+			Latch.ar(
+				WhiteNoise.ar(\wnmul.kr(0.5)).abs
+				+ \wnadd.kr(0.5),
+				InFeedback.ar(bus,1)),1) + \fadd.kr(0.999)) / \ldiv.kr(2);
+		Out.ar(bus, fb);
+		env = 1-fb;
+		fq = Latch.ar(WhiteNoise.ar(
+			\noise.kr(1000))
+			+ \noisep.kr(6000), fb);
+		osc = SinOsc.ar(SinOsc.ar(fq*5/3,0,env**2*10000,fq),0,LPF.ar(env,100));
+		Out.ar(0, \amp.kr(0.2) * Pan2.ar(osc,Latch.ar(WhiteNoise.ar(1),fb),0.05))})
+} +> \peb;
+//;test noise par
+\noise <+.peb 100; // 10 - 10000
+\noisep <+.peb 50000; // 10 - 10000
+//:test wnmul, wnadd, fadd, ldiv
+\wnmul <+.peb 10.0; // no effect? /// DO NOT USE
+\wnadd <+.peb 0.0; // no effect? /// DO NOT USE
+\fadd <+.peb 5; // 0.1 - 5
+\ldiv <+.peb 0.3; // 0.3 - 10
+//:noise, noisep, fadd, ldiv
+\peb.map(\noise, \x3);
+\peb.map(\noisep, \y3);
+\peb.map(\fadd, \z3);
+\peb.map(\ldiv, \x4);
+
+
