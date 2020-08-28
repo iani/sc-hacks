@@ -48,7 +48,8 @@ Time().gui;
 \p2 *> \fx2;
 //:
 \srcvol <+.fx2 1;
-hhjjulllll\fxvol <+.fx2 1;
+// hhjjulllll /* TYPO */
+\fxvol <+.fx2 1;
 
 //:add brick wall fx1 + fx2
 PV({ | c |
