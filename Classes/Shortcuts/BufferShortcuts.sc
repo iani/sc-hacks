@@ -39,11 +39,6 @@ triggering of PlayBuf to restart from startPos.
 		
 	}
 
-	fx { | func |
-		// pass ar ugen output as input to func
-		^func.(this.ar);
-	}
-
 	pv { | func |
 		// pass fft of the ar to func and convert fft output of func to audio
 		
@@ -66,10 +61,23 @@ triggering of PlayBuf to restart from startPos.
 		// ??? 
 	}
 	
-}
 
-+ Synth {
+
+	+ Synth} {
 	trig { | ... args |
+		// append \trig to args, setting \trig to new UniqueID.
+		// If the synth uses Changed.kr(\trig.kr(1));
+		// then this resets BufPlay to startPos.
 		this.set(*(args ++ [\trig, UniqueID.next]));
 	}
+
+		/*
+			fx { | func |
+			// Superfluous.  Shorter to inline this.ar inside Func code.
+			// pass ar ugen output as input to func
+			^func.(this.ar);
+			}
+		*/
+
+
 }
