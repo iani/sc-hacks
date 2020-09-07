@@ -60,10 +60,10 @@ triggering of PlayBuf to restart from startPos.
 	pvplay { | func |
 		// ??? 
 	}
-	
+}	
 
 
-	+ Synth} {
+	+ Synth {
 	trig { | ... args |
 		// append \trig to args, setting \trig to new UniqueID.
 		// If the synth uses Changed.kr(\trig.kr(1));
@@ -78,6 +78,4 @@ triggering of PlayBuf to restart from startPos.
 			^func.(this.ar);
 			}
 		*/
-
-
 }
