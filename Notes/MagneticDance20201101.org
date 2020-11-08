@@ -1,0 +1,51 @@
+* where is pydon?
+
+/Dev/sensestage191118/ssdn_python
+
+* how to start polling xbees with pydon?
+
+sudo pydoncli.py -P osc -c newconfig_2019_Dec_13_13-28-37.xml -s /dev/ttyUSB0
+
+* problems connecting minibees  1 Nov 2020 09:05
+
+** start messages on pydongui
+
+#+begin_example
+ assigning minibee
+ 1
+ assigning minibee
+ 1
+ assigning minibee
+ 1
+ assigning minibee
+ 1
+ ('ignoring unknown minibees', False)
+ ('check for xbee errors', False)
+ ('gui interface', '127.0.0.1', None)
+ trying to open serial port
+ ('Opening serial port', '/dev/ttyUSB0', True)
+ initialising communication through serial port
+ querying settings
+ setting coordinator settings
+ querying settings
+ --------------------------------
+ ('create new files for unknown minibees', True)
+ Created OSC listener at (0.0.0.0,57600) and OSC sender to (127.0.0.1,57120) and opened serial port at /dev/ttyUSB0. Now waiting for messages.
+ --------------------------------
+#+end_example
+
+** no data message on pydongui
+
+#+begin_example
+no data for 60 seconds, opening serial port again
+serial port is closed, trying to open serial port again
+trying to open serial port
+('Opening serial port', '/dev/ttyUSB0', True)
+serial port is open again
+initialising communication through serial port
+querying settings
+setting coordinator settings
+querying settings
+--------------------------------
+#+end_example
+
