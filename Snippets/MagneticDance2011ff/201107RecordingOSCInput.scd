@@ -4,7 +4,7 @@ Platform.userAppSupportDir;
 File.exists(Platform.userAppSupportDir);
 File.exists(~mddir);
 File.mkdir(~mddir);
-~oscfilepath = format("%/osc%", ~mddir, Date.localtime.stamp);
+~oscfilepath = format"%/osc%(, ~mddir, Date.localtime.stamp)";
 ~oscfile = File(~oscfilepath, "w");
 
 //:
@@ -46,5 +46,19 @@ File.mkdir(~mddir);
 	(~endTime - ~startTime / ~entries) - ~waittime));
 ~oscfile.close;
 "DONE!".postln;
+//: ================================================================
+//:+ recording sound - first test
+{ SinOsc.ar(LFNoise0.kr(0.5).range(400, 800), 0, 0.1).dup }.play;
+0.1.wait;
+~sndfilepath = format("%/snd%.aiff", ~mddir, Date.localtime.stamp);
+Server.default.record(~sndfilepath, 0, 2);
+10.wait;
+Server.default.stopRecording;
+//:playback
+~testbuf = Buffer.cueSoundFile(Server.default, ~mddir.matchType.first);
+~testbuf.numChannels;
 //:
-
+{ DiskIn.ar(~testbuf.numChannels, ~testbuf.bufnum) } +> \testdiskplayback;
+//:
+var path, buf;
+buf = 

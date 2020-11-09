@@ -52,7 +52,12 @@ Nevent : EnvironmentRedirect {
 			// });
 			ControlSpec.makeMoreDefaults; // method defined in sc-hacks
 			// parent = (quant: 1, clock: defaultTempoClock);
-			this.new (\default, true); // pushes \default to current environment
+			/*  8 Nov 2020 18:40
+				removed push of default event, as this is not indispensable,
+				and breaks any initializations to currentEnvir done by
+				startup file etc.
+			*/
+			// this.new (\default, true); // pushes \default to current environment
 		}; 
 	}
 
@@ -106,7 +111,7 @@ Nevent : EnvironmentRedirect {
 	}
 
 	maybePush { | doPush = false |
-		if (doPush) { this.push };
+		if (doPush) { this.push; };
 	}
 
 	push { // Avoid pushing if already current.

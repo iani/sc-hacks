@@ -17,23 +17,37 @@ triggering of PlayBuf to restart from startPos.
 
 + String {
 	bufname {
+		// folderName, _, fileNameWithoutExtension of receiver
+		// and return result as symbol. 
 		var p;
 		p = PathName(this);
 		^(p.folderName ++ "_" ++ p.fileNameWithoutExtension).asSymbol;
 	}
 }
 
++ Symbol {
+	load { | path, server |
+		// Read buffer from path and store in environment variable
+		// Receiver Symbol is the name of the variable.
+		currentEnvironment.put(this, Buffer.read(
+			server ?? { Server.default },
+			path
+		))
+	}
+	
+}
+
 + Buffer {
 	bufname { ^this.path.bufname }
-	ar {
+	ar { | rate = 1, startPos = 0, loop = 1 |
 		// access bufnum and numChans is given as instance variables.
 		var buf; // control for changing the bufnum while synth is running
 		buf = \bufnum.kr(bufnum); // initialize with current buffer's bufnum
 		^PlayBuf.ar(numChannels, buf,
-			\rate.kr(1),
+			\rate.kr(rate),
 			Changed.kr(\trig.kr(1)),
-			\startPos.kr * BufSampleRate.kr(buf),
-			\loop.kr(1),
+			\startPos.kr(startPos) * BufSampleRate.kr(buf),
+			\loop.kr(loop),
 			Done.freeSelf
 		)
 		

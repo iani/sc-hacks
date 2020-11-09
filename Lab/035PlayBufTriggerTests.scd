@@ -205,4 +205,3 @@ b.set(\freq, 5000);
 b.trig(\startPos, 750, \amp, 5, \rate, -0.75);
 //:
 b.trig(\startPos, 750, \amp, 5, \rate, -1.25);
-
