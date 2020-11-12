@@ -43,6 +43,7 @@ Used to map controls to sensor inputs.
 	}
 }
 
+/* // See Operators.scd
 + Function {
 	@@> { | param, envir |
 		// automatically map controls who are named after busses set by sensors.
@@ -70,3 +71,4 @@ Used to map controls to sensor inputs.
 		}
 	}
 }
+*/

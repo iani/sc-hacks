@@ -5,35 +5,37 @@ Sending a message to this class will redirect it to its default instance.
 The default instance is stored at Registry(<SingletonSubclass>, \default),
 where <SingletonSubclass> is a subclass of Singleton defined by the user.
 
-(Other instances can be created and used if needed, but there is no mechanism provided
-here to store them.)
+To get the default instance of a Singleton subclass, use message 'default'.
+To create and/or get an instance stored under a different name, use message
+'named'.
+
+SomeSingletonSubclass.named(\test); 
 
 */
 
 Singleton {
 	*doesNotUnderstand { | selector ... args |
-		/*
-			{ "blah".postln; } ! 10;
-			selector.postln;
-			args.postln;
-			*/
-		^Registry(this, \default, {
-			this.newCopyArgs()	
-		}).perform(selector, *args)
+		^this.default.perform(selector, *args);
 	}
 
-	/* // why is no subclassing of this possible?
-	new {
-		^super.new.init; // use init to customize state in your subclass
+	*default {
+		^this.named(\default);
 	}
 
-	init {
-		// use init to customize state in your subclass
+	*named { | name ... args |
+		^Registry(this, name, {
+			this.new().init(name, *args);
+		})
 	}
-	*/
+
+	*all { ^Registry.allAt(this) }
 	
+	init { | name ... args |
+		// use init to customize state in your subclass
+		// postf("initializing new % with args %", this, args);
+		postf("% still testing init. name was: %, args: %\n", this, name, args);
+	}	
 }
-
 
 SingletonSubclassTest : Singleton {
 // example: 
@@ -43,4 +45,20 @@ SingletonSubclassTest : Singleton {
 		"blah!".postln;
 		args.postln;
 	}
+
+	init { | name, myarg |
+		postf("testing init class of new % named %\n", this, name);
+		postf("myarg was: %\n", myarg);
+	}
 }
+
+/*
+SingletonSubclassTest.blah(1, 2, 3);
+
+SingletonSubclassTest.named(\x1, 2, 3);
+
+Registry.at(SingletonSubclassTest);
+
+SingletonSubclassTest.all;
+
+*/

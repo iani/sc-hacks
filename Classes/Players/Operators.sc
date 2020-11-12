@@ -131,9 +131,12 @@
 
 	<@ { | val | ^this.bus.set(val) }
 	
-	@> { | param, envir |
+	@> { | envir, param = \freq |
 		// map bus named by me to param in envir
-		^(envir ?? { envir.e }).map(param, this);
+		// debugged 12 Nov 2020 11:20: 
+		// postf("mapping parameter % of envir % to bus %\n", param, envir, this);
+		^envir.map(param, this);
+		// ^envir.map(param ? \freq, this);
 	}
 	
 	map { | ... paramBusPairs |
@@ -196,7 +199,7 @@
 	*/
 
 	@ { | param, numChannels = 1 |
-		// Create PersistentBusProxy. Useful for linking enirs with busses.
+		// Create PersistentBusProxy. Useful for linking envirs with busses.
 		^PersistentBusProxy(this, param, numChannels);
 	}
 
@@ -261,10 +264,44 @@
 		(envir ? currentEnvironment).playLoop(key, this);
 	}
 
-	@> { | param, envir |
+	/// fix this !!!!!!!!!!!
+	/*
+		// fixing this (12 Nov 2020 12:11)
+	@> { | envir, param |
+		postf("mapping bus: % to param % of envir %\n", this, param, envir);
 		this.map(envir ?? { envir.e }, param);
 	}
+	*/
 
+	@> { | bus |
+		// play kr function into bus. Release previous kr synths playing
+		// into same bus
+		var synth;
+		bus = bus.bus;
+		bus.changed(\kr); // free previous synths
+		synth = { Out.kr(\out.kr(bus.index), this.value) }.play;
+		synth.addNotifier(bus, \kr, { synth.free });
+	}
+
+	@+> { | bus |
+		// Like @> but do not release previous synths
+		var synth;
+		bus = bus.bus;
+		// bus.changed(\kr); // DO NOT FREE PREVIOUS SYNTHS
+		synth = { Out.kr(\out.kr(bus.index), this.value) }.play;
+		synth.addNotifier(bus, \kr, { synth.free });
+	}
+
+	// new shortcut 12 Nov 2020 12:20 - EXPERIMENTAL - UNDER EVALUATION
+	/* 
+		Play kr function into bus with same name as param to be controlled,
+		then map that bus to the parameter in envir.
+	*/
+	@@> { | envir, param = \freq | 
+		this @> param;
+		envir.map(param, param);	
+	}
+	// 12 Nov 2020 12:15 this also needs revisiting
 	map { | envir, param, controlplayer |
 		/* Play control rate function into bus
 			controlplayer: optional name of player playing the func

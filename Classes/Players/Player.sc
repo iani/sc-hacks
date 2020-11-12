@@ -180,6 +180,17 @@ Player {
 		}	
 	}
 
+	// allways restart after CmdPeriod
+	fix {
+		// delay 0.1 to ensure all necessary groups already exist.
+		this.addNotifier(CmdPeriod, \cmdPeriod, {  { this.play; }.defer(0.1) });
+	}
+
+	// undo a fix
+	unfix {
+		this.removeNotifier(CmdPeriod, \cmdPeriod);
+	}
+	
 	playEnvEvent { | event |
 		/*  Play event in a different way than a standard EventPattern:
 			Prepare event to be played by changing keys in envir

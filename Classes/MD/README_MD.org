@@ -1,0 +1,89 @@
+# 10 Nov 2020 19:43
+MD is short for Magnetic Dance.
+This folder contains classes and other code for work with wearable motion sensors used in the Magnetic Dance project.  It's aims are to enable telematic dance, by transmitting data captured from these sensors over the internet to remote locations and resynthesizing the performance sounds locally based on data received from the sensors worn by the dancers. 
+** Sending data to control busses
+*** Old implementation: see class =BusOsc=, method =watch1=.
+*** New implementation: see classes =SenseServer=, =XBeeArray=, =SenseMapper=,  =SenseBus=
+*** Approach of new implementation
+**** =XBeeArray=
+ =XBeeArray= processes data received from SenseStage via OSC, in response to 
+ \update message sent by SenseServer.
+
+ The structure of data received by SenseServer is: 
+     args message, timestamp;
+ where: 
+ message is: ['/minibee/data', x, y, z, beeID]
+
+=XBeeArray= holds an array of =SenseMapper= instances, and delegates to them the data received from SenseServer, so that they may process the data and set their bus values.
+
+It works as dependant of SenseServer, and contains one instance of SenseMapper for each XBee ID number in the system.
+**** =SenseMapper=
+
+=SenseMapper= contains an array of 3 control functions outputting to control busses and specs correspoding to the 3 values (x, y, z) received from XBeeArray.  It sets the input of each function to a value calculated by mapping the data received from XBeeArray according to the specs.
+
+By default, =SenseMapper= creates a neutral function that outputs its input to the control bus reserved by SenseMapper. SenseMapper can then map this bus to control input of a player.
+
+This creates a structure of 3 levels. In more detail: 
+***** Level 1: XBeeArray received data from SenseStage via SenseServer.
+
+  The data are of the form:
+  ['/minibee/data' x, y z, id]
+  where: 
+  '/minibee/data' is the name of the OSC message sent by SenseStage
+  x, y, z are the data from the accellerometer. Each one of these must be mapped
+  and processed further. 
+  id is the id of the xbee that sent the data, that is used as index to access the appropriate xbee. Each xbee will have separate mappers and separate bus names for each of the data. The XBeeArray selects SenseMapper corresponding to the xbee that sent the data by accessing using the numeric id as index.
+***** Level 2: The SenseMapper selected by XBeeArray processes the data and sets busses
+
+The SenseMapper selected by XBeeArray at level 1 above processes the array of data received from the XBeeArray, using its specs to _unmap_ the data and then to set its busses. Unmapping ensures that the values set to the bus will be within the range from 0 to 1. 
+
+A SenseMapper instance contains 3 busses, corresponding to x, y, z data received from an XBee.  Each bus is stored with its spec in an instance of SenseMapper - in Level 3:
+
+***** Level 3: SenseMapper maps a single data item and sets its bus
+
+For each data number received from XBeeArray, SenseMapper uses its spec to map it, and then sets the bus corresponding to it. SenseMapper creates the name of the bus on the basis of the ID number and the prefix x, y or z. Example:
+
+  For id number 1 and dimension x the bus name is x1.
+  For id number 1 and dimension y the bus name is y1.
+  Etc.
+
+  Producing the following triplets of busses for each xbee:
+  Xbee id 1: [x1, y1, z1].
+  Xbee id 2: [x2, y2, z2].
+  etc.
+
+  To change the spec for any dimension (x, y or z) of any xbee of any id, 
+  send it XBeeArray instance the message spec_:
+
+  anXBeeArray.spec_(id, dimension, argSpecSpec)
+
+  where: 
+
+  - id is the id of the XBee whose spec should be modified.
+  - dimension is one of \x, \y or \z indicating the dimension whose spec should be modified. 
+  - argSpecSpec is the new spec, given as a a spec or any object that 
+  creates a spec in response to the message 'spec', such as \freq, or [0, 1, \linear].
+
+If no spec is given, the default spec is used: [-0.47, 0.53, \linear].
+This was last tested on 2020 10 05 and on 2020 08 28 and produced reliable control values.  Other values can be given to further tweak the range of output to fit between 0 and 1, possibly adapting to different ways the sensors are worn on the body of the performer. 
+
+** Mapping control busses to synth inputs
+   :PROPERTIES:
+   :DATE:     <2020-11-11 Wed 15:01>
+   :END:
+
+*DRAFT!*
+
+*** How to map:
+ #+begin_src sclang
+ { SinOsc.ar(\freq.kr(400), 0, 0.05).stereo } +> \test;
+ { LFDNoise1.kr(5).range(200, 2000) }.map(\test, \freq);
+ #+end_src
+
+ #+RESULTS:
+ : { SinOsc.ar(\freq.kr(400), 0, 0.05).stereo } +> \test;
+ : { LFDNoise1.kr(5).range(200, 2000) }.map(\test, \freq);
+
+*** 
+
+** Processing / mapping control busses from data to new values in new control busses.
