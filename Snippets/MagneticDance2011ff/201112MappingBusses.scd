@@ -10,25 +10,23 @@ busname @>.param envir map parameter param in envir to bus busname
 //:
 \sound.e.inspect;
 //:
-{ LFNoise0.kr(4).range(300, 1200) } @>.freq \sound;
+{ LFNoise0.kr(4).range(300, 1200) } @> \bus;
 //:parameter name defaults to frequecy
-{ LFNoise1.kr(4).range(300, 1200) } @> \sound;
+{ LFNoise1.kr(4).range(300, 1200) } @> \bus;
 //:Note: Function @> frees other control synths sending to same buses
-{ LFNoise0.kr(10).range(1000, 1200) } @>.freq \sound;
+{ LFNoise0.kr(10).range(1000, 1200) } @> \bus;
 //:
-{ LFNoise0.kr(1).range(300, 500) } @>.freq \sound;
+{ LFNoise0.kr(1).range(300, 500) } @> \bus;
 //:
-{ LFNoise1.kr(0.4).range(300, 4200) } @> \sound;
+{ LFNoise1.kr(0.4).range(300, 4200) } @> \bus;
 //:================================================================
 //: @+> does not free previous kr synths on same bus
 //:
-{ SinOsc.ar(\freq.kr(400), 0, 0.01).dup } +> \sound2;
+{ SinOsc.kr(\freq.kr(4)).range(-100, 100).dup } @+> \bus;
 //:
-\bus2 @> \sound2;
+{ LFNoise0.kr(4).range(300, 1200) } @+> \bus;
 //:
-{ LFNoise1.kr(4).range(300, 1200) } @+> \sound2;
-//:
-{ LFNoise0.kr(10).range(1000, 1200) } @+>.freq \sound2;
+{ LFNoise0.kr(10).range(10, 1200) } @+>.freq \sound2;
 //:
 { LFNoise0.kr(1).range(300, 500) } @+>.freq \sound2;
 //:
@@ -39,9 +37,11 @@ It is important to know which synths output to which busses
 and which busses are mapped to which synth parameters, because
 there may be naming conflicts.  Discussion in the examples below.
 */
-//:Map bus named mybus to player named \mysound.
+//:Map bus named \mybus to player named \mysound.
 \mybus @>.freq \mysound
-
+//:
+{ SinOsc.ar(\freq.kr(400), 0, 0.1).dup } +> \mysound2;
+{ SinOsc.kr(3).range(400, 500) } @>.freq \mysound2;
 
 //:
 \sound.e.inspect;

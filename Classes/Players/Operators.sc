@@ -237,6 +237,9 @@
 		// ^this.p.release(fadeTime)
 		^this.p.release;
 	}
+
+	fix { ^this.p.fix }
+	unfix { ^this.p.unfix }
 }
 
 + Function {
@@ -273,16 +276,21 @@
 	}
 	*/
 
-	@> { | bus |
-		// play kr function into bus. Release previous kr synths playing
-		// into same bus
-		var synth;
+	@> { | bus, player |
+		// Play kr function into bus.
+		// Store in player.  Fix player.
+		var out;
+		player = (player ? bus).p;
+		player.fix;
 		bus = bus.bus;
-		bus.changed(\kr); // free previous synths
-		synth = { Out.kr(\out.kr(bus.index), this.value) }.play;
-		synth.addNotifier(bus, \kr, { synth.free });
+		out = bus.index;
+		player.envir.put(\out, out);
+		player.play({ | out = 0 | Out.kr(out, this.value) });
 	}
-
+	/*
+		// 13 Nov 2020 11:53:
+		// Obsolete. New implementation of @> allows more fine 
+		// grained control of which synths are replaced or added.
 	@+> { | bus |
 		// Like @> but do not release previous synths
 		var synth;
@@ -291,7 +299,7 @@
 		synth = { Out.kr(\out.kr(bus.index), this.value) }.play;
 		synth.addNotifier(bus, \kr, { synth.free });
 	}
-
+	*/
 	// new shortcut 12 Nov 2020 12:20 - EXPERIMENTAL - UNDER EVALUATION
 	/* 
 		Play kr function into bus with same name as param to be controlled,
@@ -301,9 +309,12 @@
 		this @> param;
 		envir.map(param, param);	
 	}
-	// 12 Nov 2020 12:15 this also needs revisiting
+
+	// 12 Nov 2020 12:15 this needs revisiting
+	// bus name construction is not a good solution.
 	map { | envir, param, controlplayer |
-		/* Play control rate function into bus
+		/* 
+			Play control rate function into bus
 			controlplayer: optional name of player playing the func
 		*/
 		var busname;
@@ -424,6 +435,12 @@
 			Possible future implementation: use clockPlayer as a name of the kr player
 			that generates the beats, where the kr player outputs the beats in a kr bus.
 		*/
+	}	
+}
+
++ Integer {
+	// set control busses by number
+	<@ { | value |
+		Bus(\control, this, 1).set(value);
 	}
-	
 }

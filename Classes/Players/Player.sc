@@ -190,6 +190,10 @@ Player {
 	unfix {
 		this.removeNotifier(CmdPeriod, \cmdPeriod);
 	}
+
+	// fix - unfix all players
+	*fix { all do: _.fix; }
+	*unfix { all do: _.unfix; }
 	
 	playEnvEvent { | event |
 		/*  Play event in a different way than a standard EventPattern:
