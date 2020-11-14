@@ -1,4 +1,12 @@
-/* 11 Nov 2020 09:54
+/* 14 Nov 2020 09:52 reviewing this - 
+will redo simplifying structure, by attaching dependants
+directly to SenseServer rather than via mediating XBeeArray.
+
+================================================================
+OBSOLETE
+================================================================
+
+11 Nov 2020 09:54
 
 Process data received from SenseStage via OSC, in response to 
 \update message sent by SenseServer.

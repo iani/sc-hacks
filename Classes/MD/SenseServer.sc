@@ -28,7 +28,7 @@ NamedSingleton : Singleton {
 
 SenseServer : NamedSingleton {
 	classvar <>defaultMessage = '/minibee/data'; // default OSC message to listen to
-	var dependants; // use these instead of default dependant mechanism
+	var <dependants; // use these instead of default dependant mechanism
 	var oscFunc, <message;
 
 	init { | argName, argMessage |
@@ -58,29 +58,76 @@ SenseServer : NamedSingleton {
 
 	
 	addDependant { | dependant |
+		// postf("% adding dependant %. dependants before are: %\n", this, dependant, dependants);
 		dependants ?? { dependants = Set() };
 		dependants add: dependant;
+		// postf("% adding dependant %. dependants after are: %\n", this, dependant, dependants);
 	}
 
 	removeDependant { | dependant |
 		dependants !? { dependants.remove(dependant); };
 		if (dependants.size == 0) { dependants = nil }; // be clean
 	}
-	
+
+	postInput { // start posting input
+		PostSenseData.named(name).activate(name);
+	}
+	muteInput { // stop posting input
+		PostSenseData.named(name).deactivate(name);
+	}
+
+	record { // start posting input
+		RecordSenseData.named(name).activate(name);
+	}
+
+	stopRecording { // stop posting input
+		RecordSenseData.named(name).deactivate(name);
+	}
 }
 
-// a very simple example class for posting data received from SenseServer
-PostSenseData : NamedSingleton {
+SenseDependant : NamedSingleton {
+	
+	activate { | serverName = \default |
+		SenseServer.named(serverName).addDependant(this);
+	}
 
+	deactivate { | serverName = \ default |
+		SenseServer.named(serverName).removeDependant(this);
+	}
+	
+}
+// a very simple example class for posting data received from SenseServer
+PostSenseData : SenseDependant {
 	update { | data, time |
 		postf("%:% received: % at %\n", this, name, data, time);
+	}	
+}
+
+RecordSenseDate : SenseDependant {
+	classvar <>recordingsDir;
+	var file;
+	/*
+		// DRAFT! 
+	*initClass {
+		recordingsDir = Platform...
+		
 	}
+	
+	activate { | serverName = \default |
+		this.prepareRecording;
+		super.activate(serverName)
+	}
+	*/
+	
 }
 
 /* 
 	// examples, testing
 
 SenseServer.defaultMessage = '/status.reply';
+SenseServer.postInput;
+qSenseServer.default.dependants;
+
 SenseServer.test;
 SenseServer.default;
 SenseServer.named('TEST');

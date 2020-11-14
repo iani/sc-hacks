@@ -3,7 +3,12 @@ MD is short for Magnetic Dance.
 This folder contains classes and other code for work with wearable motion sensors used in the Magnetic Dance project.  It's aims are to enable telematic dance, by transmitting data captured from these sensors over the internet to remote locations and resynthesizing the performance sounds locally based on data received from the sensors worn by the dancers. 
 ** Sending data to control busses
 *** Old implementation: see class =BusOsc=, method =watch1=.
-*** New implementation: see classes =SenseServer=, =XBeeArray=, =SenseMapper=,  =SenseBus=
+*** New implementation (14 Nov 2020 11:45 FF)
+    :PROPERTIES:
+    :DATE:     <2020-11-14 Sat 11:45>
+    :END:
+****  class =SenseServer=
+**** , =XBeeArray=, =SenseMapper=,  =SenseBus=
 *** Approach of new implementation
 **** =XBeeArray=
  =XBeeArray= processes data received from SenseStage via OSC, in response to 
@@ -86,4 +91,4 @@ This was last tested on 2020 10 05 and on 2020 08 28 and produced reliable contr
 
 *** 
 
-** Processing / mapping control busses from data to new values in new control busses.
+** VERSION Processing / mapping control busses from data to new values in new control busses.
