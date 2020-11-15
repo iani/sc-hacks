@@ -31,6 +31,14 @@ SenseServer : NamedSingleton {
 	var <dependants; // use these instead of default dependant mechanism
 	var oscFunc, <message;
 
+	*recordXbee {
+		defaultMessage = '/minibee/data';
+	}
+
+	*recordScsynth {
+		defaultMessage = '/status.reply';
+	}
+	
 	init { | argName, argMessage |
 		super.init(argName);
 		message = argMessage ? defaultMessage;
@@ -77,11 +85,11 @@ SenseServer : NamedSingleton {
 	}
 
 	record { // start posting input
-		RecordSenseData.named(name).activate(name);
+		SenseRecorder.named(name).activate(name);
 	}
 
 	stopRecording { // stop posting input
-		RecordSenseData.named(name).deactivate(name);
+		SenseRecorder.named(name).deactivate(name);
 	}
 }
 
@@ -96,6 +104,7 @@ SenseDependant : NamedSingleton {
 	}
 	
 }
+
 // a very simple example class for posting data received from SenseServer
 PostSenseData : SenseDependant {
 	update { | data, time |
@@ -103,30 +112,61 @@ PostSenseData : SenseDependant {
 	}	
 }
 
-RecordSenseDate : SenseDependant {
+SenseRecorder : SenseDependant {
 	classvar <>recordingsDir;
-	var file;
-	/*
-		// DRAFT! 
+	var path, file, audiopath, recorder;
+	
+	// DRAFT! 
 	*initClass {
-		recordingsDir = Platform...
-		
+		recordingsDir = Platform.userAppSupportDir +/+ "MD";
+		File.mkdir(recordingsDir);
 	}
 	
 	activate { | serverName = \default |
 		this.prepareRecording;
 		super.activate(serverName)
 	}
-	*/
+
+	prepareRecording {
+		this.makePaths;
+		file = File(path, "w");
+		recorder = Recorder(Server.default).record(audiopath, 0, 2);
+	}
+
+	makePaths {
+		path = recordingsDir +/+ format("%.txt", Date.localtime.stamp);
+		audiopath = recordingsDir +/+
+		format("%.aiff", Date.localtime.stamp);
+	}
 	
+	deactivate { | serverName = \default |
+		super.deactivate(serverName);
+		this.endRecording;
+	}
+
+	endRecording {
+		file.close;
+		recorder.stopRecording;
+	}
+
+	update { | data, time |
+		file.write([time, data].asCompileString ++ "\n");
+	}
 }
 
 /* 
 	// examples, testing
 
-SenseServer.defaultMessage = '/status.reply';
+	// SenseServer.defaultMessage = '/status.reply';
+
+SenseServer.recordScsynth;
+SenseServer.record;
+SenseServer.stopRecording;
+SenseServer.defaultMessage;
 SenseServer.postInput;
-qSenseServer.default.dependants;
+SenseServer.muteInput;
+
+SenseServer.default.dependants;
 
 SenseServer.test;
 SenseServer.default;
