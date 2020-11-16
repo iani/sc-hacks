@@ -12,19 +12,7 @@ SenseServer.all do: { | i | i.name.postln; };
 SenseServer.defaultMessage = '/status.reply';
 SenseServer.default;
 
-
-
-
 */
-
-NamedSingleton : Singleton {
-	var <name;
-
-	init { | argName |
-		name = argName;
-	}
-}
-  
 
 SenseServer : NamedSingleton {
 	classvar <>defaultMessage = '/minibee/data'; // default OSC message to listen to
@@ -44,8 +32,16 @@ SenseServer : NamedSingleton {
 		message = argMessage ? defaultMessage;
 		oscFunc = OSCFunc({ | ... data |
 			// postf("% name: !!! % !!!, data: %\n", this, name, data);
-			dependants do: _.update(data[0], data[1]);
+			this.changed(*data);
 		}, message).fix;
+	}
+
+	changed { | data, time |
+		//		postf("testing %, data %, time %\n", this, data, time);
+		/* postf("% testing changed. dependants: %, this.dependants: %\n",
+			this, dependants, this.dependants
+			); */
+		dependants do: _.update(data, time);
 	}
 
 	test {
@@ -70,10 +66,14 @@ SenseServer : NamedSingleton {
 		dependants ?? { dependants = Set() };
 		dependants add: dependant;
 		// postf("% adding dependant %. dependants after are: %\n", this, dependant, dependants);
+		// postf("addDependant CONFIRMING: THIS.DEPENDANTS ARE: %\n", this.dependants);
 	}
 
 	removeDependant { | dependant |
+		// postf("% removing dependant %. dependants before are: %\n", this, dependant, dependants);
 		dependants !? { dependants.remove(dependant); };
+		// postf("% removing dependant %. dependants after are: %\n", this, dependant, dependants);
+		// postf("removeDependant CONFIRMING: THIS.DEPENDANTS ARE: %\n", this.dependants);
 		if (dependants.size == 0) { dependants = nil }; // be clean
 	}
 
@@ -92,91 +92,3 @@ SenseServer : NamedSingleton {
 		SenseRecorder.named(name).deactivate(name);
 	}
 }
-
-SenseDependant : NamedSingleton {
-	
-	activate { | serverName = \default |
-		SenseServer.named(serverName).addDependant(this);
-	}
-
-	deactivate { | serverName = \ default |
-		SenseServer.named(serverName).removeDependant(this);
-	}
-	
-}
-
-// a very simple example class for posting data received from SenseServer
-PostSenseData : SenseDependant {
-	update { | data, time |
-		postf("%:% received: % at %\n", this, name, data, time);
-	}	
-}
-
-SenseRecorder : SenseDependant {
-	classvar <>recordingsDir;
-	var path, file, audiopath, recorder;
-	
-	// DRAFT! 
-	*initClass {
-		recordingsDir = Platform.userAppSupportDir +/+ "MD";
-		File.mkdir(recordingsDir);
-	}
-	
-	activate { | serverName = \default |
-		this.prepareRecording;
-		super.activate(serverName)
-	}
-
-	prepareRecording {
-		this.makePaths;
-		file = File(path, "w");
-		recorder = Recorder(Server.default).record(audiopath, 0, 2);
-	}
-
-	makePaths {
-		path = recordingsDir +/+ format("%.txt", Date.localtime.stamp);
-		audiopath = recordingsDir +/+
-		format("%.aiff", Date.localtime.stamp);
-	}
-	
-	deactivate { | serverName = \default |
-		super.deactivate(serverName);
-		this.endRecording;
-	}
-
-	endRecording {
-		file.close;
-		recorder.stopRecording;
-	}
-
-	update { | data, time |
-		file.write([time, data].asCompileString ++ "\n");
-	}
-}
-
-/* 
-	// examples, testing
-
-	// SenseServer.defaultMessage = '/status.reply';
-
-SenseServer.recordScsynth;
-SenseServer.record;
-SenseServer.stopRecording;
-SenseServer.defaultMessage;
-SenseServer.postInput;
-SenseServer.muteInput;
-
-SenseServer.default.dependants;
-
-SenseServer.test;
-SenseServer.default;
-SenseServer.named('TEST');
-SenseServer.addDependant(PostSenseData.default);
-SenseServer.addDependant(PostSenseData.named('testestestest'));
-SenseServer.removeDependant(PostSenseData.default);
-
-SenseServer.disable;
-SenseServer.enable;
-
-SenseServer.default.inspect;
-*/

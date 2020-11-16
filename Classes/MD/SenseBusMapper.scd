@@ -1,4 +1,8 @@
-/* 14 Nov 2020 09:52 reviewing this - 
+/* 16 Nov 2020 13:16 OBSOLETE
+
+SEE SenseBus, X, Y, Z
+u
+14 Nov 2020 09:52 reviewing this - 
 will redo simplifying structure, by attaching dependants
 directly to SenseServer rather than via mediating XBeeArray.
 
@@ -128,7 +132,3 @@ SenseMapper {
 	}
 }
 
-SenseBus {
-	var <name, <>spec, <bus;
-	
-}

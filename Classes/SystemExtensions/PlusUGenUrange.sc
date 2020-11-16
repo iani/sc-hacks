@@ -1,3 +1,58 @@
+/* Notes 16 Nov 2020 11:07
+
+urange and expurange may become obsolete when I figure out how to work
+with data mapped to bipolar range and yet monitor them on scope or gui sliders.
+
+Short explanation: urange and expurange forces the range operator to work as if
+the input signal is *not* of type \bipolar, for cases where the input UGen says
+that it is \bipolar.
+
+Long explanation: 
+
+The range ugen is designed to work with an input ranging from -1 to 1.
+For example:
+
+myInput.range(400, 800);
+
+produces output like this:
+
+when myInput is -1, output is 400
+when myInput is 1, output is 800
+
+However, when the range of the input is from 0 to 1, range will not 
+work as specified:
+
+when myInput is 0, output is 600.
+when myInput is 1, output is 800.
+
+urange is designed to work with inputs whose range is from 0 to 1. That is:
+
+For 
+
+myInput2.range(400, 800);
+
+when myInput2 is 0, output is 400
+when myInput2 is 1, output is 800
+
+You can test this with the following example:
+
+(
+{
+	var input, trig;
+	input = Line.kr(-1, 1, 10); // LFPulse.kr(2);
+	trig = Impulse.kr(4);
+	input.poll(trig, "=== input ====");
+	input.range(400, 800).poll(trig, "range");
+	input.urange(400, 800).poll(trig, "urange");
+}.play;
+
+
+)
+
+
+
+*/
+
 + UGen {
 	urange { | lo = 0, hi = 1 |
 		// explicitly map from range 0-1 to target range

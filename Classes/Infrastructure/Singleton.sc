@@ -23,6 +23,10 @@ Singleton {
 	}
 
 	*named { | name ... args |
+		/* postf("!! % !!! Singleton.named: name: %\n",
+			this,
+			name);
+		*/
 		^Registry(this, name, {
 			this.new().init(name, *args);
 		})
