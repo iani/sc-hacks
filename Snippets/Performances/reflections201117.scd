@@ -16,7 +16,11 @@ Prepare playback tracks controlled by XBee.
 	bufname.postln;
 	Library.put(\buffers, bufname, path.readBuffer);
 };
+//:
+{ WhiteNoise.ar(0.2).dup } +> \soundCheck;
 //:test one loaded buffer
+\pilgrims.buf;
+//:
 \pilgrims.buf.play;
 //:
 //:Test buffer playback with control from bus
@@ -26,19 +30,23 @@ Prepare playback tracks controlled by XBee.
 } +> \btest1;
 //:Test buffer playback with control from bus - controlling rate
 {
-	PlayBuf.ar(1, \kiiroi.bn, X(1).range(0.0125, 0.5).lag(0.5), \trig.kr(1),
+	5 * PlayBuf.ar(1, \kiiroi.bn, X(1).range(0.5, 0.1).lag(0.5), \trig.kr(1),
 	\startPos.kr(0), \loop.kr(1), 2).stereo;
 } +> \kiiroi;
 //:Test buffer playback with control from bus - controlling rate
 {
-	PlayBuf.ar(1, \pilgrims.bn, Y(1).range(0.0125, 0.5).lag(0.5), \trig.kr(1),
+	PlayBuf.ar(1, \pilgrims.bn, Y(1).range(0.5, 0.75).lag(0.5), \trig.kr(1),
 	\startPos.kr(0), \loop.kr(1), 2).stereo;
 } +> \pilgrims;
 //:Test buffer playback with control from bus - controlling rate
 {
-	PlayBuf.ar(1, \sweet_crickets.bn, Z(1).range(0.0125, 0.5).lag(0.5), \trig.kr(1),
+	2 * PlayBuf.ar(1, \sweet_crickets.bn, Z(1).range(0.15, 0.5).lag(0.5), \trig.kr(1),
 	\startPos.kr(0), \loop.kr(1), 2).stereo;
 } +> \crossing;
+//:
+SenseServer.record;
+//:
+SenseServer.stopRecording;
 //:
 Library.at(\buffers).keys
 //:
@@ -69,7 +77,3 @@ SenseBus.mute;
 	SinOsc.ar(Y(1).range(400, 800), 0, 0.1),
 	SinOsc.ar(Z(1).range(400, 800), 0, 0.1)
 ).dup } +> \test;
-//:
-SenseServer.record;
-//:
-SenseServer.stopRecording;
