@@ -132,6 +132,11 @@
 		// return the index of the associated buffer 
 		^this.b(seconds, numChannels).bufnum;
 	}
+
+	// synonym !!!
+	buf {  | seconds = 1, numChannels = 1, func |
+		^this.b(seconds, numChannels, func);
+	}
 	
 	// 20 Jul 2018 22:31 reimplementing this with registry.
 	b { | seconds = 1, numChannels = 1, func |

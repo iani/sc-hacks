@@ -16,7 +16,7 @@ To ensure that the server is booted, use with sync method like this:
 
 
 + String {
-	readbuffer { | server |
+	readBuffer { | server |
 		server ?? { server = Server.default };
 		^SoundFile.use(this, { | file |
 			var buffer;

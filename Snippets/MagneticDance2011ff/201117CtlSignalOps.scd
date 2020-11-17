@@ -21,7 +21,8 @@ Reverse the non-positive part to its positive mirror shape.
 /*
 THE EXAMPLES BELOW ONLY WORK IF YOU START THE SOURCE SYNTH
 (cm1), !!! AFTER !!! STARTING THE SYNTHS THAT READ FROM IT
-
+Alternatively, fix the order by linking the players 
+beforehand using the *< operator (link 1-to-many).
 */
 //:saw shape
 { Out.ar(10, LFSaw.ar(35.30, 0, 0.9)) } +> \cm1;
@@ -38,3 +39,4 @@ THE EXAMPLES BELOW ONLY WORK IF YOU START THE SOURCE SYNTH
 { Out.ar(14, In.ar(10) * (In.ar(10) < 0) * -1)} +> \cm5;
 //:change period of source signal
 { Out.ar(10, LFSaw.ar(1)) } +> \cm1;
+//:
