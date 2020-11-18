@@ -91,7 +91,8 @@ loop {
 var durs;
 durs = Pbrown(0.02, 0.2, 0.005, inf).asStream;
 { 0.05 * WhiteNoise.ar(Env.perc(0.01, 0.1)
-	.kr(gate: Changed.kr(\trig.kr(0)))).dup } +> \trig;
+	.kr(gate: Changed.kr(\trig.kr(0)))).dup
+} +> \trig;
 loop {
 	durs.next.wait;
 	\trig <+.trig UniqueID.next;
@@ -101,11 +102,17 @@ loop {
 var durs;
 durs = Pseq([0.1 ! 2, 0.2 ! 2, 0.4, 0.2 ! 2].flat, inf).asStream;
 { 0.05 * WhiteNoise.ar(Env.perc(0.01, 0.1)
-	.kr(gate: Changed.kr(\trig.kr(0)))).dup } +> \trig;
+	.kr(gate: Changed.kr(\trig.kr(0)))).dup
+} +> \trig;
 loop {
 	durs.next.wait;
 	\trig <+.trig UniqueID.next;
 };
 
-//:============= ===================================================
+//:================================================================
 //:Releasing envelopes
+/*
+Release is a special term that describes envelopes which 
+wait to receive a signal from the user to finish, instead of 
+finishing by themselves after a fixed time interval.
+*/
