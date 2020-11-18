@@ -64,7 +64,7 @@ Server.default.scope(rate: \control, numChannels: 12);
 	var ctl;
 	ctl = LFTri.kr(0.3).abs;
 	0.1 * WhiteNoise.ar(Env.perc(0.01, 0.1)
-		.kr(gate: Changed.kr(({ | i | i / 9 < ctl} ! 9).sum)));
+		.kr(gate: Changed.kr(({ | i | i / 9 < ctl} ! 9).sum))).dup;
 } +> \ctls;
 //:Change the density of beats by changing the comparison level quotient
 {
@@ -72,7 +72,7 @@ Server.default.scope(rate: \control, numChannels: 12);
 	ctl = LFTri.kr(0.3).abs;
 	quot = LFSaw.kr(1/60).range(1, 9);
 	0.1 * WhiteNoise.ar(Env.perc(0.01, 0.1)
-		.kr(gate: Changed.kr(({ | i | i / quot < ctl} ! 9).sum)));
+		.kr(gate: Changed.kr(({ | i | i / quot < ctl} ! 9).sum))).dup;
 } +> \ctls;
 //:Use noisy curves as control UGen for the trigger
 {
