@@ -40,4 +40,15 @@ Player 2: \sinbus1
 { SinOsc.kr(0.1).range(-0.5, 0.5) } @>.sinbus1 \bus1;
 //:Unfix all players so cmdPeriod stops them:
 Player.unfix;
-//:
+//:================================================================
+//:Use the output of a kr player as parameter input for another player.
+//:1: Start the audio player which is to be controlled
+{ SinOsc.ar(\freq.kr(2400), 0, 0.1).dup } +> \myplayer;
+//:2: Start the control rate player which is to control a parameter in \myplayer
+{ SinOsc.kr(5).range(500, 2400) } @> \myfreq;
+//:3: Map the output bus of the control rate player into the control parameter of the audio player
+\myfreq @>.freq \myplayer;
+
+
+
+

@@ -41,8 +41,10 @@
 		})
 	}
 
-	loadBuffers {
-		// Load all audio files contained in folder and store them under their filenames
+	// backup copy while exploring new version of method loadBuffers :
+	loadBuffersOLD {
+		// Load all audio files contained in folder.
+		// Store them under their filenames.
 		var standardized;
 		standardized = this.standardizePath;
 		(standardized +/+ "*.wav").pathMatch do: { | p |
@@ -54,6 +56,28 @@
 		(standardized +/+ "*.aiff").pathMatch do: { | p |
 			PathName(p).fileNameWithoutExtension.asSymbol.loadBuffer(p);
 		}
+	}
+
+	allwaysLoadBuffers {
+		ServerBoot add: { this.loadBuffers };
+		Server.default.doWhenBooted( { this.loadBuffers });
+	}
+
+	loadBuffers {
+		// Load all audio files contained in folder.
+		// Store them under their filenames.
+		// Use new method stolen from SuperDirt,
+		// to ensure buffers load even when loading very many of them at once.
+		var standardized;
+		standardized = this.standardizePath;
+		"\n================================================================".postln;
+		postf("\nLOADING BUFFERS FROM: %\n\n", standardized);
+		["wav", "aif", "aiff"] do: { | type |
+			(standardized +/+ format("*.%", type)).pathMatch do: { | p |
+				PathName(p).fileNameWithoutExtension.asSymbol.loadBuffer(p);
+			}
+		};
+		"\n================================================================".postln;
 	}
 }
 
@@ -199,8 +223,9 @@
 	get { | func |
 		^this.bus.get(func); // use value in func if provided.
 	}
-	
-	loadBuffer { | path |
+
+	// Baackup of old code while testing new version
+	loadBufferOLD { | path |
 		path = path.standardizePath;
 		^Registry(\buffers, this, {
 			path.doIfExists({
@@ -215,6 +240,25 @@
 				.path_(this.asString)
 			})
 		});
+	}
+
+	loadBuffer { | path |
+		var buffer;
+		path = path.standardizePath;
+		buffer = path.doIfExists({
+				buffer = path.readBuffer(Server.default);
+				// Defer to enable updates of gui items
+				buffer;
+			},{
+				postf("could not find file:\n%\n", path);
+				"Allocating empty buffer of 1 second".postln;
+				Buffer.alloc(Server.default, 1 * Server.default.sampleRate, 1,)
+				.path_(this.asString)
+			});
+		postf("% is: %\n", this, buffer);
+		Registry.put(\buffers, this, buffer);
+		{ Buffer.changed(\loaded, buffer) }.defer;
+		^buffer;
 	}
 	
 	toggleBuf { | bufferName, eventName |
@@ -238,4 +282,9 @@
 			}, eventName);
 		}
 	}
+}
+
++ Buffer {
+	*all { ^Library.at(\buffers) }
+	*allNames { ^this.all.keys.asArray }
 }
