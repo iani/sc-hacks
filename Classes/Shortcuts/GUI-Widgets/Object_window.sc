@@ -2,14 +2,14 @@
 /*  Any object can create a unique, re-opening window for itself.
 	To open multiple objects for the same object, use keys other than \default
 	as argument to the method call.
-	
+
 	Similar methods can be used to add instance-variable-like data attachment points to any object.
 	For example, the window method uses Registry(\windowRects ...) to store the bounds associated with a window
 	of an object in additional pseudo-variable "windowRects".
 
-	Note: The Object:window method initializes the window so that it saves its bounds when 
+	Note: The Object:window method initializes the window so that it saves its bounds when
 	the user changes these with the mouse.
-	The saved bounds can be used when re-creating a closed window, in order 
+	The saved bounds can be used when re-creating a closed window, in order
 	to restore the windows bounds when opening to the last position it was before closing.
 */
 
@@ -36,7 +36,7 @@
 			});
 			initFunc.(window, this);
 			window;
-		}).front;	
+		}).front;
 	}
 
 	bounds_ { | rect, key = \default |
@@ -90,12 +90,17 @@
 				w.layout = layoutClass.new(
 					*items
 				);
-				// this.bounds.postln; 
+				// this.bounds.postln;
 				w.bounds = w.bounds.height_( // 20 or 40
 					items.size * PlatformGuiDefaults.lineHeight + 5
+					max: 50
 				);
+				// EXPERIMENTAL
+				w.view.keyDownAction_({ | win, key |
+					this.changed(\keydown, key);
+				});
 			});
-		}.fork(AppClock);	
+		}.fork(AppClock);
 	}
 
 	close { | key = \default |
@@ -106,6 +111,72 @@
 }
 
 + Symbol {
+	sliders { | ... specs |
+		// 26 Nov 2020 14:47
+		/*
+		Create a v window with sliders from your specs,
+			and bound to the envronment of yourself.
+
+		Ensure that your widgets will address your environment.
+			specs have the form:
+			[paramname, spec, envir, displayname]
+			paramname names the parameter to be controlled
+			spec is something responding to asSpec - for mapping the input
+			envir and displayname are optional:
+			envir: name of envir which the widget addresses,
+			defaults to this.
+			displayname: name displayed for the slided widget.
+			defaults to paramname.
+		// Under development
+		*/
+		// experimental: provide keydown bindings
+		this.addDependant({ | who, what, key |
+			if (who === this and: {
+				what === \keydown and: {
+					key === Char.space
+				}
+			}) {
+				this.toggle;
+			}
+		});
+		//provide eventual missing default to specs
+		specs = specs.collect({ | spec |
+			spec = (spec.asArray ++ [nil, nil, nil])[..3];
+			spec[1] ?? { spec[1] = spec[0] }; // paramname -> spec
+			spec[2] ?? { spec[2] = this }; // this -> envir
+			spec[3] ?? { spec[3] = spec[0] }; // paramname -> displayname
+		});
+		([this.playButton] ++ specs.collect({ | spec |
+			spec[0].slider(spec[1], spec[2], spec[3]);
+		}))
+		^this.v(
+			*([this.playButton] ++ specs.collect({ | spec |
+				spec[0].slider(spec[1], spec[2], spec[3]);
+			}));
+		)
+	}
+
+	playButton {
+		// also sync player status:
+		var player;
+		player = this.p;
+		^HLayout(
+			StaticText().string_(this.asString),
+			Button()
+			.states_([["Start", nil, Color.green], ["Stop", nil, Color.red]])
+			.action_({ | me |
+				this.perform([\stop, \play][me.value]);
+			})
+			.value_(this.isPlaying.binaryValue)
+			.addNotifier(Player, \started, { | player, n |
+				{ n.listener.value = 1; }.defer;
+			})
+			.addNotifier(Player, \stopped, { | player, n |
+				{ n.listener.value = 0; }.defer;
+			});
+		);
+	}
+
 	slider { | controlspec, envir, name |
 		// shortcut for slider displaying/setting a parameter in an environment
 		// this = paramname. name = name to display (default: this).
@@ -121,7 +192,7 @@
 		{
 			envir.changed(this, envir[this]);
 		}.defer(0.1);
-		// Used as component in VLayout: 
+		// Used as component in VLayout:
 		^HLayout(
 			StaticText()
 			.font_(PlatformGuiDefaults.font)
@@ -150,7 +221,7 @@
 		)
 	}
 	timer { | name |
-		// shortcut for time display widget 
+		// shortcut for time display widget
 		^HLayout(
 			StaticText()
 			.font_(PlatformGuiDefaults.font)

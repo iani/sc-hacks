@@ -1,11 +1,15 @@
 //: 18 Nov 2020 01:47 Linking audio synths with sc-hacks
-/* 
+/*
 
 */
 //:Preliminary tests: compare linked pairs.
 \src1 *> \fx1;
 { WhiteNoise.ar(0.1) } +> \src1;
 { Resonz.ar(Inp.ar, LFNoise0.kr(5).range(100, 2000), 0.1, 5) } +> \fx1;
+//:change the source
+{ LFNoise2.ar(5, 0.1).range(500, 4000) } +> \src1;
+//:change the effect
+{ Resonz.ar(Inp.ar, LFNoise2.kr(5).range(100, 2000), 0.1, 5) } +> \fx1;
 //:
 \src2 *> \fx2;
 { WhiteNoise.ar(0.1) } +> \src2;

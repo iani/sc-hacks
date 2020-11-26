@@ -1,4 +1,3 @@
-
 SourcePlayer {
 	var <player, <envir, <source, <process;
 
@@ -33,15 +32,15 @@ PatternPlayer : SourcePlayer {
 	play { | argSource | // argSource should be a kind of Event.
 		var stream, event, clock, quant;
 		// postf("playing PatternPlayer. player is: %, envir is: %\n", player, envir);
-		
+
 		if (source.isNil) {
-			source = EventPattern(argSource);			
+			source = EventPattern(argSource);
 		}{
-			source.addEvent(argSource);			
+			source.addEvent(argSource);
 		};
 		if (process.isNil) {
 			// "STARTING NEW PATTERN PROCESS.".postln;
-			postf("quant is: %\n", envir[\quant]);		
+			postf("quant is: %\n", envir[\quant]);
 			source.put (\group, envir[\target].asTarget);
 			envir.busses.keysValuesDo({ | key, value |
 				source.put(key, value.index);
@@ -57,10 +56,10 @@ PatternPlayer : SourcePlayer {
 			);
 			process addDependant: { | whochanged, whathappened |
 				switch (whathappened,
-					\playing, { Player.changed(\status, player); },
+					\playing, { Player.changed(\started, player); },
 					\stopped, {
 						process = nil;
-						Player.changed(\status, player);
+						Player.changed(\stopped, player);
 					}
 				)
 			};
@@ -108,7 +107,7 @@ PatternPlayer : SourcePlayer {
 							envir[\quant]) ?? { Clocks.quant }
 							//							envir[\quant]) ? 1
 						};
-						
+
 					})
 			}
 		};
@@ -132,11 +131,11 @@ PatternPlayer : SourcePlayer {
 	prPlay { | argSource | // argSource should be a kind of Event.
 		var stream, event;
 		// postf("playing PatternPlayer. player is: %, envir is: %\n", player, envir);
-		
+
 		if (source.isNil) {
-			source = EventPattern(argSource);			
+			source = EventPattern(argSource);
 		}{
-			source.addEvent(argSource);			
+			source.addEvent(argSource);
 		};
 		if (process.isNil) {
 			source.put (\group, envir[\target].asTarget);
@@ -234,7 +233,7 @@ SynthPlayer : SourcePlayer {
 				// "i removed the process map so addNotifierOneShot is not the culprit".postln;
 				//	process.map(param, bus.index);
 			})
-		
+
 		});
 	}
 
@@ -329,7 +328,7 @@ SynthPlayer : SourcePlayer {
 
 	source_ { | argDef |
 		var parName;
-		
+
 		//   Use hack to guess rate:
 		if (argDef.children.detect({ | c | c.class === Out; }).rate === \control) {
 			// if rate is control, then output to control bus.
@@ -383,7 +382,7 @@ SynthPlayer : SourcePlayer {
 				args add: 1
 			}
 		};
-		^[args, busses];		
+		^[args, busses];
 	}
 
 	connectPlayer { | argSynth, busses, isTemp = false |
@@ -405,14 +404,14 @@ SynthPlayer : SourcePlayer {
 			}{  // schedule busses added while starting to map after synth starts.
 				if (process.notNil) {
 					startActions = startActions add: { process.map(param, bus.index); }
-				}	
+				}
 			}
 		});
 
 		process.onStart (this, {
 			startActions do: _.(this);
 			startActions = nil;
-			Player.changed(\status, player); // player.changed(\started);
+			Player.changed(\started, player); // player.changed(\started);
 			// catch any link busses that were set before you started.
 			envir.busses keysValuesDo: { | key, bus |
 				process.set(key, bus.index);
@@ -433,7 +432,7 @@ SynthPlayer : SourcePlayer {
 						Nil, {},
 						{ notification.listener.set (param, val); }
 					)
-				});				
+				});
 			};
 			process.onEnd (this, { | notification |
 				if (process === notification.notifier) {
@@ -444,7 +443,7 @@ SynthPlayer : SourcePlayer {
 					// "removing all notifications through process objectClosed".postln;
 					process.objectClosed.postln; // TODO: why is this needed explicitly?????
 					// envir.dependants.postln;
-					Player.changed(\status, player); // player.changed(\stopped);
+					Player.changed(\stopped, player); // player.changed(\stopped);
 					process = nil;
 				};
 			});
@@ -494,10 +493,10 @@ SynthPlayer : SourcePlayer {
 
 	/*
 		TODO: Rewrite this as release method.
-		Check again for consistency in all use scenarios: 
+		Check again for consistency in all use scenarios:
 		1. Release to stop the synth player but keep the current source for restarting.
 		2. Release and clear the source (remove the SynthDef from the server!).
-		   This is when: 
+		   This is when:
 		   1. A new source has been provided and the old source is temp, so cleanup is needed.
 		   2. This SynthPlayer will be discarded because it is replaced by a PatternPlayer.
 	*/

@@ -22,6 +22,11 @@
 | Event      | =*>=       | Symbol     | Play Pattern in Player's Environment |
 | UGen       | =<+=       | Symbol     | Read input from Player's Output      |
 
+================================================================
+New (26 Nov 2020 18:58) - under development:
+
+Function !> Symbol: Set envir's params to my defaults, then play me
+in player.
 */
 
 + Symbol {
@@ -29,7 +34,7 @@
 	toggle { | source, eventName |
 		// if playing, stop. If not playing start.
 		//	play in player named by receiver.
-		//	Use source as source, if available. 
+		//	Use source as source, if available.
 		this.p(eventName).toggle(source);
 	}
 
@@ -45,9 +50,9 @@
 		// set event parameter
 		this.e.put(param, val);
 	}
-	
+
 	target { ^this.e.target }
-	
+
 	e { ^Nevent(this) }
 	push { ^this.e.push }
 
@@ -65,7 +70,7 @@
 		// if available
 		^this.p(eventName).controls;
 	}
-	
+
 	p { | eventName | ^Nevent(eventName ? this).player(this) }
 	pp { | eventName | ^this.p(eventName).sourcePlayer }
 	ppp { | eventName | ^this.p(eventName).process }
@@ -74,12 +79,12 @@
 	playRoutine { | key, func | ^this.e.playRoutine(key, func)}
 	playLoop { | key, func | ^this.e.playLoop(key, func)}
 	playEnvEvent { | key, func | ^this.e.playEnvEvent(key, func)}
-	
+
 	copyAudio { | reader, numChans = 1, outParam = \out, inParam = \in |
-		/* Connect writer with reader via an intermediate player which copies 
+		/* Connect writer with reader via an intermediate player which copies
 			the output from the writer's output bus to the reader's input bus.
 			numChans only matters if neither the reader nor the writer already have a bus.
-		*/ 
+		*/
 		var writer, writersChans, readersChans, linker;
 		writer = this.e;
 		reader = reader.e;
@@ -130,15 +135,15 @@
 	isPlaying { ^this.p.isPlaying }
 
 	<@ { | val | ^this.bus.set(val) }
-	
+
 	@> { | envir, param = \freq |
 		// map bus named by me to param in envir
-		// debugged 12 Nov 2020 11:20: 
+		// debugged 12 Nov 2020 11:20:
 		// postf("mapping parameter % of envir % to bus %\n", param, envir, this);
 		^envir.map(param, this);
 		// ^envir.map(param ? \freq, this);
 	}
-	
+
 	map { | ... paramBusPairs |
 		// map parameter - bus pairs named by symbols
 		var envir;
@@ -147,7 +152,7 @@
 			envir.put(param, bus.bus);
 		};
 	}
-	
+
 	+> { | player, envir |
 		// play named SynthDef in player.
 		// Push environment before playing.
@@ -172,13 +177,13 @@
 		// Thus a new reader is added to the writer.
 	     ^reader.asPersistentBusProxy(\in) linkWritersBus2Reader: (
 	           PersistentBusProxy(this, param)
-         )		
+         )
 	}
 
 	soundIn { | chan = 0 |
 		// TODO: play soundin in players envir. Add numChannels argument
 		var soundinPlayer;
-		soundinPlayer = format("%_%", \soundin, this).asSymbol;		
+		soundinPlayer = format("%_%", \soundin, this).asSymbol;
 		soundinPlayer *> this;
 		{ SoundIn.ar(chan) } +> soundinPlayer;
 	}
@@ -229,7 +234,7 @@
 				\startpos.kr((startpos * this.b.sampleRate)),
 				1 // loop on
 			) * \amp.kr(1)
-		}.playFor(playerName, dur ? inf);	
+		}.playFor(playerName, dur ? inf);
 	}
 
 	release {
@@ -240,12 +245,40 @@
 
 	fix { ^this.p.fix }
 	unfix { ^this.p.unfix }
+	// additions 26 Nov 2020 20:21
+	onStart { | action |
+		// do an action when my player starts
+		var player;
+		player = this.p;
+		player.addNotifier(Player, \started, { | argPlayer |
+			if (player === argPlayer) { action.(player) }
+		})
+	}
+
+	onEnd { | action |
+		// do an action when my player ends
+		var player;
+		player = this.p;
+		player.addNotifier(Player, \stopped, { | argPlayer |
+			if (player === argPlayer) { action.(player) }
+		})
+
+	}
 }
 
 + Function {
+	!> { | player, envir |
+		// under development 26 Nov 2020 18:58
+		// Remove all keys from envir which correspond to your controls,
+		// with the exception of \in and \out.
+		// Then play self in player
+		// Removal of keys will set their values to your defaults
+		// Just before the new synth starts.
+		// TODO ....
+	}
 	+> { | player, envir |
 		// play function as SynthPlayer
-		^player.asPlayer(envir).play(this); // accept non-symbol player arg	
+		^player.asPlayer(envir).play(this); // accept non-symbol player arg
 	}
 
 	*> { | key, envir |
@@ -289,7 +322,7 @@
 	}
 	/*
 		// 13 Nov 2020 11:53:
-		// Obsolete. New implementation of @> allows more fine 
+		// Obsolete. New implementation of @> allows more fine
 		// grained control of which synths are replaced or added.
 	@+> { | bus |
 		// Like @> but do not release previous synths
@@ -301,19 +334,19 @@
 	}
 	*/
 	// new shortcut 12 Nov 2020 12:20 - EXPERIMENTAL - UNDER EVALUATION
-	/* 
+	/*
 		Play kr function into bus with same name as param to be controlled,
 		then map that bus to the parameter in envir.
 	*/
-	@@> { | envir, param = \freq | 
+	@@> { | envir, param = \freq |
 		this @> param;
-		envir.map(param, param);	
+		envir.map(param, param);
 	}
 
 	// 12 Nov 2020 12:15 this needs revisiting
 	// bus name construction is not a good solution.
 	map { | envir, param, controlplayer |
-		/* 
+		/*
 			Play control rate function into bus
 			controlplayer: optional name of player playing the func
 		*/
@@ -361,7 +394,7 @@
 + Event {
 	+> { | player, envir |
 		// play Event as PatternPlayer
-		^player.asPlayer(envir).play(this); // accept non-symbol player arg	
+		^player.asPlayer(envir).play(this); // accept non-symbol player arg
 	}
 
 	*> { | playerName, envir |
@@ -428,14 +461,14 @@
 		player.envir[\quant] ?? {
 			player.envir[\quant] = 1;
 		};
-		player.asPlayer(envir) play: 
-		(instrument: instruments.pseq, buf: buffers.pseq, dur: 1 / instruments.size, rate: 1) 
+		player.asPlayer(envir) play:
+		(instrument: instruments.pseq, buf: buffers.pseq, dur: 1 / instruments.size, rate: 1)
 		/* parse the string as a sequence of buffer names from SuperDirt
 			tempoClock is the clock for synchronizing the pattern.
 			Possible future implementation: use clockPlayer as a name of the kr player
 			that generates the beats, where the kr player outputs the beats in a kr bus.
 		*/
-	}	
+	}
 }
 
 + Integer {

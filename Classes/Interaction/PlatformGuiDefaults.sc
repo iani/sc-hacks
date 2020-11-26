@@ -19,7 +19,7 @@ PlatformGuiDefaults {
 				// defaults for all other platforms
 				// can be overwritten when required.
 				font = Font("Helvetica", 12);
-				lineHeight = 20;
+				lineHeight = 30;
 				bounds = Rect(0, 0, 400, 400);
 				// add more lines for other defaults when needed
 			}
