@@ -246,23 +246,24 @@ in player.
 	fix { ^this.p.fix }
 	unfix { ^this.p.unfix }
 	// additions 26 Nov 2020 20:21
-	onStart { | action |
+	onStart { | action, listener |
 		// do an action when my player starts
 		var player;
 		player = this.p;
-		player.addNotifier(Player, \started, { | argPlayer |
-			if (player === argPlayer) { action.(player) }
+		listener = listener ? this;
+		listener.addNotifier(player, \started, { | ... args |
+			 { action.(*args) }
 		})
 	}
 
-	onEnd { | action |
+	onEnd { | action, listener |
 		// do an action when my player ends
 		var player;
 		player = this.p;
-		player.addNotifier(Player, \stopped, { | argPlayer |
-			if (player === argPlayer) { action.(player) }
+		listener = listener ? this;
+		listener.addNotifier(player, \stopped, { | ... args |
+			{ action.(*args) }
 		})
-
 	}
 }
 

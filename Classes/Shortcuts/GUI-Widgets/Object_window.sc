@@ -168,10 +168,10 @@
 				this.perform([\stop, \play][me.value]);
 			})
 			.value_(this.isPlaying.binaryValue)
-			.addNotifier(Player, \started, { | player, n |
+			.addNotifier(player, \started, { | n |
 				{ n.listener.value = 1; }.defer;
 			})
-			.addNotifier(Player, \stopped, { | player, n |
+			.addNotifier(player, \stopped, { | n |
 				{ n.listener.value = 0; }.defer;
 			});
 		);
