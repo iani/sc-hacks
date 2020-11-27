@@ -56,10 +56,10 @@ PatternPlayer : SourcePlayer {
 			);
 			process addDependant: { | whochanged, whathappened |
 				switch (whathappened,
-					\playing, { Player.changed(\started, player); },
+					\playing, { player.changed(\started); },
 					\stopped, {
 						process = nil;
-						Player.changed(\stopped, player);
+						player.changed(\stopped);
 					}
 				)
 			};
@@ -149,10 +149,10 @@ PatternPlayer : SourcePlayer {
 			);
 			process addDependant: { | whochanged, whathappened |
 				switch (whathappened,
-					\playing, { Player.changed(\status, player); },
+					\playing, { player.changed(\status, player); },
 					\stopped, {
 						process = nil;
-						Player.changed(\status, player);
+						player.changed(\status, player);
 					}
 				)
 			};
@@ -411,7 +411,7 @@ SynthPlayer : SourcePlayer {
 		process.onStart (this, {
 			startActions do: _.(this);
 			startActions = nil;
-			Player.changed(\started, player); // player.changed(\started);
+			player.changed(\started); // player.changed(\started);
 			// catch any link busses that were set before you started.
 			envir.busses keysValuesDo: { | key, bus |
 				process.set(key, bus.index);
@@ -443,7 +443,7 @@ SynthPlayer : SourcePlayer {
 					// "removing all notifications through process objectClosed".postln;
 					process.objectClosed.postln; // TODO: why is this needed explicitly?????
 					// envir.dependants.postln;
-					Player.changed(\stopped, player); // player.changed(\stopped);
+					player.changed(\stopped); // player.changed(\stopped);
 					process = nil;
 				};
 			});
