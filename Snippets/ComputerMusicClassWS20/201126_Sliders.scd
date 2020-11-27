@@ -50,3 +50,4 @@ and the message \stop to stop the player:
 //:Set custom ControlSpec by specifying its parameters like this:
 \test.sliders(\freq, [\q, [0.01, 5, \exp, 0, 0.5]]);
 { Resonz.ar(WhiteNoise.ar(0.5), \freq.kr(400), \q.kr(0.3)).dup } +> \test;
+//:

@@ -23,7 +23,9 @@ PatternPlayer : SourcePlayer {
 				//				process.play;
 				this.play(source.event);
 			},{
-				this.release;
+				//postf("Debugging PatternPlayer:playSource release\n");
+				// this.release;
+				this.stop;
 				^SynthPlayer(argPlayer).play(argSource);
 			}
 		)

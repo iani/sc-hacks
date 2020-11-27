@@ -5,11 +5,11 @@
 //:Preliminary tests: compare linked pairs.
 \src1 *> \fx1;
 { WhiteNoise.ar(0.1) } +> \src1;
-{ Resonz.ar(Inp.ar, LFNoise0.kr(5).range(100, 2000), 0.1, 5) } +> \fx1;
+{ Resonz.ar(Inp.ar, LFNoise0.kr(5).range(100, 2000), 0.1, 5).dup } +> \fx1;
 //:change the source
 { LFNoise2.ar(5, 0.1).range(500, 4000) } +> \src1;
 //:change the effect
-{ Resonz.ar(Inp.ar, LFNoise2.kr(5).range(100, 2000), 0.1, 5) } +> \fx1;
+{ Resonz.ar(Inp.ar, LFNoise2.kr(5).range(100, 2000), 0.1, 5).dup } +> \fx1;
 //:
 \src2 *> \fx2;
 { WhiteNoise.ar(0.1) } +> \src2;
@@ -28,7 +28,7 @@
 //:play the effect;
 { Inp.ar * LFPulse.kr(1, iphase: [0, 0.5])} +> \m1fx1;
 //:change the effect
-{ Inp.ar * LFSaw.kr(1/4, iphase: [0, 0.5])} +> \m1fx1;
+{ Inp.ar * LFSaw.kr(1/2, iphase: [0, 0.5])} +> \m1fx1;
 //:change the effect again
 { Inp.ar * LFTri.kr(1/8, iphase: [0, 0.5])} +> \m1fx1;
 //:================================================================
