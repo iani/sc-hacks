@@ -91,14 +91,14 @@ BusOsc {
 	widget {
 		var slider, numbox;
 		^HLayout(
-			StaticText().string_(name).font_(PlatformGuiDefaults.font),
-			StaticText().string_(msg).font_(PlatformGuiDefaults.font),
-			StaticText().string_(index.asString).font_(PlatformGuiDefaults.font),
+			StaticText().string_(name).font_(GuiDefaults.font),
+			StaticText().string_(msg).font_(GuiDefaults.font),
+			StaticText().string_(index.asString).font_(GuiDefaults.font),
 			slider = Slider().orientation_(\horizontal)
 			.minWidth_(200),
 			numbox = NumberBox()
 			.maxWidth_(80)
-			.font_(PlatformGuiDefaults.font)
+			.font_(GuiDefaults.font)
 			.decimals_(3)
 			.addNotifier(name, msg.addSlashIfNeeded, { | val |
 				{
@@ -108,7 +108,7 @@ BusOsc {
 			}),
 			NumberBox()
 			.maxWidth_(80)
-			.font_(PlatformGuiDefaults.font)
+			.font_(GuiDefaults.font)
 			.decimals_(3)
 			.value_(min)
 			.action_({ | me |
@@ -116,7 +116,7 @@ BusOsc {
 			}),
 			NumberBox()
 			.maxWidth_(80)
-			.font_(PlatformGuiDefaults.font)
+			.font_(GuiDefaults.font)
 			.decimals_(3)
 			.value_(max)
 			.action_({ | me |

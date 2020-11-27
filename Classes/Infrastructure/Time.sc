@@ -121,18 +121,18 @@ Time {
 			name.tr_(width: 400).v(
 				HLayout(
 					StaticText()
-					.font_(PlatformGuiDefaults.font)
+					.font_(GuiDefaults.font)
 					.string_("mins"),
 					NumberBox()
-					.font_(PlatformGuiDefaults.font)
+					.font_(GuiDefaults.font)
 					.addNotifier(name, \time, { | val, n |
 						{ n.listener.value = val div: 60; }.defer;
 					}),
 					StaticText()
-					.font_(PlatformGuiDefaults.font)
+					.font_(GuiDefaults.font)
 					.string_("secs"),
 					NumberBox()
-					.font_(PlatformGuiDefaults.font)
+					.font_(GuiDefaults.font)
 					.addNotifier(name, \time, { | val, n |
 						{ n.listener.value = val % 60; }.defer;
 					})

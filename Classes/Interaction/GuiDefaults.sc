@@ -3,7 +3,7 @@ An efficient way to store some defaults for gui.
 Initialized at StartUp depending on thisProcess.platform.
 */
 
-PlatformGuiDefaults {
+GuiDefaults {
 	classvar <>font, <>lineHeight, <>bounds;
 	// add more variables when needer
 	// classvar <>maxWidth;
@@ -12,7 +12,7 @@ PlatformGuiDefaults {
 		StartUp add: {
 			if (thisProcess.platform.name === \linux) {
 				font = Font("Helvetica", 20);
-				lineHeight = 30;
+				lineHeight = 40; // 30;
 				bounds = Rect(0, 0, 1000, 400)
 				// add more lines for other defaults when needed
 			}{

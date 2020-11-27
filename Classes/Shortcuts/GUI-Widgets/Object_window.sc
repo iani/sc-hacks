@@ -62,7 +62,7 @@
 
 	bounds { | key = \default |
 		^Registry(\windowRects, this, key, {
-			PlatformGuiDefaults.bounds
+			GuiDefaults.bounds
 		} )
 	}
 
@@ -92,9 +92,9 @@
 				);
 				// this.bounds.postln;
 				w.bounds = w.bounds.height_( // 20 or 40
-					items.size * PlatformGuiDefaults.lineHeight + 5
+					items.size * GuiDefaults.lineHeight.postln + 5
 					max: 50
-				);
+				).postln;
 				// EXPERIMENTAL
 				w.view.keyDownAction_({ | win, key |
 					this.changed(\keydown, key);
@@ -161,8 +161,11 @@
 		var player;
 		player = this.p;
 		^HLayout(
-			StaticText().string_(this.asString),
+			StaticText()
+			.font_(GuiDefaults.font)
+			.string_(this.asString),
 			Button()
+			.font_(GuiDefaults.font)
 			.states_([["Start", nil, Color.green], ["Stop", nil, Color.red]])
 			.action_({ | me |
 				this.perform([\stop, \play][me.value]);
@@ -193,9 +196,10 @@
 			envir.changed(this, envir[this]);
 		}.defer(0.1);
 		// Used as component in VLayout:
+		postf("GuiDefaults.font is: %\n", GuiDefaults.font);
 		^HLayout(
 			StaticText()
-			.font_(PlatformGuiDefaults.font)
+			.font_(GuiDefaults.font.postln)
 			.string_(name ?? { this.asString }),
 			Slider()
 			.orientation_(\horizontal)
@@ -206,7 +210,7 @@
 				{ notification.listener.value = controlspec.unmap(value ? 0) }.defer;
 			}),
 			NumberBox()
-			.font_(PlatformGuiDefaults.font)
+			.font_(GuiDefaults.font)
 			.decimals_(5)
 			.maxWidth_(180)
 			.clipLo_(controlspec.minval)
@@ -224,16 +228,16 @@
 		// shortcut for time display widget
 		^HLayout(
 			StaticText()
-			.font_(PlatformGuiDefaults.font)
+			.font_(GuiDefaults.font)
 			.string_(name ?? { this.asString }),
 			NumberBox()
-			.font_(PlatformGuiDefaults.font)
+			.font_(GuiDefaults.font)
 			.decimals_(0)
 			.addNotifier(this, \time, { | mins, secs, n |
 				n.listener.value = mins;
 			}),
 			NumberBox()
-			.font_(PlatformGuiDefaults.font)
+			.font_(GuiDefaults.font)
 			.decimals_(2)
 			.addNotifier(this, \time, { | mins, secs, n |
 				n.listener.value = secs;
