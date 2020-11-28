@@ -59,7 +59,6 @@ SenseServer : NamedSingleton {
 	*removeDependant { | dependant |
 		^this.default.removeDependant(dependant)
 	}
-
 	
 	addDependant { | dependant |
 		// postf("% adding dependant %. dependants before are: %\n", this, dependant, dependants);

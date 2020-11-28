@@ -12,7 +12,6 @@ corresponding to the 4 Xbees currently in use.
 Can be increased to a larger number of busses.
 
 \x1.bus;
-
 */
 
 SenseBus : SenseDependant {
@@ -76,4 +75,7 @@ SenseBus : SenseDependant {
 	verbose { verbose = true }
 	mute { this.silent }
 	silent { verbose = false }
+	scope { | numChannels = 24 |
+		Server.default.scope(rate: \control, numChannels: numChannels);
+	}
 }
