@@ -54,21 +54,32 @@ SensePlayer : NamedSingleton {
 	}
 
 	convertData { | rawData |
-		^rawData.split($\n) collect: _.interpret;
+		^rawData.split($\n).collect(_.interpret).select(_.notNil);
 	}
 
 	play { | startAt = 0 |
-		var startFrame, startTime;
-		startFrame = data[startAt];
-		startTime = startFrame[0];
+		// convert times to dt and insert them in a copy of the data.
+		// play that.
+		var rows, times, size;
+		rows = data[startAt..].flop;
+		times = rows[0]; // .postln;
+		// times.asCompileString; // .postln;
+		times = rows[0].differentiate.put(0, 0);
+		rows = rows.put(0, times);
+		// rows.size.postln;
+		rows = rows.flop;
+		postf("\n\n======= playing % frames ========\n\n", size = rows.size);
+		// rows.asCompileString.postln;
 		{
-			postf("starting at frame %\n", startAt);
-			postf("Data at this frame are: %\n", startFrame);
-			postf("Absolute start time is: %\n", startTime);
-			data do: { | a |
-				a.postln;
-				0.1.wait;
-			}
+			// times.sort.reverse.select({|t| t > 0.1}).asCompileString.postln;
+			// 10.wait;
+			rows do: { | row, count |
+				// row.postln;
+				if (count % 10 == 0) { postf("%.. ", count + 1); };
+				row[0].wait;
+				//				postf("row % of % is: %\n", count + 1, size, row[1]);
+			};
+			postf("\n\n===== played % frames ======\n", size);
 		}.fork;
 	}
 }
