@@ -79,6 +79,7 @@ SenseServer : NamedSingleton {
 	postInput { // start posting input
 		PostSenseData.named(name).activate(name);
 	}
+	mute { this.muteInput }
 	muteInput { // stop posting input
 		PostSenseData.named(name).deactivate(name);
 	}
