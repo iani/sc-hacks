@@ -42,7 +42,7 @@ PatternPlayer : SourcePlayer {
 		};
 		if (process.isNil) {
 			// "STARTING NEW PATTERN PROCESS.".postln;
-			postf("quant is: %\n", envir[\quant]);
+			// postf("quant is: %\n", envir[\quant]);
 			source.put (\group, envir[\target].asTarget);
 			envir.busses.keysValuesDo({ | key, value |
 				source.put(key, value.index);
@@ -58,10 +58,14 @@ PatternPlayer : SourcePlayer {
 			);
 			process addDependant: { | whochanged, whathappened |
 				switch (whathappened,
-					\playing, { player.changed(\started); },
+					\playing, {
+						//			postf("% debugging %. sending STARTED\n", this, thisMethod.name);
+						player.changed(\started); },
 					\stopped, {
 						process = nil;
-						player.changed(\stopped);
+						if (player.sourcePlayer.isKindOf(SynthPlayer).not ) {
+							player.changed(\stopped);
+						}
 					}
 				)
 			};
@@ -413,6 +417,7 @@ SynthPlayer : SourcePlayer {
 		process.onStart (this, {
 			startActions do: _.(this);
 			startActions = nil;
+			// postf("% debugging %. sending STARTED\n", this, thisMethod.name);
 			player.changed(\started); // player.changed(\started);
 			// catch any link busses that were set before you started.
 			envir.busses keysValuesDo: { | key, bus |
@@ -445,6 +450,7 @@ SynthPlayer : SourcePlayer {
 					// "removing all notifications through process objectClosed".postln;
 					process.objectClosed.postln; // TODO: why is this needed explicitly?????
 					// envir.dependants.postln;
+					// postf("% debugging %. sending STOPPED\n", this, thisMethod.name);
 					player.changed(\stopped); // player.changed(\stopped);
 					process = nil;
 				};

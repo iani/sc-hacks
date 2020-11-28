@@ -146,14 +146,17 @@
 			spec[2] ?? { spec[2] = this }; // this -> envir
 			spec[3] ?? { spec[3] = spec[0] }; // paramname -> displayname
 		});
+		/*
 		([this.playButton] ++ specs.collect({ | spec |
 			spec[0].slider(spec[1], spec[2], spec[3]);
 		}))
-		^this.v(
+		*/
+		{ this.v(
 			*([this.playButton] ++ specs.collect({ | spec |
 				spec[0].slider(spec[1], spec[2], spec[3]);
 			}));
 		)
+		}.defer;
 	}
 
 	playButton {
