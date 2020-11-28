@@ -32,7 +32,12 @@ SensePlayer : NamedSingleton {
 	var <file; // file containing the data
 	var <rawData; // data as single string - as read from file
 	var <data; // the data interpreted as arrays.
+	var <addr;
 
+	prInit {
+		addr = NetAddr.localAddr;
+	}
+	
 	read { | argPath |
 		path = argPath;
 		postf("my path is: %\n", path);
@@ -75,7 +80,8 @@ SensePlayer : NamedSingleton {
 			// 10.wait;
 			rows do: { | row, count |
 				// row.postln;
-				if (count % 10 == 0) { postf("%.. ", count + 1); };
+				addr.sendMsg(*row[1]);
+				if (count % 10 == 0) { postf("%.. ", count + 1); };				
 				row[0].wait;
 				//				postf("row % of % is: %\n", count + 1, size, row[1]);
 			};

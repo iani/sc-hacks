@@ -7,5 +7,8 @@ NamedSingleton : Singleton {
 			this, argName;
 			); */
 		name = argName;
+		this.prInit; // subclasses add more init here if needed
 	}
+
+	prInit { /* subclasses add stuff if needed */ }
 }
