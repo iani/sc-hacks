@@ -24,9 +24,10 @@ Buffer.allNames.postln do: { | name |
 { | thresh = 0.1 |
 	var b;
 	b = \houston.b;
-	PlayBuf.ar(b.numChannels, b.bufnum, \rate.kr(1),
+	PlayBuf.ar(b.numChannels, b.bufnum,
+		Y(1).exprange(0.5, 1.5),
 		X(1) > thresh,
-		\startPos.kr(0) * BufSampleRate.kr(b.bufnum)
+		Z(1).range(0, 2) * BufSampleRate.kr(b.bufnum)
 	).dup * 5;
 } +> \p1;
 //:trigger manually
