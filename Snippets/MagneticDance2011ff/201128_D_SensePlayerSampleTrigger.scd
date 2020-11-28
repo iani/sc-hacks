@@ -30,6 +30,95 @@ Buffer.allNames.postln do: { | name |
 		Z(1).range(0, 2) * BufSampleRate.kr(b.bufnum)
 	).dup * 5;
 } +> \p1;
+//:Same as above, but with columbia buffer
+{ | thresh = 0.1 |
+	var b;
+	b = \columbia.b;
+	PlayBuf.ar(b.numChannels, b.bufnum,
+		Y(2).exprange(0.5, 1.5),
+		X(2) > thresh,
+		Z(2).range(0, 2) * BufSampleRate.kr(b.bufnum)
+	).dup * 5;
+} +> \p2;
+// ================================================================
+//:Same pair as above, but mute with another threshold
+//:Prepare the above for triggering from SenseData, with threshold
+{ | thresh = 0.1, muteThresh = 0.01 |
+	var b;
+	b = \houston.b;
+	PlayBuf.ar(b.numChannels, b.bufnum,
+		Y(1).exprange(0.5, 1.5),
+		X(1) > thresh,
+		Z(1).range(0, 2) * BufSampleRate.kr(b.bufnum),
+		1.0
+	).dup * 1 * (X(1) > muteThresh);
+} +> \p1;
+//:Same as above, but with columbia buffer
+{ | thresh = 0.1, muteThresh = 0.01 |
+	var b;
+	b = \columbia.b;
+	PlayBuf.ar(b.numChannels, b.bufnum,
+		Y(2).exprange(0.5, 1.5),
+		X(2) > thresh,
+		Z(2).range(0, 2) * BufSampleRate.kr(b.bufnum),
+		1.0
+	).dup * 1 * (X(2) > muteThresh);
+} +> \p2;
+// ================================================================
+//:Same pair as above, but mirror X polarity
+//:Prepare the above for triggering from SenseData, with threshold
+{ | thresh = 0.1, muteThresh = 0.01 |
+	var b;
+	b = \houston.b;
+	PlayBuf.ar(b.numChannels, b.bufnum,
+		Y(1).exprange(0.5, 1.5),
+		(-1 * X(1)) > thresh,
+		Z(1).range(0, 2) * BufSampleRate.kr(b.bufnum),
+		1.0
+	).dup * 1 * ((X(1) * -1) > muteThresh);
+} +> \p1;
+//:Same as above, but with columbia buffer
+{ | thresh = 0.1, muteThresh = 0.01 |
+	var b;
+	b = \columbia.b;
+	PlayBuf.ar(b.numChannels, b.bufnum,
+		Y(2).exprange(0.5, 1.5),
+		(-1 * X(2)) > thresh,
+		Z(2).range(0, 2) * BufSampleRate.kr(b.bufnum),
+		1.0
+	).dup * 1 * ((X(2) * -1) > muteThresh);
+} +> \p2;
+
+// ================================================================
+//:Same pair as above, but with grainbuf
+//:Prepare the above for triggering from SenseData, with threshold
+{ | thresh = 0.1, muteThresh = 0.01 |
+	var b, bufnum;
+	b = \houston.b;
+	bufnum = b.bufnum;
+	GrainBuf.ar(b.numChannels,
+		Impulse.kr(X(1).exprange(1, 10)), // trigger
+		X(1).exprange(1, 10).reciprocal + 0.1,// dur
+		bufnum, // sndbuf
+		Y(1).exprange(0.5, 1.5), // Rate
+		Z(1).range(0, 3), // pos
+		Z(1).range(0, 2) * BufSampleRate.kr(bufnum),
+		1.0
+	).dup * 1 * (X(1) > muteThresh);
+} +> \p1;
+//:Same as above, but with columbia buffer
+{ | thresh = 0.1, muteThresh = 0.01 |
+	var b;
+	b = \columbia.b;
+	GrainBuf.ar(b.numChannels, b.bufnum,
+		Y(2).exprange(0.5, 1.5),
+		X(2) > thresh,
+		Z(2).range(0, 2) * BufSampleRate.kr(b.bufnum),
+		1.0
+	).dup * 1 * (X(2) > muteThresh);
+} +> \p2;
+
+//================================================================
 //:trigger manually
 \x1 <@ 0;
 //:
@@ -47,4 +136,3 @@ SenseBus.mute.activate.scope;
 SensePlayer.read("/home/iani/.local/share/SuperCollider/MD/201117_153721.txt");
 SensePlayer.play;
 //:
-
