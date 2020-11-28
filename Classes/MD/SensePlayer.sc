@@ -67,14 +67,12 @@ SensePlayer : NamedSingleton {
 		// play that.
 		var rows, times, size;
 		rows = data[startAt..].flop;
-		times = rows[0]; // .postln;
+		times = rows[0];
 		// times.asCompileString; // .postln;
 		times = rows[0].differentiate.put(0, 0);
 		rows = rows.put(0, times);
-		// rows.size.postln;
 		rows = rows.flop;
 		postf("\n\n======= playing % frames ========\n\n", size = rows.size);
-		// rows.asCompileString.postln;
 		{
 			// times.sort.reverse.select({|t| t > 0.1}).asCompileString.postln;
 			// 10.wait;
@@ -83,7 +81,6 @@ SensePlayer : NamedSingleton {
 				addr.sendMsg(*row[1]);
 				if (count % 10 == 0) { postf("%.. ", count + 1); };				
 				row[0].wait;
-				//				postf("row % of % is: %\n", count + 1, size, row[1]);
 			};
 			postf("\n\n===== played % frames ======\n", size);
 		}.fork;
