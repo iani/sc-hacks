@@ -1,3 +1,4 @@
+//:28 Nov 2020 10:59
 SenseServer.postInput;
 SenseServer.mute;
 SensePlayer.read("/home/iani/.local/share/SuperCollider/MD/201117_153721.txt");
@@ -44,12 +45,3 @@ SenseBus.mute.activate.scope;
 	/* \level.kr(0) */ X(1) > \thresh.kr(0.1))
 ).dup; } +> \test
 
-//: ================================================================
-//:+building the playback algorithm
-SensePlayer.read("/home/iani/.local/share/SuperCollider/MD/201117_153721.txt");
-~data = SensePlayer.data[..4];
-~size = ~data.size;
-~times = ~data.flop.first.differentiate[0] = 0;
-~convertedData = ~data.flop.put(0, ~times).flop;
-~convertedData do: { | row, count |
-}
