@@ -85,7 +85,8 @@ Buffer.allNames.postln do: { | name |
 	b = \crickets.b; // try crickets recording
 	PlayBuf.ar(b.numChannels, b.bufnum,
 		Y(2).exprange(0.5, 1.5),
-		X(2) > thresh,lhb.bufnum),
+		X(2) > thresh,
+		Z(2).range(0, 10) * BufSampleRate.kr(b.bufnum),
 		1.0
 	).dup * 1 * X(2).exprange(0.01, 1); // (X(2) > muteThresh);
 } +> \p2;
@@ -109,7 +110,7 @@ Buffer.allNames.postln do: { | name |
 	b = \crickets.b; // try crickets recording
 	PlayBuf.ar(b.numChannels, b.bufnum,
 		Y(2).exprange(0.5, 1.5),
-nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnhmjjjjjjjjjhjmnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnmmmmnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn		X(2) > thresh,
+		X(2) > thresh,
 		Z(2).range(0, 10) * BufSampleRate.kr(b.bufnum),
 		1.0
 	).dup * 1 * X(2).exprange(0.01, 1); // (X(2) > muteThresh);
