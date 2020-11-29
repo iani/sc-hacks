@@ -51,18 +51,93 @@ Buffer.allNames.postln do: { | name |
 		X(1) > thresh,
 		Z(1).range(0, 2) * BufSampleRate.kr(b.bufnum),
 		1.0
-	).dup * 1 * (X(1) > muteThresh);
+	).dup * 1 * X(1).exprange(0.01, 1); // (X(1) > muteThresh);
 } +> \p1;
 //:Same as above, but with columbia buffer
 { | thresh = 0.1, muteThresh = 0.01 |
 	var b;
-	b = \columbia.b;
+	// b = \columbia.b;
+	b = \crickets.b; // try crickets recording
 	PlayBuf.ar(b.numChannels, b.bufnum,
 		Y(2).exprange(0.5, 1.5),
 		X(2) > thresh,
-		Z(2).range(0, 2) * BufSampleRate.kr(b.bufnum),
+		Z(2).range(0, 10) * BufSampleRate.kr(b.bufnum),
 		1.0
-	).dup * 1 * (X(2) > muteThresh);
+	).dup * 1 * X(2).exprange(0.01, 1); // (X(2) > muteThresh);
+} +> \p2;
+// ================================================================
+//:Same pair as above, but use 2 soundscape sounds + bipolar range
+//:Prepare the above for triggering from SenseData, with threshold
+{ | thresh = 0.1, muteThresh = 0.01 |
+	var b;
+	b = \crossing.b;
+	PlayBuf.ar(b.numChannels, b.bufnum,
+		Y(1).range(-1.5, 1.5),
+		X(1) > thresh,
+		Z(1).range(0, 2) * BufSampleRate.kr(b.bufnum),
+		1.0
+	).dup * 1 * X(1).exprange(0.01, 1); // (X(1) > muteThresh);
+} +> \p1;
+//:Same as above, but with columbia buffer
+{ | thresh = 0.1, muteThresh = 0.01 |
+	var b;
+	// b = \columbia.b;
+	b = \crickets.b; // try crickets recording
+	PlayBuf.ar(b.numChannels, b.bufnum,
+		Y(2).exprange(0.5, 1.5),
+		X(2) > thresh,lhb.bufnum),
+		1.0
+	).dup * 1 * X(2).exprange(0.01, 1); // (X(2) > muteThresh);
+} +> \p2;
+// ================================================================
+//:Same pair as above, but use columbia sound + bipolar range
+//:Prepare the above for triggering from SenseData, with threshold
+{ | thresh = 0.1, muteThresh = 0.01 |
+	var b;
+	b = \crossing .b;
+	PlayBuf.ar(b.numChannels, b.bufnum,
+		Y(1).range(-1.5, 1.5),
+		X(1) > thresh,
+		Z(1).range(0, 2) * BufSampleRate.kr(b.bufnum),
+		1.0
+	).dup * 1 * X(1).exprange(0.01, 1); // (X(1) > muteThresh);
+} +> \p1;
+//:Same as above, but with columbia buffer
+{ | thresh = 0.1, muteThresh = 0.01 |
+	var b;
+	// b = \columbia.b;
+	b = \crickets.b; // try crickets recording
+	PlayBuf.ar(b.numChannels, b.bufnum,
+		Y(2).exprange(0.5, 1.5),
+nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnhmjjjjjjjjjhjmnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnmmmmnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn		X(2) > thresh,
+		Z(2).range(0, 10) * BufSampleRate.kr(b.bufnum),
+		1.0
+	).dup * 1 * X(2).exprange(0.01, 1); // (X(2) > muteThresh);
+} +> \p2;
+// ================================================================
+//:Same pair as above, but use range -1.5 - 1.5 on houston
+//:Prepare the above for triggering from SenseData, with threshold
+{ | thresh = 0.1, muteThresh = 0.01 |
+	var b;
+	b = \houston.b;
+	PlayBuf.ar(b.numChannels, b.bufnum,
+		Y(1).range(-1.5, 1.5),
+		X(1) > thresh,
+		Z(1).range(0, 2) * BufSampleRate.kr(b.bufnum),
+		1.0
+	).dup * 1 * X(1).exprange(0.01, 1); // (X(1) > muteThresh);
+} +> \p1;
+//:Same as above, but with columbia buffer
+{ | thresh = 0.1, muteThresh = 0.01 |
+	var b;
+	// b = \columbia.b;
+	b = \crickets.b; // try crickets recording
+	PlayBuf.ar(b.numChannels, b.bufnum,
+		Y(2).exprange(0.5, 1.5),
+		X(2) > thresh,
+		Z(2).range(0, 10) * BufSampleRate.kr(b.bufnum),
+		1.0
+	).dup * 1 * X(2).exprange(0.01, 1); // (X(2) > muteThresh);
 } +> \p2;
 // ================================================================
 //:Same pair as above, but mirror X polarity
