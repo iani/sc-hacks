@@ -302,11 +302,10 @@ from file in sclang, instead of waiting for that info to arrive
 from the server. 
 */
 
-	/*
-	This guarantees that buffer info exists before the buffer is on the server.
-	*/
-
-	*readWithInfo { |server, path, startFrame = 0, numFrames = -1|
+	*readWithInfo { | server, path, startFrame = 0, numFrames = -1 |
+		/*
+			This guarantees that buffer info exists before the buffer is on the server.
+		*/
 		var buffer = this.new(server), failed;
 		if(server.serverRunning.not) { "server not running - cannot load sound file.".postln; this.throw };
 		SoundFile.use(path, { |file|
@@ -322,6 +321,57 @@ from the server.
 		} {
 			buffer.allocRead(path, startFrame, numFrames)
 		}
+	}
+
+	*readWithInfoIfNew { | server, path, startFrame = 0, numFrames = -1 |
+		/*
+			Variant of readWithInfo. 
+			Avoid loading duplicates, to save space on Server:
+			Do not load if a buffer with the same path and size exists.
+			Instead, return that buffer which is already loaded.
+		*/
+		var buffer, failed, alreadyLoaded;
+		buffer = this.new(server);
+		if(server.serverRunning.not) {
+			"server not running - cannot load sound file.".postln;
+			this.throw
+		};
+		SoundFile.use(path, { |file|
+			buffer.sampleRate = file.sampleRate;
+			buffer.numFrames = file.numFrames;
+			buffer.numChannels = file.numChannels;
+		});
+		failed = buffer.numFrames == 0;
+		if(failed) {
+			"\n".post; "File reading failed for path: '%'\n\n".format(path).warn;
+			buffer.free; // free buffer number
+			^nil
+		};
+		alreadyLoaded = buffer.alreadyLoaded;
+		if (alreadyLoaded.isNil) {
+			^buffer.allocRead(path, startFrame, numFrames)
+		}{
+			postf("Buffer wih path \n%\nis already loaded. Returning that\n",
+				path;
+			);
+			^alreadyLoaded
+		}
+	}
+
+	alreadyLoadedp {
+		// true if a buffer with the same path and memoryFootPrint is
+		// already in Buffer.all.asArray
+		^this.alreadyLoaded.notNil;
+	}
+
+	alreadyLoaded {
+		// reaturn Buffer with same path and memoryFootprint which is
+		// already in Buffer.all.asArray, else nil.
+		var footPrint;
+		footPrint = this.memoryFootprint;
+		^Buffer.all.asArray.detect({ | b |
+			b.path == path and: { b.memoryFootprint == footPrint };
+		});
 	}
 
 	// in bytes
