@@ -32,5 +32,4 @@ To ensure that the server is booted, use with sync method like this:
 			buffer;
 		})
 	}
-	
 }
