@@ -1,8 +1,11 @@
-/* Try executing any snippets below in any order
+/* This is old stuff - tried 2019.
+From  2 Dec 2020 00:41 new load buffer methods are being tested.
+
+Try executing any snippets below in any order
 
 */
 //:preload buffers
-(Hacks.homedir ++ "Sounds/lindrum/").loadBuffers;
+(Hacks.homeDir ++ "Sounds/lindrum/").loadBuffers;
 //:list loaded buffers
 (Library.at(\buffers) ? ()).keys.postln;
 //:look at one buffer

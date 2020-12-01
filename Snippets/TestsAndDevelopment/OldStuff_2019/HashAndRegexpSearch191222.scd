@@ -21,6 +21,3 @@ alphaddd".findAllRegexp("^alpha")
 //:
 Document.current.currentString.findAllRegexp("^//:");
 Document.current.text;
-
-
-

@@ -1,4 +1,5 @@
 // Tests
+// Symbol:osc shortcut for Osc functions?
 
 \default.v(
 	\freq.slider()
