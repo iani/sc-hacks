@@ -331,7 +331,9 @@ from the server.
 			Instead, return that buffer which is already loaded.
 		*/
 		var buffer, failed, alreadyLoaded;
-		buffer = this.new(server);
+		buffer = this.new(se{ | b |
+			b.path == path and: { b.memoryFootPring == footPrint };
+		}rver);
 		if(server.serverRunning.not) {
 			"server not running - cannot load sound file.".postln;
 			this.throw
