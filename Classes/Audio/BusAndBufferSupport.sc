@@ -22,7 +22,7 @@
 			postf("Could not find path: %\n", this);
 		}
 	}
-	
+
 	addCode {
 		// Only add file path to StartupFiles, if it exists.
 		this.doIfExists {
@@ -145,15 +145,15 @@
 	*initClass {
 		ServerQuit add: {
 			Library.put(\buffers, IdentityDictionary());
-		}		
+		}
 	}
-	
+
 	bn { | seconds = 1, numChannels = 1 |
 		// shortcut for bufnum
 		^this.bufnum(seconds, numChannels);
 	}
 	bufnum { | seconds = 1, numChannels = 1 |
-		// return the index of the associated buffer 
+		// return the index of the associated buffer
 		^this.b(seconds, numChannels).bufnum;
 	}
 
@@ -161,7 +161,7 @@
 	buf {  | seconds = 1, numChannels = 1, func |
 		^this.b(seconds, numChannels, func);
 	}
-	
+
 	// 20 Jul 2018 22:31 reimplementing this with registry.
 	b { | seconds = 1, numChannels = 1, func |
 		// See also newer variant in Hacks class
@@ -201,7 +201,7 @@
 			)
 		})
 	}
-	
+
 	free {
 		// free buffer and remove from registry
 		var buffer;
@@ -260,7 +260,7 @@
 		{ Buffer.changed(\loaded, buffer) }.defer;
 		^buffer;
 	}
-	
+
 	toggleBuf { | bufferName, eventName |
 		// like toggle, but use as source a PlayBuf func with appropriate number of channels.
 		var buffer, numChans, bufnum;
@@ -294,12 +294,12 @@
 	/* 14 Aug 2020 10:36
 Copied from Alex McLean's SuperDirt quark library.
 
-This is safer than Buffer.read when loading a large number of buffers 
+This is safer than Buffer.read when loading a large number of buffers
 at once.  Buffer.read sometimes fails to update the info of a buffer,
 while readWithInfo guarantees that the buffer will get the info
-(sampleRate, number of channels, number of frames), by reading it 
+(sampleRate, number of channels, number of frames), by reading it
 from file in sclang, instead of waiting for that info to arrive
-from the server. 
+from the server.
 */
 
 	*readWithInfo { | server, path, startFrame = 0, numFrames = -1 |
@@ -325,15 +325,13 @@ from the server.
 
 	*readWithInfoIfNew { | server, path, startFrame = 0, numFrames = -1 |
 		/*
-			Variant of readWithInfo. 
+			Variant of readWithInfo.
 			Avoid loading duplicates, to save space on Server:
 			Do not load if a buffer with the same path and size exists.
 			Instead, return that buffer which is already loaded.
 		*/
 		var buffer, failed, alreadyLoaded;
-		buffer = this.new(se{ | b |
-			b.path == path and: { b.memoryFootPring == footPrint };
-		}rver);
+		buffer = this.new(server);
 		if(server.serverRunning.not) {
 			"server not running - cannot load sound file.".postln;
 			this.throw
@@ -356,6 +354,7 @@ from the server.
 			postf("Buffer wih path \n%\nis already loaded. Returning that\n",
 				path;
 			);
+			buffer.free;
 			^alreadyLoaded
 		}
 	}
