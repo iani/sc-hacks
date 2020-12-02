@@ -44,20 +44,20 @@
 	}
 
 	// defers are done here, because Rect.tl... calls need to return
-	tl_ { | width = 200, height = 200, key = \default |
-		{ this.bounds_(Rect.tl(width, height), key) }.defer;
+	tl_ { | width, height = 200, key = \default |
+		{ this.bounds_(Rect.tl(GuiDefaults.width, height), key) }.defer;
 	}
 
-	tr_ { | width = 200, height = 200, key = \default |
-		{ this.bounds_(Rect.tr(width, height), key) }.defer;
+	tr_ { | width, height = 200, key = \default |
+		{ this.bounds_(Rect.tr(GuiDefaults.width, height), key) }.defer;
 	}
 
-	bl_ { | width = 200, height = 200, key = \default |
-		{ this.bounds_(Rect.bl(width, height), key) }.defer;
+	bl_ { | width, height = 200, key = \default |
+		{ this.bounds_(Rect.bl(GuiDefaults.width, height), key) }.defer;
 	}
 
-	br_ { | width = 200, height = 200, key = \default |
-		{ this.bounds_(Rect.br(width, height), key) }.defer;
+	br_ { | width, height = 200, key = \default |
+		{ this.bounds_(Rect.br(GuiDefaults.width, height), key) }.defer;
 	}
 
 	bounds { | key = \default |
@@ -81,20 +81,19 @@
 		this.prLayout(items, HLayout);
 	}
 
-	prLayout { | items, layoutClass |
+	prLayout { | items, layoutClass, height |
 		// helper method for v and h methods
+		// items.postln;
 		{
+			height ?? {
+				height = items.size * GuiDefaults.lineHeight + 5 max: 50
+			};
 			this.close;
 			0.1.wait;
 			this.window({ | w |
-				w.layout = layoutClass.new(
-					*items
-				);
+				w.layout = layoutClass.new(*items);
 				// this.bounds.postln;
-				w.bounds = w.bounds.height_( // 20 or 40
-					items.size * GuiDefaults.lineHeight.postln + 5
-					max: 50
-				).postln;
+				w.bounds = w.bounds.height_(height);
 				// EXPERIMENTAL
 				w.view.keyDownAction_({ | win, key |
 					this.changed(\keydown, key);
@@ -199,7 +198,6 @@
 			envir.changed(this, envir[this]);
 		}.defer(0.1);
 		// Used as component in VLayout:
-		postf("GuiDefaults.font is: %\n", GuiDefaults.font);
 		^HLayout(
 			StaticText()
 			.font_(GuiDefaults.font.postln)
