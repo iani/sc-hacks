@@ -81,6 +81,41 @@
 		this.prLayout(items, HLayout);
 	}
 
+	list {
+		// experimental  2 Dec 2020 07:42
+		// single list view
+		this.prLayout(
+			[ListView()
+				.items_(["---------------", "blahblah"])
+				.font_(GuiDefaults.font)
+				.action_({ | me |
+					postf("% value selected %, item: %\n", me, me.value, me.item);
+				})
+				.keyDownAction_({ | me, key |
+					// postf("%, pressed: %\n", me, key);
+					if (key === Char.ret ) { "Return was pressed".postln }
+				})
+			],
+			VLayout,
+			400
+		)
+		
+	}
+
+	doubleList { | layout |
+		// experimental  2 Dec 2020 07:42
+		// double list view
+		this.prLayout(
+			['----------', '////////////'] collect: { | i |
+				ListView()
+				.items_(i.asArray)
+				.font_(GuiDefaults.font)
+			} ,
+			layout ? VLayout,
+			400
+		)
+	}
+	
 	prLayout { | items, layoutClass, height |
 		// helper method for v and h methods
 		// items.postln;
@@ -107,6 +142,8 @@
 		window = Library.at(\windows, this, key);
 		window !? { {window.close}.defer }
 	}
+
+	
 }
 
 + Symbol {
@@ -114,7 +151,7 @@
 		// 26 Nov 2020 14:47
 		/*
 		Create a v window with sliders from your specs,
-			and bound to the envronment of yourself.
+			and bound to the environment of yourself.
 
 		Ensure that your widgets will address your environment.
 			specs have the form:
