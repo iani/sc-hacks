@@ -282,6 +282,13 @@
 			})
 		)
 	}
+
+	//  3 Dec 2020 14:19 NOT SURE THIS IS NEEDED ANY MORE?
+	watch { | key, action |
+		// perform action when key is set in envir named by symbol
+		this.e.addNotifier(this.e, key, action);
+	}
+
 }
 
 + Window {

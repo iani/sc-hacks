@@ -5,7 +5,7 @@ Return a HLayout that can be used when building a GUI through an array of Layout
 
 Additional utilities and shortcuts: v, h, watch, close.
 */
-
+/*
 + Symbol {
 	// symbol names the parameter.
 	// controlspec and envir are optional, defaulting to this.asSpec and
@@ -17,6 +17,7 @@ Additional utilities and shortcuts: v, h, watch, close.
 		this.e.addNotifier(this.e, key, action);
 	}
 }
+*/
 
 /* // Prototype:
 
