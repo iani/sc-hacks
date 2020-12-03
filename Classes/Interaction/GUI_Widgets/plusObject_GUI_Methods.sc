@@ -77,28 +77,17 @@
 		this.prLayout(items, HLayout);
 	}
 
-	list {
+	listView {
 		// experimental  2 Dec 2020 07:42
 		// single list view
 		this.prLayout(
-			[ListView()
-				.items_(["---------------", "blahblah"])
-				.font_(GuiDefaults.font)
-				.action_({ | me |
-					postf("% value selected %, item: %\n", me, me.value, me.item);
-				})
-				.keyDownAction_({ | me, key |
-					// postf("%, pressed: %\n", me, key);
-					if (key === Char.ret ) { "Return was pressed".postln }
-				})
-			],
+			[ListModel.named(this).listView],
 			VLayout,
 			400
 		)
-		
 	}
 
-	doubleList { | layout |
+	doubleListView { | layout |
 		// experimental  2 Dec 2020 07:42
 		// double list view
 		this.prLayout(
