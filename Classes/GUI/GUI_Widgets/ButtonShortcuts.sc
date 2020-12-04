@@ -22,4 +22,18 @@ Experimental shortcuts for buttons.
 		}))
 		.action_({ | me | (states[1]@@(me.value - 1)).value});
 	}
+
+	buttons {
+		^this.clump(2).collect({ | labelAction |
+			var label, action;
+			#label, action = labelAction;
+			action.button(label)
+		});
+	}
+}
+
++ Symbol {
+	buttons { | ... labelsActions |
+		^this.v(*labelsActions.buttons);
+	}
 }

@@ -22,3 +22,19 @@ use an array with the labels and actions in pairs like this:
 		"more stuff",  { "printing more stuff".postln; }
 	].button
 );
+//:Array of labels-functions -> Array of buttons
+\test.v(
+	// state (label)    action
+	*(["hello",          { "hello printing".postln; },
+		"there",       { "printing there".postln; },
+		"more stuff",  { "printing more stuff".postln; }
+	].buttons)
+);
+//:window with buttons stacked vertically
+//:Array of labels-functions -> Array of buttons
+\test.buttons(
+	// state (label)    action
+	"hello",          { "hello printing".postln; },
+	"there",       { "printing there".postln; },
+	"more stuff",  { "printing more stuff".postln; }
+);
