@@ -12,6 +12,7 @@
 {
 	var in;
 	in = In.ar(2);
-	DelayN.ar(in, 10, 10, 1, in) } +> \delay;
+	DelayN.ar(in, 10, 10, 1, in)
+} +> \delay;
 //:
 { CombN.ar(In.ar(2), 2, 2) } +> \delay;

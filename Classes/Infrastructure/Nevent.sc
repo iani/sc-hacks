@@ -82,7 +82,12 @@ Nevent : EnvironmentRedirect {
 		};
 		*/
 		^Registry(libRoot, name, {
-			this.newCopyArgs((), nil, name, ())
+			this.prNew(name, doPush)
+		})
+	}
+
+	*prNew { | name, doPush = false |
+			^this.newCopyArgs((), nil, name, ())
 			.makeDispatch(() putPairs: [
 				Integer, { | key, object |
 					[key, object]
@@ -96,9 +101,8 @@ Nevent : EnvironmentRedirect {
 			])
 			.init
 			.maybePush(doPush)
-		})
 	}
-
+	
 	makeDispatch { | dispatcherEvent |
 		dispatch = Dispatch.newCopyArgs(this, dispatcherEvent);
 	}
