@@ -3,14 +3,6 @@ Manage the saving and loading of information to/from file, to store them between
 
  3 Dec 2020 12:44 - stalled. First need to finish Folder class
 
-
-Alternative names:
-
-Asset
-Config? 
-Configs?
-Persistence?????
-
 Should be able to do the following:
 
 - Store the data (and itself?) in the Library
@@ -19,10 +11,7 @@ Should be able to do the following:
 
 Starting the implementation with the above.
 
-Approach:
-
-
-
+Approach: ?????
 
 */
 
@@ -38,10 +27,9 @@ Config : NamedSingleton {
 			File.mkdir(configsDir);
 		};
 
-		ShutDown add: {
+		ShutDown add: { // this.storeAll // ??????
 			
 		}
-		
 	}
 
 	/* alternative method name: write */
@@ -53,7 +41,6 @@ Config : NamedSingleton {
 			Configs path +/+ Backups, in file under your class name +
 			timestamp of now.
 		*/
-		
 	}
 
 	/* alternative method name: read */

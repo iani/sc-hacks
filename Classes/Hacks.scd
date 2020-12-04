@@ -1,6 +1,8 @@
 /* 29 Jul 2018 14:02
 Return path of the home directory of sc-hacks library.
 In future possibly also perform other global management tasks.
+
+Will be reworking this from  4 Dec 2020 08:54 on separate file.
 */
 
 Hacks : Singleton {
