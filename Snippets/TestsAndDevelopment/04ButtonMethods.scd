@@ -46,5 +46,5 @@ Hacks.buttons(
 	"more stuff",  { "printing more stuff".postln; },
 	"receiver?", { postf("the receiver is %\n", this) }
 );
-//:PS: something about the receiver inside a class and outside of items
+//:PS: something about the receiver inside a class and outside of it
 Hacks.menu;
