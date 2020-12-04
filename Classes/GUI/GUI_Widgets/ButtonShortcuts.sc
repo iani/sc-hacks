@@ -4,7 +4,7 @@ Experimental shortcuts for buttons.
 
 + Function {
 	button { | string = "button", foreground, background |
-		^Button()
+		^HButton()
 		.states_([[string, foreground, background]])
 		.action_(this)
 	}
