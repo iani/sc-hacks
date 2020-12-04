@@ -5,7 +5,9 @@
 
 Hacks : NamedSingleton {
 
-	mainGui {
-		
+	menu {
+		this.buttons(
+			"test my receiver", { postf("my receiver is: %\n", this) }
+		)
 	}	
 }

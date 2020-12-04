@@ -38,3 +38,13 @@ use an array with the labels and actions in pairs like this:
 	"there",       { "printing there".postln; },
 	"more stuff",  { "printing more stuff".postln; }
 );
+//:any object can create a window with buttons
+Hacks.buttons(
+	// state (label)    action
+	"hello",          { "hello printing".postln; },
+	"there",       { "printing there".postln; },
+	"more stuff",  { "printing more stuff".postln; },
+	"receiver?", { postf("the receiver is %\n", this) }
+);
+//:PS: something about the receiver inside a class and outside of items
+Hacks.menu;

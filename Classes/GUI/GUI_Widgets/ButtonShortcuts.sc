@@ -32,7 +32,7 @@ Experimental shortcuts for buttons.
 	}
 }
 
-+ Symbol {
++ Object {
 	buttons { | ... labelsActions |
 		^this.v(*labelsActions.buttons);
 	}
