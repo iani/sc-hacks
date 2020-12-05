@@ -1,0 +1,56 @@
+#  5 Dec 2020 12:56
+* About NPlayer
+** Purpose / function
+** Difference from Player
+
+NPlayer is a NamedSingleton subclass.  This allows access by name, in a separate namespace from Player.  This ensures that any NPlayer named for example "x" will be a different object from the Player with the same name. So an NPlayers can be created from the name of a player without replacing the Player of the same name. 
+* Syntax and implementation for playing
+  :PROPERTIES:
+  :DATE:     <2020-12-05 Sat 13:17>
+  :END:
+** Basic user syntax for creation and playing of NPlayers. Starting point: 
+
+ #+begin_src sclang
+ \player +> { /* Sound Function */ };
+ #+end_src
+** Code analysis/implementation
+*** 1. Symbol:+> player, index
+ #+begin_src sclang
+ + Symbol {
+ +> { | player, index = 0 |
+		 ^player.asPlayer(index, this).play(this);
+	 }
+ }
+ #+end_src
+
+ Delegate the choice of play action to player.asPlayer.  Example of use: 
+
+ #+begin_src sclang
+ \player +>.1 { /* Sound Function */ };
+ #+end_src
+
+ Here the argument =player= is not a player but a Function: ={ /* Sound Function */ }= (a Function), and index is =1= (an Integer). Thus, aFunction.asPlayer creates an NPlayer, which implements in =play= the algorithm:
+
+ 1. Link the player named by the receiver symbol (=\player=) as source, to the player stored in slot =1= of NPlayer. This player is stored in variable =activePlayer= of the NPlayer.
+2. Set the argument ={ /* Sound Function */ }= as source of the =activePlayer=.
+3. Play the activePlayer
+
+*** 2. Function:asPlayer
+The above steps are implemented in code as follows: 
+
+#+begin_src sclang
++ Function {
+asPlayer { | index, name |
+    ^NPlayer.named(name).playerAt(index).setSource(this);
+   }
+}
+#+end_src
+
+1. Obtain an NPlayer named after =name=, and obtain its player at =index=.
+(If no NPlayer or player exist, create them.)  
+1. set this function as source in the SynthPlayer of the selected =activePlayer= of the NPlayer.
+
+*** NPlayer:play
+
+
+
