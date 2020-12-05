@@ -6,7 +6,8 @@ Adding asPlayer
 		//  4 Dec 2020 22:13 : play functions as fx synths.
 		// link them as fx after another player
 		// create NPlayer, which accepts player message to make the link
-		^NPlayer.named(name).playerAt(index).playFunc(this);
+		// this becomes the synth source for the player at index
+		^NPlayer.named(name).playerAt(index).setSource(this);
 	}
 	!> { | player, envir |
 		// under development 26 Nov 2020 18:58

@@ -123,10 +123,11 @@
 	}
 
 	+> { | player, index = 0 |
-		// play named SynthDef in player.
+		// play named SynthDef in player. (or player as source to fx function!)
 		// Push environment before playing.
 		// See optional 4th argument in Nevent:play for push.
-		// Instead of envir name, adverb is an index of the fx to be added
+		// Instead of envir name, adverb is an index of the fx to be added.
+		// The index is only used when player is a Function (not a player).
 		^player.asPlayer(index, this).play(this); // accept non-symbol player arg
 	}
 
