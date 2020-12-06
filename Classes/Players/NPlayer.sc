@@ -5,56 +5,59 @@ It is a NamedSingleton, and thus stored in Library under NamedSingleton.
 This means it does not interfere with the namespace of Player
 
 \default +> { "some function" };
-
 \anotherPlayer +> { "some function" };
-
 */
 
 NPlayer : NamedSingleton {
 	var players; // player array - accessed by numerical index
 	var <sourcePlayer;
-	var <activePlayer; // the player to be linked with next playFunc
 
 	prInit {
 		// get your source player
 		postf("% Will get and store my source player from my name\n", this);
 		sourcePlayer = name.asPlayer;
 		postf("My source player is now: %\n", sourcePlayer);
+		players = List(); // initialize players list
 	}
 
-	playerAt { | index |
-		/*  Access player at index. If none exists, create a new one:
-			Create a new non-registered Nevent for the player, (using prNew).
-			Store this player into activePlayer, so that it will be 
-			(linked to your sourcePlayer and) played with the source 
-			provided through setSource.
-		*/
-		postf("NPlayer will create a player storing it at %\n", index);
-	}
-
-	setSource { | function |
-		/* Set function as source to the selected activePlayer
-		*/
-		postf("Method %, srcPlayer argument is: %, its class is: %\n",
-			thisMethod.name, function, function.class
-		);
-		postf(
-			"NPlayer will link the latest created player, then play % in it\n",
-			function
-		);
-	}
-	play { | srcPlayer |
-		/* 
-		*/
-		postf("Method %, srcPlayer argument is: %, its class is: %\n",
-			thisMethod.name, srcPlayer, srcPlayer.class
+	play { | func, index |
+		var activePlayer; // the player to be linked with next playFunc
+		activePlayer = this.getPlayerAt(index);
+		//================================================================
+		postf("Method %, srcPlayer argument is: %\n",
+			thisMethod.name, func
 		);
 		"I think this method play in NPlayer must be changed".postln;
 		postf(
 			"NPlayer will link the latest created player, then play % in it\n",
-			srcPlayer
+			func
 		);
-		// "this is what needs to be debugged".errorerrorerror;
+		//================================================================
+		// Here we need to adapt - or incorporate - this code 
+		/*
+	*< { | reader, param = \out | // many readers to one writer.
+		// Writers bus stays same
+		// The new reader gets the writer's bus.
+		// Thus a new reader is added to the writer.
+	     ^reader.asPersistentBusProxy(\in) linkWritersBus2Reader: (
+	           PersistentBusProxy(this, param)
+         )
 	}
 
+		*/
+	}
+
+	getPlayerAt { | index |
+		/*  Access player at index. If none exists, create a new one:
+			Create a new non-registered Nevent for the player, (using prNew).
+			return so that it will be 
+			(linked to your sourcePlayer and) played with the source 
+			provided through setSource.
+		*/
+		postf("NPlayer will access or create a player storing it at %\n", index);
+		^players[index] ?? {
+			players.sput(index, format("%_%", name, index).asSymbol.p;);
+			players[index];
+		};
+	}
 }

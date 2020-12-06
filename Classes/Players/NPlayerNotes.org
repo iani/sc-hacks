@@ -29,11 +29,10 @@ NPlayer is a NamedSingleton subclass.  This allows access by name, in a separate
  \player +>.1 { /* Sound Function */ };
  #+end_src
 
- Here the argument =player= is not a player but a Function: ={ /* Sound Function */ }= (a Function), and index is =1= (an Integer). Thus, aFunction.asPlayer creates an NPlayer, which implements in =play= the algorithm:
+Here the argument =player= is not a player but a Function: ={ /* Sound Function */ }= (a Function), and index is =1= (an Integer). Thus, aFunction.asPlayer creates an NPlayer, which implements in =play= the algorithm:
 
- 1. Link the player named by the receiver symbol (=\player=) as source, to the player stored in slot =1= of NPlayer. This player is stored in variable =activePlayer= of the NPlayer.
-2. Set the argument ={ /* Sound Function */ }= as source of the =activePlayer=.
-3. Play the activePlayer
+1. Link the player named by the receiver symbol (=\player=) as source, to the player stored in slot =1= of NPlayer. This player is stored in variable =activePlayer= of the NPlayer.
+2. Play the activePlayer using the argument ={ /* Sound Function */ }=
 
 *** 2. Function:asPlayer
 The above steps are implemented in code as follows: 
@@ -41,16 +40,15 @@ The above steps are implemented in code as follows:
 #+begin_src sclang
 + Function {
 asPlayer { | index, name |
-    ^NPlayer.named(name).playerAt(index).setSource(this);
+    //^NPlayer.named(name).playerAt(index) // .setSource(this);
+    //    ^NPlayer.named(name).playerAt(index).play(this);
+    ^NPlayer.named(name).play(this, index);
    }
 }
 #+end_src
 
-1. Obtain an NPlayer named after =name=, and obtain its player at =index=.
-(If no NPlayer or player exist, create them.)  
-1. set this function as source in the SynthPlayer of the selected =activePlayer= of the NPlayer.
-
-*** NPlayer:play
-
-
-
+1. Obtain an NPlayer named after =name=.
+2. Send this NPlayer message play with arguments =this= (*the present Function*), =index=. This does the following:
+   1. Obtain in NPlayer the internal Player at =index= and store it in =activePlayer=
+   2. Link the sourcePlayer as source to the activePlayer (with one-to-many link!).
+   3. play the present function in activePlayer with activePlayer.play(argFunction)
