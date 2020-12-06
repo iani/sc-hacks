@@ -5,4 +5,7 @@ Load all sound files contained in the sounds directory of the SuperCollider appl
 
 Buffer.all;
 
-Buffer.allNames;
+Buffer.allNames.sort;
+
+(Platform.resourceDir +/+ "sounds/*").pathMatch
+
