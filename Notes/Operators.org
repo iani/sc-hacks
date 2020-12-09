@@ -1,0 +1,7 @@
+* Table of Operators
+  :PROPERTIES:
+  :DATE:     <2020-12-09 Wed 07:41>
+  :END:
+
+* Operators: Receiver / Argument combinations
+
