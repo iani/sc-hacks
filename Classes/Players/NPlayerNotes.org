@@ -18,7 +18,7 @@ NPlayer is a NamedSingleton subclass.  This allows access by name, in a separate
  #+begin_src sclang
  + Symbol {
  +> { | player, index = 0 |
-		 ^player.asPlayer(index, this).play(this);
+		 ^player.asPlayer(this).play(this, index);
 	 }
  }
  #+end_src
@@ -39,15 +39,23 @@ The above steps are implemented in code as follows:
 
 #+begin_src sclang
 + Function {
-asPlayer { | index, name |
+asPlayer { | name |
     //^NPlayer.named(name).playerAt(index) // .setSource(this);
     //    ^NPlayer.named(name).playerAt(index).play(this);
-    ^NPlayer.named(name).play(this, index);
+    ^NPlayer.named(name);
    }
 }
 #+end_src
 
-1. Obtain an NPlayer named after =name=.
+Obtain an NPlayer named after =name=.
+
+*** 3. NPlayer:play(playername, index)
+#+begin_src sclang
+       var activePlayer; // the player to be linked
+       activePlayer = this.getPlayerAt(index);
+#+end_src
+
+1. Obtain the Player named after playername at index.
 2. Send this NPlayer message play with arguments =this= (*the present Function*), =index=. This does the following:
    1. Obtain in NPlayer the internal Player at =index= and store it in =activePlayer=
    2. Link the sourcePlayer as source to the activePlayer (with one-to-many link!).

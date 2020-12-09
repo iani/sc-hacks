@@ -6,6 +6,15 @@ This means it does not interfere with the namespace of Player
 
 \default +> { "some function" };
 \anotherPlayer +> { "some function" };
+
+Note on var players: 
+This is a List containing Players named by concatenating the name of 
+the present NPlayer with the index at which they are created.
+If the NPlayer is named \test and the index is 1, then tne Player is 
+named \test_1.  While the players are created in the usual way by
+accessing them through Registry, using method Symbol:p, the List
+stores all players belonging to this NPlayer in order to be able to
+free them and garbage collect them when needed.
 */
 
 NPlayer : NamedSingleton {
@@ -21,7 +30,7 @@ NPlayer : NamedSingleton {
 	}
 
 	play { | func, index |
-		var activePlayer; // the player to be linked with next playFunc
+		var activePlayer; // the player to be linked
 		activePlayer = this.getPlayerAt(index);
 		//================================================================
 		postf("Method %, srcPlayer argument is: %\n",
@@ -48,15 +57,14 @@ NPlayer : NamedSingleton {
 	}
 
 	getPlayerAt { | index |
-		/*  Access player at index. If none exists, create a new one:
-			Create a new non-registered Nevent for the player, (using prNew).
-			return so that it will be 
+		/*  Access a Player at index. If none exists, create a new one:
+			Return the Player so that it will be 
 			(linked to your sourcePlayer and) played with the source 
 			provided through setSource.
 		*/
 		postf("NPlayer will access or create a player storing it at %\n", index);
 		^players[index] ?? {
-			players.sput(index, format("%_%", name, index).asSymbol.p;);
+			players.sput(index, format("%_%", name, index).asSymbol.p);
 			players[index];
 		};
 	}
