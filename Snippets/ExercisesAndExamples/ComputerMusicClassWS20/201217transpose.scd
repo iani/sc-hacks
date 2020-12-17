@@ -31,39 +31,14 @@ Pbind(\degree, Pseq((0..7), inf),
 ).play(TempoClock(4));
 /* Note:
 This plays major scales on all chromatic steps from c to c'
-c major (ionian), d dorian, e phrygian, f lydian, g mixolydian, a aolian, 
-b locrian, c' ionian
 */
-//:Testing tempo change
-var tempo, pattern;
-tempo = TempoClock();
-pattern = Pbind(\degree, Pseq((0..7), inf), \dur, Pseq([Pn(1/4, 7), 1], inf) ).play(tempo);
-{
-	(1, 1.1 .. 5) do: { | t |
-		2.wait;
-		postf("now setting tempo to %\n", t);
-		tempo.tempo = t;
-	};
-	"DONE!".postln;
-	pattern.stop;
-}.fork;
-//:Testing tempo change inside pattern
+//:Play all 7 modes based on c.
 Pbind(\degree, Pseq((0..7), inf),
 	\dur, Pseq([Pn(1/4, 7), 1], inf),
-	\tempo, Pstutter(8, Pseq((1, 1.1..5), inf))
-).play(TempoClock());
-//:Random tempo change inside pattern
-Pbind(\degree, Pseq((0..7), inf),
-	\dur, Pseq([Pn(1/4, 7), 4], inf),
-	\tempo, Pstutter(8, Pwhite(0.05, 5, inf))
-).play(TempoClock());
-
-//:Random tempo change inside pattern + random gtranspose, mtranspose
-Pbind(\degree, Pseq((0..7), inf),
-	\dur, Pseq([Pn(1/4, 7), 4], inf),
-	\gtranspose, Pseq([Pn(1/4, 7), 4], inf),
-	\dur, Pseq([Pn(1/4, 7), 4], inf),
-	\tempo, Pstutter(8, Pwhite(0.05, 5, inf)),
-	\gtranspose, Pstutter(8, Prand((0..7), inf)),
-	\mtranspose, Pstutter(8, Prand((0..7), inf)),
-).play(TempoClock());
+	\mtranspose, Pstutter(8, Pseq((0..6), inf)),
+	\ctranspose, Pstutter(8, Pseq([0, -2, -4, -5, -7, -9, -11], inf))
+).play(TempoClock(2));
+/* Note: Since mtranspose makes the scale start on a different degree,
+we transpose the whole framework down by as many semitones as the mode
+moves it up.
+*/
