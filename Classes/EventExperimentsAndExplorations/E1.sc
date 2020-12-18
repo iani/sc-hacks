@@ -7,6 +7,8 @@ Keep naming and methods as simple as possible.
 
 After understanding and testing these, names and methods and subclass structure may be improved.
 
+E1 experiment / exercise 1: play a tone synchronized with quant
+
 */
 
 E1 {
