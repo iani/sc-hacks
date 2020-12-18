@@ -1,0 +1,8 @@
+# 18 Dec 2020 11:07
+
+A series of exprerimental classes for understanding how Event is played in patterns (Pbind etc.).  
+
+Keep naming and methods as simple as possible.
+
+After understanding and testing these, names and methods and subclass structure may be improved.
+
