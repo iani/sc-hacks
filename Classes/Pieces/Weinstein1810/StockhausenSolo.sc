@@ -692,7 +692,7 @@ StockhausenSoloAction {
 	}
 	
 	init {
-		envir = envirName.e;
+		envir = envirName.ev;
 	}
 	
 	widget {
@@ -723,10 +723,10 @@ StockhausenSoloAction {
 			// envir.put(param, state /* * 0.5 */ /* *      */);
 			/*
 			[param, state, midictl, \lpd8.e[midictl] ? 1,
-				\lpd8.e[midictl] ? 1 * state
+				\lpd8.ev[midictl] ? 1 * state
 			].postln;
 			*/
-			envir.put(param, \lpd8.e [midictl] ? 1 * state);
+			envir.put(param, \lpd8.ev [midictl] ? 1 * state);
 		} {
 			/*
 			postf("this state: %, previousState: %. NOT CHANGING STATE!\n",

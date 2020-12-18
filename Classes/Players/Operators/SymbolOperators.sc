@@ -7,7 +7,7 @@
 		this.p(eventName).toggle(source);
 	}
 
-	use { | func | this.e.use(func); }
+	use { | func | this.ev.use(func); }
 
 	set { | ... args |
 		// set group of event of symbol
@@ -17,22 +17,22 @@
 
 	put { | param, val |
 		// set event parameter
-		this.e.put(param, val);
+		this.ev.put(param, val);
 	}
 
-	target { ^this.e.target }
+	target { ^this.ev.target }
 
-	e { ^Nevent(this) }
-	push { ^this.e.push }
+	ev { ^Nevent(this) }
+	push { ^this.ev.push }
 
 	addClock { | clock |
 		this.clock_(clock ?? { PlayerClock() })
 	}
 
 	clock_ { | clock |
-		this.e[\clock] = clock;
+		this.ev[\clock] = clock;
 	}
-	clock { ^this.e.clock }
+	clock { ^this.ev.clock }
 
 	controls { | eventName |
 		// return control inputs of current player's sourcePlayer,
@@ -45,9 +45,9 @@
 	ppp { | eventName | ^this.p(eventName).process }
 	stop { | eventName | ^this.p(eventName).stop }
 
-	playRoutine { | key, func | ^this.e.playRoutine(key, func)}
-	playLoop { | key, func | ^this.e.playLoop(key, func)}
-	playEnvEvent { | key, func | ^this.e.playEnvEvent(key, func)}
+	playRoutine { | key, func | ^this.ev.playRoutine(key, func)}
+	playLoop { | key, func | ^this.ev.playLoop(key, func)}
+	playEnvEvent { | key, func | ^this.ev.playEnvEvent(key, func)}
 
 	copyAudio { | reader, numChans = 1, outParam = \out, inParam = \in |
 		/* Connect writer with reader via an intermediate player which copies
@@ -55,8 +55,8 @@
 			numChans only matters if neither the reader nor the writer already have a bus.
 		*/
 		var writer, writersChans, readersChans, linker;
-		writer = this.e;
-		reader = reader.e;
+		writer = this.ev;
+		reader = reader.ev;
 		writersChans = writer.audioBusChans(outParam);
 		readersChans = reader.audioBusChans(inParam);
 		/* writers channels overwrite channels if existent.
@@ -68,7 +68,7 @@
 			readersChans !? { numChans = readersChans }
 		};
 		// Use buses from writer and reader, if they exist.
-		linker = format("_link_%_", UniqueID.next).asSymbol.e;
+		linker = format("_link_%_", UniqueID.next).asSymbol.ev;
 		linker.addAudioBus(\in, writer.getAudioBus(outParam, numChans));
 		linker.addAudioBus(\out, reader.getAudioBus(inParam, numChans));
 		writer addReader: linker;
@@ -166,7 +166,7 @@
 	<+ { | argument, envir |
 		// argument interprets this differently according to class
 		// See file ArgSetParameter.sc
-		argument.setParameter(this, envir.e);
+		argument.setParameter(this, envir.ev);
 	}
 
 	/* // ????????????????

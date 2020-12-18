@@ -14,14 +14,14 @@
 		postf("Debuging: envir, %, currentEnvironment %, using: %\n",
 			envir, currentEnvironment, if(envir.isNil) { currentEnvironment } { envir.e };
 		);
-		envir.e.put(paramName, this);
-		// ^(if(envir.isNil) { currentEnvironment } { envir.e }).put(paramName, this);
+		envir.ev.put(paramName, this);
+		// ^(if(envir.isNil) { currentEnvironment } { envir.ev }).put(paramName, this);
 	}
 	*/
 
 	setParameter { | paramName = \test, envir |
 		// currentEnvironment.postln;
-		// envir.e.postln;
+		// envir.ev.postln;
 		envir.put(paramName, this);
 	}
 }
@@ -33,20 +33,20 @@
 	// The mapping is done through code in dispatcher of Nevent and in SynthPlayer.
 	setParameter { | paramName, adverb |
 		var envir, bus, synth, numChannels = 1;
-		// (if(envir.isNil) { envir = currentEnvironment } { envir = envir.e });
+		// (if(envir.isNil) { envir = currentEnvironment } { envir = envir.ev });
 		/*
 		if (adverb isKindOf: Integer) {
-			envir = nil.e;
+			envir = nil.ev;
 			numChannels = adverb;
 		}{
-			envir = adverb.e;
+			envir = adverb.ev;
 		};
 		*/
 		switch (adverb.class,
 			Integer, { numChannels = adverb; },
 			Symbol, { envir = adverb.e; }
 		);
-		envir = envir.e; // see Nil:e, Symbol:e
+		envir = envir.ev; // see Nil:ev, Symbol:ev
 		bus = envir.at(paramName);
 		if (bus isKindOf: Bus) {
 			// this releases previous synths.

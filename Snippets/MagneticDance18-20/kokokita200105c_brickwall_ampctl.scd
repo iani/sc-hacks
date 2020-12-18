@@ -204,7 +204,7 @@ currentEnvironment.target;
 /*
 	@> { | param, envir |
 		// map bus named by me to param in envir
-		^(envir ?? { envir.e }).map(param, this);
+		^(envir ?? { envir.ev }).map(param, this);
 	}
 */
 //:

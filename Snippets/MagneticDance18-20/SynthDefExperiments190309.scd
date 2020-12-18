@@ -101,8 +101,8 @@ a release: 5;
 (instrument: \plain2) +> \fade;
 //:================================================================
 //:trying to use private group in pattern
-\envir1.e[\target] = OrderedGroup();
-\envir2.e[\target] = OrderedGroup();
+\envir1.ev[\target] = OrderedGroup();
+\envir2.ev[\target] = OrderedGroup();
 //:
 { SinOsc.ar(\freq.kr(400), 0, 0.1) } +> \envir1;
 { SinOsc.ar(\freq.kr(500), 0, 0.1) } +> \envir2;

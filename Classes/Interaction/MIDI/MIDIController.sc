@@ -78,7 +78,7 @@ LPD8 : MIDIController {
 	classvar <envir;
 	*gui {
 		// TOGGLE MODE!
-		envir = \lpd8.e;
+		envir = \lpd8.ev;
 		this.window({ | w |
 			this.init;
 			w.bounds =  Rect(0, 820, 300, 20); //  Rect(300, 300, 300, 20);

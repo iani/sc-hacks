@@ -51,7 +51,7 @@ Used to map controls to sensor inputs.
 		// to permit customization:
 		var busses = #[\x1, \y1, \z1, \x2, \y2, \z2, \x3, \y3, \z3, \x4, \y4, \z4];
 		var envirname, controls, controlplayer;
-		envir = envir.e;
+		envir = envir.ev;
 		envirname = envir.name;
 		controlplayer = this.map(envirname, param); 
 		// postf("created this controlplayer: %\n", controlplayer);

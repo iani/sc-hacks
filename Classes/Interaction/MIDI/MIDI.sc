@@ -15,7 +15,7 @@ MIDI {
 
 	setParameter { | paramName, envir |
 		// called by Symbol <+ midi.
-		^envir.e.setMIDIparam(paramName, this);
+		^envir.ev.setMIDIparam(paramName, this);
 	}
 
 	asMIDIFunc { | argFunc |

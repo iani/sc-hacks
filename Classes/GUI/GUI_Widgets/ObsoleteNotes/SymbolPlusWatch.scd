@@ -14,7 +14,7 @@ Additional utilities and shortcuts: v, h, watch, close.
 
 	watch { | key, action |
 		// perform action when key is set in envir named by symbol
-		this.e.addNotifier(this.e, key, action);
+		this.ev.addNotifier(this.ev, key, action);
 	}
 }
 */
@@ -31,16 +31,16 @@ Additional utilities and shortcuts: v, h, watch, close.
 			Slider()
 			.orientation_(\horizontal)
 			.action_({ | me |
-				\test.e.put(\freq, \freq.asSpec.map(me.value))
+				\test.ev.put(\freq, \freq.asSpec.map(me.value))
 			})
-			.addNotifier(\test.e, \freq, { | freq, notification |
+			.addNotifier(\test.ev, \freq, { | freq, notification |
 				notification.listener.value = \freq.asSpec.unmap (freq);
 			}),
 			NumberBox()
 			.action_({ | me |
-				\test.e.put(\freq, me.value)
+				\test.ev.put(\freq, me.value)
 			})
-			.addNotifier(\test.e, \freq, { | freq, notification |
+			.addNotifier(\test.ev, \freq, { | freq, notification |
 				notification.listener.value = freq;
 			})
 		)
@@ -54,7 +54,7 @@ Additional utilities and shortcuts: v, h, watch, close.
 + SimpleNumber {
 	// if Symbol <+ SimpleNumber, then set symbol as parameter in envir to number.
 	setParameter { | paramName, envir |	
-		^(if(envir.isNil) { currentEnvironment } { envir.e }).put(paramName, this);
+		^(if(envir.isNil) { currentEnvironment } { envir.ev }).put(paramName, this);
 	}
 }
 

@@ -14,7 +14,7 @@ Testing before implementing:
 //:
 ~freq = 100;
 //: Listen to change notifications when setting the parameter
-\default.e.addDependant({ | ... args | args.postln; });
+\default.ev.addDependant({ | ... args | args.postln; });
 //:
 \default.play;
 //:

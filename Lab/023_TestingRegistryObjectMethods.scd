@@ -50,9 +50,9 @@ Library.at(\primes, 1000, \bigtest);
 //:
 {
 	loop {
-		\default.e.get_(\windows, ~name = \window1, ~windowFunc).front;
+		\default.ev.get_(\windows, ~name = \window1, ~windowFunc).front;
 		2.wait;
-		\default.e.get_(\windows, ~name = \window2, ~windowFunc).front;
+		\default.ev.get_(\windows, ~name = \window2, ~windowFunc).front;
 		2.wait;
 	}
 }.fork(AppClock)

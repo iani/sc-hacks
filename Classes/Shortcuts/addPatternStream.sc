@@ -21,7 +21,7 @@ It defaults to player.
 		stream = this.asStream;
 		dt = dt.asStream(player.target);
 		func = func.asStreamFunction(player.target);
-		envir = player.e;
+		envir = player.ev;
 		envir.playRoutine(key ? player, { 
 			stream do: { | value |
 				func.(value, player);

@@ -47,7 +47,7 @@ Adding asPlayer
 		// fixing this (12 Nov 2020 12:11)
 	@> { | envir, param |
 		postf("mapping bus: % to param % of envir %\n", this, param, envir);
-		this.map(envir ?? { envir.e }, param);
+		this.map(envir ?? { envir.ev }, param);
 	}
 	*/
 

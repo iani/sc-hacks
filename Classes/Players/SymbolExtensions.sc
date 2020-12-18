@@ -8,7 +8,7 @@
 	/*
 	value { | envir |
 		// return value of self as parameter in envir
-		^envir.e[this];
+		^envir.ev[this];
 	}
 	*/
 }

@@ -8,7 +8,7 @@ busname @>.param envir map parameter param in envir to bus busname
 \bus <@ 600;
 \bus @>.freq \sound;
 //:
-\sound.e.inspect;
+\sound.ev.inspect;
 //:
 { LFNoise0.kr(4).range(300, 1200) } @> \bus;
 //:parameter name defaults to frequecy
@@ -44,7 +44,7 @@ there may be naming conflicts.  Discussion in the examples below.
 { SinOsc.kr(3).range(400, 500) } @>.freq \mysound2;
 
 //:
-\sound.e.inspect;
+\sound.ev.inspect;
 //:
 \bus.bus;
 \bus.bus.get;

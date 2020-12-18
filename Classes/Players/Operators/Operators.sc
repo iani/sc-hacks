@@ -39,8 +39,8 @@ in player.
 		// play Event as PatternPlayer of type \envEvent;
 		// playerName: name where the PatternPalayer will be stored.
 		// envir: The (name of the) envir to play the routine in. If nil, defaults to currentEnvir.
-		//		playerName.p(envir.e).playEnvEvent(this)
-		playerName.p(envir.e.name).playEnvEvent(this)
+		//		playerName.p(envir.ev).playEnvEvent(this)
+		playerName.p(envir.ev.name).playEnvEvent(this)
 	}
 	p {
 		^EventPattern(this).play;
@@ -80,7 +80,7 @@ in player.
 
 	+> { | player, envir |
 		// stop envir-player named player in envir
-		player.p(envir.e.name).stop;
+		player.p(envir.ev.name).stop;
 	}
 }
 

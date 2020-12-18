@@ -151,8 +151,8 @@ HarveyRicercare {
 		delayRoutine = {
 			channels do: { | channelName, channelNum |
 				// \out <+.channelName channelNum;
-				channelName.e[\out] = channelNum;
-				channelName.e[\rate] = 1;
+				channelName.ev[\out] = channelNum;
+				channelName.ev[\rate] = 1;
 				[\channelNum, channelNum].postln;
 				{ | out = 0, rate = 1 |
 					Out.ar(out, 
@@ -163,8 +163,8 @@ HarveyRicercare {
 				/*				
 				\channel1.ppp.set(\out, 3);
 				
-				channelName.e[\out].postln;
-				channelName.e.pp.postln;
+				channelName.ev[\out].postln;
+				channelName.ev.pp.postln;
 				*/
 				3.wait;
 			};
@@ -184,19 +184,19 @@ HarveyRicercare {
 			// 6, 18, 42, 90 sec
 			6.wait;
 			"start channel 1 at 1 octave lower".postln;
-			\channel1.e[\rate] = 2.reciprocal;
+			\channel1.ev[\rate] = 2.reciprocal;
 			\channel1.start;
 			13.wait;
 			"start channel 2 at 2 octaves lower".postln;
-			\channel2.e[\rate] = 4.reciprocal;
+			\channel2.ev[\rate] = 4.reciprocal;
 			\channel2.start;
 			24.wait;
 			"start channel 3 at 3 octaves lower".postln;
-			\channel3.e[\rate] = 8.reciprocal;
+			\channel3.ev[\rate] = 8.reciprocal;
 			\channel3.start;
 			48.wait;
 			"start channel 4 at 4 octaves lower".postln;
-			\channel4.e[\rate] = 16.reciprocal;
+			\channel4.ev[\rate] = 16.reciprocal;
 			\channel4.start;
 		}.fork;
 	}

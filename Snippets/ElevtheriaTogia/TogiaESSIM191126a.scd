@@ -93,7 +93,7 @@ BusOsc.watch1(\thisissensestagetest, '/minibee/data',
 //:
 ~rate;
 //:
-\prologue.e;
+\prologue.ev;
 //:
 \period <+ 1;
 //:
@@ -127,7 +127,7 @@ format("%_%", \soundin, \effect).asSymbol *> \effect;
 { SoundIn.ar } +> format("%_%", \soundin, \effect).asSymbol;
 { }
 //:model sound in method step 2
-\soundin.asPlayer(\effect.e) // .play(this); // accept non-symbol player arg
+\soundin.asPlayer(\effect.ev) // .play(this); // accept non-symbol player arg
 //:model sound in method step 2
 var chan = 0;
 // create player soundin in environment effect

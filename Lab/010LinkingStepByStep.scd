@@ -14,10 +14,10 @@
 //: Start testing as above, with symbols instead of PersistentBusProxies.
 \writer2 *> \reader2;
 //: continuing above
-\writer2.e[\target];
-\reader2.e[\target];
-\writer2.e[\target] isBefore: \reader2.e[\target];
-\reader2.e[\target] isBefore: \writer2.e[\target];
+\writer2.ev[\target];
+\reader2.ev[\target];
+\writer2.ev[\target] isBefore: \reader2.ev[\target];
+\reader2.ev[\target] isBefore: \writer2.ev[\target];
 //: continuing above
 \reader2 *> \reader2;
 //: 5. Testing *> vs *<
@@ -25,16 +25,16 @@
 \writer2a *> \reader1a;
 \writer1b *< \reader1b;
 \writer1b *< \reader2b;
-\writer1a.e.busses;
-\writer1a.e[\out];
-\writer1a.e;
-\writer2a.e[\out];
-\writer1a.e[\out];
-\reader1a.e[\out];
+\writer1a.ev.busses;
+\writer1a.ev[\out];
+\writer1a.ev;
+\writer2a.ev[\out];
+\writer1a.ev[\out];
+\reader1a.ev[\out];
 //:
-\writer1b.e[\out];
-\reader1b.e[\out];
-\reader2b.e[\out];
+\writer1b.ev[\out];
+\reader1b.ev[\out];
+\reader2b.ev[\out];
 //: 6. Testing with sound a: many to 1 (*>)
 \writer1a *> \reader1a;
 \writer2a *> \reader1a;
@@ -59,7 +59,7 @@
 //:
 (addMethod: \addAfter) +> \writer1b;
 //:
-\writer1b.e[\target];
+\writer1b.ev[\target];
 //:
 \writer1b.ppp.stream.event;
 //:

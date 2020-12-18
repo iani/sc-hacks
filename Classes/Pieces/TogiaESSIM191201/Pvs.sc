@@ -141,8 +141,8 @@ TODO: refactor the next class to support subclassing for different play function
 Pbuf2 {
 	*new { | initFunc, player = \pi, fx |
 		var buffername, buffer;
-		player.e.use(initFunc);
-		buffername = player.e[\buffer] ? \prologue;
+		player.ev.use(initFunc);
+		buffername = player.ev[\buffer] ? \prologue;
 		buffer = buffername.b;
 		fx ?? { fx = { | in | in } };
 		{
@@ -150,7 +150,7 @@ Pbuf2 {
 			src = PlayBuf.ar(1, buffer, // \prologue.b,
 				\rate.kr(1),
 				Impulse.kr(\period.kr(9e10).reciprocal),
-				\startpos.kr(player.e.startpos) + 10 * 44100, 1
+				\startpos.kr(player.ev.startpos) + 10 * 44100, 1
 			);
 			fx.(src);
 		} +> player;
@@ -161,14 +161,14 @@ Pbuf2 {
 Gbuf {
 	*new { | initFunc, player = \pi |
 		var buffername, buffer;
-		player.e.use(initFunc);
-		buffername = player.e[\buffer] ? \prologue;
+		player.ev.use(initFunc);
+		buffername = player.ev[\buffer] ? \prologue;
 		buffer = buffername.b;
 		{
 			PlayBuf.ar(1, buffer, // \prologue.b,
 				\rate.kr(1),
 				Impulse.kr(\period.kr(9e10).reciprocal),
-				\startpos.kr(player.e.startpos) + 10 * 44100, 1
+				\startpos.kr(player.ev.startpos) + 10 * 44100, 1
 			);
 		} +> player;
 	}

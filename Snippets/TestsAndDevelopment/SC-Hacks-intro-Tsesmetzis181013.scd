@@ -18,11 +18,11 @@ SnippetList.gui;
 //:pushing an environment by name
 //To get an environment, send the message
 //'e' to the symbol naming the environment. For example:
-\myenvironment.e;
+\myenvironment.ev;
 //:environments created with e are stored in the library by name:
 Library.at(\environments)
 //:To push an environment, send it the push message:
-\myenvironment.e.push;
+\myenvironment.ev.push;
 //:Test the above:
 currentEnvironment;
 //:Shortcut: to create, get and push an environment, use "push"

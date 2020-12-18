@@ -23,7 +23,7 @@ Nevent : EnvironmentRedirect {
 
 	*all {
 		// return array with all environments (Nevent instances).
-		//	^Registry(libRoot, { \default.e }).values.asArray;
+		//	^Registry(libRoot, { \default.ev }).values.asArray;
 		^(Registry.at(libRoot) ?? { IdentityDictionary() }).values.asArray
 	}
 

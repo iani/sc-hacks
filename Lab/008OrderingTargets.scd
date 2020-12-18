@@ -12,18 +12,18 @@ Server.default.defaultGroup.asTarget.server;
 
 currentEnvironment;
 
-\test.e;
+\test.ev;
 // ================================================================
 //: Testing recent additions to lib for ordering of groups
-\test.e canAddWriter: \test.e;
+\test.ev canAddWriter: \test.ev;
 //:
-\test.e canAddWriter: \writer1.e;
+\test.ev canAddWriter: \writer1.ev;
 //:
-\test.e addWriter: \test.e;
+\test.ev addWriter: \test.ev;
 //:
-\test.e addWriter: \writer1.e;
+\test.ev addWriter: \writer1.ev;
 //:
-\test.e;
+\test.ev;
 //:
-\writer1.e;
+\writer1.ev;
 //:

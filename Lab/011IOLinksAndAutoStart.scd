@@ -15,13 +15,13 @@ b = a.getBus;
 //:
 b.inspect;
 //: The bus has the right number of channels:
-\io.e.busses[\out].inspect;
+\io.ev.busses[\out].inspect;
 // now let's make a link synth player for the configured envir.
 //: First obtain the number of channels to work with.
-\io.e.busses[\out].numChannels;
+\io.ev.busses[\out].numChannels;
 //: Then make the function with the number of channels:
 var numChans;
-numChans = \io.e.busses[\out].numChannels;
+numChans = \io.ev.busses[\out].numChannels;
 numChans.postln;
 { In.ar(\in.kr, numChans.postln;) } +> \io;
 //: now do all the steps, starting with a symbol.
@@ -29,7 +29,7 @@ numChans.postln;
 var linkName = \io, argChannels = 2, numChannels;
 numChannels = PersistentBusProxy(linkName, \in, argChannels).getBus.numChannels;
 PersistentBusProxy(linkName, \out, argChannels).getBus;
-linkName.e.busses;
+linkName.ev.busses;
 { In.ar(\in.kr, numChannels) } +> linkName;
 \writerTest *> linkName;
 linkName *> \readerTest;
@@ -43,9 +43,9 @@ linkName *> \readerTest;
 \writerTest *> \io;
 \io *> \readerTest;
 //:
-\readerTest.e;
-\io.e;
-\writerTest.e;
+\readerTest.ev;
+\io.ev;
+\writerTest.ev;
 //: Now the link synth, and persistency
 { In.ar(\in.kr) } +> \io.persist;
 { WhiteNoise.ar(0.1) } +> \writerTest.persist;
@@ -61,17 +61,17 @@ PersistentBusProxy(\io, \out, 2).getBus;
 // ================================================================
 // One can do the linking without PersistentBusProxy if one is not using the @ or * operators
 //: Example of customizing the name of parameter for a writer
-\customWriterTest.e.addAudioBus(\out2, \io.e.getAudioBus(\in, 2));
-\customReaderTest.e.addAudioBus(\in2, \io.e.getAudioBus(\out, 2));
-\customReaderTest.e.busses.postln;
-\customWriterTest.e.busses.postln;
+\customWriterTest.ev.addAudioBus(\out2, \io.ev.getAudioBus(\in, 2));
+\customReaderTest.ev.addAudioBus(\in2, \io.ev.getAudioBus(\out, 2));
+\customReaderTest.ev.busses.postln;
+\customWriterTest.ev.busses.postln;
 //: Redoing example with default i/o parameter names.
-\stereoWriterTest.e.addAudioBus(\out, \io.e.getAudioBus(\in, 2));
-\stereoReaderTest.e.addAudioBus(\in, \io.e.getAudioBus(\out, 2));
-\stereoReaderTest.e.busses.postln;
-\stereoWriterTest.e.busses.postln;
+\stereoWriterTest.ev.addAudioBus(\out, \io.ev.getAudioBus(\in, 2));
+\stereoReaderTest.ev.addAudioBus(\in, \io.ev.getAudioBus(\out, 2));
+\stereoReaderTest.ev.busses.postln;
+\stereoWriterTest.ev.busses.postln;
 //:
-{ In.ar(\in.kr, \stereoWriterTest.e.getAudioBus(\out).numChannels) } +> \io.persist;
+{ In.ar(\in.kr, \stereoWriterTest.ev.getAudioBus(\out).numChannels) } +> \io.persist;
 //:
 \stereoWriterTest *> \io;
 \io *> \stereoReaderTest;
@@ -80,10 +80,10 @@ PersistentBusProxy(\io, \out, 2).getBus;
 // ================================================================
 //: Retrying the above in one block of code: Perhaps defer is necessary for starting the synths
 //: This in this order is ok in one block.
-\stereoWriterTest.e.addAudioBus(\out, \io.e.getAudioBus(\in, 2));
-\stereoReaderTest.e.addAudioBus(\in, \io.e.getAudioBus(\out, 2));
-\stereoReaderTest.e.busses.postln;
-\stereoWriterTest.e.busses.postln;
+\stereoWriterTest.ev.addAudioBus(\out, \io.ev.getAudioBus(\in, 2));
+\stereoReaderTest.ev.addAudioBus(\in, \io.ev.getAudioBus(\out, 2));
+\stereoReaderTest.ev.busses.postln;
+\stereoWriterTest.ev.busses.postln;
 \stereoWriterTest *> \io;
 \io *> \stereoReaderTest;
 { In.ar(\in.kr, \stereoWriterTest.e.getAudioBus(\out).numChannels) } +> \io.persist;
@@ -95,13 +95,13 @@ PersistentBusProxy(\io, \out, 2).getBus;
 
 //: Retrying the above in one block of code: Perhaps defer is necessary for starting the synths
 // Splitting this so that the writer and reader are started at any other later point is also ok.
-\stereoWriterTest.e.addAudioBus(\out, \io.e.getAudioBus(\in, 2));
-\stereoReaderTest.e.addAudioBus(\in, \io.e.getAudioBus(\out, 2));
-\stereoReaderTest.e.busses.postln;
-\stereoWriterTest.e.busses.postln;
+\stereoWriterTest.ev.addAudioBus(\out, \io.ev.getAudioBus(\in, 2));
+\stereoReaderTest.ev.addAudioBus(\in, \io.ev.getAudioBus(\out, 2));
+\stereoReaderTest.ev.busses.postln;
+\stereoWriterTest.ev.busses.postln;
 \stereoWriterTest *> \io;
 \io *> \stereoReaderTest;
-{ In.ar(\in.kr, \stereoWriterTest.e.getAudioBus(\out).numChannels) } +> \io.persist;
+{ In.ar(\in.kr, \stereoWriterTest.ev.getAudioBus(\out).numChannels) } +> \io.persist;
 //:
 { WhiteNoise.ar(0.1) } +> \stereoWriterTest.persist;
 { Ringz.ar(In.ar(\in.kr), LFNoise0.kr(5).range(400, 2000), 0.5, 0.1) } +> \stereoReaderTest.persist;
@@ -121,9 +121,9 @@ writer.copyAudio(reader, numChans, outparam, inparam);
 //: Testing stereo - counterexample with 1 channel link, (user error.)
 // The second channel of the stereo output of the writer is copied onto the first input channel.
 /* Explanation of resulting error:
-	\testWriter2.e.busses[\out].index; // 4
-	\testReader2.e.busses[\in].index; // 5
-	\testReader2.e.writers.asArray.first; // in index: 4. Out index: 5
+	\testWriter2.ev.busses[\out].index; // 4
+	\testReader2.ev.busses[\in].index; // 5
+	\testReader2.ev.writers.asArray.first; // in index: 4. Out index: 5
 
 testWriter2 writes its output to bus \out with 1 channel, at index 4.
 But the actual output has 2 channels, so it writes in channel 4 and 5.

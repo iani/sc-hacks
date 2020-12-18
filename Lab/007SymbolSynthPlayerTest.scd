@@ -62,5 +62,5 @@ Therefore need to order the synths of linked players in the correct order.
 //:
 \source1.stop;
 //:
-\source1.e;
+\source1.ev;
 //:

@@ -6,7 +6,7 @@ PersistentBusProxy {
 
 	*new { arg envir, param, numChannels = 1;
 		// Get envir, but do not make bus.
-		^this.newCopyArgs(envir.e, param, numChannels)
+		^this.newCopyArgs(envir.ev, param, numChannels)
 	}
 
 	/*

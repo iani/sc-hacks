@@ -44,18 +44,18 @@ SynthDef("ring", {
 { WhiteNoise.ar(Decay2.kr(Impulse.kr(0.5, 0, 0.1), 0.3, 1, 0.1)) } +> \writer2;
 
 //:
-\writer1.e.writers;
-\reader1.e.writers;
+\writer1.ev.writers;
+\reader1.ev.writers;
 //:
-\w1.e.writers add: \w2.e;
-\w2.e.writers add: \w3.e;
-\w1.e.writers add: \w2b.e;
-\r1.e.writers add: \w1.e; // w1 becomes a writer of r1
+\w1.ev.writers add: \w2.ev;
+\w2.ev.writers add: \w3.ev;
+\w1.ev.writers add: \w2b.ev;
+\r1.ev.writers add: \w1.ev; // w1 becomes a writer of r1
 //:
-\r1.e.allWriters(Set());
+\r1.ev.allWriters(Set());
 //:
-\r1.e.canAddWriter(\r1.e);
-\r1.e.canAddWriter(\w1.e);
+\r1.ev.canAddWriter(\r1.ev);
+\r1.ev.canAddWriter(\w1.ev);
 /* If you add r1 as writer to w1, note that 
 w1 is a writer of r1. So:
 Originally w1 writer to r1 !:
@@ -64,8 +64,8 @@ After adding r1 AS WRITER to w1:
 r1 <- w1 <- r1
 This would clearly be a cycle.
 */
-\w1.e.canAddWriter(\r1.e);
-\w1.e.allWriters(Set());
+\w1.ev.canAddWriter(\r1.ev);
+\w1.ev.allWriters(Set());
 \
 
 Set() add: 1;

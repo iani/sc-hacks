@@ -25,7 +25,7 @@ currentEnvironment.playRoutine(\test, { loop {
 //:
 \default +> \test;
 //:
-\test.e.playRoutine(\blah,
+\test.ev.playRoutine(\blah,
 	{
 		loop {
 			~freq = 400 rrand: 1000;
@@ -34,7 +34,7 @@ currentEnvironment.playRoutine(\test, { loop {
 	}
 )
 //:
-\test.e.playLoop(\blah, {
+\test.ev.playLoop(\blah, {
 	~freq = 400 rrand: 1000;
 	0.5.wait;
 })

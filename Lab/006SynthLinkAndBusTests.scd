@@ -45,23 +45,23 @@ Cases to test:
 //:
 currentEnvironment;
 //:
-\test.e.getAudioBus;
+\test.ev.getAudioBus;
 //:
-\test.e.inspect;
-\test.e.something;
+\test.ev.inspect;
+\test.ev.something;
 //:
 { WhiteNoise.ar(0.05) } +> \source;
-\source.e.getAudioBus(\out);
+\source.ev.getAudioBus(\out);
 //:
 { Ringz.ar(Fin(), 1000, ) } +> \effect;
-\effect.e.getAudioBus(\in);
+\effect.ev.getAudioBus(\in);
 //:
-\effect.e;
+\effect.ev;
 //:
-\source.e;
+\source.ev;
 //:
 \source *> \effect;
 //:
-\source.e;
+\source.ev;
 //:
-\effect.e;
+\effect.ev;
