@@ -34,4 +34,75 @@ Define Pseq2 (or Pser2) with an additional argument 'step', which enables one to
 
 Would it be better to make this a subclass of Pser?
 
+
+Pseq : ListPattern {
+	var <>offset;
+	*new { arg list, repeats=1, offset=0;
+		^super.new(list, repeats).offset_(offset)
+	}
+	embedInStream {  arg inval;
+		var item, offsetValue;
+		offsetValue = offset.value(inval);
+		if (inval.eventAt('reverse') == true, {
+			repeats.value(inval).do({ arg j;
+				list.size.reverseDo({ arg i;
+					item = list.wrapAt(i + offsetValue);
+					inval = item.embedInStream(inval);
+				});
+			});
+		},{
+			repeats.value(inval).do({ arg j;
+				list.size.do({ arg i;
+					item = list.wrapAt(i + offsetValue);
+					inval = item.embedInStream(inval);
+				});
+			});
+		});
+		^inval;
+	}
+	storeArgs { ^[ list, repeats, offset ] }
+}
+
+Pser : Pseq {
+	embedInStream { arg inval;
+		var item;
+		var offsetValue = offset.value(inval);
+		if (inval.eventAt('reverse') == true, {
+			repeats.value(inval).reverseDo({ arg i;
+				item = list.wrapAt(i + offsetValue);
+				inval = item.embedInStream(inval);
+			});
+		},{
+			repeats.value(inval).do({ arg i;
+				item = list.wrapAt(i + offsetValue);
+				inval = item.embedInStream(inval);
+			});
+		});
+		^inval;
+	}
+}
+
 */
+
+Pser2 : Pser {
+	var <>step = 1;
+	*new { arg list, repeats=1, offset=0, step = 1;
+		^super.new(list, repeats, offset).step_(step);
+	}
+
+	embedInStream { arg inval;
+		var item, index;
+		index = offset.(inval);
+		repeats.value(inval).do({
+			item = list.wrapAt(index);
+			inval = item.embedInStream(inval);
+			index = index + step.(inval);
+		});
+		^inval;
+	}
+
+	reverse {
+		offset = list.size - 1;
+		step = -1;
+	}
+}
