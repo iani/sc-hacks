@@ -115,3 +115,9 @@ Rational {
 	}
 	
 }
+
++ SimpleNumber {
+	rational {
+		^Rational(*this.asFraction);	
+	}
+}
