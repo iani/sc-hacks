@@ -21,7 +21,9 @@ e = ();
 e.play;
 "Now inspecting event after playing:".postln;
 postf("()'s parents' type is: %\n", e.parent.type);
-
-
+postf("()'s parents' keys are: \n");
+e.parent.keys.asArray.sort do: ({ | k, i |
+	postf("(%:) %\n", i, k);
+});
 \_;
 //:
