@@ -1,0 +1,1 @@
+Server.default.scope.window.bounds = Rect(0, 120, 300, 300);

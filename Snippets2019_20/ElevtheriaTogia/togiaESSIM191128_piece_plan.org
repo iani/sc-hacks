@@ -1,0 +1,43 @@
+#+LATEX_HEADER_PATH: /home/iani/latex-exports/templates/00BasicGreek/framework.tex
+* COMMENT table
+
+|---+-----------------+---------+--------+------------------------------------+-------------+--------------|
+|   | minutes:seconds | player  | effect | source or action                   | effect type | control      |
+|---+-----------------+---------+--------+------------------------------------+-------------+--------------|
+|   |             0:0 | cauche1 | pv1    | start semitone glissando (sec 809) | none        | -            |
+|   |            0:20 |         | pv1    | fade in effect                     | MagClip     | z1 > thresh  |
+|   |            0:50 | cauche2 | pv2    | start semitone glissando           | BinShift    | static, low  |
+|   |       ca   1:30 |         |        | LIVE VIOLA                         | BinShift    | x1> stretch  |
+|   |       ca   1:30 |         |        | LIVE VIOLA                         | BinShift    | y1> shift    |
+|   |       ca   1:30 |         |        | LIVE VIOLA                         | BinShift    |              |
+|   |            2:00 | cauche2 | pv2    |                                    | BinShift    | x1 > stretch |
+|   |            2:00 | cauche2 | pv2    |                                    | BinShift    | y1 > shift   |
+|   |                 |         |        |                                    |             |              |
+
+
+* 00:00 start: cauche glissando (no fx)
+* 00:20 fade in MagClip on cauche glissando: z1->thresh
+* 00:50 cauche2 glissando + BinShift (low, static)
+* ca 01:30 start togia (live viola) + BinShift, x1>stretch, y1>shift
+To check: Possibly control source / effect volumes with x2, y2.
+* ca 02:00 cauche2: BinShift: add x1>stretch, y1>shift
+* 04:00 cauche start of piece. (no fx)
+* ca 04:10 togia  start of piece. (no fx)
+* 4:30 cauche + magabove (thresh: line 0->0.7 30'')
+* 5:30 togia + magabove (thresh: line 0->0.7 30'')
+* 6:00 cauche + magabove (z1>thresh)
+* 6:30 togia + magabove (z1>thresh)
+* 7:00 cauche + togia: heartbeat + LocalMax (thresh: line 0->0.7 30'')
+* 7:30 cauche2: scratch + BinShift (x1>stretch, y1>shift)
+* 8:00 togia (scratch) + BinShift (x1>stretch, y1>shift)
+* 9:00 quiet end of piece (+MagClip)
+** version from ET 30 Nov 2019 08:50
+   
+
+[ΝΑΙ] :00-4:30 Μόνο ηχογράφηση, χωρίς φίλτρα
+!!! [02:00] Δεύτερη φωνη ηχογράφησης με χαμηλό Bin Shift σταθερό
+
+[ΈΧΕΙ ΜΠΕΊ 2Η ΗΧΟΓΡΑΦΗΣΗ ΉΔΗ ΜΕ ΧΑΜΗΛΌ Bin Shift] 4:30-5:00  βιόλα live με bin shift 
+5:00-7:00 μπαίνουν διαδοχικα στην ηχογράφηση τα 2 φίλτρα που λέγαμε χτες και 2πλασιασμος ,3πλασιασμος της ηχογράφησης. 
+7:00-:8:30  μπαίνει το heart beat συνεχόμενα ( μπορείτε να το πάρετε από την ηχογράφηση του Causse στο 4:30-4:40)
+Τέλος 8:30-10:00 Θέλουμε τρίξιμο ( μπορείτε να το πάρετε από την ηχογράφηση του Causse από το 12:28-13:00)

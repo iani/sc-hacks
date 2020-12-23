@@ -1,0 +1,7 @@
+21 Oct 2020 09:50
+
+Code for processing recordings for use in soundscape projects.
+
+Starting with decoding of ambisonic recordings made with Zoom HR3-VR.
+
+
