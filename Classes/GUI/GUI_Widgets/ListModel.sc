@@ -11,6 +11,8 @@ etc.
 
 - Devise ways to save these lists with Config class.
 
+\test.listView;
+ListModel.named(\test).items = (1..5);
 */
 
 ListModel : NamedSingleton {

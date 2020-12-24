@@ -77,16 +77,6 @@
 		this.prLayout(items, HLayout);
 	}
 
-	listView {
-		// experimental  2 Dec 2020 07:42
-		// single list view
-		this.prLayout(
-			[ListModel.named(this).listView],
-			VLayout,
-			400
-		)
-	}
-
 	doubleListView { | layout |
 		// experimental  2 Dec 2020 07:42
 		// double list view
