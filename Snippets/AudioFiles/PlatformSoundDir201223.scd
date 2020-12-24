@@ -12,3 +12,8 @@ Platform.systemAppSupportDir; // -> "/usr/share/SuperCollider"
 //:This is the proposed dir - we need to provide it as default
 // and add a mechanism for selecting and adding more dirs:
 // "/usr/share/SuperCollider/sounds"
+//:some candidate platform sound dirs:
+[\resourceDir, \userAppSupportDir, \systemAppSupportDir].collect({ | d |
+	format("%/sounds/", Platform.perform(d))
+}
+)

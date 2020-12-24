@@ -17,7 +17,7 @@ ListModel.named(\test).items = (1..5);
 
 ListModel : NamedSingleton {
 	var <list;
-	var <selectedIndex = 0, <selectedItem;
+	var <selection = #[0], <selectedItems;
 	
 	prInit { list = List(); }
 
@@ -26,34 +26,62 @@ ListModel : NamedSingleton {
 		.items_(list.array)
 		.font_(GuiDefaults.font)
 		.action_({ | me |
-			this.selectAt(me.value);
+			//	postf("testing selection: %\n", me.selection);
+			this.selection = me.selection;
 		})
+		.mouseUpAction_({ | me |
+			//	postf("testing MOUSE selection: %\n", me.selection);
+			this.selection = me.selection;
+		})
+		.selectionMode_(\multi) // allow selecting multiple items
 		.keyDownAction_({ | me, key |
-			if (key === Char.ret ) { "return was pressed".postln }
+			switch(
+				Char.ret, { "return was pressed".postln },
+				Char.space, {
+					//	postf("updating selection: %\n", me.selection);
+					this.selection = me.selection;
+				}
+			)
 		})
 		.addNotifier(this, \items, { | arglist, n |
 			{
 				n.listener.items = list.array;
 			}.defer;
 		})
-		.addNotifier(this, \selectedIndex, { | n |
+		.addNotifier(this, \selection, { | n |
 			{
-				n.listener.value = selectedIndex
+				n.listener.selection = selection
 			}.defer;
 		})
 	}
 
 	items_ { | argArray |
-		list.array = argArray;
-		this.changed(\items, list);
-		this.updateSelection;
+		/* set the contents of the list to argArray
+			notify view dependants about the change so that they
+			update their condents according to the new list.
+		*/
+		list.array = argArray; // set contents of list
+		this.changed(\items, list); // notify (view) dependants to update
+		this.updateSelection;  // update values of selected items
 	}
 
-	updateSelection { this.selectAt(selectedIndex); }
+	updateSelection {
+		/* Note: selection_ method selects only those 
+			indices which are within the range of the size of the new list.
+		*/
+		this.selection = selection;
+	}
 
-	selectAt { | argSelectedIndex |
-		selectedIndex = argSelectedIndex max: 0 min: (list.size - 1);
-		selectedItem = list[selectedIndex];
-		this.changed(\selectedIndex);
+	selection_ { | indexArray |
+		var max;
+		max = list.size;
+		/* make sure that items selected are within the size
+			of the new list.
+		*/
+		selection = indexArray select: { | i |
+			i >= 0 and: { i < max}
+		};
+		selectedItems = list[selection];
+		this.changed(\selection);
 	}
 }
