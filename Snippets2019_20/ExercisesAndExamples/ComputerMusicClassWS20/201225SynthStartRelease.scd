@@ -30,3 +30,12 @@ dts = (1..7).reciprocal;
 ~synths = [60, 62, 63, 66, 67, 68, 72].midicps collect: { | f | Synth(\default, [freq: f])};
 2.wait;
 [~synths, [0.1, 0.5, 1, 2, 5, 7, 0.1]].flop.flat pairsDo: (_.release(_));
+
+//:+Alternative way, using local variables and custom synth-making function;
+var synths, amps, synthFunc;
+synths = [60, 62, 63, 66, 67, 68, 72].midicps;
+amps = [0.1, 0.5, 1, 2, 5, 7, 0.1];
+synthFunc = { | freq | Synth(\default, [freq: freq]) }; 
+~synths = [60, 62, 63, 66, 67, 68, 72].midicps collect: synthFunc.(_);
+2.wait;
+[~synths, [0.1, 0.5, 1, 2, 5, 7, 0.1]].flop.flat pairsDo: (_.release(_));
