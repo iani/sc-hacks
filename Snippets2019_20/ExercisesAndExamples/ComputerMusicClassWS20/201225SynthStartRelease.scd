@@ -19,7 +19,7 @@ Do the release with 1 statement for all 7 synths.
 var synths, dts;
 synths = (61..67).midicps;
 dts = (1..7).reciprocal;
-[synths, dts].flop pairsDo: { | a, b | a.postln; b.postln; };
+[synths, dts].flop.flat pairsDo: { | a, b | postf("a is: %, b is: %\n", a, b); };
 
 //:+Alternative way, combining 2 arrays
 ~synths = [60, 62, 63, 66, 67, 68, 72].midicps collect: { | f | Synth(\default, [freq: f])};
