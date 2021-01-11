@@ -1,0 +1,38 @@
+10 Jan 2021 12:56
+
+Config - configuration
+
+Prefs - Preferences
+
+Two approaches for managing/saving settings between sessions.
+
+Still highly experimental. Under development.
+
+The concept is not yet clear.
+
+* Why NamedSingleton? 
+
+Why not define all methods in Config and Prefs as class methods?
+Why make these classes subclasses of NamedSingleton instead?
+
+Because we may want to manage multiple instances of Prefs (Preferences), in a single session.
+Why? 
+Because we may want to work with multiple different pieces at the same time. For example, to merge parts of different pieces into a new piece. So each piece will have its own instance of Prefs for storing its assets such as folders, soundfiles, synthdefs etc.
+
+* Main
+  :PROPERTIES:
+  :DATE:     <2021-01-10 Sun 12:58>
+  :END:
+- Folders where sound files are
+- Lists of sound files to load
+- Synthdefs to load
+
+* Experimental - to consider
+  :PROPERTIES:
+  :DATE:     <2021-01-10 Sun 12:58>
+  :END:
+
+- Bus configs?
+- Group configs?
+- Synth configs?
+- Scores

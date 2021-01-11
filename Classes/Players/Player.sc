@@ -158,7 +158,10 @@ Player {
 	setSource { | source |
 		// Create a sourceplayer from the source and store it in sourcePlayer.
 		// But do not start the sourcePlayer;
+		// Under development!
 		sourcePlayer = source.makeSource(this);
+		postf("My new sourceplayer is : %\n", sourcePlayer);
+		postf("My new sourceplayer's source is : %\n", sourcePlayer.source);
 	}
 
 	play { | source |
