@@ -273,6 +273,20 @@ SynthPlayer : SourcePlayer {
 		};
 	}
 
+	setSource { | synthDefFunc |
+		/* 12 Jan 2021 20:35
+			set source to a SynthDef created from synthDefFunc.
+			Used to set the source of a player without immediately playing it.
+			Code copied from makeSynth.
+		*/
+		this.source_(
+			synthDefFunc.asPlayerSynthDef (
+				fadeTime: envir [\fadeTime] ? 0.02,
+				name: SystemSynthDefs.generateTempName
+			).add
+		);
+	}
+	
 	makeSynth { | argSource |
 		// If a function or symbol is provided, then make def, then synth,
 		// else use old def or default def.

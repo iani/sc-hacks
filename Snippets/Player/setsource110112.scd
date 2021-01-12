@@ -12,3 +12,12 @@ setSource: set the source of the player, but do not start it.
 //:How does a Player with no sourcePlayer play?
 \test3.play;
 //:
+\test3.pp.source.name;
+//:
+\test3.play;
+//:
+\test3.p.setSource({ SinOsc.ar(\freq.kr(500), 0, 0.2).dup });
+//:
+\test3.play;
+//:
+\freq <+.test3 1200;

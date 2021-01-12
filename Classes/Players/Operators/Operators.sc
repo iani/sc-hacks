@@ -76,7 +76,8 @@ in player.
 }
 
 + Nil {
-	e { ^currentEnvironment }
+	e { ^currentEnvironment } // old. kept for compatibility
+	ev { ^currentEnvironment }
 
 	+> { | player, envir |
 		// stop envir-player named player in envir

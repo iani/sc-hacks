@@ -160,6 +160,7 @@ Player {
 		// But do not start the sourcePlayer;
 		// Under development!
 		sourcePlayer = source.makeSource(this);
+		// still debugging:
 		postf("My new sourceplayer is : %\n", sourcePlayer);
 		postf("My new sourceplayer's source is : %\n", sourcePlayer.source);
 	}
@@ -301,7 +302,7 @@ Player {
 }
 
 + Nil { makeSource { | player | ^SynthPlayer(player) } }
-+ Function { makeSource { | player | ^SynthPlayer(player) } }
++ Function { makeSource { | player | ^SynthPlayer(player).setSource(this) } }
 + Symbol { makeSource { | player | ^SynthPlayer(player) } }
 + Event { makeSource { | player | ^PatternPlayer(player) } }
 
