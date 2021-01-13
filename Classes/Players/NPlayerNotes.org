@@ -4,6 +4,7 @@
 ** Difference from Player
 
 NPlayer is a NamedSingleton subclass.  This allows access by name, in a separate namespace from Player.  This ensures that any NPlayer named for example "x" will be a different object from the Player with the same name. So an NPlayers can be created from the name of a player without replacing the Player of the same name. 
+
 * Syntax and implementation for playing
   :PROPERTIES:
   :DATE:     <2020-12-05 Sat 13:17>

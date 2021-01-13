@@ -77,7 +77,10 @@ in player.
 
 + Nil {
 	e { ^currentEnvironment } // old. kept for compatibility
-	ev { ^currentEnvironment }
+	ev {
+		//	postf("debugging. nil ev. currentEnvironment is: %\n", currentEnvironment);
+		^currentEnvironment
+	}
 
 	+> { | player, envir |
 		// stop envir-player named player in envir

@@ -16,7 +16,7 @@ setSource: set the source of the player, but do not start it.
 //:
 \test3.play;
 //:
-\test3.p.setSource({ SinOsc.ar(\freq.kr(500), 0, 0.2).dup });
+\test3.p.setSource({ SinOsc.ar(\freq.kr(1500), 0, 0.2).dup });
 //:
 \test3.play;
 //:

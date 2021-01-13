@@ -108,7 +108,9 @@
 	// TODO: Do we want to free the bus also? What if other parameters are also listening to the same bus?
 	setParameter { | paramName, envir |
 		var bus, synth;
-		envir = envir.e; // see Nil:e, Symbol:e
+		//		postf("debugging: envir BEFORE envir.ev is: %\n", envir);
+		// envir = envir.ev; // see Nil:e, Symbol:e
+		// postf("debugging: envir after envir.ev is: %\n", envir);
 		bus = envir.at(paramName);
 		if (bus isKindOf: Bus) {
 			// this releases previous synths.
