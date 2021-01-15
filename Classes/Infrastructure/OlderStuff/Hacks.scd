@@ -7,10 +7,11 @@ Will be reworking this from  4 Dec 2020 08:54 on separate file.
 
 Hacks : Singleton {
 
+	/*
 	*initClass {
-		// no comment
 		CmdPeriod add: { CmdPeriod.changed(\cmdPeriod) };
 	}
+	*/
 	
 	homeDir {
 		^PathName(this.class.filenameSymbol.asString).pathOnly;

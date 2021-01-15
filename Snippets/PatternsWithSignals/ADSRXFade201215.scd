@@ -8,7 +8,7 @@ Env.adsr.plot;
 Env.adsr(1, 1, 1, 1).plot;
 //:reverse attack curve?
 Env.adsr(1, 1, 1, 1, curve: [4, -4, -4, -4]).plot;
-//:+Testing with a source - this does not seem to work
+//:+Testing with a source - works ok
 var func, synth;
 func = { PinkNoise.ar(0.1).dup };
 synth = {   func *

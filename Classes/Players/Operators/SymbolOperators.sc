@@ -113,6 +113,13 @@
 		// ^envir.map(param ? \freq, this);
 	}
 
+	bin {
+		// Return control ugen reading from bus named by meal
+		var bus;
+		bus = this.bus;
+		^In.kr(bus.index, bus.numChannels);
+	}
+	
 	map { | ... paramBusPairs |
 		// map parameter - bus pairs named by symbols
 		var envir;
