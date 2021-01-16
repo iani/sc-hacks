@@ -3,29 +3,27 @@
 Before first tries triggering envelope multiple times with a control signal
 
 Prelims: Review of bus mapping syntax
+
+2 Approaches: 
+
+1. Map a bus to a control of a synth.
+
+2. Read a control signal from a bus inside a synth.
+ 
 */
 //:================================================================
 //:A. Approach 1: map control to bus.
-//1. Play a function with freq as control in player \test
-{ | freq = 2400 | SinOsc.ar(freq, 0, 0.2).dup } +> \test;
-//:2. Set the target bus to a desired value
-\freqbus.bus.set(1200);
-//:3. Map the freq parameter in player bus to the target bus \freqbus
-\freqbus @>.freq \test;
-//:4. play a control function ot the target bus \freqbus
-{ LFNoise1.kr(5).range(1000, 1500) }  @> \freqbus;
-//:5. play a different function in player test
-{ LFDNoise1.ar(\freq.kr(100), 0.5).dup } +> \test;
-//:6. play a different control function to the same bus
-{ LFNoise0.kr(25).range(700, 2500) }  @> \freqbus;
+\freqbus @>.freq \test; // map control freq to bus freqbus
+{ LFNoise0.kr(5).range(1000, 1500) }  @> \freqbus; // play control func in bus
+{ | freq = 2400 | Pulse.ar(freq, mul: 0.1).dup } +> \test;
 
-//================================================================
-//:B. Approach 2: get bus as input in player's function
-//:Earlier code - for cleanup
-//:Prelims: Review of bus mapping syntax
-\freqbus.bus.set(1500);
-//:// read explicitly from the named bus
-{ SinOsc.ar(\freqbus.bin, 0, 0.2).dup } +> \test;
-//:
-{ LFNoise1.kr(10, 1000, 1500) }  @> \freqbus;
+//:================ Features: ================
+//:Play a different func in the player. The parameter mapping remains
+{ | freq = 2400 | SinOsc.ar(freq, mul: 0.3).dup } +> \test;
+//:Play a new control func in the bus, replacing the previous control synth
+{ LFNoise1.kr(15).range(1000, 1700) }  @> \freqbus;
 
+//:================================================================
+//:B. Approach 2: Read from a control bus inside the synthfunc.
+{ SinOsc.ar(\freqbus.bin * [1, 5/4], 0, 0.2) } +> \test2;
+{ Decay.kr(Dust.kr(5)).range(1000, 1700) }  @> \freqbus;

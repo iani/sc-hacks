@@ -2,7 +2,14 @@
 /*
 Triggering with a control bus.
 This can be shared amongs synths to ensure coordination of beats.
+
+Procedure:
+
+
+
+
 */
+// Tests - demos:
 //:the audio player to be controlled
 { | trig = 0 | WhiteNoise.ar(Decay.kr(trig)).dup } +> \test;
 //:Map the trig parameter in player bus to the target bus \trigbus
