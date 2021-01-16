@@ -457,15 +457,8 @@ SynthPlayer : SourcePlayer {
 			};
 			process.onEnd (this, { | notification |
 				if (process === notification.notifier) {
-					// thisMethod.name.postln;
-					// postf("I should remove this node because it ended %\n", process);
-					// "I should now remove the process node from notifications of envir".postln;
-					// envir.postln;
-					// "removing all notifications through process objectClosed".postln;
-					process.objectClosed.postln; // TODO: why is this needed explicitly?????
-					// envir.dependants.postln;
-					// postf("% debugging %. sending STOPPED\n", this, thisMethod.name);
-					player.changed(\stopped); // player.changed(\stopped);
+					process.objectClosed.postln; //  why is this needed?
+					player.changed(\stopped);
 					process = nil;
 				};
 			});

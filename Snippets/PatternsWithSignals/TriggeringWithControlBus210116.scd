@@ -5,16 +5,13 @@ This can be shared amongs synths to ensure coordination of beats.
 
 Procedure:
 
-
-
-
 */
 // Tests - demos:
 //:the audio player to be controlled
-{ | trig = 0 | WhiteNoise.ar(Decay.kr(trig)).dup } +> \test;
+{ | trig = 0 | WhiteNoise.ar(Decay.kr(trig) * 0.2).dup } +> \test;
 //:Map the trig parameter in player bus to the target bus \trigbus
 \trigbus @>.trig \test;
-//:Play a control function ot the target bus \freqbus
+//:Play a control function in target bus \freqbus
 { Impulse.kr(1) }  @> \trigbus;
 //:Try triggering with envelope instead of Decay
 { WhiteNoise.ar(0.1 * Env.perc.kr(0, \trig.kr)).dup } +> \test;
@@ -27,4 +24,7 @@ Procedure:
 { Impulse.kr(3) }  @> \trigbus;
 { Impulse.kr(5) }  @> \trigbus;
 { Impulse.kr(15) }  @> \trigbus;
-//:Try using demand ugen to play different beat patterns
+{ Impulse.kr(25) }  @> \trigbus;
+//:NEXT:
+// 1. Try using demand ugen to play different beat patterns
+// 2. Try triggering a player from a sendtrig in a synth
