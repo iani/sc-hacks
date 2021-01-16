@@ -6,6 +6,10 @@ triggering players to instances of listening players.
 \test.p.hash;
 \test2.p.hash;
 
+Note: Patterns can then be played in a different way than Pbind
+by storing Patterns in the arguments of the Players' envir.
+Test this!
+
 */
 //:================================================================
 //:Use SendTrig to send triggers from server to lang
@@ -27,3 +31,11 @@ o = OSCFunc({ arg msg, time;
 },'/tr', argTemplate: [nil, 1]); // ignore synth id, match trig id
 //:Synth for testing
 Synth("help-SendTrig");
+//================================================================
+//:test pattern in envir
+{ SinOsc.ar(\freq.kr(1000), 0, 0.3).dup } +> \ptest;
+//:
+currentEnvironment[\freq] = Pseq([1200, 1500], inf).asStream;
+//:*
+\ptest.play;
+0.5.wait;

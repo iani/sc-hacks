@@ -389,7 +389,7 @@ SynthPlayer : SourcePlayer {
 			switch(val.class,
 				Nil, { },
                 Bus, { busses add: name; busses add: val },
-                { args add: name; args add: val }
+                { args add: name; args add: val.next }
             );
 		};
 		if (hasGate) {
