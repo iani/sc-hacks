@@ -20,7 +20,9 @@ This todo list is after the stockhausen/harvey works performance of October 9, 2
   :DATE:     <2021-01-17 Sun 10:21>
   :END:
 
+many to many
 
+use symbol as key for the many to many connections (not id, not hash).
 
 * Operator TODOs
   :PROPERTIES:

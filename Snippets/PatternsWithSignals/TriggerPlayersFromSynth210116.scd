@@ -35,7 +35,12 @@ Synth("help-SendTrig");
 //:test pattern in envir
 { SinOsc.ar(\freq.kr(1000), 0, 0.3).dup } +> \ptest;
 //:
-currentEnvironment[\freq] = Pseq([1200, 1500], inf).asStream;
+currentEnvironment[\freq] = Pseq([1700, 1500], inf).asStream;
 //:*
 \ptest.play;
 0.5.wait;
+//:
+\freq <+.ptest 1900;
+//:
+
+\freq <+.ptest Pseq([1600, 1800], inf);

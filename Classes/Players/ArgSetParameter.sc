@@ -119,3 +119,10 @@
 		};
 	}
 }
+
++ Object {
+	// allow Patterns, routines and streams in a Players Envir
+	setParameter { | paramName, envir |
+		envir.put(paramName, this.asStream);
+	}	
+}
