@@ -61,40 +61,61 @@ OSCFunc({ \triggered.play }, \tr);
 
 *** Many to one: More than one SendTrig triggering one player
 
-#+begin_src sclang
-// Initialize the player
-{ SinOsc.ar(\freq.kr, 0, Env.perc(0.01, 0.1)
-  .kr(2)).dup
-} +>! \triggered2;
-\amp <+ 0.5;
-// make the player play a different pitch each time
-\freq <+.triggered2 Pseq((3..10) * 100, inf);
-// OSCFunc for triggering from the \tr message
-OSCFunc({ \triggered2.play }, \tr);
-// player issuing the trigger
-{ SendTrig.kr(Impulse.kr(1) ) } +> \trigger1;
-// second trigger is issued at a phase of 1/4
-{ SendTrig.kr(Impulse.kr(1.01, pi / 4) ) } +> \trigger2;
-#+end_src
+**** Simple implementation (Demo only. Not for final implementation)
+ #+begin_src sclang
+ // Initialize the player
+ { SinOsc.ar(\freq.kr, 0, Env.perc(0.01, 0.1)
+   .kr(2)).dup
+ } +>! \triggered2;
+ \amp <+ 0.5;
+ // make the player play a different pitch each time
+ \freq <+.triggered2 Pseq((3..10) * 100, inf);
+ // OSCFunc for triggering from the \tr message
+ OSCFunc({ \triggered2.play }, \tr);
+ // player issuing the trigger
+ { SendTrig.kr(Impulse.kr(1) ) } +> \trigger1;
+ // second trigger is issued at a phase of 1/4
+ { SendTrig.kr(Impulse.kr(1.01, pi / 4) ) } +> \trigger2;
+ #+end_src
 
-#+RESULTS:
-#+begin_example
-// Initialize the player
-{ SinOsc.ar(\freq.kr, 0, Env.perc(0.01, 0.1)
-  .kr(2, \gate.kr(0))).dup
-} +>! \triggered2;
-\amp <+ 0.5;
-//: make the player play a different pitch each time
-\freq <+.triggered2 Pseq((3..10) * 100, inf);
-// OSCFunc for triggering from the \tr message
-OSCFunc({ \triggered2.play }, \tr);
-// player issuing the trigger
-{ SendTrig.kr(Impulse.kr(2) ) } +> \trigger1;
-// second trigger is issued at a phase of 1/4
-{ SendTrig.kr(Impulse.kr(2.1, pi / 4) ) } +> \trigger2;
-#+end_example
+ #+RESULTS:
+ #+begin_example
+ // Initialize the player
+ { SinOsc.ar(\freq.kr, 0, Env.perc(0.01, 0.1)
+   .kr(2, \gate.kr(0))).dup
+ } +>! \triggered2;
+ \amp <+ 0.5;
+ //: make the player play a different pitch each time
+ \freq <+.triggered2 Pseq((3..10) * 100, inf);
+ // OSCFunc for triggering from the \tr message
+ OSCFunc({ \triggered2.play }, \tr);
+ // player issuing the trigger
+ { SendTrig.kr(Impulse.kr(2) ) } +> \trigger1;
+ // second trigger is issued at a phase of 1/4
+ { SendTrig.kr(Impulse.kr(2.1, pi / 4) ) } +> \trigger2;
+ #+end_example
+
+**** Many to one correct implementation
+
+When sending =/tr= messages from several different triggering players, a different OSCFunc should be used to listen to each different player. In that way, a player that wants to be triggered by a given triggering player can add itself to the oscfunc that is listening to this player.  
+
+To distinguish 
 
 *** One to many: One SendTrig triggering more than one player
+
+*** Many to many: arbitrary combinations of one-to-many and many-to-one (and many-to-many)
+Test configuration:
+
+A. 
+players =\trigr1= and =trigr2= trigger player =\trigd1=
+
+*** API
+
+**** =triggeredPlayer.addTrigger(triggeringPlayer);=
+
+****  =triggeredPlayer.removeTrigger(triggeringPlayer);=
+
+*** Implementation
 
 
 
