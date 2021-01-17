@@ -30,7 +30,15 @@ func bresenhamEuclidean(onsets: Int, pulses: Int) -> [Int] {
 }
 
 */
-//:the algorithm - Bresenham version
+//:Implementation 1 (plain)
+\br.f = { | o = 1, p = 4 |
+	//Note: in SC, the algorithm can be coded in a single line, as follows:
+	(o / p * (0..p - 1)).floor.differentiate.asInteger;
+	// Note 2: the if (o <= 0) statement covers the case when we want 0 beats
+	// in the pattern
+};
+\br.f(10, 16);
+//:Implementation 2 (allow o == 0, o > p)
 \br.f = { | o = 1, p = 4 |
 	//Note: in SC, the algorithm can be coded in a single line, as follows:
 	(o / p * (0..p - 1)).floor.differentiate.asInteger.min(1)[0] = if (o <= 0) { 0 } { 1 };

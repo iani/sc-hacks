@@ -15,6 +15,13 @@ This todo list is after the stockhausen/harvey works performance of October 9, 2
 
 ** Make timer guis
 
+* Use SendTrig to trigger players (17 Jan 2021 10:21)
+  :PROPERTIES:
+  :DATE:     <2021-01-17 Sun 10:21>
+  :END:
+
+
+
 * Operator TODOs
   :PROPERTIES:
   :DATE:     <2017-10-05 Thu 18:04>
