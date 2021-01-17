@@ -246,8 +246,8 @@ SynthPlayer : SourcePlayer {
 	play { | argSource |
 		var outbus, target, server;
 		// if still waiting to start synth after def, then skip this play!
-		if (process.notNil and: { process.isPlaying.not}) {
-			"Waiting for created synth to start".postln;
+		if (process.notNil and: { process.isPlaying.not }) {
+			// "Waiting for created synth to start".postln;
 			^this
 		};
 		this.release; // stop previous synth;
@@ -280,7 +280,7 @@ SynthPlayer : SourcePlayer {
 			Code copied from makeSynth.
 		*/
 		this.source_(
-			synthDefFunc.asPlayerSynthDef (
+			synthDefFunc.asPlayerSynthDef(
 				fadeTime: envir [\fadeTime] ? 0.02,
 				name: SystemSynthDefs.generateTempName
 			).add
@@ -294,6 +294,7 @@ SynthPlayer : SourcePlayer {
 		// or scheduled for removal after previous synth stops.
 		var target, server, outbus, args, busses, isTemp = false;
 		// remove temp SynthDef if leftover from previous release.
+		// postf("Debugging: argSource is: %\n", argSource);
 		if (synthDefIsTemp and: { process.isNil } and: { argSource.notNil }) {
 			SynthDef removeAt: source.name;
 		};
@@ -332,8 +333,13 @@ SynthPlayer : SourcePlayer {
 				// To take current settings of envir into account (!)
 				#args, busses = this.source_(
 					// use source if it exists, else provide one by guessing:
+					// Note: as of 17 Jan 2021 20:52 this is broken.
 					source ?? {
-						(SynthDescLib.at (argSource) ?? { SynthDescLib at: \default}).def
+						postf("Source of player % is nil. Staying silent\n", player);
+						(SynthDescLib.at(argSource) ?? {
+							SynthDescLib at: \default }
+
+						).def;
 					}
 				);
 				process = Synth (

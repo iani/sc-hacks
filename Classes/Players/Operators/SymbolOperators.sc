@@ -139,6 +139,9 @@
 		^player.asPlayer(this).play(this, index);
 	}
 
+	+>! { | player |
+		player.asPlayer.setSource(this);
+	}
 	// ================ LINKING PLAYERS ================
 	//	player { | envir | ^(envir ? this) }
 	*> { | reader, param = \out | // many writers to one reader.

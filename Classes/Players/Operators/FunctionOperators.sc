@@ -23,6 +23,10 @@ Adding asPlayer
 		^player.asPlayer(envir).play(this); // accept non-symbol player arg
 	}
 
+	+>! { | player |
+		player.asPlayer.setSource(this);
+	}
+
 	*> { | key, envir |
 		// play function as routine. Note different argumnent+adverb convention:
 		// name: name where the routine will be stored.
