@@ -313,6 +313,15 @@ SynthPlayer : SourcePlayer {
 			// Here decide from argSource's class: if argSource is Function or Symbol,
 			// then obtain def from them and use it.
 			// Else provide a def by guessing.
+			/* 18 Jan 2021 16:40 TODO:
+				Substitute code inside .source_(...) parens with call to new class
+				DefWrapper. An instance of DefWrapper should be stored in 
+				SynthPlayer to provide easy customization of adding a wrapper such as:
+				- SendTrig
+				- PlayBuf
+				- Granulate Buf
+				- Filter source through a PV ... et al.				
+			*/
 			Function, {
 				isTemp = true;
 				#args, busses = this.source_(
