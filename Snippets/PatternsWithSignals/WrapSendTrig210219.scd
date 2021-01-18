@@ -17,3 +17,12 @@ To be built into a method Player:makeSendTrigFunc(trigFunc)
 "wait another sec...".postln;
 1.wait;
 \test.start;
+//:testing new setTrig method
+\test.p.setSource({ WhiteNoise.ar(0.1).dup });
+\test.play;
+//:
+\test.p.setTrig({ Impulse.kr(10) });
+//:
+\test.play;
+//:
+\id <+.test 12;

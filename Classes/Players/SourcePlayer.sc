@@ -273,6 +273,14 @@ SynthPlayer : SourcePlayer {
 		};
 	}
 
+	// 18 Jan 2021 15:13 experimental:
+	// Wrap trigFunc as SendTrig input for use with OscTrigger:
+	setTrig { | trigFunc |
+		this.setSource({ | id = 0 |
+			SendTrig.kr(trigFunc, id);
+		})
+	}
+
 	setSource { | synthDefFunc |
 		/* 12 Jan 2021 20:35
 			set source to a SynthDef created from synthDefFunc.

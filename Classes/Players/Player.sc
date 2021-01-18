@@ -155,6 +155,12 @@ Player {
 		this.addNotifier(Player, \run, { this.play });	
 	}
 
+	// 18 Jan 2021 16:07 experimental:
+	// Wrap source in { | in = 0 | SendTrig.kr(source, in) }
+	setTrig { | source |
+		this.setSource({ | id = 0 | SendTrig.kr(source, id) });
+	}
+	
 	setSource { | source |
 		// Create a sourceplayer from the source and store it in sourcePlayer.
 		// But do not start the sourcePlayer;
