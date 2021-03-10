@@ -13,6 +13,15 @@
 }
 
 + GraphBuilder {
+	/*
+		TODO: add an argument for customizing makeFadeEnv.
+		Make it possible to either provide the function itself,
+		or the name of a method to call,
+		Define different methods for different types of fade envelopes.
+		Symbol \none might build as envelope just the number 1, 
+		thus canceling the envelope making and allowing the user 
+		to write their envelope + gate in the function. 
+	*/
 	*wrapPlayerOut { arg name, func, rates, prependArgs, outClass = \Out, fadeTime;
 		^SynthDef.new(name, { arg out = 0; // i_out is non-modifiable. Use out instead.
 			var result, rate, env;

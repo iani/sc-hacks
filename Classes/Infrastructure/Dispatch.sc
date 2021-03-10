@@ -5,9 +5,9 @@ See Nevent:new for use.
 */
 
 Dispatch {
-	var <pevent, <dispatcher;
+	var <event, <dispatcher;
 	value { | key, obj |
-		pevent.changed(
+		event.changed(
 			*(dispatcher[obj.class] ?? { [\unknown, key, obj]}).value(key, obj)
 		)
 	}	

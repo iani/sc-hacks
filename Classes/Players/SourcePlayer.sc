@@ -412,6 +412,14 @@ SynthPlayer : SourcePlayer {
 			switch(val.class,
 				Nil, { },
                 Bus, { busses add: name; busses add: val },
+				/* val.next: obtain next value from val if it is a stream
+					made from a pattern. See Object:setParameter 
+					TODO: This method should return a new kind of object
+					which in addition to returning the next value of the stream,
+					also performs envir.changed(\key, value)
+					with key being the parameter where it is stored.
+					This is good for updating guis and possibly other stuff.
+				*/
                 { args add: name; args add: val.next }
             );
 		};
